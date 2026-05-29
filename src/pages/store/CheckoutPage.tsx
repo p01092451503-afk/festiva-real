@@ -287,8 +287,23 @@ const CheckoutPage = () => {
     };
   }, [orderId, tossOrderId, checkoutData, user]);
 
+  const isInIframe = typeof window !== "undefined" && window.self !== window.top;
+
   const handlePayment = async () => {
     if (!widgetsRef.current || !tossOrderId || !orderId || !checkoutData) return;
+
+    // Lovable 미리보기(iframe) 환경에서는 Toss SDK가 부모 프레임 redirect 권한이 없어 실패함.
+    // 게시된(published) URL을 새 탭에서 열도록 안내.
+    if (isInIframe) {
+      const publishedOrigin = "https://webheads-class.lovable.app";
+      window.open(`${publishedOrigin}/checkout`, "_blank", "noopener");
+      toast({
+        title: "미리보기에서는 결제 테스트가 제한됩니다",
+        description: "게시된 사이트가 새 탭에서 열렸습니다. 그곳에서 결제를 진행해 주세요.",
+      });
+      return;
+    }
+
     setIsProcessing(true);
     try {
       const orderName =
@@ -306,13 +321,21 @@ const CheckoutPage = () => {
       });
     } catch (e: any) {
       console.error("Payment request error:", e);
-      if (e.code !== "USER_CANCEL") {
+      const msg = String(e?.message || "");
+      if (msg.includes("permission to navigate") || msg.includes("Failed to set a named property 'href'")) {
+        toast({
+          title: "미리보기 환경 제한",
+          description: "결제 redirect가 차단되었습니다. 게시된 URL에서 다시 시도해 주세요.",
+          variant: "destructive",
+        });
+      } else if (e.code !== "USER_CANCEL") {
         toast({ title: "결제 요청 실패", description: e.message, variant: "destructive" });
       }
     } finally {
       setIsProcessing(false);
     }
   };
+
 
   if (isCreatingOrder) {
     return (
