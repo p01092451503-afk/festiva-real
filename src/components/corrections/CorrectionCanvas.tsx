@@ -102,9 +102,23 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         editor.updateInstanceState({ isReadonly: true });
       } else {
         const unlockHandler = editor.sideEffects.registerOperationCompleteHandler(() => {
-          lockUnlockedShapes(editor);
+          syncLocksForTool(editor);
         });
         editor.disposables.add(unlockHandler);
+
+        // React to tool changes (e.g. user picks eraser → unlock; picks draw → lock)
+        let lastToolId = editor.getCurrentToolId();
+        const toolWatcher = editor.store.listen(
+          () => {
+            const toolId = editor.getCurrentToolId();
+            if (toolId !== lastToolId) {
+              lastToolId = toolId;
+              syncLocksForTool(editor);
+            }
+          },
+          { source: "user", scope: "session" },
+        );
+        editor.disposables.add(toolWatcher);
 
         // Default to draw tool so mouse/pen/touch immediately writes
         try {
