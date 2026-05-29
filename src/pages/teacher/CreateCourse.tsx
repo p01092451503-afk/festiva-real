@@ -31,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import type { Database } from "@/integrations/supabase/types";
 import B2CSaleSettings from "@/components/admin/B2CSaleSettings";
 import PaidCourseSettings from "@/components/admin/PaidCourseSettings";
+import PackagePicker from "@/components/admin/PackagePicker";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import BunnyUploader from "@/components/admin/BunnyUploader";
 import { BulkAddDialog, BulkEditBar, type NewContentDraft } from "@/components/admin/BulkContentTools";
