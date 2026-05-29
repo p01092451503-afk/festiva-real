@@ -530,27 +530,64 @@ const StorefrontCourseDetail = () => {
                   </div>
                 )}
 
-                {detailBlocks.map((block) => (
-                  <div key={block.id} className="space-y-3">
-                    {block.title && <h3 className="text-lg font-bold text-foreground">{block.title}</h3>}
-                    {block.block_type === "text" && block.content && (
-                      <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">{block.content}</p>
-                    )}
-                    {block.block_type === "image" && block.image_url && (
-                      <img src={block.image_url} alt={block.title || ""} className="rounded-xl w-full" loading="lazy" />
-                    )}
-                    {block.block_type === "checklist" && block.checklist_items && (
-                      <ul className="space-y-2">
-                        {block.checklist_items.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2.5 text-muted-foreground">
-                            <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ))}
+                {detailBlocks.map((block: any) => {
+                  if (block.block_type === "heading") {
+                    return (
+                      <h3 key={block.id} className="text-xl font-bold text-foreground pt-4 border-l-4 border-foreground pl-4">
+                        {block.title || ""}
+                      </h3>
+                    );
+                  }
+                  if (block.block_type === "video" && block.video_url) {
+                    const url: string = block.video_url;
+                    let embed = url;
+                    if (block.video_provider === "youtube") {
+                      const m = url.match(/(?:youtu\.be\/|v=)([\w-]+)/);
+                      if (m) embed = `https://www.youtube.com/embed/${m[1]}`;
+                    } else if (block.video_provider === "vimeo") {
+                      const m = url.match(/vimeo\.com\/(\d+)/);
+                      if (m) embed = `https://player.vimeo.com/video/${m[1]}`;
+                    }
+                    const isFile = block.video_provider === "cdn";
+                    return (
+                      <div key={block.id} className="space-y-3">
+                        {block.title && <h3 className="text-lg font-bold text-foreground">{block.title}</h3>}
+                        <div className="aspect-video rounded-xl overflow-hidden bg-black">
+                          {isFile ? (
+                            <video src={url} controls className="w-full h-full" />
+                          ) : (
+                            <iframe src={embed} title={block.title || "intro video"} className="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div key={block.id} className="space-y-3">
+                      {block.title && block.block_type !== "image" && (
+                        <h3 className="text-lg font-bold text-foreground">{block.title}</h3>
+                      )}
+                      {block.block_type === "text" && block.content && (
+                        <p className="text-foreground/80 whitespace-pre-wrap leading-relaxed">{block.content}</p>
+                      )}
+                      {block.block_type === "image" && block.image_url && (
+                        <img src={block.image_url} alt={block.title || ""} className="rounded-xl w-full" loading="lazy" />
+                      )}
+                      {block.block_type === "checklist" && block.checklist_items && (
+                        <ul className="space-y-2">
+                          {block.checklist_items.map((item: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2.5 text-foreground/80">
+                              <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
 
