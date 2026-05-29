@@ -245,6 +245,7 @@ const AdminSettings = () => {
             { key: "admin.learning", label: t("nav.learningManagement", "학습 관리") },
             { key: "admin.attendance", label: t("nav.attendanceManagement", "출석 관리") },
             { key: "admin.completion", label: t("nav.completionManagement", "수료 관리") },
+            { key: "admin.bulkCertificates", label: t("nav.bulkCertificates", "수료증 일괄 발급") },
             { key: "admin.aiProgressPrediction", label: t("nav.aiProgressPrediction", "AI 진도 예측") },
             { key: "admin.aiFeedback", label: t("nav.aiFeedback", "AI 과제 피드백") },
           ],
