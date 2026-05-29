@@ -580,6 +580,15 @@ const CreateCourse = () => {
           price: b2cPrice,
           sale_price: b2cSalePrice,
           sale_ends_at: b2cSaleEndsAt || null,
+          instructor_bio: instructorBio || null,
+          textbook_title: textbookTitle || null,
+          textbook_author: textbookAuthor || null,
+          textbook_publisher: textbookPublisher || null,
+          textbook_isbn: textbookIsbn || null,
+          textbook_price: textbookPrice === "" ? null : Number(textbookPrice),
+          textbook_image_url: textbookImageUrl || null,
+          textbook_description: textbookDescription || null,
+          textbook_purchase_url: textbookPurchaseUrl || null,
           updated_at: new Date().toISOString(),
         } as any)
         .eq("id", editCourseId!);
