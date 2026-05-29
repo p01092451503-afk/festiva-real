@@ -1,0 +1,1 @@
+ALTER TABLE public.course_contents ADD COLUMN IF NOT EXISTS transcript text;

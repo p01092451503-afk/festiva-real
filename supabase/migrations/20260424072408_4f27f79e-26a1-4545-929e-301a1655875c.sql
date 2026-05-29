@@ -1,0 +1,1 @@
+UPDATE public.site_settings SET company_name_en = 'CLASSYS' WHERE company_name_en IS NULL OR company_name_en = '';

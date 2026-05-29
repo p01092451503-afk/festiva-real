@@ -1,0 +1,117 @@
+{
+  "timestamp": "2026-04-26T08:26:17.419Z",
+  "totals": {
+    "raw": 4538619,
+    "gzipText": 1041460,
+    "files": 178
+  },
+  "buckets": {
+    "js": {
+      "files": 123,
+      "raw": 3477083,
+      "gzip": 1018464
+    },
+    "css": {
+      "files": 1,
+      "raw": 124181,
+      "gzip": 20124
+    },
+    "img": {
+      "files": 50,
+      "raw": 928057,
+      "gzip": 0
+    },
+    "font": {
+      "files": 0,
+      "raw": 0,
+      "gzip": 0
+    },
+    "html": {
+      "files": 1,
+      "raw": 8520,
+      "gzip": 2872
+    },
+    "other": {
+      "files": 3,
+      "raw": 778,
+      "gzip": 0
+    }
+  },
+  "topJs": [
+    {
+      "path": "assets/vendor-charts-CmQ_bjiZ.js",
+      "size": 432240,
+      "gzip": 113310
+    },
+    {
+      "path": "assets/vendor-pdf-BXpq_eW4.js",
+      "size": 416452,
+      "gzip": 135080
+    },
+    {
+      "path": "assets/index-CeE-HIK6.js",
+      "size": 243103,
+      "gzip": 75999
+    },
+    {
+      "path": "assets/vendor-canvas-BfxBtG_O.js",
+      "size": 202285,
+      "gzip": 47691
+    },
+    {
+      "path": "assets/vendor-supabase-brbIVSkk.js",
+      "size": 193819,
+      "gzip": 51310
+    },
+    {
+      "path": "assets/vendor-react-BCOLYn79.js",
+      "size": 162873,
+      "gzip": 53139
+    },
+    {
+      "path": "assets/index.es-nBFJhR4J.js",
+      "size": 150883,
+      "gzip": 51454
+    },
+    {
+      "path": "assets/vendor-ui-C0oF_08d.js",
+      "size": 113041,
+      "gzip": 36143
+    },
+    {
+      "path": "assets/CourseDetail-BNwTLjKl.js",
+      "size": 94643,
+      "gzip": 20053
+    },
+    {
+      "path": "assets/ContentPlayer-BtjiE_En.js",
+      "size": 72226,
+      "gzip": 21709
+    },
+    {
+      "path": "assets/CreateCourse-M3X4BGUd.js",
+      "size": 72069,
+      "gzip": 18254
+    },
+    {
+      "path": "assets/BunnyUploader-C-xzRW1i.js",
+      "size": 62963,
+      "gzip": 17128
+    },
+    {
+      "path": "assets/vendor-icons-DEnua6Va.js",
+      "size": 58198,
+      "gzip": 10769
+    },
+    {
+      "path": "assets/vendor-i18n-CQs3Qaf0.js",
+      "size": 48240,
+      "gzip": 15876
+    },
+    {
+      "path": "assets/MyPage-D9itYGkd.js",
+      "size": 45166,
+      "gzip": 10623
+    }
+  ]
+}

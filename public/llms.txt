@@ -1,0 +1,13 @@
+# WEBHEADS Education Platform
+
+> 다국어와 AI 기능을 지원하는 맞춤형 이러닝 플랫폼. 영상·HTML5 콘텐츠, 평가, 수료증, 통계까지 통합 제공합니다.
+
+## Pages
+
+- [Home](/store): 추천 강의와 신규 오픈 강의 모아보기
+- [Course Catalog](/store/courses): 전체 강의 카탈로그 및 카테고리 탐색
+- [Login](/auth): 학습자·강사·관리자 로그인 및 회원가입
+
+## Optional
+
+- [Reset Password](/reset-password): 비밀번호 재설정

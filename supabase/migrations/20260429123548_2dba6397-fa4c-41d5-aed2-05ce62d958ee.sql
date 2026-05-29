@@ -1,0 +1,1 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS hidden_nav_keys text[] NOT NULL DEFAULT '{}';

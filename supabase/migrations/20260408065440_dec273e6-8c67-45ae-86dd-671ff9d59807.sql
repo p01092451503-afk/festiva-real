@@ -1,0 +1,1 @@
+UPDATE course_contents SET video_url = 'https://www.youtube.com/watch?v=fZppvB07tI0' WHERE video_provider = 'youtube';

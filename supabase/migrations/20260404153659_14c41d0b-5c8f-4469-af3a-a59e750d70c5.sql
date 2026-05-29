@@ -1,0 +1,1 @@
+UPDATE courses SET created_at = now() WHERE id = 'f61d0896-52d4-4498-935e-296ca56e6a44';

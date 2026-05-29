@@ -1,0 +1,203 @@
+/* Fonts are loaded non-blocking via <link> in index.html for faster FCP. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 20% 98%;
+    --foreground: 30 10% 12%;
+
+    --card: 40 25% 97%;
+    --card-foreground: 30 10% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 10% 12%;
+
+    --primary: 30 10% 12%;
+    --primary-foreground: 40 20% 97%;
+
+    --secondary: 35 18% 93%;
+    --secondary-foreground: 30 12% 15%;
+
+    --muted: 35 12% 94%;
+    --muted-foreground: 30 8% 35%;
+
+    --accent: 28 30% 88%;
+    --accent-foreground: 30 10% 12%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 15% 90%;
+    --input: 35 15% 90%;
+    --ring: 30 10% 30%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 40 20% 97%;
+    --sidebar-foreground: 30 10% 25%;
+    --sidebar-primary: 30 10% 12%;
+    --sidebar-primary-foreground: 40 20% 97%;
+    --sidebar-accent: 35 18% 93%;
+    --sidebar-accent-foreground: 30 10% 15%;
+    --sidebar-border: 35 15% 90%;
+    --sidebar-ring: 30 10% 30%;
+
+    /* Custom tokens */
+    --warm-50: 40 25% 97%;
+    --warm-100: 35 20% 94%;
+    --warm-200: 33 18% 88%;
+    --warm-300: 30 16% 75%;
+    --warm-400: 28 14% 55%;
+    --warm-500: 26 12% 40%;
+    --warm-600: 24 14% 30%;
+    --warm-700: 22 16% 22%;
+    --warm-800: 20 18% 15%;
+    --warm-900: 18 20% 10%;
+
+    --flip-bg: 215 80% 55%;
+    --flip-foreground: 0 0% 100%;
+    --video-bg: 0 72% 51%;
+    --video-foreground: 0 0% 100%;
+
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 30 10% 12%;
+    --info: 210 60% 50%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Noto Sans KR', sans-serif;
+    @apply font-semibold tracking-tight;
+  }
+
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl;
+  }
+
+  .stat-card {
+    @apply bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground;
+  }
+
+  .nav-item-active {
+    @apply bg-primary text-primary-foreground font-medium;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Guided Tour (driver.js) — Apple glassmorphism */
+.nf-tour-popover .driver-popover {
+  background: hsl(var(--background) / 0.72) !important;
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border) / 0.45);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 8px 40px -8px hsl(var(--foreground) / 0.12),
+    0 0 0 0.5px hsl(var(--border) / 0.3) inset;
+  padding: 1.5rem;
+}
+.nf-tour-popover .driver-popover-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.35rem;
+}
+.nf-tour-popover .driver-popover-description {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+}
+.nf-tour-popover .driver-popover-progress-text {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground) / 0.7);
+  font-weight: 500;
+}
+.nf-tour-popover .driver-popover-footer {
+  margin-top: 0.75rem;
+}
+.nf-tour-popover .driver-popover-navigation-btns button {
+  border-radius: 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.45rem 1.15rem;
+  border: none;
+  text-shadow: none;
+  transition: all 0.2s ease;
+}
+.nf-tour-popover .driver-popover-next-btn,
+.nf-tour-popover .driver-popover-close-btn {
+  background: hsl(var(--foreground)) !important;
+  color: hsl(var(--background)) !important;
+}
+.nf-tour-popover .driver-popover-next-btn:hover,
+.nf-tour-popover .driver-popover-close-btn:hover {
+  background: hsl(var(--foreground) / 0.85) !important;
+  transform: scale(1.03);
+}
+.nf-tour-popover .driver-popover-prev-btn {
+  background: hsl(var(--foreground) / 0.08) !important;
+  color: hsl(var(--foreground)) !important;
+}
+.nf-tour-popover .driver-popover-prev-btn:hover {
+  background: hsl(var(--foreground) / 0.14) !important;
+  transform: scale(1.03);
+}
+.nf-tour-popover .driver-popover-close-btn {
+  font-size: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  background: hsl(var(--foreground) / 0.06) !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+.nf-tour-popover .driver-popover-close-btn::after {
+  content: "✕";
+  font-size: 0.75rem;
+}
+.nf-tour-popover .driver-popover-close-btn:hover {
+  background: hsl(var(--foreground) / 0.12) !important;
+  transform: none;
+}
+
+/* 매뉴얼 검색 키워드 하이라이트 */
+mark.nf-mark {
+  background-color: hsl(var(--primary) / 0.18);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 600;
+}
