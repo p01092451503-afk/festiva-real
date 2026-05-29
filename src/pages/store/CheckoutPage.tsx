@@ -366,6 +366,28 @@ const CheckoutPage = () => {
       <main className="max-w-5xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-semibold text-foreground mb-6">결제</h1>
 
+        {isInIframe && (
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-yellow-300/60 bg-yellow-50 p-4 text-sm text-yellow-900">
+            <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="font-semibold">미리보기 환경에서는 결제 redirect가 제한됩니다.</p>
+              <p className="text-yellow-900/80">
+                결제 테스트는{" "}
+                <a
+                  href="https://webheads-class.lovable.app/checkout"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium underline underline-offset-2"
+                >
+                  게시된 사이트
+                </a>
+                에서 진행해 주세요. (결제 버튼을 누르면 자동으로 새 탭에서 열립니다)
+              </p>
+            </div>
+          </div>
+        )}
+
+
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Left: Order summary + Payment widget */}
           <div className="lg:col-span-3 space-y-6">
