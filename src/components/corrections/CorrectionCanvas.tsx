@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Tldraw, type Editor, type TLStoreSnapshot, loadSnapshot, getSnapshot } from "tldraw";
+import {
+  Tldraw,
+  type Editor,
+  type TLShapePartial,
+  type TLStoreSnapshot,
+  loadSnapshot,
+  getSnapshot,
+} from "tldraw";
 import "tldraw/tldraw.css";
 
 interface Props {
@@ -18,6 +25,23 @@ interface Props {
 const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Props) => {
   const editorRef = useRef<Editor | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+
+  const lockUnlockedShapes = useCallback((editor: Editor) => {
+    const unlockedShapes = editor.getCurrentPageShapes().filter((shape) => !shape.isLocked);
+    if (unlockedShapes.length === 0) return;
+
+    editor.updateShapes(
+      unlockedShapes.map((shape) => ({
+        id: shape.id,
+        type: shape.type,
+        isLocked: true,
+      })) as TLShapePartial[],
+    );
+    editor.selectNone();
+    try {
+      editor.setCurrentTool("draw");
+    } catch {}
+  }, []);
 
   // Load image dimensions to size the canvas
   useEffect(() => {
@@ -45,6 +69,9 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       if (readOnly) {
         editor.updateInstanceState({ isReadonly: true });
       } else {
+        editor.sideEffects.registerOperationCompleteHandler(() => {
+          lockUnlockedShapes(editor);
+        });
         // Default to draw tool so mouse/pen/touch immediately writes
         try {
           editor.setCurrentTool("draw");
@@ -56,12 +83,13 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         editor.setCameraOptions({ isLocked: true });
         editor.setCamera({ x: 0, y: 0, z: 1 });
       } catch {}
+      lockUnlockedShapes(editor);
       onReady?.({
         getSnapshot: () => getSnapshot(editor.store),
         editor,
       });
     },
-    [initialSnapshot, readOnly, onReady],
+    [initialSnapshot, readOnly, onReady, lockUnlockedShapes],
   );
 
   // Aspect ratio container based on the image
