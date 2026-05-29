@@ -32,6 +32,7 @@ import type { Database } from "@/integrations/supabase/types";
 import B2CSaleSettings from "@/components/admin/B2CSaleSettings";
 import PaidCourseSettings from "@/components/admin/PaidCourseSettings";
 import PackagePicker from "@/components/admin/PackagePicker";
+import CourseIntroEditor from "@/components/admin/CourseIntroEditor";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import BunnyUploader from "@/components/admin/BunnyUploader";
 import { BulkAddDialog, BulkEditBar, type NewContentDraft } from "@/components/admin/BulkContentTools";
@@ -1158,6 +1159,21 @@ const CreateCourse = () => {
         {isAdmin && isEditMode && editCourseId && (
           <PaidCourseSettings courseId={editCourseId} />
         )}
+
+        {/* 강의 소개 에디터 — 편집 모드 전용 (course_id 필요) */}
+        {isEditMode && editCourseId && (
+          <div className="stat-card space-y-5">
+            <div className="flex items-center gap-2 pb-3 border-b border-border">
+              <FileText className="h-5 w-5 text-foreground" />
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold">강의 소개 에디터</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">제목, 본문, 이미지, 영상, 체크리스트 블록을 자유롭게 추가해 상세 페이지를 구성하세요.</p>
+              </div>
+            </div>
+            <CourseIntroEditor courseId={editCourseId} />
+          </div>
+        )}
+
 
         {/* 강사 소개 & 교재 정보 */}
         <div className="stat-card space-y-6">

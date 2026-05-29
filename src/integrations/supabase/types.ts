@@ -2196,6 +2196,8 @@ export type Database = {
           image_url: string | null
           sort_order: number
           title: string | null
+          video_provider: string | null
+          video_url: string | null
         }
         Insert: {
           block_type: string
@@ -2207,6 +2209,8 @@ export type Database = {
           image_url?: string | null
           sort_order?: number
           title?: string | null
+          video_provider?: string | null
+          video_url?: string | null
         }
         Update: {
           block_type?: string
@@ -2218,6 +2222,8 @@ export type Database = {
           image_url?: string | null
           sort_order?: number
           title?: string | null
+          video_provider?: string | null
+          video_url?: string | null
         }
         Relationships: [
           {
