@@ -1073,6 +1073,10 @@ const ContentPlayer = () => {
           </ScrollArea>
         </DrawerContent>
       </Drawer>
+
+      {contentId && (
+        <ContentCommentsTrigger contentId={contentId} courseId={courseId} />
+      )}
     </div>
   );
 };
