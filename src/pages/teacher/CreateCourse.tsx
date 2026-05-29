@@ -117,6 +117,13 @@ const CreateCourse = () => {
   const [b2cSalePrice, setB2cSalePrice] = useState<number | null>(null);
   const [b2cSaleEndsAt, setB2cSaleEndsAt] = useState("");
 
+  // Paid sale quick setup (create mode)
+  const [courseType, setCourseType] = useState<"single" | "package">("single");
+  const [tiers, setTiers] = useState<Array<{ duration_days: number; list_price: number; sale_price: number; points: number; display_name: string }>>([
+    { duration_days: 30, list_price: 0, sale_price: 0, points: 0, display_name: "" },
+  ]);
+  const [packageItems, setPackageItems] = useState<string[]>([]);
+
   // Content items
   const [contents, setContents] = useState<ContentItem[]>([]);
   const [draftLoaded, setDraftLoaded] = useState(false);
@@ -124,6 +131,7 @@ const CreateCourse = () => {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [editDataLoaded, setEditDataLoaded] = useState(false);
   const [existingThumbnailUrl, setExistingThumbnailUrl] = useState<string | null>(null);
+
 
   // Load existing course data for edit mode
   useEffect(() => {
