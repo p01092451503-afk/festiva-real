@@ -31,8 +31,8 @@ const CorrectionDetail = () => {
   const { toast } = useToast();
 
   const isStaff = useMemo(
-    () => roles.some((r) => ["teacher", "admin", "super_admin"].includes(r)),
-    [roles],
+    () => ["teacher", "admin", "super_admin"].includes(primaryRole as string),
+    [primaryRole],
   );
   const basePath = useMemo(() => {
     if (primaryRole === "admin" || primaryRole === "super_admin") return "/admin/corrections";
