@@ -23,6 +23,7 @@ import { VideoPlayerSkeleton } from "@/components/PageSkeletons";
 import { formatDurationMs } from "@/lib/duration";
 import { ContentProtection } from "@/components/ContentProtection";
 import LessonExtras from "@/components/LessonExtras";
+import { ContentCommentsTrigger } from "@/components/ContentComments";
 import {
   AlertDialog,
   AlertDialogAction,
