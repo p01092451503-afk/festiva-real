@@ -46,6 +46,9 @@ const StudentNotes = lazy(() => import("./pages/student/StudentNotes"));
 const StudentArticles = lazy(() => import("./pages/student/StudentArticles"));
 const StudentArticleDetail = lazy(() => import("./pages/student/StudentArticleDetail"));
 const EnglishCorrection = lazy(() => import("./pages/student/EnglishCorrection"));
+const StudentCorrections = lazy(() => import("./pages/student/StudentCorrections"));
+const CorrectionsQueue = lazy(() => import("./pages/corrections/CorrectionsQueue"));
+const CorrectionDetail = lazy(() => import("./pages/corrections/CorrectionDetail"));
 
 // Teacher
 const TeacherDashboard = lazy(() => import("./pages/TeacherDashboard"));
@@ -232,6 +235,14 @@ const App = () => (
 
               {/* AI tools (all authenticated users) */}
               <Route path="/tools/english-correction" element={<ProtectedRoute><EnglishCorrection /></ProtectedRoute>} />
+
+              {/* Corrections (essay correction system) */}
+              <Route path="/student/corrections" element={<ProtectedRoute><StudentCorrections /></ProtectedRoute>} />
+              <Route path="/student/corrections/:id" element={<ProtectedRoute><CorrectionDetail /></ProtectedRoute>} />
+              <Route path="/teacher/corrections" element={<TeacherRoute><CorrectionsQueue role="teacher" /></TeacherRoute>} />
+              <Route path="/teacher/corrections/:id" element={<TeacherRoute><CorrectionDetail /></TeacherRoute>} />
+              <Route path="/admin/corrections" element={<AdminRoute><CorrectionsQueue role="admin" /></AdminRoute>} />
+              <Route path="/admin/corrections/:id" element={<AdminRoute><CorrectionDetail /></AdminRoute>} />
 
               {/* Teacher */}
               <Route path="/teacher" element={<TeacherRoute><TeacherDashboard /></TeacherRoute>} />

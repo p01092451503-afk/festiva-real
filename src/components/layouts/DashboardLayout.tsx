@@ -11,7 +11,7 @@ import {
   KeyRound,
   TrendingUp,
   MessageSquareText,
-  CalendarRange, Briefcase, FolderCheck, Award, ToggleRight,
+  CalendarRange, Briefcase, FolderCheck, Award, ToggleRight, PenLine,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -164,6 +164,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "student.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
     { navKey: "student.articles", label: t("nav.articles", "아티클"), href: "/articles", icon: Newspaper },
     { navKey: "student.assignments", label: t("nav.assignments"), href: "/dashboard/assignments", icon: ClipboardList, tourId: "nav-assignments" },
+    { navKey: "student.corrections", label: t("nav.corrections", "첨삭 받기"), href: "/student/corrections", icon: PenLine },
     { navKey: "student.achievements", label: t("nav.achievements"), href: "/dashboard/achievements", icon: Trophy, tourId: "nav-achievements" },
     ...(isEnabled("programs")
       ? [{ navKey: "student.programs", label: t("nav.programs", "프로그램 신청"), href: "/student/programs", icon: CalendarRange } as NavItem]
@@ -187,6 +188,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "teacher.dashboard", label: t("nav.dashboard"), href: "/teacher", icon: LayoutDashboard, tourId: "nav-dashboard" },
     { navKey: "teacher.courses", label: t("nav.courseManagement"), href: "/teacher/courses", icon: BookOpen, tourId: "nav-course-mgmt" },
     { navKey: "teacher.assignments", label: t("nav.assignmentManagement"), href: "/teacher/assignments", icon: ClipboardList, tourId: "nav-assignment-mgmt" },
+    { navKey: "teacher.corrections", label: t("nav.correctionsMgmt", "첨삭 관리"), href: "/teacher/corrections", icon: PenLine },
     { navKey: "teacher.students", label: t("nav.studentManagement"), href: "/teacher/students", icon: Users, tourId: "nav-student-mgmt" },
     { navKey: "teacher.notifications", label: t("nav.notificationManagement", "알림 관리"), href: "/teacher/notifications", icon: Bell },
     { navKey: "teacher.announcements", label: t("nav.announcementManagement", "공지사항 관리"), href: "/teacher/announcements", icon: Megaphone },
@@ -298,6 +300,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
         { navKey: "admin.questionBank", label: t("nav.questionBank", "문제은행"), href: "/admin/question-bank", icon: Library },
         { navKey: "admin.aiProgressPrediction", label: t("nav.aiProgressPrediction", "AI 진도 예측"), href: "/admin/ai-progress-prediction", icon: TrendingUp },
         { navKey: "admin.aiFeedback", label: t("nav.aiFeedback", "AI 과제 피드백"), href: "/admin/ai-feedback", icon: MessageSquareText },
+        { navKey: "admin.corrections", label: t("nav.correctionsMgmt", "첨삭 관리"), href: "/admin/corrections", icon: PenLine },
       ],
     },
     {
