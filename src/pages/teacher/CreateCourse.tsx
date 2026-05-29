@@ -1159,6 +1159,63 @@ const CreateCourse = () => {
           <PaidCourseSettings courseId={editCourseId} />
         )}
 
+        {/* 강사 소개 & 교재 정보 */}
+        <div className="stat-card space-y-6">
+          <div className="flex items-center gap-2 pb-3 border-b border-border">
+            <BookOpen className="h-5 w-5 text-foreground" />
+            <h2 className="text-lg font-semibold">강사 소개 & 교재 정보</h2>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">강사 소개</label>
+            <Textarea
+              value={instructorBio}
+              onChange={(e) => setInstructorBio(e.target.value)}
+              placeholder="강사 약력, 전문 분야, 경력 등을 입력하세요"
+              className="min-h-[100px]"
+            />
+          </div>
+
+          <div className="pt-2 border-t border-border space-y-4">
+            <h3 className="text-sm font-semibold">교재 정보</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">교재명</label>
+                <Input value={textbookTitle} onChange={(e) => setTextbookTitle(e.target.value)} placeholder="예: 노동법 총론" />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">저자</label>
+                <Input value={textbookAuthor} onChange={(e) => setTextbookAuthor(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">출판사</label>
+                <Input value={textbookPublisher} onChange={(e) => setTextbookPublisher(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">ISBN</label>
+                <Input value={textbookIsbn} onChange={(e) => setTextbookIsbn(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">교재 가격 (원)</label>
+                <Input type="number" value={textbookPrice} onChange={(e) => setTextbookPrice(e.target.value === "" ? "" : Number(e.target.value))} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs text-muted-foreground">구매 링크</label>
+                <Input value={textbookPurchaseUrl} onChange={(e) => setTextbookPurchaseUrl(e.target.value)} placeholder="https://" />
+              </div>
+              <div className="space-y-1.5 md:col-span-2">
+                <label className="text-xs text-muted-foreground">교재 표지 이미지 URL</label>
+                <Input value={textbookImageUrl} onChange={(e) => setTextbookImageUrl(e.target.value)} placeholder="https://" />
+              </div>
+              <div className="space-y-1.5 md:col-span-2">
+                <label className="text-xs text-muted-foreground">교재 설명</label>
+                <Textarea value={textbookDescription} onChange={(e) => setTextbookDescription(e.target.value)} placeholder="교재 구성, 챕터 등 학습자에게 안내할 내용" className="min-h-[80px]" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         {/* Submit */}
         <div className="flex items-center gap-3 pt-4 border-t border-border">
           <Button type="button" variant="outline" className="rounded-xl" onClick={() => navigate(-1)}>
