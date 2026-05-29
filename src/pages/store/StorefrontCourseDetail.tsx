@@ -311,11 +311,12 @@ const StorefrontCourseDetail = () => {
         </div>
       </div>
 
-      <main className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+      <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {/* Hero layout: left thumbnail + right sticky purchase card */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
-          {/* Left: Thumbnail + Info */}
-          <div className="lg:col-span-3 space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10 items-start">
+          {/* Left: Thumbnail + Info + Tabs */}
+          <div className="lg:col-span-3 space-y-6 min-w-0">
+
             {/* Thumbnail */}
             {(getCourseThumbnail(course.id, course.thumbnail_url) || course.thumbnail_url) ? (
               <div className="rounded-3xl overflow-hidden aspect-video shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.18)] ring-1 ring-border/40">
