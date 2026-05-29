@@ -544,7 +544,7 @@ const StorefrontCourseDetail = () => {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   className={cn(
-                    "px-5 py-3.5 text-sm font-medium transition-colors relative",
+                    "px-6 py-4 text-base font-semibold transition-colors relative",
                     activeTab === tab.key
                       ? "text-foreground"
                       : "text-muted-foreground hover:text-foreground"
