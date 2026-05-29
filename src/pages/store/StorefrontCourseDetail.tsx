@@ -588,6 +588,79 @@ const StorefrontCourseDetail = () => {
               </div>
             )}
 
+            {activeTab === "instructor" && (
+              <div className="space-y-6">
+                {instructor ? (
+                  <div className="flex items-start gap-5 p-6 rounded-2xl border border-border bg-accent/30">
+                    <Avatar className="h-20 w-20 shrink-0">
+                      <AvatarImage src={instructor.avatar_url || undefined} />
+                      <AvatarFallback className="bg-accent text-xl">
+                        {(instructor.full_name || "?")[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0 space-y-2">
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground">{instructor.full_name}</h3>
+                        {(instructor as any).position && (
+                          <p className="text-sm text-muted-foreground mt-0.5">
+                            {(instructor as any).position}
+                            {(instructor as any).department ? ` · ${(instructor as any).department}` : ""}
+                          </p>
+                        )}
+                      </div>
+                      {c.instructor_bio ? (
+                        <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap pt-2">{c.instructor_bio}</p>
+                      ) : (
+                        <p className="text-sm text-muted-foreground pt-2">등록된 강사 소개가 없습니다.</p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-sm py-12 text-center">강사 정보가 없습니다</p>
+                )}
+              </div>
+            )}
+
+            {activeTab === "textbook" && (
+              <div className="rounded-2xl border border-border overflow-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+                  <div className="bg-accent/40 p-6 flex items-center justify-center">
+                    {c.textbook_image_url ? (
+                      <img src={c.textbook_image_url} alt={c.textbook_title || "교재"} className="max-h-64 w-auto rounded-lg shadow-md" loading="lazy" />
+                    ) : (
+                      <BookOpen className="h-24 w-24 text-muted-foreground/30" strokeWidth={1} />
+                    )}
+                  </div>
+                  <div className="md:col-span-2 p-6 space-y-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">{c.textbook_title || "교재"}</h3>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-muted-foreground">
+                        {c.textbook_author && <span>저자 · {c.textbook_author}</span>}
+                        {c.textbook_publisher && <span>출판사 · {c.textbook_publisher}</span>}
+                        {c.textbook_isbn && <span>ISBN · {c.textbook_isbn}</span>}
+                      </div>
+                    </div>
+                    {c.textbook_price != null && (
+                      <p className="text-lg font-bold text-foreground">{formatPrice(c.textbook_price)}</p>
+                    )}
+                    {c.textbook_description && (
+                      <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{c.textbook_description}</p>
+                    )}
+                    {c.textbook_purchase_url && (
+                      <a
+                        href={c.textbook_purchase_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-xl bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity"
+                      >
+                        교재 구매하기 <Share2 className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === "reviews" && (
               <div className="space-y-4">
                 {reviews.length === 0 ? (
