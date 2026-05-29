@@ -655,39 +655,19 @@ export default function AssessmentManager({ courseId }: { courseId: string }) {
             <DialogTitle className="text-base">{assessment ? t("assessment.editSettings") : t("assessment.create")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* KO Title */}
+            {/* Title */}
             <div className="space-y-1">
-              <Label className="text-xs">{t("assessment.assessmentTitle")} (KO)</Label>
+              <Label className="text-xs">{t("assessment.assessmentTitle")}</Label>
               <Input className="h-9 text-sm" value={assessmentForm.title} onChange={e => setAssessmentForm(f => ({ ...f, title: e.target.value }))} />
             </div>
-            {/* KO Description */}
+            {/* Description */}
             <div className="space-y-1">
-              <Label className="text-xs">{t("assessment.description")} (KO)</Label>
+              <Label className="text-xs">{t("assessment.description")}</Label>
               <Textarea className="text-sm" value={assessmentForm.description} onChange={e => setAssessmentForm(f => ({ ...f, description: e.target.value }))} rows={2} />
             </div>
 
             <Separator />
 
-            {/* EN Section */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-muted-foreground">{t("course.enOptional", "영어 버전 (선택)")}</p>
-                <Button type="button" variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleTranslateAssessment} disabled={translatingAssessment || (!assessmentForm.title && !assessmentForm.description)}>
-                  {translatingAssessment ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
-                  {t("course.autoTranslate", "자동 번역")}
-                </Button>
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.assessmentTitle")} (EN)</Label>
-                <Input className="h-9 text-sm" value={enTitle} onChange={e => { setEnTitle(e.target.value); setEnTitleManual(true); }} />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.description")} (EN)</Label>
-                <Textarea className="text-sm" value={enDescription} onChange={e => { setEnDescription(e.target.value); setEnDescManual(true); }} rows={2} />
-              </div>
-            </div>
-
-            <Separator />
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
