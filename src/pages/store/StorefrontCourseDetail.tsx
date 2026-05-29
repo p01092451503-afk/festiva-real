@@ -535,7 +535,7 @@ const StorefrontCourseDetail = () => {
 
 
         {/* Tabs section — full width below */}
-        <div className="mt-12">
+        <div className="mt-6">
           {/* Tab navigation — sticky */}
           <div className="sticky top-0 z-30 bg-background border-b border-border -mx-4 px-4">
             <div className="flex gap-0">
