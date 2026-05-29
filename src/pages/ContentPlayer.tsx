@@ -907,19 +907,6 @@ const ContentPlayer = () => {
                     </Button>
                   ) : <div />}
                 </div>
-                <div>
-                  {nextContent ? (() => {
-                    const isSeq = (course as any)?.is_sequential;
-                    const currentDone = currentProgress?.completed;
-                    const locked = isSeq && !currentDone && routePrefix === "/student";
-                    return (
-                      <Button variant="outline" className="rounded-xl gap-2" onClick={() => !locked && navigate(`${routePrefix}/courses/${courseId}/content/${nextContent.id}`)} disabled={locked}>
-                        <span className="text-sm">{locked ? t("course.sequentialLockedShort") : t("common.next")}</span>
-                        {locked ? <LockIcon className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                      </Button>
-                    );
-                  })() : <div />}
-                </div>
               </div>
 
               {/* Notes & Up Next — fills empty space below the player */}
