@@ -1174,20 +1174,27 @@ const ContentDialog = ({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label className="text-xs">{t("course.contentType")}</Label>
-              <Select value={form.content_type} onValueChange={(v) => setForm(f => ({ ...f, content_type: v }))}>
-                <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+              <Label className="text-xs">유형</Label>
+              <Select
+                value={form.video_provider || "youtube"}
+                onValueChange={(v) => setForm(f => ({
+                  ...f,
+                  video_provider: v,
+                  content_type: "video",
+                  // provider 전환 시 잔여 URL 초기화
+                  video_url: v !== f.video_provider ? "" : f.video_url,
+                }))}
+              >
+                <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="선택" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="video">{t("course.video")}</SelectItem>
-                  <SelectItem value="document">{t("course.document")}</SelectItem>
-                  <SelectItem value="quiz">{t("course.quiz")}</SelectItem>
-                  <SelectItem value="assignment">{t("course.assignment")}</SelectItem>
-                  <SelectItem value="live">{t("course.live")}</SelectItem>
+                  <SelectItem value="youtube">유튜브</SelectItem>
+                  <SelectItem value="bunny">동영상 (CDN)</SelectItem>
+                  <SelectItem value="kollus">콜러스 (Kollus)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">{t("course.playbackTime")} (분 / 초)</Label>
+              <Label className="text-xs">{t("course.playbackTime")} (분 / 초){form.video_provider === "bunny" && <span className="ml-1 text-[10px] text-muted-foreground">· 자동</span>}</Label>
               <div className="flex items-center gap-1.5">
                 <Input
                   className="h-9 text-sm w-16"
