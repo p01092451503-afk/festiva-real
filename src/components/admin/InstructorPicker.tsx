@@ -180,7 +180,7 @@ export default function InstructorPicker({ value, onChange }: Props) {
   );
 }
 
-function InstructorEditDialog({
+export function InstructorEditDialog({
   instructorId,
   baseProfile,
   existing,
