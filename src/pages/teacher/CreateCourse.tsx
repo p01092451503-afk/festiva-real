@@ -33,6 +33,7 @@ import B2CSaleSettings from "@/components/admin/B2CSaleSettings";
 import PaidCourseSettings from "@/components/admin/PaidCourseSettings";
 import PackagePicker from "@/components/admin/PackagePicker";
 import CourseIntroEditor from "@/components/admin/CourseIntroEditor";
+import InstructorPicker from "@/components/admin/InstructorPicker";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import BunnyUploader from "@/components/admin/BunnyUploader";
 import { BulkAddDialog, BulkEditBar, type NewContentDraft } from "@/components/admin/BulkContentTools";
@@ -128,6 +129,7 @@ const CreateCourse = () => {
 
   // 강사 소개 & 교재 정보
   const [instructorBio, setInstructorBio] = useState("");
+  const [instructorId, setInstructorId] = useState<string | null>(null);
   const [textbookTitle, setTextbookTitle] = useState("");
   const [textbookAuthor, setTextbookAuthor] = useState("");
   const [textbookPublisher, setTextbookPublisher] = useState("");
@@ -175,6 +177,7 @@ const CreateCourse = () => {
       setB2cSalePrice(course.sale_price ?? null);
       setB2cSaleEndsAt(course.sale_ends_at || "");
       setInstructorBio((course as any).instructor_bio || "");
+      setInstructorId((course as any).instructor_id || null);
       setTextbookTitle((course as any).textbook_title || "");
       setTextbookAuthor((course as any).textbook_author || "");
       setTextbookPublisher((course as any).textbook_publisher || "");
@@ -582,6 +585,7 @@ const CreateCourse = () => {
           sale_price: b2cSalePrice,
           sale_ends_at: b2cSaleEndsAt || null,
           instructor_bio: instructorBio || null,
+          instructor_id: instructorId || null,
           textbook_title: textbookTitle || null,
           textbook_author: textbookAuthor || null,
           textbook_publisher: textbookPublisher || null,
@@ -677,7 +681,7 @@ const CreateCourse = () => {
           title,
           description: description || null,
           category_id: categoryId || null,
-          instructor_id: user!.id,
+          instructor_id: instructorId || user!.id,
           difficulty_level: difficultyLevel,
           estimated_duration_hours: estimatedHours ? parseInt(estimatedHours) : null,
           max_students: maxStudents ? parseInt(maxStudents) : null,
@@ -1182,12 +1186,14 @@ const CreateCourse = () => {
             <h2 className="text-lg font-semibold">강사 소개 & 교재 정보</h2>
           </div>
 
+          <InstructorPicker value={instructorId} onChange={setInstructorId} />
+
           <div className="space-y-2">
-            <label className="text-sm font-medium">강사 소개</label>
+            <label className="text-sm font-medium">강의 소개용 강사 약력 (강의 페이지에 표시)</label>
             <Textarea
               value={instructorBio}
               onChange={(e) => setInstructorBio(e.target.value)}
-              placeholder="강사 약력, 전문 분야, 경력 등을 입력하세요"
+              placeholder="이 강의에 한정된 강사 소개를 입력하세요. 비워두면 강사 프로필의 약력이 사용됩니다."
               className="min-h-[100px]"
             />
           </div>

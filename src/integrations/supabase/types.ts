@@ -3441,6 +3441,48 @@ export type Database = {
         }
         Relationships: []
       }
+      instructor_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          expertise: string[]
+          headline: string | null
+          photo_url: string | null
+          public_email: string | null
+          social: Json
+          updated_at: string
+          user_id: string
+          website_url: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          expertise?: string[]
+          headline?: string | null
+          photo_url?: string | null
+          public_email?: string | null
+          social?: Json
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          expertise?: string[]
+          headline?: string | null
+          photo_url?: string | null
+          public_email?: string | null
+          social?: Json
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       learning_tracks: {
         Row: {
           created_at: string
