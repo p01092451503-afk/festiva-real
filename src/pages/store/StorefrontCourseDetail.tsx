@@ -375,11 +375,7 @@ const StorefrontCourseDetail = () => {
               </div>
             </div>
 
-            {course.subtitle && (
-              <p className="text-base text-foreground/80 leading-relaxed border-l-2 border-foreground/80 pl-4">
-                {course.subtitle}
-              </p>
-            )}
+
 
 
             {/* Reviews below thumbnail */}
