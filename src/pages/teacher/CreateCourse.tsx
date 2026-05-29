@@ -125,6 +125,17 @@ const CreateCourse = () => {
   ]);
   const [packageItems, setPackageItems] = useState<string[]>([]);
 
+  // 강사 소개 & 교재 정보
+  const [instructorBio, setInstructorBio] = useState("");
+  const [textbookTitle, setTextbookTitle] = useState("");
+  const [textbookAuthor, setTextbookAuthor] = useState("");
+  const [textbookPublisher, setTextbookPublisher] = useState("");
+  const [textbookIsbn, setTextbookIsbn] = useState("");
+  const [textbookPrice, setTextbookPrice] = useState<number | "">("");
+  const [textbookImageUrl, setTextbookImageUrl] = useState("");
+  const [textbookDescription, setTextbookDescription] = useState("");
+  const [textbookPurchaseUrl, setTextbookPurchaseUrl] = useState("");
+
   // Content items
   const [contents, setContents] = useState<ContentItem[]>([]);
   const [draftLoaded, setDraftLoaded] = useState(false);
