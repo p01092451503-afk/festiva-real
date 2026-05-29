@@ -47,6 +47,8 @@ interface NavItem {
   showNew?: boolean;
   tourId?: string;
   navKey?: string;
+  children?: NavItem[];
+  groupId?: string;
 }
 
 interface NavGroup {
