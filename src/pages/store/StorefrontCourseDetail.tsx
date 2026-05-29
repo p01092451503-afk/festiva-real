@@ -588,6 +588,11 @@ const StorefrontCourseDetail = () => {
                     </div>
                   );
                 })}
+                {!course.description && detailBlocks.length === 0 && (
+                  <div className="border border-dashed border-border rounded-xl p-10 text-center text-sm text-muted-foreground">
+                    아직 등록된 소개 내용이 없습니다.
+                  </div>
+                )}
               </div>
             )}
 
