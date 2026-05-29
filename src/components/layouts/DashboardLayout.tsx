@@ -180,9 +180,18 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     ...(isEnabled("surveys_ops")
       ? [{ navKey: "student.surveys", label: t("nav.surveys", "만족도 조사"), href: "/student/surveys", icon: ClipboardList } as NavItem]
       : []),
-    { navKey: "student.announcements", label: t("nav.announcements", "공지사항"), href: "/student/announcements", icon: Megaphone, showNew: hasNewAnnouncement },
-    { navKey: "student.board", label: t("nav.board", "게시판"), href: "/student/board", icon: FileText, showNew: hasNewBoardPost },
-    { navKey: "student.community", label: t("nav.community", "커뮤니티"), href: "/student/community", icon: Users2 },
+    {
+      navKey: "student.communication",
+      label: t("nav.groupCommunication", "소통"),
+      href: "#group-student-communication",
+      icon: Megaphone,
+      showNew: hasNewAnnouncement || hasNewBoardPost,
+      children: [
+        { navKey: "student.announcements", label: t("nav.announcements", "공지사항"), href: "/student/announcements", icon: Megaphone, showNew: hasNewAnnouncement },
+        { navKey: "student.board", label: t("nav.board", "게시판"), href: "/student/board", icon: FileText, showNew: hasNewBoardPost },
+        { navKey: "student.community", label: t("nav.community", "커뮤니티"), href: "/student/community", icon: Users2 },
+      ],
+    },
     { navKey: "student.mypage", label: t("nav.myPage"), href: "/mypage", icon: UserCircle },
   ].filter((i) => !isHidden(i.navKey));
 
