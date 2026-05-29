@@ -1313,23 +1313,26 @@ const ContentDialog = ({
             </div>
           ) : (
             <div className="space-y-1">
-              <Label className="text-xs">{t("course.contentUrl")}</Label>
-              <Input className="h-9 text-sm" value={form.video_url} onChange={(e) => setForm(f => ({ ...f, video_url: e.target.value }))} placeholder="https://..." />
+              <Label className="text-xs">
+                {form.video_provider === "kollus" ? "Kollus 미디어 콘텐츠 키" : "YouTube 영상 URL"}
+              </Label>
+              <Input
+                className="h-9 text-sm"
+                value={form.video_url}
+                onChange={(e) => setForm(f => ({ ...f, video_url: e.target.value }))}
+                placeholder={
+                  form.video_provider === "kollus"
+                    ? "Kollus 미디어 콘텐츠 키 입력"
+                    : "https://www.youtube.com/watch?v=... 또는 https://youtu.be/..."
+                }
+              />
+              <p className="text-[11px] text-muted-foreground">
+                {form.video_provider === "kollus"
+                  ? "Kollus 관리자 → 미디어 → 콘텐츠 키를 그대로 입력하세요."
+                  : "YouTube 영상 URL을 그대로 붙여넣으세요."}
+              </p>
             </div>
           )}
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.provider")}</Label>
-            <Select value={form.video_provider} onValueChange={(v) => setForm(f => ({ ...f, video_provider: v }))}>
-              <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={t("course.select")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="youtube">{t("course.youtube")}</SelectItem>
-                <SelectItem value="vimeo">{t("course.vimeo")}</SelectItem>
-                <SelectItem value="bunny">Global CDN</SelectItem>
-                <SelectItem value="custom">{t("course.flipLearningMango")}</SelectItem>
-                <SelectItem value="upload">{t("course.cdnUpload")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="space-y-1">
             <Label className="text-xs">{t("course.description")}</Label>
             <Textarea className="text-sm" value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} rows={2} />
