@@ -1471,13 +1471,8 @@ const CourseEditDialog = ({
       <DialogHeader>
         <DialogTitle className="text-base">{t("course.courseEditTitle")}</DialogTitle>
       </DialogHeader>
-      <Tabs defaultValue="ko" className="w-full">
-        <TabsList className="w-full">
-          <TabsTrigger value="ko" className="flex-1">{t("course.koTab")}</TabsTrigger>
-          <TabsTrigger value="en" className="flex-1">{t("course.enTab")}</TabsTrigger>
-        </TabsList>
+      <div className="space-y-3 pt-2">
 
-        <TabsContent value="ko" className="space-y-3 pt-2">
           {/* Thumbnail */}
           <div className="space-y-1">
             <Label className="text-xs">{t("createCourse.thumbnailLabel") || "썸네일"}</Label>
