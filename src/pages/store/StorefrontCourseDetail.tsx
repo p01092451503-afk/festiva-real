@@ -282,9 +282,13 @@ const StorefrontCourseDetail = () => {
     );
   }
 
+  const c: any = course;
+  const hasTextbook = !!(c.textbook_title || c.textbook_author || c.textbook_image_url || c.textbook_description);
   const tabItems = [
     { key: "intro" as const, label: "소개" },
     { key: "curriculum" as const, label: `커리큘럼 (${contents.length})` },
+    { key: "instructor" as const, label: "강사 소개" },
+    ...(hasTextbook ? [{ key: "textbook" as const, label: "교재 정보" }] : []),
     { key: "reviews" as const, label: `수강 후기 (${reviews.length})` },
   ];
 
