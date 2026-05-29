@@ -602,6 +602,81 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
               })
             ) : (
               navItems.map((item) => {
+              // Inline collapsible group (used by student/teacher communication group)
+              if (item.children && item.children.length > 0) {
+                const groupId = `inline-${item.navKey || item.href}`;
+                const childActive = item.children.some((c) => c.href === location.pathname);
+                const isGroupOpen = (openGroups[groupId] ?? false) || childActive;
+                if (collapsed) {
+                  // In collapsed mode, render children as individual tooltip icons
+                  return (
+                    <div key={groupId} className="space-y-1">
+                      {item.children.map((child) => {
+                        const isActive = location.pathname === child.href;
+                        return (
+                          <Tooltip key={child.href}>
+                            <TooltipTrigger asChild>
+                              <Link to={child.href} onClick={() => setSidebarOpen(false)}
+                                className={`nav-item ${isActive ? "nav-item-active" : ""} lg:justify-center lg:px-0 lg:gap-0`}
+                                aria-current={isActive ? "page" : undefined}
+                                aria-label={child.label}>
+                                <child.icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+                                {child.showNew && (
+                                  <span className="hidden lg:block absolute -mt-4 ml-4 h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" aria-hidden="true" />
+                                )}
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="right" className="hidden lg:block">{child.label}</TooltipContent>
+                          </Tooltip>
+                        );
+                      })}
+                    </div>
+                  );
+                }
+                return (
+                  <div key={groupId}>
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(groupId)}
+                      className={`nav-item w-full ${childActive ? "text-foreground" : ""}`}
+                      aria-expanded={isGroupOpen}
+                    >
+                      <item.icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+                      <span className="flex-1 text-left">{item.label}</span>
+                      {item.showNew && (
+                        <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold leading-none rounded bg-destructive text-destructive-foreground animate-pulse">
+                          NEW
+                        </span>
+                      )}
+                      <ChevronDown
+                        className={`h-3.5 w-3.5 shrink-0 text-muted-foreground/70 transition-transform ${isGroupOpen ? "rotate-0" : "-rotate-90"}`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {isGroupOpen && (
+                      <div className="mt-1 space-y-0.5 pl-1.5 border-l border-border/60 ml-3">
+                        {item.children.map((child) => {
+                          const isActive = location.pathname === child.href;
+                          return (
+                            <Link key={child.href} to={child.href} onClick={() => setSidebarOpen(false)}
+                              className={`nav-item ${isActive ? "nav-item-active" : ""}`}
+                              aria-current={isActive ? "page" : undefined}>
+                              <child.icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+                              <span>{child.label}</span>
+                              {child.showNew && (
+                                <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold leading-none rounded bg-destructive text-destructive-foreground animate-pulse">
+                                  NEW
+                                </span>
+                              )}
+                              {isActive && <ChevronRight className="h-3.5 w-3.5 ml-auto" aria-hidden="true" />}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
               const isActive = location.pathname === item.href;
               const linkEl = (
                 <Link key={item.href} to={item.href} onClick={() => setSidebarOpen(false)}
