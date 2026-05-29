@@ -26,7 +26,7 @@ const StorefrontCourseDetail = () => {
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const [curriculumExpanded, setCurriculumExpanded] = useState(true);
-  const [activeTab, setActiveTab] = useState<"intro" | "instructor" | "curriculum" | "reviews" | "textbook">("intro");
+  const [activeTab, setActiveTab] = useState<"intro" | "instructor" | "curriculum" | "reviews" | "textbook" | "refund">("intro");
 
   // Course
   const { data: course, isLoading } = useQuery({
@@ -290,7 +290,9 @@ const StorefrontCourseDetail = () => {
     { key: "instructor" as const, label: "강사 소개" },
     ...(hasTextbook ? [{ key: "textbook" as const, label: "교재 정보" }] : []),
     { key: "reviews" as const, label: `수강 후기 (${reviews.length})` },
+    { key: "refund" as const, label: "환불·배송 안내" },
   ];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -312,8 +314,33 @@ const StorefrontCourseDetail = () => {
       </div>
 
       <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
+        {/* Mega title — full width above hero */}
+        <header className="mb-6 sm:mb-8 max-w-5xl">
+          <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
+            {(course as any).categories?.name && (
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-foreground text-background font-semibold tracking-wide">
+                {(course as any).categories.name}
+              </span>
+            )}
+            {instructor?.full_name && (
+              <span className="text-primary font-semibold">{instructor.full_name}</span>
+            )}
+            <span className="text-muted-foreground/40">|</span>
+            <span className="text-muted-foreground">정규 교육과정</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-foreground leading-[1.2] tracking-tight">
+            {getCourseTitle(course.id, course.title)}
+          </h1>
+          {course.subtitle && (
+            <p className="mt-3 text-base sm:text-lg text-muted-foreground leading-relaxed">
+              {course.subtitle}
+            </p>
+          )}
+        </header>
+
         {/* Hero layout: left thumbnail + right sticky purchase card */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10 items-start">
+
           {/* Left: Thumbnail + Info + Tabs */}
           <div className="lg:col-span-3 space-y-6 min-w-0">
 
@@ -348,11 +375,7 @@ const StorefrontCourseDetail = () => {
               </div>
             </div>
 
-            {course.subtitle && (
-              <p className="text-base text-foreground/80 leading-relaxed border-l-2 border-foreground/80 pl-4">
-                {course.subtitle}
-              </p>
-            )}
+
 
 
             {/* Reviews below thumbnail */}
@@ -398,19 +421,18 @@ const StorefrontCourseDetail = () => {
           <div className="lg:col-span-2">
             <div className="lg:sticky lg:top-8">
               <div className="rounded-2xl border border-border/70 bg-card p-6 space-y-5 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.12)]">
-                {/* Title & badges */}
+                {/* Compact title repeat + meta */}
                 <div className="space-y-3">
-                  {(course as any).categories?.name && (
-                    <Badge variant="secondary" className="text-[11px] font-medium tracking-wide rounded-full px-2.5 py-0.5">
-                      {(course as any).categories.name}
-                    </Badge>
-                  )}
-                  <h1 className="text-2xl sm:text-[26px] font-bold text-foreground leading-tight tracking-tight">
+                  <div className="flex items-center gap-1.5 text-xs">
+                    {instructor?.full_name && (
+                      <span className="text-primary font-semibold">{instructor.full_name}</span>
+                    )}
+                    <span className="text-muted-foreground/40">|</span>
+                    <span className="text-muted-foreground">정규 교육과정</span>
+                  </div>
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground leading-snug tracking-tight line-clamp-2">
                     {getCourseTitle(course.id, course.title)}
-                  </h1>
-                  {course.subtitle && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">{course.subtitle}</p>
-                  )}
+                  </h2>
 
                   {/* Rating + Share */}
                   <div className="flex items-center justify-between pt-1">
@@ -437,8 +459,18 @@ const StorefrontCourseDetail = () => {
 
                 <Separator />
 
+                {/* Course structure row — like reference '차시 | 총 8강 > 26차시' */}
+                <div className="flex items-center justify-between py-1 text-sm">
+                  <span className="text-muted-foreground">차시</span>
+                  <span className="font-semibold text-foreground tabular-nums">
+                    총 {contents.length}차시 · {formatDurationMinutes(totalDuration)}
+                  </span>
+                </div>
+
+                <Separator />
+
                 {/* Price section */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {isFree ? (
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-extrabold text-green-600 tracking-tight">무료</span>
@@ -455,79 +487,68 @@ const StorefrontCourseDetail = () => {
                         </div>
                       )}
                       <p className="text-3xl font-extrabold text-foreground tracking-tight tabular-nums">{formatPrice(displayPrice)}</p>
-                    </>
-                  )}
-                </div>
-
-                {/* Course meta */}
-                <div className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-2xl bg-muted/40 p-4 text-sm">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span className="text-foreground/80 truncate">총 {formatDurationMinutes(totalDuration)}</span>
-                  </div>
-                  <div className="flex items-center gap-2 min-w-0">
-                    <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span className="text-foreground/80 truncate">{contents.length}개 차시</span>
-                  </div>
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Users className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span className="text-foreground/80 truncate">{course.enrolled_count.toLocaleString()}명 수강</span>
-                  </div>
-                  {course.difficulty_level && (
-                    <div className="flex items-center gap-2 min-w-0">
-                      <BarChart3 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span className="text-foreground/80 truncate">{course.difficulty_level}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Instructor */}
-                {instructor && (
-                  <div className="flex items-center gap-3 pt-1">
-                    <Avatar className="h-11 w-11 ring-2 ring-border/50">
-                      <AvatarImage src={instructor.avatar_url || undefined} />
-                      <AvatarFallback className="bg-accent text-sm">
-                        {(instructor.full_name || "?")[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Instructor</p>
-                      <p className="text-sm font-semibold text-foreground truncate">{instructor.full_name}</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Action buttons */}
-                <div className="space-y-2.5 pt-1">
-                  {isEnrolled ? (
-                    <Button className="w-full h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
-                      <Play className="h-4 w-4 mr-2" /> 학습하기
-                    </Button>
-                  ) : (
-                    <>
-                      <Button className="w-full h-12 text-base rounded-xl font-semibold shadow-sm" onClick={handleBuyNow}>
-                        {isFree ? "무료로 시작하기" : "바로 구매"}
-                      </Button>
-                      {!isFree && (
-                        <Button variant="outline" className="w-full h-12 rounded-xl font-medium" onClick={handleAddToCart} disabled={isInCart || addToCartMutation.isPending}>
-                          <ShoppingBag className="h-4 w-4 mr-2" />
-                          {isInCart ? "장바구니에 있음" : "장바구니 담기"}
-                        </Button>
+                      {displayPrice >= 12000 && (
+                        <p className="text-xs text-muted-foreground">
+                          12개월 무이자 할부시 <span className="font-bold text-foreground tabular-nums">월 {formatPrice(Math.round(displayPrice / 12 / 100) * 100)}</span>
+                        </p>
                       )}
                     </>
                   )}
-
-                  <button
-                    onClick={() => {
-                      if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
-                      wishlistMutation.mutate();
-                    }}
-                    className="w-full inline-flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-                  >
-                    <Heart className={cn("h-4 w-4", isInWishlist ? "fill-destructive text-destructive" : "")} />
-                    {isInWishlist ? "찜 해제" : "찜하기"}
-                  </button>
                 </div>
+
+
+                {/* Course meta */}
+                {/* Meta grid — compact */}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 rounded-xl bg-muted/40 p-3.5 text-[13px]">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="text-foreground/80 truncate tabular-nums">{course.enrolled_count.toLocaleString()}명 수강</span>
+                  </div>
+                  {course.difficulty_level && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <BarChart3 className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span className="text-foreground/80 truncate capitalize">{course.difficulty_level}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Action row — icon buttons + primary CTA (reference style) */}
+                <div className="flex items-stretch gap-2 pt-1">
+                  {!isEnrolled && (
+                    <>
+                      <button
+                        onClick={() => {
+                          if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
+                          wishlistMutation.mutate();
+                        }}
+                        aria-label={isInWishlist ? "찜 해제" : "찜하기"}
+                        className="h-12 w-12 shrink-0 inline-flex items-center justify-center rounded-xl border border-border hover:bg-accent transition-colors"
+                      >
+                        <Heart className={cn("h-5 w-5", isInWishlist ? "fill-destructive text-destructive" : "text-muted-foreground")} />
+                      </button>
+                      {!isFree && (
+                        <button
+                          onClick={handleAddToCart}
+                          disabled={isInCart || addToCartMutation.isPending}
+                          aria-label={isInCart ? "장바구니에 있음" : "장바구니 담기"}
+                          className="h-12 w-12 shrink-0 inline-flex items-center justify-center rounded-xl border border-border hover:bg-accent transition-colors disabled:opacity-50"
+                        >
+                          <ShoppingBag className={cn("h-5 w-5", isInCart ? "text-foreground" : "text-muted-foreground")} />
+                        </button>
+                      )}
+                    </>
+                  )}
+                  {isEnrolled ? (
+                    <Button className="flex-1 h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
+                      <Play className="h-4 w-4 mr-2" /> 학습하기
+                    </Button>
+                  ) : (
+                    <Button className="flex-1 h-12 text-base rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
+                      {isFree ? "무료로 시작하기" : "바로구매"}
+                    </Button>
+                  )}
+                </div>
+
               </div>
             </div>
           </div>
@@ -778,6 +799,37 @@ const StorefrontCourseDetail = () => {
                 )}
               </div>
             )}
+
+            {activeTab === "refund" && (
+              <div className="space-y-6 text-sm leading-relaxed">
+                <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
+                  <h3 className="text-base font-bold text-foreground">수강 안내</h3>
+                  <ul className="space-y-2 text-foreground/80">
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>결제 완료 후 즉시 수강이 가능합니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>수강 기간 내 PC·모바일에서 무제한 반복 학습이 가능합니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>강의 자료(PDF·교재 등)는 마이페이지에서 다운로드할 수 있습니다.</span></li>
+                  </ul>
+                </section>
+                <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
+                  <h3 className="text-base font-bold text-foreground">환불 정책</h3>
+                  <ul className="space-y-2 text-foreground/80">
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>학습 이력이 없는 경우, 결제일로부터 7일 이내 100% 환불.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>7일 경과 또는 학습 이력 발생 시, 잔여 차시 비율에 따라 부분 환불.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>전체 차시의 50% 이상 수강 시 환불이 제한될 수 있습니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>환불 요청은 마이페이지 &gt; 결제 내역에서 신청 가능합니다.</span></li>
+                  </ul>
+                </section>
+                <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
+                  <h3 className="text-base font-bold text-foreground">교재·배송 안내</h3>
+                  <ul className="space-y-2 text-foreground/80">
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>교재 포함 옵션 구매 시, 결제일 기준 영업일 1~3일 내 발송됩니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>도서·산간 지역은 1~2일 추가 소요될 수 있습니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>교재 개봉·필기 후에는 환불이 제한됩니다.</span></li>
+                  </ul>
+                </section>
+              </div>
+            )}
+
           </div>
         </div>
       </main>
