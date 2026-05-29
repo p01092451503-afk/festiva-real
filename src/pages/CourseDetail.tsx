@@ -1605,8 +1605,8 @@ const CourseEditDialog = ({
               />
             </div>
           </div>
-        </TabsContent>
-      </Tabs>
+      </div>
+
 
       <DialogFooter>
         <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>{t("common.cancel")}</Button>
