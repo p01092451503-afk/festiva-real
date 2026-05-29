@@ -88,6 +88,7 @@ const AdminBoard = lazy(() => import("./pages/admin/AdminBoard"));
 const AdminCommunity = lazy(() => import("./pages/admin/AdminCommunity"));
 const AdminSurveys = lazy(() => import("./pages/admin/AdminSurveys"));
 const AdminVideos = lazy(() => import("./pages/admin/AdminVideos"));
+const AdminInstructors = lazy(() => import("./pages/admin/AdminInstructors"));
 const AdminEnrollments = lazy(() => import("./pages/admin/AdminEnrollments"));
 const AdminBanners = lazy(() => import("./pages/admin/AdminBanners"));
 const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
