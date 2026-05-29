@@ -1040,6 +1040,11 @@ const CreateCourse = () => {
           </div>
         )}
 
+        {/* 유료 강의 판매 상세 설정 — 편집 모드 전용 */}
+        {isAdmin && isEditMode && editCourseId && (
+          <PaidCourseSettings courseId={editCourseId} />
+        )}
+
         {/* Submit */}
         <div className="flex items-center gap-3 pt-4 border-t border-border">
           <Button type="button" variant="outline" className="rounded-xl" onClick={() => navigate(-1)}>
