@@ -397,7 +397,7 @@ const StorefrontCourseDetail = () => {
           {/* Right: Sticky purchase card */}
           <div className="lg:col-span-2">
             <div className="lg:sticky lg:top-8">
-              <div className="rounded-3xl border border-border/70 bg-card p-7 space-y-6 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.12)]">
+              <div className="rounded-2xl border border-border/70 bg-card p-6 space-y-5 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.12)]">
                 {/* Title & badges */}
                 <div className="space-y-3">
                   {(course as any).categories?.name && (
