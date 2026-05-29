@@ -27,6 +27,14 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
 
   const lockUnlockedShapes = useCallback((editor: Editor) => {
+    const isActivelyCreating =
+      editor.inputs.getIsPointing() ||
+      editor.inputs.getIsDragging() ||
+      editor.inputs.getIsPinching() ||
+      !!editor.getEditingShapeId();
+
+    if (isActivelyCreating) return;
+
     const unlockedShapes = editor.getCurrentPageShapes().filter((shape) => !shape.isLocked);
     if (unlockedShapes.length === 0) return;
 
@@ -69,9 +77,11 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       if (readOnly) {
         editor.updateInstanceState({ isReadonly: true });
       } else {
-        editor.sideEffects.registerOperationCompleteHandler(() => {
+        const unlockHandler = editor.sideEffects.registerOperationCompleteHandler(() => {
           lockUnlockedShapes(editor);
         });
+        editor.disposables.add(unlockHandler);
+
         // Default to draw tool so mouse/pen/touch immediately writes
         try {
           editor.setCurrentTool("draw");
