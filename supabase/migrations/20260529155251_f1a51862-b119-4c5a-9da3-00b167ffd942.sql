@@ -1,0 +1,1 @@
+DELETE FROM public.correction_requests WHERE id IN ('8f4fa5f3-c654-46eb-a399-3f2bf2895940','f6de559f-665d-4d4d-ac6e-22a91e592620');
