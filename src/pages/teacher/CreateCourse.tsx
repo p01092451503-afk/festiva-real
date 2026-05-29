@@ -173,6 +173,15 @@ const CreateCourse = () => {
       setB2cPrice(course.price || 0);
       setB2cSalePrice(course.sale_price ?? null);
       setB2cSaleEndsAt(course.sale_ends_at || "");
+      setInstructorBio((course as any).instructor_bio || "");
+      setTextbookTitle((course as any).textbook_title || "");
+      setTextbookAuthor((course as any).textbook_author || "");
+      setTextbookPublisher((course as any).textbook_publisher || "");
+      setTextbookIsbn((course as any).textbook_isbn || "");
+      setTextbookPrice((course as any).textbook_price ?? "");
+      setTextbookImageUrl((course as any).textbook_image_url || "");
+      setTextbookDescription((course as any).textbook_description || "");
+      setTextbookPurchaseUrl((course as any).textbook_purchase_url || "");
       if (course.thumbnail_url) {
         setThumbnailPreview(course.thumbnail_url);
         setExistingThumbnailUrl(course.thumbnail_url);
