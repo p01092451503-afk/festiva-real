@@ -319,14 +319,41 @@ const StorefrontCourseDetail = () => {
 
             {/* Thumbnail */}
             {(getCourseThumbnail(course.id, course.thumbnail_url) || course.thumbnail_url) ? (
-              <div className="rounded-3xl overflow-hidden aspect-video shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.18)] ring-1 ring-border/40">
+              <div className="rounded-2xl overflow-hidden aspect-video shadow-[0_16px_48px_-20px_hsl(var(--foreground)/0.18)] ring-1 ring-border/40">
                 <img src={getCourseThumbnail(course.id, course.thumbnail_url)!} alt={getCourseTitle(course.id, course.title)} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="rounded-3xl aspect-video bg-gradient-to-br from-accent via-muted to-accent/50 flex items-center justify-center ring-1 ring-border/40 shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.12)]">
-                <BookOpen className="h-20 w-20 text-muted-foreground/25" strokeWidth={1} />
+              <div className="rounded-2xl aspect-video bg-gradient-to-br from-accent via-muted to-accent/50 flex items-center justify-center ring-1 ring-border/40 shadow-[0_16px_48px_-20px_hsl(var(--foreground)/0.12)]">
+                <BookOpen className="h-16 w-16 text-muted-foreground/25" strokeWidth={1} />
               </div>
             )}
+
+            {/* Quick highlights — fills space under thumbnail */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Duration</span>
+                <span className="text-sm font-semibold text-foreground">{formatDurationMinutes(totalDuration)}</span>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Lessons</span>
+                <span className="text-sm font-semibold text-foreground">{contents.length}개 차시</span>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Students</span>
+                <span className="text-sm font-semibold text-foreground">{course.enrolled_count.toLocaleString()}명</span>
+              </div>
+              <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Level</span>
+                <span className="text-sm font-semibold text-foreground capitalize">{course.difficulty_level || "All"}</span>
+              </div>
+            </div>
+
+            {course.subtitle && (
+              <p className="text-base text-foreground/80 leading-relaxed border-l-2 border-foreground/80 pl-4">
+                {course.subtitle}
+              </p>
+            )}
+
 
             {/* Reviews below thumbnail */}
             {reviews.length > 0 && (
