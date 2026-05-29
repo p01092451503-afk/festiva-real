@@ -898,17 +898,6 @@ const ContentPlayer = () => {
                 </div>
               </div>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div>
-                  {prevContent ? (
-                    <Button variant="outline" className="rounded-xl gap-2" onClick={() => navigate(`${routePrefix}/courses/${courseId}/content/${prevContent.id}`)}>
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="text-sm">{t("common.previous")}</span>
-                    </Button>
-                  ) : <div />}
-                </div>
-              </div>
 
               {/* Notes & Up Next — fills empty space below the player */}
               {contentId && courseId && routePrefix === "/student" && (
