@@ -312,8 +312,33 @@ const StorefrontCourseDetail = () => {
       </div>
 
       <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
+        {/* Mega title — full width above hero */}
+        <header className="mb-6 sm:mb-8 max-w-5xl">
+          <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
+            {(course as any).categories?.name && (
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-foreground text-background font-semibold tracking-wide">
+                {(course as any).categories.name}
+              </span>
+            )}
+            {instructor?.full_name && (
+              <span className="text-primary font-semibold">{instructor.full_name}</span>
+            )}
+            <span className="text-muted-foreground/40">|</span>
+            <span className="text-muted-foreground">정규 교육과정</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-foreground leading-[1.2] tracking-tight">
+            {getCourseTitle(course.id, course.title)}
+          </h1>
+          {course.subtitle && (
+            <p className="mt-3 text-base sm:text-lg text-muted-foreground leading-relaxed">
+              {course.subtitle}
+            </p>
+          )}
+        </header>
+
         {/* Hero layout: left thumbnail + right sticky purchase card */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-10 items-start">
+
           {/* Left: Thumbnail + Info + Tabs */}
           <div className="lg:col-span-3 space-y-6 min-w-0">
 
