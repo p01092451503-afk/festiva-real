@@ -655,39 +655,19 @@ export default function AssessmentManager({ courseId }: { courseId: string }) {
             <DialogTitle className="text-base">{assessment ? t("assessment.editSettings") : t("assessment.create")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {/* KO Title */}
+            {/* Title */}
             <div className="space-y-1">
-              <Label className="text-xs">{t("assessment.assessmentTitle")} (KO)</Label>
+              <Label className="text-xs">{t("assessment.assessmentTitle")}</Label>
               <Input className="h-9 text-sm" value={assessmentForm.title} onChange={e => setAssessmentForm(f => ({ ...f, title: e.target.value }))} />
             </div>
-            {/* KO Description */}
+            {/* Description */}
             <div className="space-y-1">
-              <Label className="text-xs">{t("assessment.description")} (KO)</Label>
+              <Label className="text-xs">{t("assessment.description")}</Label>
               <Textarea className="text-sm" value={assessmentForm.description} onChange={e => setAssessmentForm(f => ({ ...f, description: e.target.value }))} rows={2} />
             </div>
 
             <Separator />
 
-            {/* EN Section */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-muted-foreground">{t("course.enOptional", "영어 버전 (선택)")}</p>
-                <Button type="button" variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleTranslateAssessment} disabled={translatingAssessment || (!assessmentForm.title && !assessmentForm.description)}>
-                  {translatingAssessment ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
-                  {t("course.autoTranslate", "자동 번역")}
-                </Button>
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.assessmentTitle")} (EN)</Label>
-                <Input className="h-9 text-sm" value={enTitle} onChange={e => { setEnTitle(e.target.value); setEnTitleManual(true); }} />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.description")} (EN)</Label>
-                <Textarea className="text-sm" value={enDescription} onChange={e => { setEnDescription(e.target.value); setEnDescManual(true); }} rows={2} />
-              </div>
-            </div>
-
-            <Separator />
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
@@ -805,66 +785,34 @@ export default function AssessmentManager({ courseId }: { courseId: string }) {
               </div>
             </div>
 
-            {/* KO & EN question text side by side */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.questionText")} (KO)</Label>
-                <Textarea className="text-sm" value={questionForm.question_text} onChange={e => setQuestionForm(f => ({ ...f, question_text: e.target.value }))} rows={3} />
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs">{t("assessment.questionText")} (EN)</Label>
-                  <Button type="button" variant="outline" size="sm" className="h-6 text-[10px] gap-1 px-2" onClick={handleTranslateQuestion} disabled={translatingQuestion || !questionForm.question_text.trim()}>
-                    {translatingQuestion ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <Languages className="h-2.5 w-2.5" />}
-                    {t("course.autoTranslate", "자동 번역")}
-                  </Button>
-                </div>
-                <Textarea className="text-sm" value={questionForm.en_question_text} onChange={e => setQuestionForm(f => ({ ...f, en_question_text: e.target.value, en_question_text_manual: true }))} rows={3} />
-              </div>
+            {/* Question text */}
+            <div className="space-y-1">
+              <Label className="text-xs">{t("assessment.questionText")}</Label>
+              <Textarea className="text-sm" value={questionForm.question_text} onChange={e => setQuestionForm(f => ({ ...f, question_text: e.target.value }))} rows={3} />
             </div>
 
             {/* Options for MCQ and OX */}
             {["multiple_choice_4", "multiple_choice_5", "ox"].includes(questionForm.question_type) && (
               <div className="space-y-2">
                 <Label className="text-xs">{t("assessment.options")}</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <p className="text-[10px] text-muted-foreground">KO</p>
-                    {questionForm.options.map((opt, i) => (
-                      <div key={i} className="flex items-center gap-2">
-                        <input type="radio" name="correct_answer" checked={questionForm.correct_answer === opt && opt !== ""} onChange={() => setQuestionForm(f => ({ ...f, correct_answer: opt }))} className="h-4 w-4 text-primary" />
-                        {questionForm.question_type === "ox" ? (
-                          <span className="text-sm font-medium">{opt}</span>
-                        ) : (
-                          <Input className="h-8 text-sm flex-1" value={opt} placeholder={`보기 ${i + 1}`}
-                            onChange={e => {
-                              const newOpts = [...questionForm.options];
-                              const wasSelected = questionForm.correct_answer === newOpts[i];
-                              newOpts[i] = e.target.value;
-                              setQuestionForm(f => ({ ...f, options: newOpts, correct_answer: wasSelected ? e.target.value : f.correct_answer }));
-                            }}
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  {questionForm.question_type !== "ox" && (
-                    <div className="space-y-2">
-                      <p className="text-[10px] text-muted-foreground">EN</p>
-                      {questionForm.en_options.map((opt, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <div className="w-4" />
-                          <Input className="h-8 text-sm flex-1" value={opt} placeholder={`Option ${i + 1}`}
-                            onChange={e => {
-                              const newOpts = [...questionForm.en_options];
-                              newOpts[i] = e.target.value;
-                              setQuestionForm(f => ({ ...f, en_options: newOpts, en_options_manual: true }));
-                            }}
-                          />
-                        </div>
-                      ))}
+                <div className="space-y-2">
+                  {questionForm.options.map((opt, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <input type="radio" name="correct_answer" checked={questionForm.correct_answer === opt && opt !== ""} onChange={() => setQuestionForm(f => ({ ...f, correct_answer: opt }))} className="h-4 w-4 text-primary" />
+                      {questionForm.question_type === "ox" ? (
+                        <span className="text-sm font-medium">{opt}</span>
+                      ) : (
+                        <Input className="h-8 text-sm flex-1" value={opt} placeholder={`보기 ${i + 1}`}
+                          onChange={e => {
+                            const newOpts = [...questionForm.options];
+                            const wasSelected = questionForm.correct_answer === newOpts[i];
+                            newOpts[i] = e.target.value;
+                            setQuestionForm(f => ({ ...f, options: newOpts, correct_answer: wasSelected ? e.target.value : f.correct_answer }));
+                          }}
+                        />
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
                 <p className="text-[10px] text-muted-foreground">{t("assessment.selectCorrect")}</p>
               </div>
@@ -872,49 +820,28 @@ export default function AssessmentManager({ courseId }: { courseId: string }) {
 
             {/* Short answer / essay correct answer */}
             {["short_answer", "essay"].includes(questionForm.question_type) && (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <Label className="text-xs">{t("assessment.correctAnswer")} (KO)</Label>
-                  {questionForm.question_type === "short_answer" ? (
-                    <Input className="h-9 text-sm" value={questionForm.correct_answer} onChange={e => setQuestionForm(f => ({ ...f, correct_answer: e.target.value }))} placeholder="정답 (일치하는 답)" />
-                  ) : (
-                    <Textarea className="text-sm" value={questionForm.correct_answer} onChange={e => setQuestionForm(f => ({ ...f, correct_answer: e.target.value }))} rows={2} placeholder="모범 답안 / 키워드" />
-                  )}
-                </div>
-                <div className="space-y-1">
-                  <Label className="text-xs">{t("assessment.correctAnswer")} (EN)</Label>
-                  {questionForm.question_type === "short_answer" ? (
-                    <Input className="h-9 text-sm" value={questionForm.en_correct_answer} onChange={e => setQuestionForm(f => ({ ...f, en_correct_answer: e.target.value, en_correct_answer_manual: true }))} placeholder="Exact match answer" />
-                  ) : (
-                    <Textarea className="text-sm" value={questionForm.en_correct_answer} onChange={e => setQuestionForm(f => ({ ...f, en_correct_answer: e.target.value, en_correct_answer_manual: true }))} rows={2} placeholder="Model answer / keywords" />
-                  )}
-                </div>
+              <div className="space-y-1">
+                <Label className="text-xs">{t("assessment.correctAnswer")}</Label>
+                {questionForm.question_type === "short_answer" ? (
+                  <Input className="h-9 text-sm" value={questionForm.correct_answer} onChange={e => setQuestionForm(f => ({ ...f, correct_answer: e.target.value }))} placeholder="정답 (일치하는 답)" />
+                ) : (
+                  <Textarea className="text-sm" value={questionForm.correct_answer} onChange={e => setQuestionForm(f => ({ ...f, correct_answer: e.target.value }))} rows={2} placeholder="모범 답안 / 키워드" />
+                )}
               </div>
             )}
 
             {/* Explanation */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.explanation")} (KO)</Label>
-                <Textarea className="text-sm" value={questionForm.explanation} onChange={e => setQuestionForm(f => ({ ...f, explanation: e.target.value }))} rows={2} placeholder="채점 후 표시될 해설 (선택사항)" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs">{t("assessment.explanation")} (EN)</Label>
-                <Textarea className="text-sm" value={questionForm.en_explanation} onChange={e => setQuestionForm(f => ({ ...f, en_explanation: e.target.value, en_explanation_manual: true }))} rows={2} placeholder="Explanation shown after grading (optional)" />
-              </div>
+            <div className="space-y-1">
+              <Label className="text-xs">{t("assessment.explanation")}</Label>
+              <Textarea className="text-sm" value={questionForm.explanation} onChange={e => setQuestionForm(f => ({ ...f, explanation: e.target.value }))} rows={2} placeholder="채점 후 표시될 해설 (선택사항)" />
             </div>
 
             {/* Hint */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label className="text-xs">{isEn ? "Hint" : "힌트"} (KO)</Label>
-                <Textarea className="text-sm" value={questionForm.hint} onChange={e => setQuestionForm(f => ({ ...f, hint: e.target.value }))} rows={2} placeholder="시험 중 학생에게 보여줄 힌트 (선택사항)" />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-xs">{isEn ? "Hint" : "힌트"} (EN)</Label>
-                <Textarea className="text-sm" value={questionForm.en_hint} onChange={e => setQuestionForm(f => ({ ...f, en_hint: e.target.value, en_hint_manual: true }))} rows={2} placeholder="Hint shown to students during test (optional)" />
-              </div>
+            <div className="space-y-1">
+              <Label className="text-xs">{isEn ? "Hint" : "힌트"}</Label>
+              <Textarea className="text-sm" value={questionForm.hint} onChange={e => setQuestionForm(f => ({ ...f, hint: e.target.value }))} rows={2} placeholder="시험 중 학생에게 보여줄 힌트 (선택사항)" />
             </div>
+
           </div>
           <DialogFooter>
             <Button variant="outline" size="sm" onClick={() => setQuestionDialogOpen(false)}>{t("common.cancel")}</Button>

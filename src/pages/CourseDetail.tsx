@@ -1166,13 +1166,8 @@ const ContentDialog = ({
       <DialogHeader>
         <DialogTitle className="text-base">{editingId ? t("course.editContent") : t("course.addContent")}</DialogTitle>
       </DialogHeader>
-      <Tabs defaultValue="ko" className="w-full">
-        <TabsList className="w-full">
-          <TabsTrigger value="ko" className="flex-1">{t("course.koTab")}</TabsTrigger>
-          <TabsTrigger value="en" className="flex-1">{t("course.enTab")}</TabsTrigger>
-        </TabsList>
+      <div className="space-y-3 pt-2">
 
-        <TabsContent value="ko" className="space-y-3 pt-2">
           <div className="space-y-1">
             <Label className="text-xs">{t("course.contentTitle")} *</Label>
             <Input className="h-9 text-sm" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} placeholder={t("course.contentPlaceholder")} />
@@ -1381,107 +1376,9 @@ const ContentDialog = ({
               <Label className="text-xs">{t("course.allowPreview")}</Label>
             </div>
           </div>
-        </TabsContent>
+      </div>
 
-        <TabsContent value="en" className="space-y-3 pt-2">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">{t("course.enOptional")}</p>
-            <Button type="button" variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleAutoTranslate} disabled={translating || (!form.title && !form.description)}>
-              {translating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
-              {t("course.autoTranslate", "자동 번역")}
-            </Button>
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.enTitle")}</Label>
-            <Input className="h-9 text-sm" value={enForm.title} onChange={(e) => setEnForm(f => ({ ...f, title: e.target.value }))} placeholder="English title" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label className="text-xs">{t("course.contentType")}</Label>
-              <Select value={form.content_type} onValueChange={(v) => setForm(f => ({ ...f, content_type: v }))}>
-                <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="video">{t("course.video")}</SelectItem>
-                  <SelectItem value="document">{t("course.document")}</SelectItem>
-                  <SelectItem value="quiz">{t("course.quiz")}</SelectItem>
-                  <SelectItem value="assignment">{t("course.assignment")}</SelectItem>
-                  <SelectItem value="live">{t("course.live")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs">{t("course.playbackTime")} (분 / 초)</Label>
-              <div className="flex items-center gap-1.5">
-                <Input
-                  className="h-9 text-sm w-16"
-                  type="number"
-                  min={0}
-                  value={(() => {
-                    const v = Number(enForm.duration_minutes);
-                    return Number.isFinite(v) ? Math.floor(v) : 0;
-                  })()}
-                  onChange={(e) => {
-                    const m = Math.max(0, parseInt(e.target.value || "0", 10) || 0);
-                    const cur = Number(enForm.duration_minutes) || 0;
-                    const s = Math.round((cur - Math.floor(cur)) * 60);
-                    setEnForm(f => ({ ...f, duration_minutes: Math.round((m + s / 60) * 100) / 100 }));
-                  }}
-                />
-                <span className="text-[11px] text-muted-foreground">분</span>
-                <Input
-                  className="h-9 text-sm w-16"
-                  type="number"
-                  min={0}
-                  max={59}
-                  value={(() => {
-                    const v = Number(enForm.duration_minutes);
-                    if (!Number.isFinite(v)) return 0;
-                    return Math.round((v - Math.floor(v)) * 60);
-                  })()}
-                  onChange={(e) => {
-                    const s = Math.min(59, Math.max(0, parseInt(e.target.value || "0", 10) || 0));
-                    const cur = Number(enForm.duration_minutes) || 0;
-                    const m = Math.floor(cur);
-                    setEnForm(f => ({ ...f, duration_minutes: Math.round((m + s / 60) * 100) / 100 }));
-                  }}
-                />
-                <span className="text-[11px] text-muted-foreground">초</span>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.contentUrl")}</Label>
-            <Input className="h-9 text-sm" value={enForm.video_url} onChange={(e) => setEnForm(f => ({ ...f, video_url: e.target.value }))} placeholder="https://..." />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.provider")}</Label>
-            <Select value={enForm.video_provider || form.video_provider} onValueChange={(v) => setEnForm(f => ({ ...f, video_provider: v }))}>
-              <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={t("course.select")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="youtube">{t("course.youtube")}</SelectItem>
-                <SelectItem value="vimeo">{t("course.vimeo")}</SelectItem>
-                <SelectItem value="bunny">Global CDN</SelectItem>
-                <SelectItem value="custom">{t("course.flipLearningMango")}</SelectItem>
-                <SelectItem value="upload">{t("course.cdnUpload")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.enDescription")}</Label>
-            <Textarea className="text-sm" value={enForm.description} onChange={(e) => setEnForm(f => ({ ...f, description: e.target.value }))} rows={2} placeholder="English description" />
-          </div>
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Switch checked={form.is_published} onCheckedChange={(v) => setForm(f => ({ ...f, is_published: v }))} />
-              <Label className="text-xs">{t("course.isPublished")}</Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch checked={form.is_preview} onCheckedChange={(v) => setForm(f => ({ ...f, is_preview: v }))} />
-              <Label className="text-xs">{t("course.allowPreview")}</Label>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+
       <DialogFooter>
         <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>{t("common.cancel")}</Button>
         <Button size="sm" onClick={onSubmit} disabled={!form.title.trim() || isPending}>
@@ -1574,13 +1471,8 @@ const CourseEditDialog = ({
       <DialogHeader>
         <DialogTitle className="text-base">{t("course.courseEditTitle")}</DialogTitle>
       </DialogHeader>
-      <Tabs defaultValue="ko" className="w-full">
-        <TabsList className="w-full">
-          <TabsTrigger value="ko" className="flex-1">{t("course.koTab")}</TabsTrigger>
-          <TabsTrigger value="en" className="flex-1">{t("course.enTab")}</TabsTrigger>
-        </TabsList>
+      <div className="space-y-3 pt-2">
 
-        <TabsContent value="ko" className="space-y-3 pt-2">
           {/* Thumbnail */}
           <div className="space-y-1">
             <Label className="text-xs">{t("createCourse.thumbnailLabel") || "썸네일"}</Label>
@@ -1713,140 +1605,9 @@ const CourseEditDialog = ({
               />
             </div>
           </div>
-        </TabsContent>
+      </div>
 
-        <TabsContent value="en" className="space-y-3 pt-2">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">{t("course.enOptional")}</p>
-            <Button type="button" variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={handleAutoTranslate} disabled={translating || (!form.title && !form.description)}>
-              {translating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
-              {t("course.autoTranslate", "자동 번역")}
-            </Button>
-          </div>
 
-          {/* Thumbnail (shared) */}
-          <div className="space-y-1">
-            <Label className="text-xs">{t("createCourse.thumbnailLabel") || "썸네일"}</Label>
-            {thumbnailPreview ? (
-              <div className="relative w-full h-32 rounded-lg overflow-hidden border border-border">
-                <img src={thumbnailPreview} alt="thumbnail" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={onThumbnailRemove}
-                  className="absolute top-1.5 right-1.5 h-6 w-6 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                className="flex w-full h-24 items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border text-xs text-muted-foreground hover:border-primary/50 hover:text-foreground transition-colors"
-              >
-                <Upload className="h-4 w-4" />
-                {t("createCourse.thumbnailDropHint")}
-              </button>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.enTitle")}</Label>
-            <Input className="h-9 text-sm" value={enForm.title} onChange={(e) => { setEnTitleManual(true); setEnForm(f => ({ ...f, title: e.target.value })); }} placeholder="English title" />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.enDescription")}</Label>
-            <Textarea className="text-sm" value={enForm.description} onChange={(e) => { setEnDescManual(true); setEnForm(f => ({ ...f, description: e.target.value })); }} rows={3} placeholder="English description" />
-          </div>
-
-          {/* Category & Difficulty (shared) */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label className="text-xs">{t("createCourse.categoryLabel")}</Label>
-              <Select value={form.category_id} onValueChange={(v) => setForm(f => ({ ...f, category_id: v }))}>
-                <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={t("common.select") || "선택"} /></SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs">{t("createCourse.difficultyLabel")}</Label>
-              <Select value={form.difficulty_level} onValueChange={(v) => setForm(f => ({ ...f, difficulty_level: v }))}>
-                <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="beginner">{t("createCourse.beginnerLevel")}</SelectItem>
-                  <SelectItem value="intermediate">{t("createCourse.intermediateLevel")}</SelectItem>
-                  <SelectItem value="advanced">{t("createCourse.advancedLevel")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Duration & Max students (shared) */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label className="text-xs">{t("createCourse.estimatedDuration") || "예상 소요시간(h)"}</Label>
-              <Input className="h-9 text-sm" type="number" min={0} value={form.estimated_duration_hours} onChange={(e) => setForm(f => ({ ...f, estimated_duration_hours: e.target.value }))} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs">{t("createCourse.maxStudents") || "최대 수강인원"}</Label>
-              <Input className="h-9 text-sm" type="number" min={0} value={form.max_students} onChange={(e) => setForm(f => ({ ...f, max_students: e.target.value }))} />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.courseStatus")}</Label>
-            <Select value={form.status} onValueChange={(v) => setForm(f => ({ ...f, status: v }))}>
-              <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">{t("course.draftStatus")}</SelectItem>
-                <SelectItem value="published">{t("course.publishedStatus")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* 필수교육 설정 (shared) */}
-          <Separator />
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label className="text-xs font-semibold">{t("course.mandatoryToggle")}</Label>
-                <p className="text-[11px] text-muted-foreground">{t("course.mandatoryToggleDesc")}</p>
-              </div>
-              <Switch
-                checked={form.is_mandatory}
-                onCheckedChange={(v) => setForm(f => ({ ...f, is_mandatory: v }))}
-              />
-            </div>
-            {form.is_mandatory && (
-              <div className="space-y-1">
-                <Label className="text-xs">{t("course.deadlineLabel")}</Label>
-                <Input
-                  type="date"
-                  className="h-9 text-sm"
-                  value={form.deadline}
-                  onChange={(e) => setForm(f => ({ ...f, deadline: e.target.value }))}
-                />
-                <p className="text-[10px] text-muted-foreground">{t("course.deadlineHelp")}</p>
-              </div>
-            )}
-            {/* Sequential Learning Toggle */}
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label className="text-xs font-semibold">{t("course.sequentialToggle")}</Label>
-                <p className="text-[11px] text-muted-foreground">{t("course.sequentialToggleDesc")}</p>
-              </div>
-              <Switch
-                checked={form.is_sequential}
-                onCheckedChange={(v) => setForm(f => ({ ...f, is_sequential: v }))}
-              />
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
       <DialogFooter>
         <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>{t("common.cancel")}</Button>
         <Button size="sm" onClick={onSubmit} disabled={!form.title.trim() || isPending}>
