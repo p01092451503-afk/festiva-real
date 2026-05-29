@@ -59,7 +59,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         // doesn't auto-switch to the select tool (which is what causes the
         // accidental "drag groups shapes" behavior).
         try {
-          editor.user.updateUserPreferences({ isToolLocked: true });
+          editor.updateInstanceState({ isToolLocked: true });
         } catch (error) {
           console.debug("[CorrectionCanvas] tool lock preference skipped", error);
         }
