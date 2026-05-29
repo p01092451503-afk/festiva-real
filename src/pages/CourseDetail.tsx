@@ -1115,6 +1115,41 @@ const ContentDialog = ({
     ? form.video_url.replace("bunny://", "").trim()
     : "";
 
+  // Auto-fetch CDN(Bunny) duration when GUID changes and library has no record
+  useEffect(() => {
+    if (form.video_provider !== "bunny" || !currentBunnyGuid) return;
+    const lib = (bunnyVideos as any[]).find((v) => v.bunny_video_guid === currentBunnyGuid);
+    if (lib?.duration_minutes != null) {
+      // 라이브러리에 등록된 영상이면 시간 자동 반영
+      if (Math.round((form.duration_minutes ?? 0) * 100) / 100 !== Math.round((lib.duration_minutes ?? 0) * 100) / 100) {
+        setForm((f) => ({ ...f, duration_minutes: lib.duration_minutes }));
+      }
+      return;
+    }
+    // 라이브러리 미등록 GUID는 Bunny API에서 직접 조회
+    let cancelled = false;
+    (async () => {
+      try {
+        setFetchingBunnyDuration(true);
+        const { data, error } = await supabase.functions.invoke("bunny-stream-info", {
+          body: { video_guid: currentBunnyGuid },
+        });
+        if (error) throw error;
+        const sec = Number(data?.length_seconds) || 0;
+        if (!cancelled && sec > 0) {
+          const dec = Math.round((sec / 60) * 100) / 100;
+          setForm((f) => ({ ...f, duration_minutes: dec }));
+        }
+      } catch {
+        // 무시: 사용자가 수동 입력 가능
+      } finally {
+        if (!cancelled) setFetchingBunnyDuration(false);
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentBunnyGuid, form.video_provider, bunnyVideos]);
+
   // Real-time sync: mirror KO title/description to EN (raw, untranslated) so EN is never empty
   useEffect(() => {
     setEnForm(f => ({
