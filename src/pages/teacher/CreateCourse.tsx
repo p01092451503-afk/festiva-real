@@ -658,10 +658,37 @@ const CreateCourse = () => {
           price: b2cPrice,
           sale_price: b2cSalePrice,
           sale_ends_at: b2cSaleEndsAt || null,
+          course_type: courseType,
         } as any)
         .select()
         .single();
       if (courseError) throw courseError;
+
+      // Pricing tiers
+      const validTiers = tiers.filter((t) => t.duration_days > 0 || t.list_price > 0 || t.sale_price > 0);
+      if (validTiers.length > 0) {
+        const tierRows = validTiers.map((t, i) => ({
+          course_id: course.id,
+          duration_days: t.duration_days || 0,
+          list_price: t.list_price || 0,
+          sale_price: t.sale_price || 0,
+          points: t.points || 0,
+          display_name: t.display_name || null,
+          sort_order: i,
+        }));
+        await (supabase as any).from("course_pricing_tiers").insert(tierRows);
+      }
+
+      // Package items
+      if (courseType === "package" && packageItems.length > 0) {
+        const pkgRows = packageItems.map((cid, i) => ({
+          package_course_id: course.id,
+          child_course_id: cid,
+          sort_order: i,
+        }));
+        await (supabase as any).from("course_package_items").insert(pkgRows);
+      }
+
 
       if (thumbnailFile) {
         const thumbnailUrl = await uploadThumbnail(course.id);
