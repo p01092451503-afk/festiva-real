@@ -30,12 +30,24 @@ const CorrectionsQueue = ({ role }: Props) => {
       const { data, error } = await supabase
         .from("correction_requests")
         .select(
-          "id, topic, status, score, submitted_at, completed_at, student_id, assigned_teacher_id, correction_pages(id), profiles:student_id(full_name, email)",
+          "id, topic, status, score, submitted_at, completed_at, student_id, assigned_teacher_id, correction_pages(id)",
         )
         .order("submitted_at", { ascending: false })
         .limit(500);
       if (error) throw error;
-      return data || [];
+      const rows = data || [];
+      const studentIds = Array.from(new Set(rows.map((r: any) => r.student_id).filter(Boolean)));
+      let profileMap: Record<string, { full_name?: string; email?: string }> = {};
+      if (studentIds.length) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("user_id, full_name, email")
+          .in("user_id", studentIds);
+        (profs || []).forEach((p: any) => {
+          profileMap[p.user_id] = { full_name: p.full_name, email: p.email };
+        });
+      }
+      return rows.map((r: any) => ({ ...r, profiles: profileMap[r.student_id] || null }));
     },
   });
 
