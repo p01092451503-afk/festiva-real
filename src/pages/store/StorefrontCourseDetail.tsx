@@ -803,6 +803,37 @@ const StorefrontCourseDetail = () => {
                 )}
               </div>
             )}
+
+            {activeTab === "refund" && (
+              <div className="space-y-6 text-sm leading-relaxed">
+                <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
+                  <h3 className="text-base font-bold text-foreground">수강 안내</h3>
+                  <ul className="space-y-2 text-foreground/80">
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>결제 완료 후 즉시 수강이 가능합니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>수강 기간 내 PC·모바일에서 무제한 반복 학습이 가능합니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>강의 자료(PDF·교재 등)는 마이페이지에서 다운로드할 수 있습니다.</span></li>
+                  </ul>
+                </section>
+                <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
+                  <h3 className="text-base font-bold text-foreground">환불 정책</h3>
+                  <ul className="space-y-2 text-foreground/80">
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>학습 이력이 없는 경우, 결제일로부터 7일 이내 100% 환불.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>7일 경과 또는 학습 이력 발생 시, 잔여 차시 비율에 따라 부분 환불.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>전체 차시의 50% 이상 수강 시 환불이 제한될 수 있습니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>환불 요청은 마이페이지 &gt; 결제 내역에서 신청 가능합니다.</span></li>
+                  </ul>
+                </section>
+                <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
+                  <h3 className="text-base font-bold text-foreground">교재·배송 안내</h3>
+                  <ul className="space-y-2 text-foreground/80">
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>교재 포함 옵션 구매 시, 결제일 기준 영업일 1~3일 내 발송됩니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>도서·산간 지역은 1~2일 추가 소요될 수 있습니다.</span></li>
+                    <li className="flex gap-2"><span className="text-muted-foreground/60">·</span><span>교재 개봉·필기 후에는 환불이 제한됩니다.</span></li>
+                  </ul>
+                </section>
+              </div>
+            )}
+
           </div>
         </div>
       </main>
