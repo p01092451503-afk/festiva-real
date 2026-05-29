@@ -226,7 +226,7 @@ const ContentPlayer = () => {
     }
   }, [contentId, user?.id, courseId, currentContent]);
   const currentIndex = contents.findIndex((c) => c.id === contentId);
-  const prevContent = currentIndex > 0 ? contents[currentIndex - 1] : null;
+  
   const nextContent = currentIndex < contents.length - 1 ? contents[currentIndex + 1] : null;
   const progressMap = new Map(progressData.map((p) => [p.content_id, p]));
   const currentProgress = progressMap.get(contentId || "");
