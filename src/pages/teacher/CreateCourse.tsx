@@ -177,6 +177,7 @@ const CreateCourse = () => {
       setB2cSalePrice(course.sale_price ?? null);
       setB2cSaleEndsAt(course.sale_ends_at || "");
       setInstructorBio((course as any).instructor_bio || "");
+      setInstructorId((course as any).instructor_id || null);
       setTextbookTitle((course as any).textbook_title || "");
       setTextbookAuthor((course as any).textbook_author || "");
       setTextbookPublisher((course as any).textbook_publisher || "");
@@ -584,6 +585,7 @@ const CreateCourse = () => {
           sale_price: b2cSalePrice,
           sale_ends_at: b2cSaleEndsAt || null,
           instructor_bio: instructorBio || null,
+          instructor_id: instructorId || null,
           textbook_title: textbookTitle || null,
           textbook_author: textbookAuthor || null,
           textbook_publisher: textbookPublisher || null,
@@ -679,7 +681,7 @@ const CreateCourse = () => {
           title,
           description: description || null,
           category_id: categoryId || null,
-          instructor_id: user!.id,
+          instructor_id: instructorId || user!.id,
           difficulty_level: difficultyLevel,
           estimated_duration_hours: estimatedHours ? parseInt(estimatedHours) : null,
           max_students: maxStudents ? parseInt(maxStudents) : null,
