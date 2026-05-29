@@ -297,43 +297,46 @@ const StorefrontCourseDetail = () => {
       <StorefrontHeader />
 
       {/* Breadcrumb */}
-      <div className="border-b border-border">
+      <div className="border-b border-border/60 bg-muted/20">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs text-muted-foreground">
           <Link to="/store" className="hover:text-foreground transition-colors">홈</Link>
-          <span>/</span>
+          <span className="text-muted-foreground/40">/</span>
           <Link to="/store/courses" className="hover:text-foreground transition-colors">전체 과정</Link>
           {(course as any).categories?.name && (
             <>
-              <span>/</span>
-              <span>{(course as any).categories.name}</span>
+              <span className="text-muted-foreground/40">/</span>
+              <span className="text-foreground/80 font-medium">{(course as any).categories.name}</span>
             </>
           )}
         </div>
       </div>
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {/* weolbu-style layout: left image + right sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10">
+      <main className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
+        {/* Hero layout: left thumbnail + right sticky purchase card */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Left: Thumbnail + Info */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-8">
             {/* Thumbnail */}
             {(getCourseThumbnail(course.id, course.thumbnail_url) || course.thumbnail_url) ? (
-              <div className="rounded-2xl overflow-hidden aspect-video">
+              <div className="rounded-3xl overflow-hidden aspect-video shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.18)] ring-1 ring-border/40">
                 <img src={getCourseThumbnail(course.id, course.thumbnail_url)!} alt={getCourseTitle(course.id, course.title)} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="rounded-2xl aspect-video bg-gradient-to-br from-accent to-muted flex items-center justify-center">
-                <BookOpen className="h-16 w-16 text-muted-foreground/30" strokeWidth={1} />
+              <div className="rounded-3xl aspect-video bg-gradient-to-br from-accent via-muted to-accent/50 flex items-center justify-center ring-1 ring-border/40 shadow-[0_20px_60px_-20px_hsl(var(--foreground)/0.12)]">
+                <BookOpen className="h-20 w-20 text-muted-foreground/25" strokeWidth={1} />
               </div>
             )}
 
-            {/* Reviews below thumbnail (weolbu style) */}
+            {/* Reviews below thumbnail */}
             {reviews.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">베스트 수강 후기</h3>
+                <div className="flex items-baseline gap-3">
+                  <h3 className="text-lg font-bold text-foreground tracking-tight">베스트 수강 후기</h3>
+                  <span className="text-xs text-muted-foreground">{reviews.length}건</span>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {reviews.slice(0, 4).map((review: any) => (
-                    <div key={review.id} className="rounded-xl border border-border p-4 space-y-3">
+                    <div key={review.id} className="rounded-2xl border border-border/70 bg-card p-5 space-y-3 hover:border-foreground/30 transition-colors">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9">
                           <AvatarImage src={review.profiles?.avatar_url} />
@@ -363,128 +366,135 @@ const StorefrontCourseDetail = () => {
             )}
           </div>
 
-          {/* Right: Sticky Sidebar (weolbu style) */}
+          {/* Right: Sticky purchase card */}
           <div className="lg:col-span-2">
-            <div className="lg:sticky lg:top-8 space-y-6">
-              {/* Title & badges */}
-              <div className="space-y-3">
-                {(course as any).categories?.name && (
-                  <div className="flex gap-2">
-                    <Badge variant="secondary" className="text-xs">{(course as any).categories.name}</Badge>
-                  </div>
-                )}
-                <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-snug tracking-tight">
-                  {getCourseTitle(course.id, course.title)}
-                </h1>
-                {course.subtitle && <p className="text-sm text-muted-foreground">{course.subtitle}</p>}
+            <div className="lg:sticky lg:top-8">
+              <div className="rounded-3xl border border-border/70 bg-card p-7 space-y-6 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.12)]">
+                {/* Title & badges */}
+                <div className="space-y-3">
+                  {(course as any).categories?.name && (
+                    <Badge variant="secondary" className="text-[11px] font-medium tracking-wide rounded-full px-2.5 py-0.5">
+                      {(course as any).categories.name}
+                    </Badge>
+                  )}
+                  <h1 className="text-2xl sm:text-[26px] font-bold text-foreground leading-tight tracking-tight">
+                    {getCourseTitle(course.id, course.title)}
+                  </h1>
+                  {course.subtitle && (
+                    <p className="text-sm text-muted-foreground leading-relaxed">{course.subtitle}</p>
+                  )}
 
-                {/* Rating */}
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className={cn("h-4 w-4", i < Math.round(course.rating_avg) ? "text-amber-500 fill-amber-500" : "text-muted-foreground/20")} />
-                    ))}
-                  </div>
-                  <span className="text-sm font-semibold text-foreground">{course.rating_avg.toFixed(1)}</span>
-                  <span className="text-sm text-muted-foreground">{course.rating_count.toLocaleString()}개 후기</span>
-                </div>
-
-                {/* Share button */}
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success("링크가 복사되었습니다");
-                  }}
-                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Share2 className="h-3.5 w-3.5" /> 공유
-                </button>
-              </div>
-
-              {/* Price section */}
-              <div className="space-y-1">
-                {isFree ? (
-                  <Badge className="bg-green-600 hover:bg-green-600 text-white text-base px-3 py-1">무료</Badge>
-                ) : (
-                  <>
-                    {isSaleActive && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-destructive">{discountPct}%</span>
-                        <span className="text-sm text-muted-foreground line-through">{formatPrice(course.price)}</span>
+                  {/* Rating + Share */}
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star key={i} className={cn("h-3.5 w-3.5", i < Math.round(course.rating_avg) ? "text-amber-500 fill-amber-500" : "text-muted-foreground/25")} />
+                        ))}
                       </div>
-                    )}
-                    <p className="text-3xl font-extrabold text-foreground tracking-tight">{formatPrice(displayPrice)}</p>
-                  </>
-                )}
-              </div>
-
-              <Separator />
-
-              {/* Course meta */}
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Clock className="h-4 w-4 shrink-0" />
-                  <span>총 {formatDurationMinutes(totalDuration)}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <BookOpen className="h-4 w-4 shrink-0" />
-                  <span>{contents.length}개 차시</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Users className="h-4 w-4 shrink-0" />
-                  <span>{course.enrolled_count.toLocaleString()}명 수강</span>
-                </div>
-                {course.difficulty_level && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <BarChart3 className="h-4 w-4 shrink-0" />
-                    <span>{course.difficulty_level}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Instructor */}
-              {instructor && (
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-accent/50">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={instructor.avatar_url || undefined} />
-                    <AvatarFallback className="bg-accent text-sm">
-                      {(instructor.full_name || "?")[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{instructor.full_name}</p>
-                    <p className="text-xs text-muted-foreground">강사</p>
+                      <span className="text-sm font-semibold text-foreground tabular-nums">{course.rating_avg.toFixed(1)}</span>
+                      <span className="text-xs text-muted-foreground">({course.rating_count.toLocaleString()})</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                        toast.success("링크가 복사되었습니다");
+                      }}
+                      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Share2 className="h-3.5 w-3.5" /> 공유
+                    </button>
                   </div>
                 </div>
-              )}
 
-              {/* Action buttons */}
-              <div className="space-y-3">
-                {isEnrolled ? (
-                  <Button className="w-full h-12 text-base rounded-xl" onClick={() => navigate(`/student/courses/${id}`)}>
-                    <Play className="h-4 w-4 mr-2" /> 학습하기
-                  </Button>
-                ) : (
-                  <>
-                    <Button className="w-full h-12 text-base rounded-xl" onClick={handleBuyNow}>
-                      {isFree ? "무료로 시작하기" : "바로 구매"}
+                <Separator />
+
+                {/* Price section */}
+                <div className="space-y-1.5">
+                  {isFree ? (
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-extrabold text-green-600 tracking-tight">무료</span>
+                      <span className="text-sm text-muted-foreground">평생 수강</span>
+                    </div>
+                  ) : (
+                    <>
+                      {isSaleActive && (
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-xs font-bold tabular-nums">
+                            {discountPct}% OFF
+                          </span>
+                          <span className="text-sm text-muted-foreground line-through tabular-nums">{formatPrice(course.price)}</span>
+                        </div>
+                      )}
+                      <p className="text-3xl font-extrabold text-foreground tracking-tight tabular-nums">{formatPrice(displayPrice)}</p>
+                    </>
+                  )}
+                </div>
+
+                {/* Course meta */}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-2xl bg-muted/40 p-4 text-sm">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="text-foreground/80 truncate">총 {formatDurationMinutes(totalDuration)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="text-foreground/80 truncate">{contents.length}개 차시</span>
+                  </div>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Users className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span className="text-foreground/80 truncate">{course.enrolled_count.toLocaleString()}명 수강</span>
+                  </div>
+                  {course.difficulty_level && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <BarChart3 className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <span className="text-foreground/80 truncate">{course.difficulty_level}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Instructor */}
+                {instructor && (
+                  <div className="flex items-center gap-3 pt-1">
+                    <Avatar className="h-11 w-11 ring-2 ring-border/50">
+                      <AvatarImage src={instructor.avatar_url || undefined} />
+                      <AvatarFallback className="bg-accent text-sm">
+                        {(instructor.full_name || "?")[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Instructor</p>
+                      <p className="text-sm font-semibold text-foreground truncate">{instructor.full_name}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action buttons */}
+                <div className="space-y-2.5 pt-1">
+                  {isEnrolled ? (
+                    <Button className="w-full h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
+                      <Play className="h-4 w-4 mr-2" /> 학습하기
                     </Button>
-                    {!isFree && (
-                      <Button variant="outline" className="w-full h-12 rounded-xl" onClick={handleAddToCart} disabled={isInCart || addToCartMutation.isPending}>
-                        <ShoppingBag className="h-4 w-4 mr-2" />
-                        {isInCart ? "장바구니에 있음" : "장바구니 담기"}
+                  ) : (
+                    <>
+                      <Button className="w-full h-12 text-base rounded-xl font-semibold shadow-sm" onClick={handleBuyNow}>
+                        {isFree ? "무료로 시작하기" : "바로 구매"}
                       </Button>
-                    )}
-                  </>
-                )}
+                      {!isFree && (
+                        <Button variant="outline" className="w-full h-12 rounded-xl font-medium" onClick={handleAddToCart} disabled={isInCart || addToCartMutation.isPending}>
+                          <ShoppingBag className="h-4 w-4 mr-2" />
+                          {isInCart ? "장바구니에 있음" : "장바구니 담기"}
+                        </Button>
+                      )}
+                    </>
+                  )}
 
-                <div className="flex items-center justify-center">
                   <button
                     onClick={() => {
                       if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
                       wishlistMutation.mutate();
                     }}
-                    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+                    className="w-full inline-flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
                   >
                     <Heart className={cn("h-4 w-4", isInWishlist ? "fill-destructive text-destructive" : "")} />
                     {isInWishlist ? "찜 해제" : "찜하기"}
@@ -494,6 +504,7 @@ const StorefrontCourseDetail = () => {
             </div>
           </div>
         </div>
+
 
         {/* Tabs section — full width below */}
         <div className="mt-12">
