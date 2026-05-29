@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Tldraw,
   type Editor,
+  type TLEditorSnapshot,
   type TLShapePartial,
   type TLStoreSnapshot,
   loadSnapshot,
@@ -11,9 +12,9 @@ import "tldraw/tldraw.css";
 
 interface Props {
   imageUrl: string;
-  initialSnapshot?: any;
+  initialSnapshot?: Partial<TLEditorSnapshot> | TLStoreSnapshot;
   readOnly?: boolean;
-  onReady?: (api: { getSnapshot: () => any; editor: Editor }) => void;
+  onReady?: (api: { getSnapshot: () => TLEditorSnapshot; editor: Editor }) => void;
 }
 
 /**
@@ -48,7 +49,9 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     editor.selectNone();
     try {
       editor.setCurrentTool("draw");
-    } catch {}
+    } catch (error) {
+      console.debug("[CorrectionCanvas] draw tool reset skipped", error);
+    }
   }, []);
 
   // Load image dimensions to size the canvas
@@ -66,10 +69,12 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       // Transparent background so the photo behind shows through
       try {
         editor.user.updateUserPreferences({ colorScheme: "light" });
-      } catch {}
+      } catch (error) {
+        console.debug("[CorrectionCanvas] color preference skipped", error);
+      }
       if (initialSnapshot) {
         try {
-          loadSnapshot(editor.store, initialSnapshot as TLStoreSnapshot);
+          loadSnapshot(editor.store, initialSnapshot);
         } catch (e) {
           console.warn("[CorrectionCanvas] snapshot load failed", e);
         }
@@ -85,14 +90,18 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         // Default to draw tool so mouse/pen/touch immediately writes
         try {
           editor.setCurrentTool("draw");
-        } catch {}
+        } catch (error) {
+          console.debug("[CorrectionCanvas] initial draw tool skipped", error);
+        }
       }
       // Lock camera so drawings stay fixed on top of the photo
       // (no pan/zoom from wheel, pinch, or drag)
       try {
         editor.setCameraOptions({ isLocked: true });
         editor.setCamera({ x: 0, y: 0, z: 1 });
-      } catch {}
+      } catch (error) {
+        console.debug("[CorrectionCanvas] camera lock skipped", error);
+      }
       lockUnlockedShapes(editor);
       onReady?.({
         getSnapshot: () => getSnapshot(editor.store),
