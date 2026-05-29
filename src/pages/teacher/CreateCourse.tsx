@@ -1186,12 +1186,14 @@ const CreateCourse = () => {
             <h2 className="text-lg font-semibold">강사 소개 & 교재 정보</h2>
           </div>
 
+          <InstructorPicker value={instructorId} onChange={setInstructorId} />
+
           <div className="space-y-2">
-            <label className="text-sm font-medium">강사 소개</label>
+            <label className="text-sm font-medium">강의 소개용 강사 약력 (강의 페이지에 표시)</label>
             <Textarea
               value={instructorBio}
               onChange={(e) => setInstructorBio(e.target.value)}
-              placeholder="강사 약력, 전문 분야, 경력 등을 입력하세요"
+              placeholder="이 강의에 한정된 강사 소개를 입력하세요. 비워두면 강사 프로필의 약력이 사용됩니다."
               className="min-h-[100px]"
             />
           </div>
