@@ -26,7 +26,7 @@ const StorefrontCourseDetail = () => {
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const [curriculumExpanded, setCurriculumExpanded] = useState(true);
-  const [activeTab, setActiveTab] = useState<"intro" | "curriculum" | "reviews">("intro");
+  const [activeTab, setActiveTab] = useState<"intro" | "instructor" | "curriculum" | "reviews" | "textbook">("intro");
 
   // Course
   const { data: course, isLoading } = useQuery({
