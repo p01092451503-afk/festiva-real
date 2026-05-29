@@ -12,7 +12,7 @@ import "tldraw/tldraw.css";
 
 interface Props {
   imageUrl: string;
-  initialSnapshot?: Partial<TLEditorSnapshot> | TLStoreSnapshot;
+  initialSnapshot?: unknown;
   readOnly?: boolean;
   onReady?: (api: { getSnapshot: () => TLEditorSnapshot; editor: Editor }) => void;
 }
@@ -74,7 +74,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       }
       if (initialSnapshot) {
         try {
-          loadSnapshot(editor.store, initialSnapshot);
+          loadSnapshot(editor.store, initialSnapshot as Partial<TLEditorSnapshot> | TLStoreSnapshot);
         } catch (e) {
           console.warn("[CorrectionCanvas] snapshot load failed", e);
         }
