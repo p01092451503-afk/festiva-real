@@ -1776,6 +1776,47 @@ export type Database = {
           },
         ]
       }
+      content_comments: {
+        Row: {
+          body: string
+          content_id: string
+          course_id: string | null
+          created_at: string
+          id: string
+          parent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          content_id: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          content_id?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "content_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_progress: {
         Row: {
           completed: boolean | null
