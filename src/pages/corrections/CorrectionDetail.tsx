@@ -46,11 +46,20 @@ const CorrectionDetail = () => {
       const { data: req, error } = await supabase
         .from("correction_requests")
         .select(
-          "id, topic, note, status, score, summary, next_recommendation, student_id, course_id, assigned_teacher_id, submitted_at, completed_at, courses:course_id(id, title)",
+          "id, topic, note, status, score, summary, next_recommendation, student_id, course_id, assigned_teacher_id, submitted_at, completed_at",
         )
         .eq("id", id)
         .single();
       if (error) throw error;
+      let course: { id: string; title: string } | null = null;
+      if (req?.course_id) {
+        const { data: c } = await supabase
+          .from("courses")
+          .select("id, title")
+          .eq("id", req.course_id)
+          .maybeSingle();
+        course = (c as any) || null;
+      }
       const { data: pages } = await supabase
         .from("correction_pages")
         .select("id, page_no, original_path, annotated_path, width, height")
@@ -60,7 +69,7 @@ const CorrectionDetail = () => {
         .from("correction_annotations")
         .select("id, page_id, snapshot, comment, author_id, updated_at")
         .eq("request_id", id);
-      return { req, pages: pages || [], anns: anns || [] };
+      return { req: { ...req, courses: course }, pages: pages || [], anns: anns || [] };
     },
     enabled: !!id,
   });
