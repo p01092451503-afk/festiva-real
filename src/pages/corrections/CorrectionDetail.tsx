@@ -168,7 +168,7 @@ const CorrectionDetail = () => {
           title: "첨삭이 완료되었습니다",
           message: `'${data.req.topic}' 답안에 대한 첨삭이 완료되었습니다.`,
           type: "info",
-          link: `/student/corrections/${id}`,
+          action_url: `/student/corrections/${id}`,
         } as any);
       }
     },
