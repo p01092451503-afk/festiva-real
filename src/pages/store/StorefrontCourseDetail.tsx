@@ -423,19 +423,18 @@ const StorefrontCourseDetail = () => {
           <div className="lg:col-span-2">
             <div className="lg:sticky lg:top-8">
               <div className="rounded-2xl border border-border/70 bg-card p-6 space-y-5 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.12)]">
-                {/* Title & badges */}
+                {/* Compact title repeat + meta */}
                 <div className="space-y-3">
-                  {(course as any).categories?.name && (
-                    <Badge variant="secondary" className="text-[11px] font-medium tracking-wide rounded-full px-2.5 py-0.5">
-                      {(course as any).categories.name}
-                    </Badge>
-                  )}
-                  <h1 className="text-2xl sm:text-[26px] font-bold text-foreground leading-tight tracking-tight">
+                  <div className="flex items-center gap-1.5 text-xs">
+                    {instructor?.full_name && (
+                      <span className="text-primary font-semibold">{instructor.full_name}</span>
+                    )}
+                    <span className="text-muted-foreground/40">|</span>
+                    <span className="text-muted-foreground">정규 교육과정</span>
+                  </div>
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground leading-snug tracking-tight line-clamp-2">
                     {getCourseTitle(course.id, course.title)}
-                  </h1>
-                  {course.subtitle && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">{course.subtitle}</p>
-                  )}
+                  </h2>
 
                   {/* Rating + Share */}
                   <div className="flex items-center justify-between pt-1">
@@ -462,8 +461,18 @@ const StorefrontCourseDetail = () => {
 
                 <Separator />
 
+                {/* Course structure row — like reference '차시 | 총 8강 > 26차시' */}
+                <div className="flex items-center justify-between py-1 text-sm">
+                  <span className="text-muted-foreground">차시</span>
+                  <span className="font-semibold text-foreground tabular-nums">
+                    총 {contents.length}차시 · {formatDurationMinutes(totalDuration)}
+                  </span>
+                </div>
+
+                <Separator />
+
                 {/* Price section */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {isFree ? (
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-extrabold text-green-600 tracking-tight">무료</span>
@@ -480,9 +489,15 @@ const StorefrontCourseDetail = () => {
                         </div>
                       )}
                       <p className="text-3xl font-extrabold text-foreground tracking-tight tabular-nums">{formatPrice(displayPrice)}</p>
+                      {displayPrice >= 12000 && (
+                        <p className="text-xs text-muted-foreground">
+                          12개월 무이자 할부시 <span className="font-bold text-foreground tabular-nums">월 {formatPrice(Math.round(displayPrice / 12 / 100) * 100)}</span>
+                        </p>
+                      )}
                     </>
                   )}
                 </div>
+
 
                 {/* Course meta */}
                 <div className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-2xl bg-muted/40 p-4 text-sm">
