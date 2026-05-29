@@ -290,7 +290,9 @@ const StorefrontCourseDetail = () => {
     { key: "instructor" as const, label: "강사 소개" },
     ...(hasTextbook ? [{ key: "textbook" as const, label: "교재 정보" }] : []),
     { key: "reviews" as const, label: `수강 후기 (${reviews.length})` },
+    { key: "refund" as const, label: "환불·배송 안내" },
   ];
+
 
   return (
     <div className="min-h-screen bg-background">
