@@ -50,6 +50,12 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           editor.setCurrentTool("draw");
         } catch {}
       }
+      // Lock camera so drawings stay fixed on top of the photo
+      // (no pan/zoom from wheel, pinch, or drag)
+      try {
+        editor.setCameraOptions({ isLocked: true });
+        editor.setCamera({ x: 0, y: 0, z: 1 });
+      } catch {}
       onReady?.({
         getSnapshot: () => getSnapshot(editor.store),
         editor,
