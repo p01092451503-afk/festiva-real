@@ -560,7 +560,7 @@ const StorefrontCourseDetail = () => {
           </div>
 
           {/* Tab content */}
-          <div className="py-8 max-w-4xl">
+          <div className="py-6">
             {activeTab === "intro" && (
               <div className="space-y-8">
                 {course.description && (
