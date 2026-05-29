@@ -1166,13 +1166,8 @@ const ContentDialog = ({
       <DialogHeader>
         <DialogTitle className="text-base">{editingId ? t("course.editContent") : t("course.addContent")}</DialogTitle>
       </DialogHeader>
-      <Tabs defaultValue="ko" className="w-full">
-        <TabsList className="w-full">
-          <TabsTrigger value="ko" className="flex-1">{t("course.koTab")}</TabsTrigger>
-          <TabsTrigger value="en" className="flex-1">{t("course.enTab")}</TabsTrigger>
-        </TabsList>
+      <div className="space-y-3 pt-2">
 
-        <TabsContent value="ko" className="space-y-3 pt-2">
           <div className="space-y-1">
             <Label className="text-xs">{t("course.contentTitle")} *</Label>
             <Input className="h-9 text-sm" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} placeholder={t("course.contentPlaceholder")} />
