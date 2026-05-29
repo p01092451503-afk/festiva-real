@@ -1075,6 +1075,70 @@ const CreateCourse = () => {
           </div>
         )}
 
+        {/* 유료 판매 설정 — 생성 모드 (단과/패키지 + 가격) */}
+        {isAdmin && !isEditMode && (
+          <div className="stat-card space-y-6">
+            <div className="flex items-center gap-2 pb-3 border-b border-border">
+              <Layers className="h-5 w-5 text-foreground" />
+              <h2 className="text-lg font-semibold">유료 판매 설정</h2>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">강의 구분</label>
+              <div className="flex items-center gap-6 text-sm">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="course_type" checked={courseType === "single"} onChange={() => setCourseType("single")} />
+                  단과
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="course_type" checked={courseType === "package"} onChange={() => setCourseType("package")} />
+                  패키지
+                </label>
+              </div>
+              <p className="text-xs text-muted-foreground">패키지는 여러 단과 강의를 묶어 판매합니다. 세부 옵션은 생성 후 수정 화면에서 더 추가할 수 있습니다.</p>
+            </div>
+
+            {courseType === "package" && (
+              <PackagePicker selected={packageItems} onChange={setPackageItems} />
+            )}
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium">판매 가격 옵션</label>
+              <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-muted-foreground px-2">
+                <div className="col-span-2">수강기간 (일)</div>
+                <div className="col-span-2">정가 (원)</div>
+                <div className="col-span-2">가격 (원)</div>
+                <div className="col-span-2">포인트</div>
+                <div className="col-span-3">표출명</div>
+                <div className="col-span-1"></div>
+              </div>
+              {tiers.map((tier, idx) => (
+                <div key={idx} className="grid grid-cols-12 gap-2 items-center">
+                  <Input className="col-span-2 h-9" type="number" value={tier.duration_days || ""}
+                    onChange={(e) => setTiers(prev => prev.map((t, i) => i === idx ? { ...t, duration_days: Number(e.target.value) } : t))} />
+                  <Input className="col-span-2 h-9" type="number" value={tier.list_price || ""}
+                    onChange={(e) => setTiers(prev => prev.map((t, i) => i === idx ? { ...t, list_price: Number(e.target.value) } : t))} />
+                  <Input className="col-span-2 h-9" type="number" value={tier.sale_price || ""}
+                    onChange={(e) => setTiers(prev => prev.map((t, i) => i === idx ? { ...t, sale_price: Number(e.target.value) } : t))} />
+                  <Input className="col-span-2 h-9" type="number" value={tier.points || ""}
+                    onChange={(e) => setTiers(prev => prev.map((t, i) => i === idx ? { ...t, points: Number(e.target.value) } : t))} />
+                  <Input className="col-span-3 h-9" placeholder="예: 100일 과정" value={tier.display_name}
+                    onChange={(e) => setTiers(prev => prev.map((t, i) => i === idx ? { ...t, display_name: e.target.value } : t))} />
+                  <Button type="button" variant="ghost" size="icon" className="col-span-1 h-9 w-9"
+                    onClick={() => setTiers(prev => prev.filter((_, i) => i !== idx))}>
+                    <Trash2 className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </div>
+              ))}
+              <Button type="button" variant="outline" size="sm" className="rounded-xl gap-2"
+                onClick={() => setTiers(prev => [...prev, { duration_days: 30, list_price: 0, sale_price: 0, points: 0, display_name: "" }])}>
+                <Plus className="h-3.5 w-3.5" /> 가격 옵션 추가
+              </Button>
+              <p className="text-xs text-muted-foreground">가격 0 입력 시 무료 수강. 정가 입력 시 할인 금액이 자동 표출됩니다.</p>
+            </div>
+          </div>
+        )}
+
         {/* 유료 강의 판매 상세 설정 — 편집 모드 전용 */}
         {isAdmin && isEditMode && editCourseId && (
           <PaidCourseSettings courseId={editCourseId} />
