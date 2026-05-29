@@ -11,7 +11,7 @@ import {
   KeyRound,
   TrendingUp,
   MessageSquareText,
-  CalendarRange, Briefcase, FolderCheck, Award, ToggleRight, PenLine,
+  CalendarRange, Briefcase, FolderCheck, Award, ToggleRight, PenLine, UserCog,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
