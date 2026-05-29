@@ -36,6 +36,11 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
 
     if (isActivelyCreating) return;
 
+    // Don't lock while the user is using select or eraser tools –
+    // they need to interact with existing shapes.
+    const currentToolId = editor.getCurrentToolId();
+    if (currentToolId === "select" || currentToolId === "eraser") return;
+
     const unlockedShapes = editor.getCurrentPageShapes().filter((shape) => !shape.isLocked);
     if (unlockedShapes.length === 0) return;
 
@@ -47,12 +52,26 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       })) as TLShapePartial[],
     );
     editor.selectNone();
-    try {
-      editor.setCurrentTool("draw");
-    } catch (error) {
-      console.debug("[CorrectionCanvas] draw tool reset skipped", error);
-    }
   }, []);
+
+  // Allow the eraser tool to actually delete locked shapes by temporarily
+  // unlocking everything while eraser is active, and re-locking when leaving it.
+  const syncLocksForTool = useCallback((editor: Editor) => {
+    const toolId = editor.getCurrentToolId();
+    const shapes = editor.getCurrentPageShapes();
+    if (shapes.length === 0) return;
+
+    if (toolId === "eraser" || toolId === "select") {
+      const locked = shapes.filter((s) => s.isLocked);
+      if (locked.length > 0) {
+        editor.updateShapes(
+          locked.map((s) => ({ id: s.id, type: s.type, isLocked: false })) as TLShapePartial[],
+        );
+      }
+    } else {
+      lockUnlockedShapes(editor);
+    }
+  }, [lockUnlockedShapes]);
 
   // Load image dimensions to size the canvas
   useEffect(() => {
