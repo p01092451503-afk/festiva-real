@@ -141,11 +141,27 @@ const AvatarTab = () => {
     }
     setIsSaving(true);
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
-        .update({ avatar_url: selectedAvatar })
-        .eq("user_id", user.id);
+        .update({ avatar_url: selectedAvatar, updated_at: new Date().toISOString() })
+        .eq("user_id", user.id)
+        .select("user_id, avatar_url");
       if (error) throw error;
+      if (!data || data.length === 0) {
+        // No row matched — usually a missing profile row for this user
+        const { error: upsertErr } = await supabase
+          .from("profiles")
+          .upsert(
+            {
+              user_id: user.id,
+              avatar_url: selectedAvatar,
+              email: user.email ?? null,
+              full_name: profile?.full_name ?? null,
+            },
+            { onConflict: "user_id" },
+          );
+        if (upsertErr) throw upsertErr;
+      }
       // Refresh global profile so header/sidebar update immediately
       await refreshProfile();
       // Invalidate all cached instructor/profile queries so avatar updates everywhere
@@ -158,7 +174,11 @@ const AvatarTab = () => {
       toast({ title: t("mypage.avatarSaved") });
     } catch (e: any) {
       console.error("Avatar apply failed:", e);
-      toast({ title: t("common.error"), description: e.message || "저장에 실패했습니다.", variant: "destructive" });
+      toast({
+        title: t("common.error"),
+        description: e?.message || e?.error_description || "저장에 실패했습니다.",
+        variant: "destructive",
+      });
     } finally {
       setIsSaving(false);
     }
