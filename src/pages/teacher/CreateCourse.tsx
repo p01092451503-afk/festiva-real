@@ -1740,31 +1740,8 @@ const UnifiedContentEditor = ({
             <Switch checked={content.is_published} onCheckedChange={(v) => onChange("is_published", v)} className="scale-75" />
             {t("createCourse.publishToggle")}
           </label>
-          <button type="button" onClick={() => setShowEn(!showEn)} className="ml-auto flex items-center gap-1 text-[10px] text-primary hover:underline">
-            <Languages className="h-3 w-3" />
-            {showEn ? t("course.koTab", "한국어") : "English"}
-          </button>
         </div>
 
-        {showEn && (
-          <div className="space-y-3 p-3 rounded-lg bg-accent/50 border border-border">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-medium text-muted-foreground uppercase">English</span>
-              <Button type="button" variant="outline" size="sm" className="h-6 text-[10px] gap-1" onClick={handleTranslateContent} disabled={translating || (!content.title && !content.description)}>
-                {translating ? <Loader2 className="h-2.5 w-2.5 animate-spin" /> : <Languages className="h-2.5 w-2.5" />}
-                {t("course.autoTranslate", "자동 번역")}
-              </Button>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-muted-foreground uppercase">{t("course.enTitle", "영어 제목")}</label>
-              <Input value={content.enTitle} onChange={(e) => onChange("enTitle", e.target.value)} placeholder="English title" className="h-8 rounded-lg border-border text-xs" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-muted-foreground uppercase">{t("course.enDescription", "영어 설명")}</label>
-              <Textarea value={content.enDescription} onChange={(e) => onChange("enDescription", e.target.value)} placeholder="English description" className="min-h-[40px] rounded-lg border-border text-xs resize-none" />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
