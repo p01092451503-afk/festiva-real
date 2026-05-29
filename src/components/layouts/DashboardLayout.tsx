@@ -292,6 +292,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       label: t("nav.groupContent", "콘텐츠"),
       items: [
         { navKey: "admin.courses", label: t("nav.courseManagement"), href: "/admin/courses", icon: BookOpen, tourId: "nav-course-mgmt" },
+        { navKey: "admin.instructors", label: t("nav.instructorManagement", "강사 정보 관리"), href: "/admin/instructors", icon: UserCog },
         { navKey: "admin.tracks", label: t("nav.trackManagement", "학습 트랙 관리"), href: "/admin/tracks", icon: Layers },
         { navKey: "admin.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/admin/video-sessions", icon: Video },
         { navKey: "admin.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
