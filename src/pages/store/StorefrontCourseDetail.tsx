@@ -49,7 +49,7 @@ const StorefrontCourseDetail = () => {
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, avatar_url")
+        .select("full_name, avatar_url, position, department")
         .eq("user_id", course!.instructor_id!)
         .single();
       return data;
