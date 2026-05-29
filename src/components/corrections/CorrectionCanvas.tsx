@@ -44,6 +44,11 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       }
       if (readOnly) {
         editor.updateInstanceState({ isReadonly: true });
+      } else {
+        // Default to draw tool so mouse/pen/touch immediately writes
+        try {
+          editor.setCurrentTool("draw");
+        } catch {}
       }
       onReady?.({
         getSnapshot: () => getSnapshot(editor.store),
