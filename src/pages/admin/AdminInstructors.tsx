@@ -149,7 +149,7 @@ export default function AdminInstructors() {
         <div className="flex items-start gap-3">
           <GraduationCap className="h-6 w-6 text-foreground mt-1 shrink-0" />
           <div className="min-w-0 flex-1">
-            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">강사 정보 관리</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">강사 관리</h1>
             <p className="text-sm text-muted-foreground mt-1">
               강사 사진, 약력, 강의 경력, 전문 분야 등을 등록·편집합니다.
             </p>
