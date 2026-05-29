@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation, Navigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -30,15 +30,21 @@ const CorrectionDetail = () => {
   const qc = useQueryClient();
   const { toast } = useToast();
 
-  const isStaff = useMemo(
+  const location = useLocation();
+  const isStudentRoute = location.pathname.startsWith("/student/");
+
+  const hasStaffRole = useMemo(
     () => ["teacher", "admin", "super_admin"].includes(primaryRole as string),
     [primaryRole],
   );
+  // 학생 라우트에서는 staff 역할이 있어도 학생 뷰만 노출. 첨삭 도구/평가 UI는 강사/관리자 라우트에서만.
+  const isStaff = !isStudentRoute && hasStaffRole;
   const basePath = useMemo(() => {
+    if (isStudentRoute) return "/student/corrections";
     if (primaryRole === "admin" || primaryRole === "super_admin") return "/admin/corrections";
     if (primaryRole === "teacher") return "/teacher/corrections";
     return "/student/corrections";
-  }, [primaryRole]);
+  }, [primaryRole, isStudentRoute]);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["correction-request-detail", id],
