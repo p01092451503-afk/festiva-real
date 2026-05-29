@@ -2501,6 +2501,7 @@ export type Database = {
           id: string
           installment_enabled: boolean
           installment_months: number | null
+          instructor_bio: string | null
           instructor_id: string | null
           intro_video_provider: string | null
           intro_video_url: string | null
@@ -2529,6 +2530,14 @@ export type Database = {
           suspension_enabled: boolean
           tags: string[] | null
           target_departments: string[] | null
+          textbook_author: string | null
+          textbook_description: string | null
+          textbook_image_url: string | null
+          textbook_isbn: string | null
+          textbook_price: number | null
+          textbook_publisher: string | null
+          textbook_purchase_url: string | null
+          textbook_title: string | null
           thumbnail_url: string | null
           title: string
           updated_at: string | null
@@ -2555,6 +2564,7 @@ export type Database = {
           id?: string
           installment_enabled?: boolean
           installment_months?: number | null
+          instructor_bio?: string | null
           instructor_id?: string | null
           intro_video_provider?: string | null
           intro_video_url?: string | null
@@ -2583,6 +2593,14 @@ export type Database = {
           suspension_enabled?: boolean
           tags?: string[] | null
           target_departments?: string[] | null
+          textbook_author?: string | null
+          textbook_description?: string | null
+          textbook_image_url?: string | null
+          textbook_isbn?: string | null
+          textbook_price?: number | null
+          textbook_publisher?: string | null
+          textbook_purchase_url?: string | null
+          textbook_title?: string | null
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
@@ -2609,6 +2627,7 @@ export type Database = {
           id?: string
           installment_enabled?: boolean
           installment_months?: number | null
+          instructor_bio?: string | null
           instructor_id?: string | null
           intro_video_provider?: string | null
           intro_video_url?: string | null
@@ -2637,6 +2656,14 @@ export type Database = {
           suspension_enabled?: boolean
           tags?: string[] | null
           target_departments?: string[] | null
+          textbook_author?: string | null
+          textbook_description?: string | null
+          textbook_image_url?: string | null
+          textbook_isbn?: string | null
+          textbook_price?: number | null
+          textbook_publisher?: string | null
+          textbook_purchase_url?: string | null
+          textbook_title?: string | null
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
