@@ -1873,6 +1873,149 @@ export type Database = {
           },
         ]
       }
+      correction_annotations: {
+        Row: {
+          author_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          page_id: string
+          request_id: string
+          snapshot: Json | null
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          page_id: string
+          request_id: string
+          snapshot?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          page_id?: string
+          request_id?: string
+          snapshot?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correction_annotations_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "correction_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "correction_annotations_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "correction_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correction_pages: {
+        Row: {
+          annotated_path: string | null
+          created_at: string
+          height: number | null
+          id: string
+          original_path: string
+          page_no: number
+          request_id: string
+          updated_at: string
+          width: number | null
+        }
+        Insert: {
+          annotated_path?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          original_path: string
+          page_no: number
+          request_id: string
+          updated_at?: string
+          width?: number | null
+        }
+        Update: {
+          annotated_path?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          original_path?: string
+          page_no?: number
+          request_id?: string
+          updated_at?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correction_pages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "correction_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correction_requests: {
+        Row: {
+          assigned_teacher_id: string | null
+          completed_at: string | null
+          course_id: string | null
+          created_at: string
+          id: string
+          next_recommendation: string | null
+          note: string | null
+          score: number | null
+          status: Database["public"]["Enums"]["correction_status"]
+          student_id: string
+          submitted_at: string
+          summary: string | null
+          topic: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_teacher_id?: string | null
+          completed_at?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          next_recommendation?: string | null
+          note?: string | null
+          score?: number | null
+          status?: Database["public"]["Enums"]["correction_status"]
+          student_id: string
+          submitted_at?: string
+          summary?: string | null
+          topic: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_teacher_id?: string | null
+          completed_at?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          next_recommendation?: string | null
+          note?: string | null
+          score?: number | null
+          status?: Database["public"]["Enums"]["correction_status"]
+          student_id?: string
+          submitted_at?: string
+          summary?: string | null
+          topic?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           code: string
@@ -5599,6 +5742,7 @@ export type Database = {
       assignment_status: "draft" | "published" | "closed"
       attendance_status: "present" | "absent" | "late" | "excused"
       content_type: "video" | "document" | "quiz" | "assignment" | "live"
+      correction_status: "pending" | "in_progress" | "completed" | "returned"
       enrollment_status: "pending" | "approved" | "rejected"
       learner_level: "beginner" | "intermediate" | "advanced"
       question_difficulty: "easy" | "medium" | "hard"
@@ -5751,6 +5895,7 @@ export const Constants = {
       assignment_status: ["draft", "published", "closed"],
       attendance_status: ["present", "absent", "late", "excused"],
       content_type: ["video", "document", "quiz", "assignment", "live"],
+      correction_status: ["pending", "in_progress", "completed", "returned"],
       enrollment_status: ["pending", "approved", "rejected"],
       learner_level: ["beginner", "intermediate", "advanced"],
       question_difficulty: ["easy", "medium", "hard"],
