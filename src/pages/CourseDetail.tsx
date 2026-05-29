@@ -1115,6 +1115,41 @@ const ContentDialog = ({
     ? form.video_url.replace("bunny://", "").trim()
     : "";
 
+  // Auto-fetch CDN(Bunny) duration when GUID changes and library has no record
+  useEffect(() => {
+    if (form.video_provider !== "bunny" || !currentBunnyGuid) return;
+    const lib = (bunnyVideos as any[]).find((v) => v.bunny_video_guid === currentBunnyGuid);
+    if (lib?.duration_minutes != null) {
+      // 라이브러리에 등록된 영상이면 시간 자동 반영
+      if (Math.round((form.duration_minutes ?? 0) * 100) / 100 !== Math.round((lib.duration_minutes ?? 0) * 100) / 100) {
+        setForm((f) => ({ ...f, duration_minutes: lib.duration_minutes }));
+      }
+      return;
+    }
+    // 라이브러리 미등록 GUID는 Bunny API에서 직접 조회
+    let cancelled = false;
+    (async () => {
+      try {
+        setFetchingBunnyDuration(true);
+        const { data, error } = await supabase.functions.invoke("bunny-stream-info", {
+          body: { video_guid: currentBunnyGuid },
+        });
+        if (error) throw error;
+        const sec = Number(data?.length_seconds) || 0;
+        if (!cancelled && sec > 0) {
+          const dec = Math.round((sec / 60) * 100) / 100;
+          setForm((f) => ({ ...f, duration_minutes: dec }));
+        }
+      } catch {
+        // 무시: 사용자가 수동 입력 가능
+      } finally {
+        if (!cancelled) setFetchingBunnyDuration(false);
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentBunnyGuid, form.video_provider, bunnyVideos]);
+
   // Real-time sync: mirror KO title/description to EN (raw, untranslated) so EN is never empty
   useEffect(() => {
     setEnForm(f => ({
@@ -1174,20 +1209,27 @@ const ContentDialog = ({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label className="text-xs">{t("course.contentType")}</Label>
-              <Select value={form.content_type} onValueChange={(v) => setForm(f => ({ ...f, content_type: v }))}>
-                <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+              <Label className="text-xs">유형</Label>
+              <Select
+                value={form.video_provider || "youtube"}
+                onValueChange={(v) => setForm(f => ({
+                  ...f,
+                  video_provider: v,
+                  content_type: "video",
+                  // provider 전환 시 잔여 URL 초기화
+                  video_url: v !== f.video_provider ? "" : f.video_url,
+                }))}
+              >
+                <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="선택" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="video">{t("course.video")}</SelectItem>
-                  <SelectItem value="document">{t("course.document")}</SelectItem>
-                  <SelectItem value="quiz">{t("course.quiz")}</SelectItem>
-                  <SelectItem value="assignment">{t("course.assignment")}</SelectItem>
-                  <SelectItem value="live">{t("course.live")}</SelectItem>
+                  <SelectItem value="youtube">유튜브</SelectItem>
+                  <SelectItem value="bunny">동영상 (CDN)</SelectItem>
+                  <SelectItem value="kollus">콜러스 (Kollus)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">{t("course.playbackTime")} (분 / 초)</Label>
+              <Label className="text-xs">{t("course.playbackTime")} (분 / 초){form.video_provider === "bunny" && <span className="ml-1 text-[10px] text-muted-foreground">· 자동</span>}</Label>
               <div className="flex items-center gap-1.5">
                 <Input
                   className="h-9 text-sm w-16"
@@ -1306,23 +1348,26 @@ const ContentDialog = ({
             </div>
           ) : (
             <div className="space-y-1">
-              <Label className="text-xs">{t("course.contentUrl")}</Label>
-              <Input className="h-9 text-sm" value={form.video_url} onChange={(e) => setForm(f => ({ ...f, video_url: e.target.value }))} placeholder="https://..." />
+              <Label className="text-xs">
+                {form.video_provider === "kollus" ? "Kollus 미디어 콘텐츠 키" : "YouTube 영상 URL"}
+              </Label>
+              <Input
+                className="h-9 text-sm"
+                value={form.video_url}
+                onChange={(e) => setForm(f => ({ ...f, video_url: e.target.value }))}
+                placeholder={
+                  form.video_provider === "kollus"
+                    ? "Kollus 미디어 콘텐츠 키 입력"
+                    : "https://www.youtube.com/watch?v=... 또는 https://youtu.be/..."
+                }
+              />
+              <p className="text-[11px] text-muted-foreground">
+                {form.video_provider === "kollus"
+                  ? "Kollus 관리자 → 미디어 → 콘텐츠 키를 그대로 입력하세요."
+                  : "YouTube 영상 URL을 그대로 붙여넣으세요."}
+              </p>
             </div>
           )}
-          <div className="space-y-1">
-            <Label className="text-xs">{t("course.provider")}</Label>
-            <Select value={form.video_provider} onValueChange={(v) => setForm(f => ({ ...f, video_provider: v }))}>
-              <SelectTrigger className="h-9 text-sm"><SelectValue placeholder={t("course.select")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="youtube">{t("course.youtube")}</SelectItem>
-                <SelectItem value="vimeo">{t("course.vimeo")}</SelectItem>
-                <SelectItem value="bunny">Global CDN</SelectItem>
-                <SelectItem value="custom">{t("course.flipLearningMango")}</SelectItem>
-                <SelectItem value="upload">{t("course.cdnUpload")}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="space-y-1">
             <Label className="text-xs">{t("course.description")}</Label>
             <Textarea className="text-sm" value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} rows={2} />
