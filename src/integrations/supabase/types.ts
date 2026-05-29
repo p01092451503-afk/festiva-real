@@ -2366,6 +2366,92 @@ export type Database = {
         }
         Relationships: []
       }
+      course_package_items: {
+        Row: {
+          child_course_id: string
+          created_at: string
+          id: string
+          package_course_id: string
+          sort_order: number
+        }
+        Insert: {
+          child_course_id: string
+          created_at?: string
+          id?: string
+          package_course_id: string
+          sort_order?: number
+        }
+        Update: {
+          child_course_id?: string
+          created_at?: string
+          id?: string
+          package_course_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_package_items_child_course_id_fkey"
+            columns: ["child_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_package_items_package_course_id_fkey"
+            columns: ["package_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_pricing_tiers: {
+        Row: {
+          course_id: string
+          created_at: string
+          display_name: string | null
+          duration_days: number
+          id: string
+          list_price: number
+          points: number
+          sale_price: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          display_name?: string | null
+          duration_days: number
+          id?: string
+          list_price?: number
+          points?: number
+          sale_price?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          display_name?: string | null
+          duration_days?: number
+          id?: string
+          list_price?: number
+          points?: number
+          sale_price?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_pricing_tiers_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_target_departments: {
         Row: {
           course_id: string
@@ -2398,91 +2484,166 @@ export type Database = {
       }
       courses: {
         Row: {
+          always_recruiting: boolean
+          attachment_url: string | null
+          auto_start_grace_days: number
+          base_category: string | null
           category_id: string | null
+          course_type: string
           created_at: string | null
+          daily_learning_limit_min: number | null
           deadline: string | null
           description: string | null
+          detail_intro_html: string | null
           difficulty_level: string | null
           enrolled_count: number
           estimated_duration_hours: number | null
           id: string
+          installment_enabled: boolean
+          installment_months: number | null
           instructor_id: string | null
+          intro_video_provider: string | null
+          intro_video_url: string | null
           is_b2c: boolean
           is_mandatory: boolean | null
           is_sequential: boolean
+          keywords: string[]
           max_students: number | null
+          period_mode: boolean
           preview_video_url: string | null
           price: number
           rating_avg: number
           rating_count: number
+          retake_allow_coupon_stack: boolean
+          retake_discount_enabled: boolean
+          retake_discount_percent: number | null
           sale_ends_at: string | null
           sale_price: number | null
+          seo_description: string | null
+          seo_keywords: string | null
+          seo_title: string | null
+          short_intro_html: string | null
           status: string | null
           subtitle: string | null
+          support_options: string[]
+          suspension_enabled: boolean
           tags: string[] | null
           target_departments: string[] | null
           thumbnail_url: string | null
           title: string
           updated_at: string | null
           version: number | null
+          visibility: string
+          visibility_end_at: string | null
+          visibility_start_at: string | null
         }
         Insert: {
+          always_recruiting?: boolean
+          attachment_url?: string | null
+          auto_start_grace_days?: number
+          base_category?: string | null
           category_id?: string | null
+          course_type?: string
           created_at?: string | null
+          daily_learning_limit_min?: number | null
           deadline?: string | null
           description?: string | null
+          detail_intro_html?: string | null
           difficulty_level?: string | null
           enrolled_count?: number
           estimated_duration_hours?: number | null
           id?: string
+          installment_enabled?: boolean
+          installment_months?: number | null
           instructor_id?: string | null
+          intro_video_provider?: string | null
+          intro_video_url?: string | null
           is_b2c?: boolean
           is_mandatory?: boolean | null
           is_sequential?: boolean
+          keywords?: string[]
           max_students?: number | null
+          period_mode?: boolean
           preview_video_url?: string | null
           price?: number
           rating_avg?: number
           rating_count?: number
+          retake_allow_coupon_stack?: boolean
+          retake_discount_enabled?: boolean
+          retake_discount_percent?: number | null
           sale_ends_at?: string | null
           sale_price?: number | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
+          short_intro_html?: string | null
           status?: string | null
           subtitle?: string | null
+          support_options?: string[]
+          suspension_enabled?: boolean
           tags?: string[] | null
           target_departments?: string[] | null
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
           version?: number | null
+          visibility?: string
+          visibility_end_at?: string | null
+          visibility_start_at?: string | null
         }
         Update: {
+          always_recruiting?: boolean
+          attachment_url?: string | null
+          auto_start_grace_days?: number
+          base_category?: string | null
           category_id?: string | null
+          course_type?: string
           created_at?: string | null
+          daily_learning_limit_min?: number | null
           deadline?: string | null
           description?: string | null
+          detail_intro_html?: string | null
           difficulty_level?: string | null
           enrolled_count?: number
           estimated_duration_hours?: number | null
           id?: string
+          installment_enabled?: boolean
+          installment_months?: number | null
           instructor_id?: string | null
+          intro_video_provider?: string | null
+          intro_video_url?: string | null
           is_b2c?: boolean
           is_mandatory?: boolean | null
           is_sequential?: boolean
+          keywords?: string[]
           max_students?: number | null
+          period_mode?: boolean
           preview_video_url?: string | null
           price?: number
           rating_avg?: number
           rating_count?: number
+          retake_allow_coupon_stack?: boolean
+          retake_discount_enabled?: boolean
+          retake_discount_percent?: number | null
           sale_ends_at?: string | null
           sale_price?: number | null
+          seo_description?: string | null
+          seo_keywords?: string | null
+          seo_title?: string | null
+          short_intro_html?: string | null
           status?: string | null
           subtitle?: string | null
+          support_options?: string[]
+          suspension_enabled?: boolean
           tags?: string[] | null
           target_departments?: string[] | null
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           version?: number | null
+          visibility?: string
+          visibility_end_at?: string | null
+          visibility_start_at?: string | null
         }
         Relationships: [
           {

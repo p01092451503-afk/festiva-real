@@ -30,6 +30,7 @@ import CategorySelect from "@/components/CategorySelect";
 import { useTranslation } from "react-i18next";
 import type { Database } from "@/integrations/supabase/types";
 import B2CSaleSettings from "@/components/admin/B2CSaleSettings";
+import PaidCourseSettings from "@/components/admin/PaidCourseSettings";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import BunnyUploader from "@/components/admin/BunnyUploader";
 import { BulkAddDialog, BulkEditBar, type NewContentDraft } from "@/components/admin/BulkContentTools";
@@ -1037,6 +1038,11 @@ const CreateCourse = () => {
               onStatusChange={setStatus}
             />
           </div>
+        )}
+
+        {/* 유료 강의 판매 상세 설정 — 편집 모드 전용 */}
+        {isAdmin && isEditMode && editCourseId && (
+          <PaidCourseSettings courseId={editCourseId} />
         )}
 
         {/* Submit */}
