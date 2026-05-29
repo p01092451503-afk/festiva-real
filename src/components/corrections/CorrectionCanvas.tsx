@@ -36,6 +36,11 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
 
     if (isActivelyCreating) return;
 
+    // Don't lock while the user is using select or eraser tools –
+    // they need to interact with existing shapes.
+    const currentToolId = editor.getCurrentToolId();
+    if (currentToolId === "select" || currentToolId === "eraser") return;
+
     const unlockedShapes = editor.getCurrentPageShapes().filter((shape) => !shape.isLocked);
     if (unlockedShapes.length === 0) return;
 
@@ -47,12 +52,26 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       })) as TLShapePartial[],
     );
     editor.selectNone();
-    try {
-      editor.setCurrentTool("draw");
-    } catch (error) {
-      console.debug("[CorrectionCanvas] draw tool reset skipped", error);
-    }
   }, []);
+
+  // Allow the eraser tool to actually delete locked shapes by temporarily
+  // unlocking everything while eraser is active, and re-locking when leaving it.
+  const syncLocksForTool = useCallback((editor: Editor) => {
+    const toolId = editor.getCurrentToolId();
+    const shapes = editor.getCurrentPageShapes();
+    if (shapes.length === 0) return;
+
+    if (toolId === "eraser" || toolId === "select") {
+      const locked = shapes.filter((s) => s.isLocked);
+      if (locked.length > 0) {
+        editor.updateShapes(
+          locked.map((s) => ({ id: s.id, type: s.type, isLocked: false })) as TLShapePartial[],
+        );
+      }
+    } else {
+      lockUnlockedShapes(editor);
+    }
+  }, [lockUnlockedShapes]);
 
   // Load image dimensions to size the canvas
   useEffect(() => {
@@ -83,9 +102,23 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         editor.updateInstanceState({ isReadonly: true });
       } else {
         const unlockHandler = editor.sideEffects.registerOperationCompleteHandler(() => {
-          lockUnlockedShapes(editor);
+          syncLocksForTool(editor);
         });
         editor.disposables.add(unlockHandler);
+
+        // React to tool changes (e.g. user picks eraser → unlock; picks draw → lock)
+        let lastToolId = editor.getCurrentToolId();
+        const toolWatcher = editor.store.listen(
+          () => {
+            const toolId = editor.getCurrentToolId();
+            if (toolId !== lastToolId) {
+              lastToolId = toolId;
+              syncLocksForTool(editor);
+            }
+          },
+          { source: "user", scope: "session" },
+        );
+        editor.disposables.add(toolWatcher);
 
         // Default to draw tool so mouse/pen/touch immediately writes
         try {
@@ -108,7 +141,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         editor,
       });
     },
-    [initialSnapshot, readOnly, onReady, lockUnlockedShapes],
+    [initialSnapshot, readOnly, onReady, lockUnlockedShapes, syncLocksForTool],
   );
 
   // Aspect ratio container based on the image
