@@ -32,6 +32,10 @@ const RoleSwitcher = () => {
   if (mapped.has("admin") || mapped.has("teacher") || mapped.has("branch_admin")) {
     mapped.add("student");
   }
+  // Admin/super_admin can preview teacher dashboard when teacher role is enabled site-wide.
+  if (teacherRoleEnabled && mapped.has("admin")) {
+    mapped.add("teacher");
+  }
   const switchableRoles = Array.from(mapped)
     .filter((r) => r in roleConfig)
     .filter((r) => teacherRoleEnabled || r !== "teacher") as Array<keyof typeof roleConfig>;
