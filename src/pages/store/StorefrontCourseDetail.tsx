@@ -500,74 +500,57 @@ const StorefrontCourseDetail = () => {
 
 
                 {/* Course meta */}
-                <div className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-2xl bg-muted/40 p-4 text-sm">
+                {/* Meta grid — compact */}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 rounded-xl bg-muted/40 p-3.5 text-[13px]">
                   <div className="flex items-center gap-2 min-w-0">
-                    <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span className="text-foreground/80 truncate">총 {formatDurationMinutes(totalDuration)}</span>
-                  </div>
-                  <div className="flex items-center gap-2 min-w-0">
-                    <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span className="text-foreground/80 truncate">{contents.length}개 차시</span>
-                  </div>
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Users className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    <span className="text-foreground/80 truncate">{course.enrolled_count.toLocaleString()}명 수강</span>
+                    <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="text-foreground/80 truncate tabular-nums">{course.enrolled_count.toLocaleString()}명 수강</span>
                   </div>
                   {course.difficulty_level && (
                     <div className="flex items-center gap-2 min-w-0">
-                      <BarChart3 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <span className="text-foreground/80 truncate">{course.difficulty_level}</span>
+                      <BarChart3 className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span className="text-foreground/80 truncate capitalize">{course.difficulty_level}</span>
                     </div>
                   )}
                 </div>
 
-                {/* Instructor */}
-                {instructor && (
-                  <div className="flex items-center gap-3 pt-1">
-                    <Avatar className="h-11 w-11 ring-2 ring-border/50">
-                      <AvatarImage src={instructor.avatar_url || undefined} />
-                      <AvatarFallback className="bg-accent text-sm">
-                        {(instructor.full_name || "?")[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Instructor</p>
-                      <p className="text-sm font-semibold text-foreground truncate">{instructor.full_name}</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Action buttons */}
-                <div className="space-y-2.5 pt-1">
-                  {isEnrolled ? (
-                    <Button className="w-full h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
-                      <Play className="h-4 w-4 mr-2" /> 학습하기
-                    </Button>
-                  ) : (
+                {/* Action row — icon buttons + primary CTA (reference style) */}
+                <div className="flex items-stretch gap-2 pt-1">
+                  {!isEnrolled && (
                     <>
-                      <Button className="w-full h-12 text-base rounded-xl font-semibold shadow-sm" onClick={handleBuyNow}>
-                        {isFree ? "무료로 시작하기" : "바로 구매"}
-                      </Button>
+                      <button
+                        onClick={() => {
+                          if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
+                          wishlistMutation.mutate();
+                        }}
+                        aria-label={isInWishlist ? "찜 해제" : "찜하기"}
+                        className="h-12 w-12 shrink-0 inline-flex items-center justify-center rounded-xl border border-border hover:bg-accent transition-colors"
+                      >
+                        <Heart className={cn("h-5 w-5", isInWishlist ? "fill-destructive text-destructive" : "text-muted-foreground")} />
+                      </button>
                       {!isFree && (
-                        <Button variant="outline" className="w-full h-12 rounded-xl font-medium" onClick={handleAddToCart} disabled={isInCart || addToCartMutation.isPending}>
-                          <ShoppingBag className="h-4 w-4 mr-2" />
-                          {isInCart ? "장바구니에 있음" : "장바구니 담기"}
-                        </Button>
+                        <button
+                          onClick={handleAddToCart}
+                          disabled={isInCart || addToCartMutation.isPending}
+                          aria-label={isInCart ? "장바구니에 있음" : "장바구니 담기"}
+                          className="h-12 w-12 shrink-0 inline-flex items-center justify-center rounded-xl border border-border hover:bg-accent transition-colors disabled:opacity-50"
+                        >
+                          <ShoppingBag className={cn("h-5 w-5", isInCart ? "text-foreground" : "text-muted-foreground")} />
+                        </button>
                       )}
                     </>
                   )}
-
-                  <button
-                    onClick={() => {
-                      if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
-                      wishlistMutation.mutate();
-                    }}
-                    className="w-full inline-flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-                  >
-                    <Heart className={cn("h-4 w-4", isInWishlist ? "fill-destructive text-destructive" : "")} />
-                    {isInWishlist ? "찜 해제" : "찜하기"}
-                  </button>
+                  {isEnrolled ? (
+                    <Button className="flex-1 h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
+                      <Play className="h-4 w-4 mr-2" /> 학습하기
+                    </Button>
+                  ) : (
+                    <Button className="flex-1 h-12 text-base rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
+                      {isFree ? "무료로 시작하기" : "바로구매"}
+                    </Button>
+                  )}
                 </div>
+
               </div>
             </div>
           </div>
