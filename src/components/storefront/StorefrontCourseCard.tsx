@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 const categoryBgColors: Record<string, string> = {
+  // 기존 분류
   "마케팅": "#e8d5c4",
   "개발": "#c4d4e0",
   "디자인": "#d4c4d9",
@@ -15,6 +16,18 @@ const categoryBgColors: Record<string, string> = {
   "자기계발": "#d9d4c4",
   "재무": "#c4d0d5",
   "영상": "#d5c4c4",
+  // 노무사 분류
+  "노동법": "#d8e3d0",      // 세이지 그린
+  "사회보험법": "#cdd9e6",   // 소프트 블루
+  "인사노무관리": "#e6d6c4", // 웜 베이지
+  "시험전략": "#e2c9c9",     // 더스티 로즈
+  "선택과목": "#d6cce0",     // 라벤더 그레이
+  // 영문 매핑 (i18n)
+  "Labor Law": "#d8e3d0",
+  "Social Insurance": "#cdd9e6",
+  "HR Management": "#e6d6c4",
+  "Exam Strategy": "#e2c9c9",
+  "Electives": "#d6cce0",
 };
 
 interface StorefrontCourseCardProps {
