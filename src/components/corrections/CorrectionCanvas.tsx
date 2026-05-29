@@ -141,7 +141,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         editor,
       });
     },
-    [initialSnapshot, readOnly, onReady, lockUnlockedShapes],
+    [initialSnapshot, readOnly, onReady, lockUnlockedShapes, syncLocksForTool],
   );
 
   // Aspect ratio container based on the image
