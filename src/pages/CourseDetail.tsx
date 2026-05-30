@@ -727,6 +727,17 @@ const CourseDetail = () => {
           t={t}
         />
 
+        {isTeacherOrAdmin && courseId && (
+          <BulkContentEditDialog
+            open={bulkEditOpen}
+            onOpenChange={setBulkEditOpen}
+            contents={contents}
+            courseId={courseId}
+          />
+        )}
+
+
+
         <CourseEditDialog
           open={courseEditOpen}
           onOpenChange={setCourseEditOpen}
