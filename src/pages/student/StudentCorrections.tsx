@@ -327,15 +327,26 @@ const StudentCorrections = () => {
       <Dialog open={open} onOpenChange={(o) => { if (!submitting) { setOpen(o); if (!o) reset(); } }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>새 첨삭 요청</DialogTitle>
+            <DialogTitle>{activeAssignment ? "부여된 과제 제출" : "새 첨삭 요청"}</DialogTitle>
             <DialogDescription>
               답안지를 사진으로 촬영해 올려주세요. 자동으로 WebP로 압축됩니다.
             </DialogDescription>
           </DialogHeader>
+          {activeAssignment && (
+            <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm space-y-1">
+              <div className="font-medium flex items-center gap-1.5"><Sparkles className="h-4 w-4 text-primary" /> {activeAssignment.title}</div>
+              {activeAssignment.instructions && (
+                <div className="text-xs text-muted-foreground whitespace-pre-wrap">{activeAssignment.instructions}</div>
+              )}
+              {activeAssignment.due_at && (
+                <div className="text-xs text-muted-foreground">기한: {new Date(activeAssignment.due_at).toLocaleString()}</div>
+              )}
+            </div>
+          )}
           <div className="space-y-4">
             <div>
               <Label htmlFor="topic">주제 / 과제명 *</Label>
-              <Input id="topic" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="예: 2024년 노무사 2차 행정쟁송법 사례" />
+              <Input id="topic" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="예: 2024년 노무사 2차 행정쟁송법 사례" disabled={!!activeAssignment} />
             </div>
             <div>
               <Label>관련 강의 (선택)</Label>
