@@ -312,37 +312,148 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
                   <Switch checked={form.recording_enabled} onCheckedChange={(v) => setForm({ ...form, recording_enabled: v })} />
                   <Label>세션 녹화 활성화</Label>
                 </div>
-                <div>
-                  <Label>참여자 초대 (이름/이메일 검색)</Label>
-                  <Input placeholder="2자 이상 입력" value={participantQuery} onChange={(e) => setParticipantQuery(e.target.value)} />
-                  {searchUsers.length > 0 && (
-                    <div className="border rounded-md mt-1 max-h-40 overflow-y-auto">
-                      {searchUsers.map((u) => (
-                        <button
-                          key={u.user_id}
-                          type="button"
-                          className="w-full text-left px-3 py-2 hover:bg-accent text-sm"
-                          onClick={() => {
-                            if (selectedParticipants.find((p) => p.id === u.user_id)) return;
-                            setSelectedParticipants([...selectedParticipants, { id: u.user_id, name: u.full_name ?? "-", email: u.email ?? "" }]);
-                            setParticipantQuery("");
-                          }}
-                        >
-                          {u.full_name} <span className="text-muted-foreground">{u.email}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                <div className="space-y-2">
+                  <Label>참여자 초대</Label>
+                  <Tabs defaultValue="course" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="course" className="gap-1.5"><BookOpen className="h-3.5 w-3.5" />과정별</TabsTrigger>
+                      <TabsTrigger value="name" className="gap-1.5"><Search className="h-3.5 w-3.5" />개인별</TabsTrigger>
+                      <TabsTrigger value="id" className="gap-1.5"><IdCard className="h-3.5 w-3.5" />아이디 검색</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="course" className="space-y-2 mt-3">
+                      <Select value={selectedCourseId} onValueChange={setSelectedCourseId}>
+                        <SelectTrigger><SelectValue placeholder="강의 선택" /></SelectTrigger>
+                        <SelectContent>
+                          {courseList.map((c: any) => (
+                            <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedCourseId && (
+                        <div className="border rounded-md max-h-56 overflow-y-auto divide-y divide-border">
+                          {courseStudents.length === 0 ? (
+                            <p className="px-3 py-4 text-xs text-muted-foreground text-center">등록된 수강생이 없습니다.</p>
+                          ) : (
+                            <>
+                              <div className="flex items-center justify-between px-3 py-2 bg-muted/40">
+                                <span className="text-xs text-muted-foreground">총 {courseStudents.length}명</span>
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-7 text-xs"
+                                  onClick={() => {
+                                    const toAdd = courseStudents
+                                      .filter((s: any) => !selectedParticipants.find((p) => p.id === s.user_id))
+                                      .map((s: any) => ({ id: s.user_id, name: s.full_name ?? "-", email: s.email ?? "" }));
+                                    if (toAdd.length === 0) {
+                                      toast.info("이미 모두 추가되어 있습니다.");
+                                      return;
+                                    }
+                                    setSelectedParticipants([...selectedParticipants, ...toAdd]);
+                                    toast.success(`${toAdd.length}명 추가됨`);
+                                  }}
+                                >
+                                  전체 추가
+                                </Button>
+                              </div>
+                              {courseStudents.map((s: any) => {
+                                const checked = !!selectedParticipants.find((p) => p.id === s.user_id);
+                                return (
+                                  <label key={s.user_id} className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer hover:bg-accent/40">
+                                    <Checkbox
+                                      checked={checked}
+                                      onCheckedChange={(v) => {
+                                        if (v) {
+                                          if (checked) return;
+                                          setSelectedParticipants([...selectedParticipants, { id: s.user_id, name: s.full_name ?? "-", email: s.email ?? "" }]);
+                                        } else {
+                                          setSelectedParticipants(selectedParticipants.filter((p) => p.id !== s.user_id));
+                                        }
+                                      }}
+                                    />
+                                    <span className="flex-1 truncate">{s.full_name ?? "-"}</span>
+                                    <span className="text-xs text-muted-foreground truncate">{s.email}</span>
+                                  </label>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="name" className="space-y-2 mt-3">
+                      <Input placeholder="이름 2자 이상 입력" value={participantQuery} onChange={(e) => setParticipantQuery(e.target.value)} />
+                      {searchUsers.length > 0 && (
+                        <div className="border rounded-md max-h-44 overflow-y-auto divide-y divide-border">
+                          {searchUsers.map((u: any) => (
+                            <button
+                              key={u.user_id}
+                              type="button"
+                              className="w-full text-left px-3 py-2 hover:bg-accent text-sm flex items-center gap-2"
+                              onClick={() => {
+                                if (selectedParticipants.find((p) => p.id === u.user_id)) return;
+                                setSelectedParticipants([...selectedParticipants, { id: u.user_id, name: u.full_name ?? "-", email: u.email ?? "" }]);
+                                setParticipantQuery("");
+                              }}
+                            >
+                              <span className="flex-1 truncate">{u.full_name}</span>
+                              <span className="text-xs text-muted-foreground truncate">{u.email}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="id" className="space-y-2 mt-3">
+                      <Input placeholder="이메일 또는 사번 입력" value={idQuery} onChange={(e) => setIdQuery(e.target.value)} />
+                      {searchById.length > 0 && (
+                        <div className="border rounded-md max-h-44 overflow-y-auto divide-y divide-border">
+                          {searchById.map((u: any) => (
+                            <button
+                              key={u.user_id}
+                              type="button"
+                              className="w-full text-left px-3 py-2 hover:bg-accent text-sm flex items-center gap-2"
+                              onClick={() => {
+                                if (selectedParticipants.find((p) => p.id === u.user_id)) return;
+                                setSelectedParticipants([...selectedParticipants, { id: u.user_id, name: u.full_name ?? "-", email: u.email ?? "" }]);
+                                setIdQuery("");
+                              }}
+                            >
+                              <span className="flex-1 truncate">{u.full_name ?? "-"}</span>
+                              <span className="text-xs text-muted-foreground truncate">{u.employee_id || u.email}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </TabsContent>
+                  </Tabs>
+
                   {selectedParticipants.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {selectedParticipants.map((p) => (
-                        <Badge key={p.id} variant="secondary" className="cursor-pointer" onClick={() => setSelectedParticipants(selectedParticipants.filter((x) => x.id !== p.id))}>
-                          {p.name} ✕
-                        </Badge>
-                      ))}
+                    <div className="rounded-md border border-border/80 bg-muted/30 p-2 mt-2">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-xs text-muted-foreground">선택된 참여자 {selectedParticipants.length}명</span>
+                        <button
+                          type="button"
+                          className="text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => setSelectedParticipants([])}
+                        >
+                          전체 해제
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedParticipants.map((p) => (
+                          <Badge key={p.id} variant="secondary" className="cursor-pointer" onClick={() => setSelectedParticipants(selectedParticipants.filter((x) => x.id !== p.id))}>
+                            {p.name} ✕
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
+
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setOpen(false)}>취소</Button>
