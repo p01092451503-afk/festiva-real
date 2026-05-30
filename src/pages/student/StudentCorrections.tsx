@@ -74,11 +74,52 @@ const StudentCorrections = () => {
     enabled: !!user?.id,
   });
 
+  // 부여된 에세이 과제 (미제출만 표시)
+  const { data: myAssignments = [] } = useQuery({
+    queryKey: ["my-essay-assignments", user?.id],
+    enabled: !!user?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("correction_assignment_targets")
+        .select(`
+          id, status, submitted_at, assignment_id,
+          correction_assignments!inner(id, title, instructions, course_id, due_at, courses:course_id(title))
+        `)
+        .eq("student_id", user!.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const pendingAssignments = useMemo(
+    () => myAssignments.filter((t: any) => t.status === "assigned"),
+    [myAssignments]
+  );
+
   const reset = () => {
     setTopic("");
     setNote("");
     setCourseId("none");
     setFiles([]);
+    setActiveAssignment(null);
+  };
+
+  const openSubmitForAssignment = (t: any) => {
+    const a = t.correction_assignments;
+    setActiveAssignment({
+      target_id: t.id,
+      assignment_id: a.id,
+      title: a.title,
+      instructions: a.instructions,
+      course_id: a.course_id,
+      due_at: a.due_at,
+    });
+    setTopic(a.title);
+    setNote("");
+    setCourseId(a.course_id || "none");
+    setFiles([]);
+    setOpen(true);
   };
 
   const onPickFiles = (incoming: FileList | null) => {
@@ -102,7 +143,6 @@ const StudentCorrections = () => {
       if (!topic.trim()) throw new Error("주제를 입력해주세요.");
       if (files.length === 0) throw new Error("답안 사진을 1장 이상 첨부해주세요.");
 
-      // 1) request 생성
       const { data: req, error: reqErr } = await supabase
         .from("correction_requests")
         .insert({
@@ -116,7 +156,6 @@ const StudentCorrections = () => {
         .single();
       if (reqErr) throw reqErr;
 
-      // 2) 각 페이지 압축 후 업로드 + correction_pages 생성
       for (let i = 0; i < files.length; i++) {
         const raw = files[i];
         const compressed = await compressAnswerImage(raw);
@@ -132,11 +171,24 @@ const StudentCorrections = () => {
         });
         if (pageErr) throw pageErr;
       }
+
+      // 과제 대상 → 제출 상태 연결
+      if (activeAssignment) {
+        await supabase
+          .from("correction_assignment_targets")
+          .update({
+            status: "submitted",
+            request_id: req.id,
+            submitted_at: new Date().toISOString(),
+          })
+          .eq("id", activeAssignment.target_id);
+      }
       return req.id;
     },
     onSuccess: () => {
       toast({ title: "첨삭 요청이 접수되었습니다." });
       qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
+      qc.invalidateQueries({ queryKey: ["my-essay-assignments"] });
       reset();
       setOpen(false);
     },
@@ -145,6 +197,7 @@ const StudentCorrections = () => {
     },
     onSettled: () => setSubmitting(false),
   });
+
 
   const stats = useMemo(() => {
     return {
