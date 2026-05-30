@@ -25,7 +25,7 @@ import RichStatCard from "@/components/admin/stats/RichStatCard";
 
 // Recharts-heavy components → lazy so vendor-charts (~113KB gzip) loads
 // only after the page's text/cards have painted.
-const BranchLearningStats = lazy(() => import("@/components/admin/stats/BranchLearningStats"));
+
 const MemberStatsCard = lazy(() => import("@/components/admin/stats/MemberStatsCard"));
 const HourlyAccessChart = lazy(() => import("@/components/admin/stats/HourlyAccessChart"));
 const SignupTrendChart = lazy(() => import("@/components/admin/stats/SignupTrendChart"));
@@ -274,9 +274,8 @@ const AdminTraffic = () => {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
             <TabsTrigger value="overview" className="text-xs">{t("stats.tabOverview")}</TabsTrigger>
-            <TabsTrigger value="branch" className="text-xs">{t("stats.tabBranch")}</TabsTrigger>
             <TabsTrigger value="learning" className="text-xs">{t("stats.tabLearning")}</TabsTrigger>
             <TabsTrigger value="traffic" className="text-xs">{t("stats.tabTraffic")}</TabsTrigger>
           </TabsList>
@@ -297,11 +296,6 @@ const AdminTraffic = () => {
             <TrackStatsCard variant="full" limit={5} />
           </TabsContent>
 
-          <TabsContent value="branch" className="space-y-4">
-            <Suspense fallback={<div className="h-[300px]"><ChartFallback /></div>}>
-              <BranchLearningStats />
-            </Suspense>
-          </TabsContent>
 
           <TabsContent value="traffic" className="space-y-4">
             <div className="flex w-full sm:w-auto items-center gap-2 self-start">

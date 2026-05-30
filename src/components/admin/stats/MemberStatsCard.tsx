@@ -77,54 +77,34 @@ const MemberStatsCard = () => {
         <CardTitle className="text-sm font-medium">{t("stats.memberDist")}</CardTitle>
       </CardHeader>
       <CardContent className="px-3 sm:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <p className="text-xs text-muted-foreground mb-2 font-medium">{t("stats.byRole")}</p>
-            <div className="h-[150px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={roleData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={55} innerRadius={30} paddingAngle={2}>
-                    {roleData.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value: number) => [`${value}${t("common.people")}`, ""]}
-                    contentStyle={sharedTooltipContentStyle}
-                    labelStyle={sharedTooltipLabelStyle}
-                    itemStyle={sharedTooltipItemStyle}
-                    cursor={{ fill: "hsl(var(--muted) / 0.4)" }}
-                    separator=""
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 justify-center">
-              {roleData.map((r, i) => (
-                <span key={r.name} className="text-[10px] text-muted-foreground flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                  {r.name} {r.value}{t("common.people")}
-                </span>
-              ))}
-            </div>
+        <div>
+          <p className="text-xs text-muted-foreground mb-2 font-medium">{t("stats.byRole")}</p>
+          <div className="h-[180px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={roleData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={65} innerRadius={36} paddingAngle={2}>
+                  {roleData.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value: number) => [`${value}${t("common.people")}`, ""]}
+                  contentStyle={sharedTooltipContentStyle}
+                  labelStyle={sharedTooltipLabelStyle}
+                  itemStyle={sharedTooltipItemStyle}
+                  cursor={{ fill: "hsl(var(--muted) / 0.4)" }}
+                  separator=""
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
-
-          <div>
-            <p className="text-xs text-muted-foreground mb-2 font-medium">{t("stats.byBranch")}</p>
-            <div className="space-y-2">
-              {deptCounts.map((d, i) => (
-                <div key={d.name} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                    <span className="text-xs text-muted-foreground truncate">{d.name}</span>
-                  </div>
-                  <span className="text-xs font-semibold text-foreground shrink-0">{d.value}{t("common.people")}</span>
-                </div>
-              ))}
-              {deptCounts.length === 0 && (
-                <p className="text-xs text-muted-foreground text-center py-4">{t("common.noData")}</p>
-              )}
-            </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 justify-center">
+            {roleData.map((r, i) => (
+              <span key={r.name} className="text-[10px] text-muted-foreground flex items-center gap-1">
+                <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                {r.name} {r.value}{t("common.people")}
+              </span>
+            ))}
           </div>
         </div>
       </CardContent>
