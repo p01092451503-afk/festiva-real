@@ -454,7 +454,7 @@ const AdminOrders = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((order: any) => {
+              {paginated.map((order: any) => {
                 const p = profileMap.get(order.user_id);
                 const items = order.order_items || [];
                 const names = items.map((i: any) => i.courses?.title).filter(Boolean);
