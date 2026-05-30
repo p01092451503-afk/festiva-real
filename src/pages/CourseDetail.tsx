@@ -36,6 +36,7 @@ import { formatDurationMs } from "@/lib/duration";
 import { useTranslation } from "react-i18next";
 import { useAssessmentI18n } from "@/hooks/useI18nMaps";
 import { useCdnAdminUnlock } from "@/components/admin/CdnAdminUnlock";
+import { BulkContentEditDialog } from "@/components/admin/BulkContentEditDialog";
 
 const contentTypeIcon: Record<string, React.ElementType> = {
   video: Video, document: FileText, quiz: BarChart3, assignment: FileText, live: Video,
