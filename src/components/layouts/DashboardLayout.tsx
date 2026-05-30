@@ -472,28 +472,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" aria-label={t("common.closeSidebar", "사이드바 닫기")}>
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
-          {collapsed ? (
-            <Link
-              to="/"
-              className="hidden lg:flex items-center justify-center hover:opacity-70 transition-opacity"
-              aria-label={displayCompanyName}
-            >
-              {presetSidebarLogo ? (
-                <img
-                  src={presetSidebarLogo}
-                  alt={displayCompanyName}
-                  className="block h-9 w-9 object-contain"
-                />
-              ) : (
-                <img
-                  src={webheadsLogoPng}
-                  alt="WEBHEADS"
-                  aria-hidden="true"
-                  className="block h-9 w-9 object-contain"
-                />
-              )}
-            </Link>
-          ) : (
+          {collapsed ? null : (
             <>
               <Link to="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
                 {presetSidebarLogo ? (
