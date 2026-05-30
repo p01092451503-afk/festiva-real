@@ -197,7 +197,6 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
 
   const teacherNav: NavItem[] = [
     { navKey: "teacher.dashboard", label: t("nav.dashboard"), href: "/teacher", icon: LayoutDashboard, tourId: "nav-dashboard" },
-    { navKey: "teacher.courses", label: t("nav.courseManagement"), href: "/teacher/courses", icon: BookOpen, tourId: "nav-course-mgmt" },
     { navKey: "teacher.assignments", label: t("nav.assignmentManagement"), href: "/teacher/assignments", icon: ClipboardList, tourId: "nav-assignment-mgmt" },
     { navKey: "teacher.corrections", label: t("nav.correctionsMgmt", "첨삭 관리"), href: "/teacher/corrections", icon: PenLine },
     { navKey: "teacher.students", label: t("nav.studentManagement"), href: "/teacher/students", icon: Users, tourId: "nav-student-mgmt" },
