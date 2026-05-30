@@ -729,7 +729,7 @@ const ContentPlayer = () => {
                   </div>
                 </button>
               ) : currentContent.content_type === "video" && embedUrl ? (
-                <div className="relative">
+                <div className="relative" key={`video-wrap-${contentId}`}>
                   <div ref={videoContainerRef} className="aspect-video w-full relative bg-black group/video">
                     <iframe
                       key={`video-${contentId}-${resumeChoice ?? "pending"}`}
