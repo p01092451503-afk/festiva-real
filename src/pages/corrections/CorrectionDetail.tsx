@@ -1,7 +1,7 @@
-import { useMemo, useState, useEffect, useCallback } from "react";
-import { useParams, Link, useLocation, Navigate } from "react-router-dom";
+import { useMemo, useState, useEffect, useRef } from "react";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText, Clock, Sparkles, AlertCircle, ImageIcon, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText, Clock, Sparkles, AlertCircle, ImageIcon, Eye, Trash2, Camera, Plus, X } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,10 +10,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useToast } from "@/hooks/use-toast";
+import { compressAnswerImage } from "@/lib/imageCompression";
 import CorrectionCanvas from "@/components/corrections/CorrectionCanvas";
 
 const STATUS_LABEL: Record<string, string> = {
