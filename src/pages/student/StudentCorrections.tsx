@@ -22,11 +22,11 @@ import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { compressAnswerImage } from "@/lib/imageCompression";
 
-const STATUS_META: Record<string, { label: string; icon: any; cls: string }> = {
-  pending: { label: "대기", icon: Clock, cls: "text-muted-foreground" },
-  in_progress: { label: "에세이 진행 중", icon: Loader2, cls: "text-info" },
-  completed: { label: "에세이 완료", icon: CheckCircle2, cls: "text-success" },
-  returned: { label: "반려", icon: AlertCircle, cls: "text-warning" },
+const STATUS_META: Record<string, { label: string; icon: any; cls: string; hint?: string }> = {
+  pending: { label: "업로드 완료 · 첨삭 대기", icon: Clock, cls: "text-info", hint: "강사 배정 후 첨삭이 시작됩니다." },
+  in_progress: { label: "강사 첨삭 중", icon: Loader2, cls: "text-warning", hint: "첨삭이 완료되면 결과를 확인할 수 있어요." },
+  completed: { label: "첨삭 완료", icon: CheckCircle2, cls: "text-success", hint: "강사 주석과 종합 평가를 확인하세요." },
+  returned: { label: "반려", icon: AlertCircle, cls: "text-destructive", hint: "다시 작성해 새 에세이로 제출해 주세요." },
 };
 
 const StudentCorrections = () => {
