@@ -422,7 +422,7 @@ const StudentAchievements = () => {
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <h2 className="text-lg font-semibold text-foreground">{t("achievements.leaderboard")}</h2>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <Select value={branchFilter} onValueChange={setBranchFilter}>
                 <SelectTrigger className="h-9 text-xs">
                   <SelectValue placeholder={t("achievements.branchAll")} />
@@ -430,17 +430,6 @@ const StudentAchievements = () => {
                 <SelectContent className="bg-popover z-50">
                   <SelectItem value="all">{t("achievements.branchAll")}</SelectItem>
                   {branchOptions.map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="h-9 text-xs">
-                  <SelectValue placeholder={t("achievements.roleAll")} />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
-                  <SelectItem value="all">{t("achievements.roleAll")}</SelectItem>
-                  {roleOptions.map(([value, label]) => (
                     <SelectItem key={value} value={value}>{label}</SelectItem>
                   ))}
                 </SelectContent>
