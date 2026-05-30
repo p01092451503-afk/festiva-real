@@ -230,7 +230,7 @@ const StudentCorrections = () => {
               손글씨로 작성한 답안을 사진으로 올리면 강사가 디지털로 첨삭해 드립니다.
             </p>
           </div>
-          <Button onClick={() => setOpen(true)} className="gap-2">
+          <Button onClick={openNewRequest} className="gap-2">
             <Plus className="h-4 w-4" /> 새 첨삭 요청
           </Button>
         </header>
