@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   Receipt, Search, RotateCcw, DollarSign, ShoppingCart, CreditCard, TrendingUp,
   ChevronDown, ChevronUp, ExternalLink, Smartphone, Building2, Wallet, X,
-  CheckCircle2, Trash2, Ban, UserX,
+  CheckCircle2, Trash2, Ban, UserX, Calendar, Download, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
