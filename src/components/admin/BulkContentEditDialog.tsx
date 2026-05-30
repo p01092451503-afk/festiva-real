@@ -136,7 +136,7 @@ export const BulkContentEditDialog = ({ open, onOpenChange, contents, courseId }
               duration_minutes: r.duration_minutes ?? null,
               is_published: r.is_published,
               is_preview: r.is_preview,
-              video_provider: r.video_provider || null,
+              video_provider: (r.video_provider || null) as any,
               video_url: r.video_url?.trim() || null,
               description: r.description || null,
             })
