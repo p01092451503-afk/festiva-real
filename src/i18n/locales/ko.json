@@ -611,14 +611,14 @@
     "weekAgo": "{{n}}주전",
     "thisWeek": "이번주",
     "category": {
-      "product": "제품 교육",
-      "clinical": "시술 임상",
-      "skin": "피부 과학",
-      "marketing": "영업 마케팅",
-      "cs": "고객 응대 (CS)",
-      "safety": "안전 및 위생",
-      "compliance": "컴플라이언스",
-      "onboarding": "신입 온보딩"
+      "product": "노동법 총론",
+      "clinical": "근로기준법",
+      "skin": "인사노무관리",
+      "marketing": "사회보험법",
+      "cs": "행정쟁송법",
+      "safety": "선택과목 (민법)",
+      "compliance": "2차 논술 실전",
+      "onboarding": "기본 입문과정"
     },
     "badgeNames": {
       "꾸준한 학습자": "꾸준한 학습자",

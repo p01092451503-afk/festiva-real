@@ -611,14 +611,14 @@
     "weekAgo": "{{n}}w ago",
     "thisWeek": "This week",
     "category": {
-      "product": "Product Training",
-      "clinical": "Clinical Practice",
-      "skin": "Skin Science",
-      "marketing": "Sales & Marketing",
-      "cs": "Customer Service",
-      "safety": "Safety & Hygiene",
-      "compliance": "Compliance",
-      "onboarding": "Onboarding"
+      "product": "Labor Law Overview",
+      "clinical": "Labor Standards Act",
+      "skin": "HR Management",
+      "marketing": "Social Insurance Law",
+      "cs": "Administrative Litigation",
+      "safety": "Elective (Civil Law)",
+      "compliance": "Stage 2 Essay Practice",
+      "onboarding": "Foundations Course"
     },
     "badgeNames": {
       "꾸준한 학습자": "Consistent Learner",
