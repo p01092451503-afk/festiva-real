@@ -154,24 +154,14 @@ const StudentAchievements = () => {
       ),
     [allEntries, isEn],
   );
-  const roleOptions = useMemo(
-    () =>
-      Array.from(
-        new Map(
-          allEntries.map((e) => [e.role, isEn ? e.role_en || e.role : e.role] as const),
-        ).entries(),
-      ),
-    [allEntries, isEn],
-  );
 
   const combinedLeaderboard = useMemo(
     () =>
       allEntries
         .filter((e) => branchFilter === "all" || e.branch === branchFilter)
-        .filter((e) => roleFilter === "all" || e.role === roleFilter)
         .sort((a, b) => b.points - a.points)
         .slice(0, 10),
-    [allEntries, branchFilter, roleFilter]
+    [allEntries, branchFilter]
   );
 
   return (
