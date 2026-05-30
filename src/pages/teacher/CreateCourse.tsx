@@ -5,7 +5,7 @@ import {
   ArrowLeft, Plus, Trash2, GripVertical, Video, FileText, BarChart3,
   MonitorPlay, BookOpen, ExternalLink, Link2, Eye, ImagePlus, X, CalendarIcon,
   Save, Languages, Loader2, LayoutGrid, Image as ImageIcon, ChevronUp, Layers,
-  ChevronDown, Clock,
+  ChevronDown, Clock, BookOpenCheck, Settings2, ListVideo, Info,
 } from "lucide-react";
 import { translateKoToEn, autoTranslateInBackground } from "@/lib/translate";
 import { Button } from "@/components/ui/button";
