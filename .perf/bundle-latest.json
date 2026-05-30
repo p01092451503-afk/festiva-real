@@ -1,24 +1,24 @@
 {
-  "timestamp": "2026-04-26T08:26:17.419Z",
+  "timestamp": "2026-05-30T09:06:45.486Z",
   "totals": {
-    "raw": 4538619,
-    "gzipText": 1041460,
-    "files": 178
+    "raw": 9406084,
+    "gzipText": 2248622,
+    "files": 251
   },
   "buckets": {
     "js": {
-      "files": 123,
-      "raw": 3477083,
-      "gzip": 1018464
+      "files": 201,
+      "raw": 7610758,
+      "gzip": 2209256
     },
     "css": {
-      "files": 1,
-      "raw": 124181,
-      "gzip": 20124
+      "files": 2,
+      "raw": 216113,
+      "gzip": 36455
     },
     "img": {
-      "files": 50,
-      "raw": 928057,
+      "files": 43,
+      "raw": 1569310,
       "gzip": 0
     },
     "font": {
@@ -28,30 +28,50 @@
     },
     "html": {
       "files": 1,
-      "raw": 8520,
-      "gzip": 2872
+      "raw": 8646,
+      "gzip": 2911
     },
     "other": {
-      "files": 3,
-      "raw": 778,
+      "files": 4,
+      "raw": 1257,
       "gzip": 0
     }
   },
   "topJs": [
     {
-      "path": "assets/vendor-charts-CmQ_bjiZ.js",
-      "size": 432240,
-      "gzip": 113310
+      "path": "assets/CorrectionDetail-DYvPcwmI.js",
+      "size": 1603266,
+      "gzip": 479949
     },
     {
-      "path": "assets/vendor-pdf-BXpq_eW4.js",
-      "size": 416452,
-      "gzip": 135080
+      "path": "assets/vendor-icons-L9ZS2xdU.js",
+      "size": 779278,
+      "gzip": 136878
     },
     {
-      "path": "assets/index-CeE-HIK6.js",
-      "size": 243103,
-      "gzip": 75999
+      "path": "assets/vendor-charts-CJCxRpph.js",
+      "size": 432248,
+      "gzip": 113242
+    },
+    {
+      "path": "assets/xlsx-Ck5MUZvf.js",
+      "size": 425055,
+      "gzip": 140683
+    },
+    {
+      "path": "assets/vendor-pdf-DXIpiaXv.js",
+      "size": 416471,
+      "gzip": 135084
+    },
+    {
+      "path": "assets/index-o7fETBEM.js",
+      "size": 290769,
+      "gzip": 89401
+    },
+    {
+      "path": "assets/VideoRoom-B6hZPw8Z.js",
+      "size": 252222,
+      "gzip": 70957
     },
     {
       "path": "assets/vendor-canvas-BfxBtG_O.js",
@@ -59,59 +79,39 @@
       "gzip": 47691
     },
     {
-      "path": "assets/vendor-supabase-brbIVSkk.js",
-      "size": 193819,
-      "gzip": 51310
+      "path": "assets/vendor-supabase-F35Gm5_4.js",
+      "size": 193827,
+      "gzip": 51316
     },
     {
-      "path": "assets/vendor-react-BCOLYn79.js",
+      "path": "assets/vendor-react-vLNqtMOm.js",
       "size": 162873,
-      "gzip": 53139
+      "gzip": 53138
     },
     {
-      "path": "assets/index.es-nBFJhR4J.js",
+      "path": "assets/index.es-COGnWjQb.js",
       "size": 150883,
-      "gzip": 51454
+      "gzip": 51453
     },
     {
-      "path": "assets/vendor-ui-C0oF_08d.js",
-      "size": 113041,
-      "gzip": 36143
+      "path": "assets/index-fC5g9zYR.js",
+      "size": 117611,
+      "gzip": 36027
     },
     {
-      "path": "assets/CourseDetail-BNwTLjKl.js",
-      "size": 94643,
-      "gzip": 20053
+      "path": "assets/vendor-ui-CDlQfJ_A.js",
+      "size": 113203,
+      "gzip": 36048
     },
     {
-      "path": "assets/ContentPlayer-BtjiE_En.js",
-      "size": 72226,
-      "gzip": 21709
+      "path": "assets/CreateCourse-ByUX8pf2.js",
+      "size": 107373,
+      "gzip": 25734
     },
     {
-      "path": "assets/CreateCourse-M3X4BGUd.js",
-      "size": 72069,
-      "gzip": 18254
-    },
-    {
-      "path": "assets/BunnyUploader-C-xzRW1i.js",
-      "size": 62963,
-      "gzip": 17128
-    },
-    {
-      "path": "assets/vendor-icons-DEnua6Va.js",
-      "size": 58198,
-      "gzip": 10769
-    },
-    {
-      "path": "assets/vendor-i18n-CQs3Qaf0.js",
-      "size": 48240,
-      "gzip": 15876
-    },
-    {
-      "path": "assets/MyPage-D9itYGkd.js",
-      "size": 45166,
-      "gzip": 10623
+      "path": "assets/jszip.min-CGxlIdWd.js",
+      "size": 97138,
+      "gzip": 30022
     }
   ]
 }
