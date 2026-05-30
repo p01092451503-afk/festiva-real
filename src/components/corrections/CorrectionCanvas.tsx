@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Tldraw,
+  DefaultToolbar,
   type Editor,
+  type TLComponents,
   type TLEditorSnapshot,
   type TLStoreSnapshot,
   loadSnapshot,
   getSnapshot,
 } from "tldraw";
 import "tldraw/tldraw.css";
-
-
+import { GripHorizontal } from "lucide-react";
 
 interface Props {
   imageUrl: string;
@@ -19,16 +20,122 @@ interface Props {
 }
 
 /**
- * Tldraw canvas overlaid on a handwritten answer photo. The image is rendered
- * as a plain <img> background, and tldraw sits on top with a transparent
- * background so users can pen, highlight, type and draw shapes directly over
- * the answer.
+ * Draggable toolbar built on top of tldraw's DefaultToolbar. Position is
+ * managed in React state, and dragging uses pointer events on a small grip
+ * handle. The toolbar is rendered via tldraw's `components.Toolbar` slot so
+ * tldraw never re-positions or re-creates it from underneath us.
  */
+const DraggableToolbar = ({
+  containerRef,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}) => {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  // null = use default centered position (top-center)
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+    pointerId: number;
+  } | null>(null);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const wrapper = wrapperRef.current;
+    const container = containerRef.current;
+    if (!wrapper || !container) return;
+    const wRect = wrapper.getBoundingClientRect();
+    const cRect = container.getBoundingClientRect();
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: wRect.left - cRect.left,
+      originY: wRect.top - cRect.top,
+      pointerId: e.pointerId,
+    };
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const wrapper = wrapperRef.current;
+    const container = containerRef.current;
+    if (!wrapper || !container) return;
+    const wRect = wrapper.getBoundingClientRect();
+    const cRect = container.getBoundingClientRect();
+    const dx = e.clientX - drag.startX;
+    const dy = e.clientY - drag.startY;
+    const maxX = Math.max(0, cRect.width - wRect.width);
+    const maxY = Math.max(0, cRect.height - wRect.height);
+    const nx = Math.max(0, Math.min(maxX, drag.originX + dx));
+    const ny = Math.max(0, Math.min(maxY, drag.originY + dy));
+    setPos({ x: nx, y: ny });
+  };
+
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (drag && drag.pointerId === e.pointerId) {
+      try {
+        (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
+      } catch {
+        /* noop */
+      }
+      dragRef.current = null;
+    }
+  };
+
+  const style: React.CSSProperties = pos
+    ? {
+        position: "absolute",
+        left: pos.x,
+        top: pos.y,
+        transform: "none",
+        zIndex: 300,
+        pointerEvents: "auto",
+      }
+    : {
+        position: "absolute",
+        left: "50%",
+        top: 12,
+        transform: "translateX(-50%)",
+        zIndex: 300,
+        pointerEvents: "auto",
+      };
+
+  return (
+    <div
+      ref={wrapperRef}
+      style={style}
+      className="correction-draggable-toolbar flex items-stretch rounded-lg bg-background/95 backdrop-blur shadow-md border border-border/60"
+    >
+      <div
+        role="button"
+        aria-label="툴바 이동"
+        title="드래그하여 위치 이동"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        className="flex items-center justify-center px-1.5 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground touch-none select-none border-r border-border/60"
+      >
+        <GripHorizontal size={14} />
+      </div>
+      <div className="correction-toolbar-inner">
+        <DefaultToolbar />
+      </div>
+    </div>
+  );
+};
+
 const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Props) => {
   const editorRef = useRef<Editor | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
 
-  // Load image dimensions to size the canvas
   useEffect(() => {
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -57,16 +164,11 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       if (readOnly) {
         editor.updateInstanceState({ isReadonly: true });
       } else {
-        // Keep the user's chosen tool active after every action so the editor
-        // doesn't auto-switch to the select tool (which is what causes the
-        // accidental "drag groups shapes" behavior).
         try {
           editor.updateInstanceState({ isToolLocked: true });
         } catch (error) {
           console.debug("[CorrectionCanvas] tool lock preference skipped", error);
         }
-
-        // Default to draw tool so mouse/pen/touch immediately writes
         try {
           editor.setCurrentTool("draw");
         } catch (error) {
@@ -74,7 +176,6 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         }
       }
 
-      // Lock camera so drawings stay fixed on top of the photo
       try {
         editor.setCameraOptions({ isLocked: true });
         editor.setCamera({ x: 0, y: 0, z: 1 });
@@ -90,132 +191,13 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     [initialSnapshot, readOnly, onReady],
   );
 
-
-
-  // Make the tldraw toolbar movable. Position it at top-center by default,
-  // with a drag handle to reposition it anywhere within the canvas.
-  // We use CSS variables + a stylesheet (with !important) so that tldraw's
-  // internal React re-renders cannot overwrite the position.
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (readOnly) return;
-    const container = containerRef.current;
-    if (!container) return;
-    const tldrawHost = container.querySelector<HTMLElement>(".tldraw-correction");
-
-    let handle: HTMLElement | null = null;
-    let toolbar: HTMLElement | null = null;
-    let cleanup: (() => void) | null = null;
-
-    const attachHandle = (tb: HTMLElement) => {
-      tb.classList.add("correction-movable-toolbar");
-      if (tb.querySelector(":scope > .correction-toolbar-handle")) return;
-
-      handle = document.createElement("div");
-
-      handle.className = "correction-toolbar-handle";
-      handle.setAttribute("aria-label", "툴바 이동");
-      handle.title = "드래그하여 위치 이동";
-      handle.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>';
-      tb.prepend(handle);
-
-      let startX = 0;
-      let startY = 0;
-      let originX = 0;
-      let originY = 0;
-
-      const onPointerDown = (e: PointerEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const tbRect = tb.getBoundingClientRect();
-        const cRect = (tldrawHost ?? container).getBoundingClientRect();
-        originX = tbRect.left - cRect.left;
-        originY = tbRect.top - cRect.top;
-        if (tldrawHost) {
-          tldrawHost.style.setProperty("--ctb-x", `${originX}px`);
-          tldrawHost.style.setProperty("--ctb-y", `${originY}px`);
-          tldrawHost.setAttribute("data-tb-dragged", "1");
-        }
-        startX = e.clientX;
-        startY = e.clientY;
-        handle!.style.cursor = "grabbing";
-        handle!.setPointerCapture(e.pointerId);
-      };
-      const onPointerMove = (e: PointerEvent) => {
-        if (!handle?.hasPointerCapture(e.pointerId) || !tldrawHost) return;
-        const cRect = tldrawHost.getBoundingClientRect();
-        const tbRect = tb.getBoundingClientRect();
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        const maxX = cRect.width - tbRect.width;
-        const maxY = cRect.height - tbRect.height;
-        const nx = Math.max(0, Math.min(maxX, originX + dx));
-        const ny = Math.max(0, Math.min(maxY, originY + dy));
-        tldrawHost.style.setProperty("--ctb-x", `${nx}px`);
-        tldrawHost.style.setProperty("--ctb-y", `${ny}px`);
-      };
-      const onPointerUp = (e: PointerEvent) => {
-        if (handle?.hasPointerCapture(e.pointerId)) {
-          handle.releasePointerCapture(e.pointerId);
-        }
-        if (handle) handle.style.cursor = "grab";
+  // Inject a custom Toolbar component into tldraw's UI slot.
+  const components: TLComponents = readOnly
+    ? {}
+    : {
+        Toolbar: () => <DraggableToolbar containerRef={containerRef} />,
       };
 
-      handle.addEventListener("pointerdown", onPointerDown);
-      handle.addEventListener("pointermove", onPointerMove);
-      handle.addEventListener("pointerup", onPointerUp);
-      handle.addEventListener("pointercancel", onPointerUp);
-
-      cleanup = () => {
-        handle?.removeEventListener("pointerdown", onPointerDown);
-        handle?.removeEventListener("pointermove", onPointerMove);
-        handle?.removeEventListener("pointerup", onPointerUp);
-        handle?.removeEventListener("pointercancel", onPointerUp);
-        handle?.remove();
-        handle = null;
-      };
-    };
-
-    const findAndAttach = () => {
-      const all = Array.from(
-        container.querySelectorAll<HTMLElement>(".tlui-toolbar"),
-      );
-
-
-      const tb =
-        all.find((el) =>
-          el.querySelector(
-            'button[data-value="draw"], button[data-value="select"], button[data-value="hand"], button[data-testid^="tools."]',
-          ),
-        ) ||
-        all.sort(
-          (a, b) =>
-            b.getBoundingClientRect().top - a.getBoundingClientRect().top,
-        )[0];
-      if (!tb) return;
-      if (tb !== toolbar || !tb.contains(handle as Node)) {
-        toolbar = tb;
-        attachHandle(tb);
-      }
-    };
-
-
-
-
-    findAndAttach();
-    const observer = new MutationObserver(() => findAndAttach());
-    observer.observe(container, { childList: true, subtree: true });
-
-    return () => {
-      observer.disconnect();
-      cleanup?.();
-    };
-  }, [readOnly, dims]);
-
-
-  // Aspect ratio container based on the image
   const ratio = dims ? dims.h / dims.w : 11 / 8.5;
 
   return (
@@ -232,52 +214,29 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           draggable={false}
         />
         <div className="absolute inset-0 tldraw-correction">
-          <Tldraw onMount={handleMount} hideUi={!!readOnly} />
+          <Tldraw onMount={handleMount} hideUi={!!readOnly} components={components} />
         </div>
       </div>
       <style>{`
         .tldraw-correction .tl-background { background-color: transparent !important; }
         .tldraw-correction .tl-canvas { background: transparent !important; }
-        /* Expand the bottom layout panel so absolute-positioned toolbar can
-           reach the top of the canvas. Restore pointer-events on its children. */
+        /* Let our absolutely-positioned wrapper escape tldraw's bottom layout. */
         .tldraw-correction .tlui-layout__bottom { inset: 0 !important; pointer-events: none !important; }
         .tldraw-correction .tlui-layout__bottom > * { pointer-events: auto; }
-        /* Movable toolbar (only the tagged one): pinned top-center by default */
-        .tldraw-correction .tlui-toolbar.correction-movable-toolbar {
-          position: absolute !important;
-          bottom: auto !important;
-          left: 50% !important;
-          top: 12px !important;
-          transform: translateX(-50%) !important;
-          z-index: 300 !important;
-          width: max-content !important;
-          max-width: calc(100% - 16px) !important;
-        }
-        .tldraw-correction[data-tb-dragged="1"] .tlui-toolbar.correction-movable-toolbar {
-          left: var(--ctb-x, 0px) !important;
-          top: var(--ctb-y, 12px) !important;
-
+        /* Strip the default toolbar chrome so our wrapper provides it. */
+        .correction-draggable-toolbar .tlui-toolbar {
+          position: static !important;
           transform: none !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+          padding: 2px !important;
+          width: max-content !important;
         }
-
-        .correction-toolbar-handle {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 22px;
-          align-self: stretch;
-          cursor: grab;
-          color: rgba(0,0,0,0.45);
-          touch-action: none;
-          user-select: none;
-        }
-        .correction-toolbar-handle:hover { color: rgba(0,0,0,0.9); }
+        .correction-draggable-toolbar .tlui-toolbar__tools { background: transparent !important; }
       `}</style>
-
     </div>
   );
 };
-
-
 
 export default CorrectionCanvas;
