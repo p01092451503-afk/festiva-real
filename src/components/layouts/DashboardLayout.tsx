@@ -166,7 +166,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "student.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
     { navKey: "student.articles", label: t("nav.articles", "아티클"), href: "/articles", icon: Newspaper },
     { navKey: "student.assignments", label: t("nav.assignments"), href: "/dashboard/assignments", icon: ClipboardList, tourId: "nav-assignments" },
-    { navKey: "student.corrections", label: t("nav.corrections", "에세이 작성"), href: "/student/corrections", icon: PenLine },
+    { navKey: "student.corrections", label: t("nav.corrections", "에세이(첨삭) 작성"), href: "/student/corrections", icon: PenLine },
     { navKey: "student.achievements", label: t("nav.achievements"), href: "/dashboard/achievements", icon: Trophy, tourId: "nav-achievements" },
     ...(isEnabled("programs")
       ? [{ navKey: "student.programs", label: t("nav.programs", "프로그램 신청"), href: "/student/programs", icon: CalendarRange } as NavItem]

@@ -224,14 +224,14 @@ const StudentCorrections = () => {
         <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
-              <PenLine className="h-6 w-6" /> 에세이 작성하기
+              <PenLine className="h-6 w-6" /> 에세이(첨삭) 작성하기
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
               강사가 부여한 에세이 과제를 확인하고 답안을 작성·제출하세요.
             </p>
           </div>
           <Button onClick={openNewRequest} className="gap-2">
-            <Plus className="h-4 w-4" /> 새 에세이 작성
+            <Plus className="h-4 w-4" /> 새 에세이(첨삭) 작성
           </Button>
         </header>
 
