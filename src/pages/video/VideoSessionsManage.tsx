@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Video, Plus, Calendar, Users, Trash2, Play, AlertCircle } from "lucide-react";
+import { Video, Plus, Calendar, Users, Trash2, Play, AlertCircle, BookOpen, Search, IdCard } from "lucide-react";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter,
 } from "@/components/ui/dialog";
@@ -21,6 +23,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import { formatKoreaDateTime, formatKoreaTime, koreaDateTimeLocalToDbTimestamp, koreaDateTimeLocalToTime } from "@/lib/koreaDateTime";
 import { toast } from "sonner";
+
 
 type SessionType = "consultation" | "lecture" | "study";
 
