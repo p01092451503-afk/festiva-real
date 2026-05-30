@@ -258,10 +258,6 @@ const TeacherDashboard = () => {
           </Suspense>
         </div>
 
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-semibold text-foreground">{t("teacher.myCoursesList")}</h2>
               <p className="text-xs text-muted-foreground">{t("teacher.manageCourseDesc")}</p>
             </div>
             <Link to="/teacher/courses">
