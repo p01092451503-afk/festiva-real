@@ -195,7 +195,18 @@ export const SimpleBarChart = ({
           formatter={(v: number) => [`${v.toLocaleString()}${unit}`, ""]}
           cursor={{ fill: "hsl(var(--muted) / 0.4)", radius: 6 }}
         />
-        <Bar dataKey={dataKey} fill={color} radius={vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]} maxBarSize={48}>
+        <defs>
+          {data.map((_, i) => (
+            <linearGradient key={`bargrad-${i}`} id={`bargrad-${i}`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor={`hsl(var(--foreground) / ${i % 2 === 0 ? 0.18 : 0.28})`} />
+              <stop offset="100%" stopColor={`hsl(var(--foreground) / ${i % 2 === 0 ? 0.95 : 0.75})`} />
+            </linearGradient>
+          ))}
+        </defs>
+        <Bar dataKey={dataKey} radius={vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]} maxBarSize={24}>
+          {data.map((_, i) => (
+            <Cell key={`cell-${i}`} fill={`url(#bargrad-${i})`} />
+          ))}
           {showLabel && <LabelList dataKey={dataKey} position={vertical ? "right" : "top"} style={{ fontSize: 10, fill: "hsl(var(--foreground))" }} />}
         </Bar>
       </BarChart>
