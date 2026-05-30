@@ -8,7 +8,7 @@ import {
   getSnapshot,
 } from "tldraw";
 import "tldraw/tldraw.css";
-import { GripHorizontal } from "lucide-react";
+
 
 
 interface Props {
