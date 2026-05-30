@@ -179,22 +179,30 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     };
 
     const findAndAttach = () => {
-      // Pick the bottom drawing-tools toolbar specifically (tldraw has multiple
-      // .tlui-toolbar elements; the drawing tools live in the bottom layout).
+      // tldraw renders multiple `.tlui-toolbar` elements (style toolbars, etc).
+      // The drawing-tools toolbar is the one containing tool buttons
+      // (data-value="draw" / "select" / "eraser" / "hand" etc.).
+      const all = Array.from(
+        container.querySelectorAll<HTMLElement>(".tlui-toolbar"),
+      );
       const tb =
-        container.querySelector<HTMLElement>(
-          ".tlui-layout__bottom .tlui-toolbar, .tlui-layout__bottom__main .tlui-toolbar",
+        all.find((el) =>
+          el.querySelector(
+            'button[data-value="draw"], button[data-value="select"], button[data-value="hand"]',
+          ),
         ) ||
-        // Fallback: any .tlui-toolbar that actually contains tool buttons
-        Array.from(container.querySelectorAll<HTMLElement>(".tlui-toolbar")).find(
-          (el) => !!el.querySelector('[data-testid^="tools."], .tlui-toolbar__tools'),
-        );
+        // Fallback: the visually lowest one (default bottom-anchored)
+        all.sort(
+          (a, b) =>
+            b.getBoundingClientRect().top - a.getBoundingClientRect().top,
+        )[0];
       if (!tb) return;
       if (tb !== toolbar || !tb.contains(handle as Node)) {
         toolbar = tb;
         attachHandle(tb);
       }
     };
+
 
 
     findAndAttach();
