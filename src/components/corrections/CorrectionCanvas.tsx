@@ -177,13 +177,23 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     };
 
     const findAndAttach = () => {
-      const tb = container.querySelector<HTMLElement>(".tlui-toolbar");
+      // Pick the bottom drawing-tools toolbar specifically (tldraw has multiple
+      // .tlui-toolbar elements; the drawing tools live in the bottom layout).
+      const tb =
+        container.querySelector<HTMLElement>(
+          ".tlui-layout__bottom .tlui-toolbar, .tlui-layout__bottom__main .tlui-toolbar",
+        ) ||
+        // Fallback: any .tlui-toolbar that actually contains tool buttons
+        Array.from(container.querySelectorAll<HTMLElement>(".tlui-toolbar")).find(
+          (el) => !!el.querySelector('[data-testid^="tools."], .tlui-toolbar__tools'),
+        );
       if (!tb) return;
       if (tb !== toolbar || !tb.contains(handle as Node)) {
         toolbar = tb;
         attachHandle(tb);
       }
     };
+
 
     findAndAttach();
     const observer = new MutationObserver(() => findAndAttach());
