@@ -127,9 +127,8 @@ const StudentAchievements = () => {
     { name: "badges", value: badgeRate, fill: "hsl(var(--warning))" },
   ];
 
-  // 리더보드 필터: 지점 / 직책
+  // 리더보드 필터: 지점
   const [branchFilter, setBranchFilter] = useState<string>("all");
-  const [roleFilter, setRoleFilter] = useState<string>("all");
 
   // 데모 리더보드 + 현재 사용자 합산
   const allEntries = useMemo<(LeaderboardEntryLocalized & { isMe?: boolean })[]>(() => [
@@ -155,24 +154,14 @@ const StudentAchievements = () => {
       ),
     [allEntries, isEn],
   );
-  const roleOptions = useMemo(
-    () =>
-      Array.from(
-        new Map(
-          allEntries.map((e) => [e.role, isEn ? e.role_en || e.role : e.role] as const),
-        ).entries(),
-      ),
-    [allEntries, isEn],
-  );
 
   const combinedLeaderboard = useMemo(
     () =>
       allEntries
         .filter((e) => branchFilter === "all" || e.branch === branchFilter)
-        .filter((e) => roleFilter === "all" || e.role === roleFilter)
         .sort((a, b) => b.points - a.points)
         .slice(0, 10),
-    [allEntries, branchFilter, roleFilter]
+    [allEntries, branchFilter]
   );
 
   return (
@@ -422,7 +411,7 @@ const StudentAchievements = () => {
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <h2 className="text-lg font-semibold text-foreground">{t("achievements.leaderboard")}</h2>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <Select value={branchFilter} onValueChange={setBranchFilter}>
                 <SelectTrigger className="h-9 text-xs">
                   <SelectValue placeholder={t("achievements.branchAll")} />
@@ -430,17 +419,6 @@ const StudentAchievements = () => {
                 <SelectContent className="bg-popover z-50">
                   <SelectItem value="all">{t("achievements.branchAll")}</SelectItem>
                   {branchOptions.map(([value, label]) => (
-                    <SelectItem key={value} value={value}>{label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="h-9 text-xs">
-                  <SelectValue placeholder={t("achievements.roleAll")} />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
-                  <SelectItem value="all">{t("achievements.roleAll")}</SelectItem>
-                  {roleOptions.map(([value, label]) => (
                     <SelectItem key={value} value={value}>{label}</SelectItem>
                   ))}
                 </SelectContent>
