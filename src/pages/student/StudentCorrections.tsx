@@ -104,9 +104,16 @@ const StudentCorrections = () => {
     setCourseId("none");
     setFiles([]);
     setActiveAssignment(null);
+    setStep(1);
   };
 
-  const openSubmitForAssignment = (t: any) => {
+  const openNewRequest = () => {
+    reset();
+    setStep(2); // 자유 요청은 바로 작성 단계
+    setOpen(true);
+  };
+
+  const openAssignmentReview = (t: any) => {
     const a = t.correction_assignments;
     setActiveAssignment({
       target_id: t.id,
@@ -114,12 +121,14 @@ const StudentCorrections = () => {
       title: a.title,
       instructions: a.instructions,
       course_id: a.course_id,
+      course_title: a.courses?.title ?? null,
       due_at: a.due_at,
     });
     setTopic(a.title);
     setNote("");
     setCourseId(a.course_id || "none");
     setFiles([]);
+    setStep(1); // 1단계: 주제 확인
     setOpen(true);
   };
 
