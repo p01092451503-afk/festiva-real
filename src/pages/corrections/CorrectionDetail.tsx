@@ -629,6 +629,33 @@ const CorrectionDetail = () => {
           </Card>
         ) : null}
       </div>
+
+      {/* 학생: 내용 수정 다이얼로그 */}
+      <Dialog open={editOpen} onOpenChange={(o) => !updateRequestMutation.isPending && setEditOpen(o)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>제출 내용 수정</DialogTitle>
+            <DialogDescription>주제와 메모를 수정할 수 있습니다. 첨삭이 시작되면 수정할 수 없어요.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="edit-topic">주제 *</Label>
+              <Input id="edit-topic" value={editTopic} onChange={(e) => setEditTopic(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="edit-note">에세이 본문 / 메모</Label>
+              <Textarea id="edit-note" rows={6} value={editNote} onChange={(e) => setEditNote(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)} disabled={updateRequestMutation.isPending}>취소</Button>
+            <Button onClick={() => updateRequestMutation.mutate()} disabled={updateRequestMutation.isPending || !editTopic.trim()} className="gap-2">
+              {updateRequestMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              저장
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
