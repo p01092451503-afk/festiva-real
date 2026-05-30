@@ -1962,6 +1962,95 @@ export type Database = {
           },
         ]
       }
+      correction_assignment_targets: {
+        Row: {
+          assignment_id: string
+          created_at: string
+          id: string
+          request_id: string | null
+          status: string
+          student_id: string
+          submitted_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          assignment_id: string
+          created_at?: string
+          id?: string
+          request_id?: string | null
+          status?: string
+          student_id: string
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assignment_id?: string
+          created_at?: string
+          id?: string
+          request_id?: string | null
+          status?: string
+          student_id?: string
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correction_assignment_targets_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "correction_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "correction_assignment_targets_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "correction_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correction_assignments: {
+        Row: {
+          assigned_by: string
+          course_id: string | null
+          created_at: string
+          due_at: string | null
+          id: string
+          instructions: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by: string
+          course_id?: string | null
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          instructions?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string
+          course_id?: string | null
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          instructions?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correction_assignments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       correction_pages: {
         Row: {
           annotated_path: string | null
@@ -5759,6 +5848,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      can_manage_correction_assignment: {
+        Args: { _assignment_id: string }
+        Returns: boolean
+      }
       check_and_award_badges: {
         Args: { p_user_id: string }
         Returns: undefined
@@ -5925,6 +6018,10 @@ export type Database = {
       }
       is_branch_admin_of: {
         Args: { _branch_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_correction_assignment_target: {
+        Args: { _assignment_id: string }
         Returns: boolean
       }
       is_video_session_host: {
