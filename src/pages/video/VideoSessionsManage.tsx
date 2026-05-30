@@ -162,6 +162,9 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
     });
     setSelectedParticipants([]);
     setParticipantQuery("");
+    setIdQuery("");
+    setSelectedCourseId("");
+
   };
 
   const handleCreate = async () => {
