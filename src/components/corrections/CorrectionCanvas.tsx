@@ -109,9 +109,11 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     let cleanup: (() => void) | null = null;
 
     const attachHandle = (tb: HTMLElement) => {
+      tb.classList.add("correction-movable-toolbar");
       if (tb.querySelector(":scope > .correction-toolbar-handle")) return;
 
       handle = document.createElement("div");
+
       handle.className = "correction-toolbar-handle";
       handle.setAttribute("aria-label", "툴바 이동");
       handle.title = "드래그하여 위치 이동";
