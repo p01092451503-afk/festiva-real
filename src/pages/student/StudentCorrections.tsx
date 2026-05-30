@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  PenLine, Plus, Camera, X, Clock, CheckCircle2, Loader2, ChevronRight, AlertCircle,
+  PenLine, Plus, Camera, X, Clock, CheckCircle2, Loader2, ChevronRight, AlertCircle, FileText, Calendar, Sparkles,
 } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
