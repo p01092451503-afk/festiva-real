@@ -664,6 +664,35 @@ const AdminOrders = () => {
             <div className="stat-card !p-8 text-center text-sm text-muted-foreground">{t("adminOrders.noOrders")}</div>
           )}
         </div>
+
+        {/* Pagination */}
+        {filtered.length > 0 && totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 rounded-xl gap-1"
+              disabled={safePage <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              <ChevronLeft className="h-3.5 w-3.5" /> {t("adminOrders.pagePrev")}
+            </Button>
+            <span className="text-sm text-muted-foreground px-3 whitespace-nowrap">
+              {t("adminOrders.pageInfo", { current: safePage, total: totalPages })}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 rounded-xl gap-1"
+              disabled={safePage >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            >
+              {t("adminOrders.pageNext")} <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Order Detail Dialog */}
