@@ -248,6 +248,10 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       <style>{`
         .tldraw-correction .tl-background { background-color: transparent !important; }
         .tldraw-correction .tl-canvas { background: transparent !important; }
+        /* Expand the bottom layout panel so absolute-positioned toolbar can
+           reach the top of the canvas. Restore pointer-events on its children. */
+        .tldraw-correction .tlui-layout__bottom { inset: 0 !important; pointer-events: none !important; }
+        .tldraw-correction .tlui-layout__bottom > * { pointer-events: auto; }
         /* Movable toolbar (only the tagged one): pinned top-center by default */
         .tldraw-correction .tlui-toolbar.correction-movable-toolbar {
           position: absolute !important;
@@ -259,10 +263,10 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           width: max-content !important;
           max-width: calc(100% - 16px) !important;
         }
-        /* Once user drags, switch to pixel coordinates from CSS vars */
         .tldraw-correction[data-tb-dragged="1"] .tlui-toolbar.correction-movable-toolbar {
           left: var(--ctb-x, 0px) !important;
           top: var(--ctb-y, 12px) !important;
+
           transform: none !important;
         }
 
