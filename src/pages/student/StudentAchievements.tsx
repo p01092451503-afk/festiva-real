@@ -127,9 +127,8 @@ const StudentAchievements = () => {
     { name: "badges", value: badgeRate, fill: "hsl(var(--warning))" },
   ];
 
-  // 리더보드 필터: 지점 / 직책
+  // 리더보드 필터: 지점
   const [branchFilter, setBranchFilter] = useState<string>("all");
-  const [roleFilter, setRoleFilter] = useState<string>("all");
 
   // 데모 리더보드 + 현재 사용자 합산
   const allEntries = useMemo<(LeaderboardEntryLocalized & { isMe?: boolean })[]>(() => [
