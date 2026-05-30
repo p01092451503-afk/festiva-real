@@ -266,7 +266,7 @@ const StudentCorrections = () => {
                   <li key={t.id}>
                     <button
                       type="button"
-                      onClick={() => openSubmitForAssignment(t)}
+                      onClick={() => openAssignmentReview(t)}
                       className="w-full text-left flex items-center gap-4 p-4 hover:bg-muted/40 transition-colors"
                     >
                       <FileText className="h-5 w-5 text-primary shrink-0" />
