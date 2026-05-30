@@ -621,7 +621,7 @@ const AdminOrders = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-2">
-          {filtered.map((order: any) => {
+          {paginated.map((order: any) => {
             const p = profileMap.get(order.user_id);
             const items = order.order_items || [];
             const names = items.map((i: any) => i.courses?.title).filter(Boolean);
