@@ -504,6 +504,36 @@ const CorrectionDetail = () => {
                           <Loader2 className="h-3 w-3 animate-spin" /> 첨삭 중
                         </div>
                       )}
+                      {canStudentModify && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              type="button"
+                              className="absolute top-2 right-2 inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border shadow-sm text-destructive hover:bg-destructive/10"
+                              aria-label="이 사진 삭제"
+                            >
+                              <Trash2 className="h-3 w-3" /> 사진 삭제
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>이 사진을 삭제할까요?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                페이지 {p.page_no}의 사진이 영구적으로 삭제됩니다.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>취소</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deletePageMutation.mutate({ id: p.id, original_path: p.original_path })}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                삭제
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
                   ) : (
                     <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">이미지 로딩 중…</div>
