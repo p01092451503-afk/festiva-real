@@ -843,22 +843,33 @@ const CreateCourse = () => {
           <ArrowLeft className="h-4 w-4" /> {t("createCourse.backButton")}
         </button>
 
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">
-            {isEditMode ? t("createCourse.editTitle", "강의 수정") : t("createCourse.title")}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {isEditMode ? t("createCourse.editSubtitle", "강의 정보와 차시를 수정할 수 있습니다.") : t("createCourse.subtitle")}
-          </p>
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <BookOpenCheck className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
+              {isEditMode ? t("createCourse.editTitle", "강의 수정") : t("createCourse.title")}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              {isEditMode ? t("createCourse.editSubtitle", "강의 정보와 차시를 수정할 수 있습니다.") : t("createCourse.subtitle")}
+            </p>
+          </div>
         </div>
 
         {/* Course Info */}
-        <div className="stat-card space-y-5">
-          <h2 className="text-base font-semibold text-foreground border-b border-border pb-3">{t("createCourse.courseInfo")}</h2>
+        <div className="stat-card space-y-6 p-6">
+          <div className="flex items-center gap-2.5 border-b border-border pb-4">
+            <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
+            <div className="min-w-0">
+              <h2 className="text-lg font-semibold text-foreground leading-tight">{t("createCourse.courseInfo")}</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">강의의 기본 정보를 입력하세요. <span className="text-destructive">*</span> 표시는 필수 항목입니다.</p>
+            </div>
+          </div>
 
           {/* Thumbnail Upload */}
           <div className="space-y-2">
-            <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.thumbnailLabel")}</label>
+            <label className="text-sm font-medium text-foreground">{t("createCourse.thumbnailLabel")}</label>
             <input ref={fileInputRef} type="file" accept="image/*" onChange={handleThumbnailChange} className="hidden" />
             {thumbnailPreview ? (
               <div className="relative w-full h-44 rounded-xl overflow-hidden border border-border">
@@ -869,96 +880,113 @@ const CreateCourse = () => {
               </div>
             ) : (
               <button type="button" onClick={() => fileInputRef.current?.click()} onPaste={handlePaste} onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}
-                className="w-full h-32 rounded-xl border-2 border-dashed border-border hover:border-primary/50 focus:border-primary/50 focus:outline-none flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors" tabIndex={0}>
+                className="w-full h-32 rounded-xl border-2 border-dashed border-border hover:border-primary/50 hover:bg-accent/30 focus:border-primary/50 focus:outline-none flex flex-col items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors" tabIndex={0}>
                 <ImagePlus className="h-6 w-6" />
-                <span className="text-xs">{t("createCourse.thumbnailDropHint")}</span>
+                <span className="text-sm">{t("createCourse.thumbnailDropHint")}</span>
               </button>
             )}
           </div>
 
+          {/* 기본 정보 그룹 */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.courseTitleRequired")}</label>
-              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("createCourse.courseTitleExample")} className="h-11 rounded-xl border-border" />
+              <label className="text-sm font-medium text-foreground">
+                {t("createCourse.courseTitleRequired")} <span className="text-destructive">*</span>
+              </label>
+              <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("createCourse.courseTitleExample")} className="h-11 rounded-xl border-border text-sm" />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.descriptionLabel")}</label>
-              <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("createCourse.descriptionPlaceholder2")} className="min-h-[100px] rounded-xl border-border resize-none" />
+              <label className="text-sm font-medium text-foreground">{t("createCourse.descriptionLabel")}</label>
+              <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("createCourse.descriptionPlaceholder2")} className="min-h-[110px] rounded-xl border-border resize-none text-sm" />
             </div>
           </div>
 
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.categoryLabel2")}</label>
-              <CategorySelect value={categoryId} onValueChange={setCategoryId} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.difficultyLabel2")}</label>
-              <Select value={difficultyLevel} onValueChange={setDifficultyLevel}>
-                <SelectTrigger className="h-11 rounded-xl border-border"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="beginner">{t("createCourse.beginnerLevel")}</SelectItem>
-                  <SelectItem value="intermediate">{t("createCourse.intermediateLevel")}</SelectItem>
-                  <SelectItem value="advanced">{t("createCourse.advancedLevel")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.estimatedDurationLabel")}</label>
-              <Input type="number" value={estimatedHours} onChange={(e) => setEstimatedHours(e.target.value)} placeholder={t("createCourse.estimatedDurationExample")} className="h-11 rounded-xl border-border" min="0" />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.maxStudentsLabel")}</label>
-              <Input type="number" value={maxStudents} onChange={(e) => setMaxStudents(e.target.value)} placeholder={t("createCourse.maxStudentsPlaceholder")} className="h-11 rounded-xl border-border" min="1" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.deadlineLabelCreate")}</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className={`h-11 w-full rounded-xl border-border justify-start text-left font-normal ${!deadline ? "text-muted-foreground" : ""}`}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {deadline ? formatDeadline(deadline) : t("createCourse.selectDate")}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 rounded-2xl shadow-lg border-border" align="start">
-                  <Calendar mode="single" locale={dateLocale} selected={deadline ? parse(deadline, "yyyy-MM-dd", new Date()) : undefined} onSelect={(date) => setDeadline(date ? format(date, "yyyy-MM-dd") : "")} initialFocus className="rounded-2xl" />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{t("createCourse.publishStatusLabel")}</label>
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="h-11 rounded-xl border-border"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">{t("createCourse.draftPrivate")}</SelectItem>
-                  <SelectItem value="published">{t("createCourse.publishedOpen")}</SelectItem>
-                </SelectContent>
-              </Select>
+          {/* 분류 그룹 */}
+          <div className="rounded-xl border border-border/70 bg-secondary/30 p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Layers className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              분류 & 난이도
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{t("createCourse.categoryLabel2")}</label>
+                <CategorySelect value={categoryId} onValueChange={setCategoryId} />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{t("createCourse.difficultyLabel2")}</label>
+                <Select value={difficultyLevel} onValueChange={setDifficultyLevel}>
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-background"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginner">{t("createCourse.beginnerLevel")}</SelectItem>
+                    <SelectItem value="intermediate">{t("createCourse.intermediateLevel")}</SelectItem>
+                    <SelectItem value="advanced">{t("createCourse.advancedLevel")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{t("createCourse.estimatedDurationLabel")}</label>
+                <Input type="number" value={estimatedHours} onChange={(e) => setEstimatedHours(e.target.value)} placeholder={t("createCourse.estimatedDurationExample")} className="h-11 rounded-xl border-border bg-background text-sm" min="0" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{t("createCourse.maxStudentsLabel")}</label>
+                <Input type="number" value={maxStudents} onChange={(e) => setMaxStudents(e.target.value)} placeholder={t("createCourse.maxStudentsPlaceholder")} className="h-11 rounded-xl border-border bg-background text-sm" min="1" />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between py-2">
-            <div>
-              <p className="text-sm font-medium text-foreground">{t("createCourse.mandatoryLabel")}</p>
-              <p className="text-xs text-muted-foreground">{t("createCourse.mandatoryDesc2")}</p>
+          {/* 운영 그룹 */}
+          <div className="rounded-xl border border-border/70 bg-secondary/30 p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <Settings2 className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              운영 & 공개
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{t("createCourse.deadlineLabelCreate")}</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={`h-11 w-full rounded-xl border-border bg-background justify-start text-left font-normal text-sm ${!deadline ? "text-muted-foreground" : ""}`}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {deadline ? formatDeadline(deadline) : t("createCourse.selectDate")}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 rounded-2xl shadow-lg border-border" align="start">
+                    <Calendar mode="single" locale={dateLocale} selected={deadline ? parse(deadline, "yyyy-MM-dd", new Date()) : undefined} onSelect={(date) => setDeadline(date ? format(date, "yyyy-MM-dd") : "")} initialFocus className="rounded-2xl" />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">{t("createCourse.publishStatusLabel")}</label>
+                <Select value={status} onValueChange={setStatus}>
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-background"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">{t("createCourse.draftPrivate")}</SelectItem>
+                    <SelectItem value="published">{t("createCourse.publishedOpen")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <Switch checked={isMandatory} onCheckedChange={setIsMandatory} />
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <div>
-              <p className="text-sm font-medium text-foreground">{t("course.sequentialToggle")}</p>
-              <p className="text-xs text-muted-foreground">{t("course.sequentialToggleDesc")}</p>
+
+            {/* 토글 옵션 */}
+            <div className="divide-y divide-border/70 rounded-lg border border-border/70 bg-background">
+              <div className="flex items-center justify-between gap-4 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground">{t("createCourse.mandatoryLabel")}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t("createCourse.mandatoryDesc2")}</p>
+                </div>
+                <Switch checked={isMandatory} onCheckedChange={setIsMandatory} />
+              </div>
+              <div className="flex items-center justify-between gap-4 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground">{t("course.sequentialToggle")}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t("course.sequentialToggleDesc")}</p>
+                </div>
+                <Switch checked={isSequential} onCheckedChange={setIsSequential} />
+              </div>
             </div>
-            <Switch checked={isSequential} onCheckedChange={setIsSequential} />
           </div>
         </div>
+
 
         {/* Contents */}
         <div className="bg-accent/50 border border-accent rounded-2xl p-6 space-y-4">
