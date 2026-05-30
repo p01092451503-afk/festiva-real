@@ -41,6 +41,9 @@ const StudentCorrections = () => {
   const [courseId, setCourseId] = useState<string>("none");
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [activeAssignment, setActiveAssignment] = useState<null | {
+    target_id: string; assignment_id: string; title: string; instructions: string | null; course_id: string | null; due_at: string | null;
+  }>(null);
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ["my-correction-requests", user?.id],
