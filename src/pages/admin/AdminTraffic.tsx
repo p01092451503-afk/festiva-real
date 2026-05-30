@@ -25,7 +25,7 @@ import RichStatCard from "@/components/admin/stats/RichStatCard";
 
 // Recharts-heavy components → lazy so vendor-charts (~113KB gzip) loads
 // only after the page's text/cards have painted.
-const BranchLearningStats = lazy(() => import("@/components/admin/stats/BranchLearningStats"));
+
 const MemberStatsCard = lazy(() => import("@/components/admin/stats/MemberStatsCard"));
 const HourlyAccessChart = lazy(() => import("@/components/admin/stats/HourlyAccessChart"));
 const SignupTrendChart = lazy(() => import("@/components/admin/stats/SignupTrendChart"));
