@@ -1217,7 +1217,7 @@ const CreateCourse = () => {
             <h2 className="text-lg font-semibold">강사 소개 & 교재 정보</h2>
           </div>
 
-          <InstructorPicker value={instructorId} onChange={setInstructorId} />
+          <InstructorPicker value={instructorId} onChange={setInstructorId} categoryId={categoryId} />
 
           <div className="space-y-2">
             <label className="text-sm font-medium">강의 소개용 강사 약력 (강의 페이지에 표시)</label>
