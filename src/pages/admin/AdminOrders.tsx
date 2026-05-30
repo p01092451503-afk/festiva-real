@@ -230,7 +230,15 @@ const AdminOrders = () => {
       p?.email?.toLowerCase().includes(search.toLowerCase()) ||
       p?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
       o.card_approve_no?.toLowerCase().includes(search.toLowerCase());
-    return matchStatus && matchSearch && matchMethod;
+    // 날짜 범위 필터 (주문일 created_at 기준, 종료일 포함)
+    let matchDate = true;
+    if (dateFrom) {
+      matchDate = matchDate && !!o.created_at && new Date(o.created_at) >= new Date(`${dateFrom}T00:00:00`);
+    }
+    if (dateTo) {
+      matchDate = matchDate && !!o.created_at && new Date(o.created_at) <= new Date(`${dateTo}T23:59:59`);
+    }
+    return matchStatus && matchSearch && matchMethod && matchDate;
   });
 
   const paidOrders = orders.filter((o: any) => o.status === "paid");
@@ -244,6 +252,53 @@ const AdminOrders = () => {
   const paymentMethods = [...new Set(orders.map((o: any) => o.payment_method).filter(Boolean))];
 
   const formatDate = (d: string | null) => d ? new Date(d).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }) : "-";
+
+  // 페이지네이션
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  // CSV 내보내기 (필터 적용된 전체)
+  const handleExportCsv = () => {
+    if (filtered.length === 0) {
+      toast({ title: t("adminOrders.exportEmpty"), variant: "destructive" });
+      return;
+    }
+    const headers = ["주문번호", "주문자", "이메일", "강의", "결제수단", "결제액", "상태", "주문일", "결제일"];
+    const escape = (v: any) => {
+      const s = v === null || v === undefined ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = filtered.map((o: any) => {
+      const p = profileMap.get(o.user_id);
+      const items = o.order_items || [];
+      const names = items.map((i: any) => i.courses?.title).filter(Boolean).join(" | ");
+      return [
+        o.order_number,
+        p?.full_name || "",
+        p?.email || "",
+        names,
+        paymentMethodLabel(o),
+        o.final_amount ?? 0,
+        statusLabel[o.status] || o.status,
+        o.created_at ? new Date(o.created_at).toLocaleString("ko-KR") : "",
+        o.paid_at ? new Date(o.paid_at).toLocaleString("ko-KR") : "",
+      ].map(escape).join(",");
+    });
+    // UTF-8 BOM + CRLF (Excel 한글 호환)
+    const csv = "\uFEFF" + [headers.join(","), ...rows].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `orders_${toDateInput(new Date())}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+
 
   // B2C 기능이 비활성화된 경우 결제 관리 페이지 접근 차단
   if (!settingsLoading && siteSettings && siteSettings.b2c_enabled === false) {
