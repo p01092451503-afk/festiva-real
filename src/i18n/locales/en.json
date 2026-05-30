@@ -181,7 +181,8 @@
     "branchAdminAssign": "Track Assignment",
     "branchAdminStats": "Branch Stats",
     "videoSessions": "Video Sessions",
-    "questionBank": "Question Bank"
+    "questionBank": "Question Bank",
+    "corrections": "Essay Writing"
   },
   "roles": {
     "student": "Student",
