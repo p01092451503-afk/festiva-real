@@ -67,7 +67,10 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
     return () => clearInterval(id);
   }, []);
   const [participantQuery, setParticipantQuery] = useState("");
+  const [idQuery, setIdQuery] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [selectedParticipants, setSelectedParticipants] = useState<{ id: string; name: string; email: string }[]>([]);
+
   const [form, setForm] = useState({
     title: "",
     description: "",
