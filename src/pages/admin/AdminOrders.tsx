@@ -355,29 +355,88 @@ const AdminOrders = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder={t("adminOrders.searchPlaceholder")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 rounded-xl" />
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder={t("adminOrders.searchPlaceholder")} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-xl" />
+            </div>
+            <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+              <SelectTrigger className="w-32 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colStatus")} /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("adminOrders.allStatus")}</SelectItem>
+                <SelectItem value="paid">{t("adminOrders.statusPaid")}</SelectItem>
+                <SelectItem value="pending">{t("adminOrders.statusPending")}</SelectItem>
+                <SelectItem value="cancelled">{t("adminOrders.statusCancelled")}</SelectItem>
+                <SelectItem value="refunded">{t("adminOrders.statusRefunded")}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={methodFilter} onValueChange={(v) => { setMethodFilter(v); setPage(1); }}>
+              <SelectTrigger className="w-36 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colMethod")} /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("adminOrders.allMethod")}</SelectItem>
+                {paymentMethods.map((m: string) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-32 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colStatus")} /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("adminOrders.allStatus")}</SelectItem>
-              <SelectItem value="paid">{t("adminOrders.statusPaid")}</SelectItem>
-              <SelectItem value="pending">{t("adminOrders.statusPending")}</SelectItem>
-              <SelectItem value="cancelled">{t("adminOrders.statusCancelled")}</SelectItem>
-              <SelectItem value="refunded">{t("adminOrders.statusRefunded")}</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={methodFilter} onValueChange={setMethodFilter}>
-            <SelectTrigger className="w-36 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colMethod")} /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("adminOrders.allMethod")}</SelectItem>
-              {paymentMethods.map((m: string) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
-            </SelectContent>
-          </Select>
+
+          {/* 기간 검색 + 빠른 프리셋 */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground px-2">
+              <Calendar className="h-3.5 w-3.5" />
+              {t("adminOrders.dateRange")}
+            </span>
+            <Input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+              className="w-[160px] h-9 rounded-xl"
+              aria-label={t("adminOrders.dateFrom")}
+            />
+            <span className="text-muted-foreground text-sm">~</span>
+            <Input
+              type="date"
+              value={dateTo}
+              onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+              className="w-[160px] h-9 rounded-xl"
+              aria-label={t("adminOrders.dateTo")}
+            />
+            <div className="flex items-center gap-1 ml-1 flex-wrap">
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("today")}>{t("adminOrders.datePresetToday")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("7d")}>{t("adminOrders.datePreset7d")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("15d")}>{t("adminOrders.datePreset15d")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("1m")}>{t("adminOrders.datePreset1m")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("3m")}>{t("adminOrders.datePreset3m")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("6m")}>{t("adminOrders.datePreset6m")}</Button>
+              {(dateFrom || dateTo) && (
+                <Button type="button" variant="ghost" size="sm" className="h-9 rounded-full px-3 text-muted-foreground" onClick={resetDateRange}>
+                  <X className="h-3.5 w-3.5 mr-1" />{t("adminOrders.dateReset")}
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* 결과 헤더: 총 건수 / 페이지 크기 / CSV 내보내기 */}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-sm text-muted-foreground">
+            {t("adminOrders.totalCount", { count: filtered.length.toLocaleString() })}
+          </p>
+          <div className="flex items-center gap-2">
+            <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setPage(1); }}>
+              <SelectTrigger className="w-[140px] h-9 rounded-xl text-sm"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="20">{t("adminOrders.perPage", { count: 20 })}</SelectItem>
+                <SelectItem value="50">{t("adminOrders.perPage", { count: 50 })}</SelectItem>
+                <SelectItem value="100">{t("adminOrders.perPage", { count: 100 })}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button type="button" variant="outline" size="sm" className="h-9 rounded-xl gap-1.5" onClick={handleExportCsv}>
+              <Download className="h-3.5 w-3.5" /> {t("adminOrders.exportCsv")}
+            </Button>
+          </div>
+        </div>
+
 
         {/* Desktop Table */}
         <div className="stat-card !p-0 overflow-x-auto hidden md:block">
