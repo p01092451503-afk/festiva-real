@@ -419,12 +419,27 @@ const CorrectionDetail = () => {
           </Card>
         ) : req.status === "completed" ? (
           <Card className="p-4 space-y-2">
-            <h2 className="font-semibold">종합 평가</h2>
+            <h2 className="font-semibold flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-success" /> 종합 평가
+            </h2>
             {req.score != null && <div className="text-sm">점수: <span className="font-medium">{req.score}점</span></div>}
             {req.summary && <div className="text-sm"><span className="text-muted-foreground">총평:</span> <span className="whitespace-pre-wrap">{req.summary}</span></div>}
             {req.next_recommendation && (
               <div className="text-sm"><span className="text-muted-foreground">다음 학습 추천:</span> <span className="whitespace-pre-wrap">{req.next_recommendation}</span></div>
             )}
+            {req.score == null && !req.summary && !req.next_recommendation && (
+              <div className="text-sm text-muted-foreground">강사가 별도의 종합 평가를 남기지 않았습니다.</div>
+            )}
+          </Card>
+        ) : !isStaff ? (
+          // 학생: 미완료 상태에서 종합평가 자리표시자
+          <Card className="p-4 border-dashed">
+            <h2 className="font-semibold flex items-center gap-2 text-muted-foreground">
+              <Clock className="h-4 w-4" /> 종합 평가 (대기 중)
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              첨삭이 완료되면 점수, 총평, 다음 학습 추천을 이곳에서 확인할 수 있습니다.
+            </p>
           </Card>
         ) : null}
       </div>
