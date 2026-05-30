@@ -36,13 +36,14 @@ const StudentCorrections = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
   const [topic, setTopic] = useState("");
   const [note, setNote] = useState("");
   const [courseId, setCourseId] = useState<string>("none");
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [activeAssignment, setActiveAssignment] = useState<null | {
-    target_id: string; assignment_id: string; title: string; instructions: string | null; course_id: string | null; due_at: string | null;
+    target_id: string; assignment_id: string; title: string; instructions: string | null; course_id: string | null; course_title?: string | null; due_at: string | null;
   }>(null);
 
   const { data: requests = [], isLoading } = useQuery({
@@ -103,9 +104,16 @@ const StudentCorrections = () => {
     setCourseId("none");
     setFiles([]);
     setActiveAssignment(null);
+    setStep(1);
   };
 
-  const openSubmitForAssignment = (t: any) => {
+  const openNewRequest = () => {
+    reset();
+    setStep(2); // 자유 요청은 바로 작성 단계
+    setOpen(true);
+  };
+
+  const openAssignmentReview = (t: any) => {
     const a = t.correction_assignments;
     setActiveAssignment({
       target_id: t.id,
@@ -113,12 +121,14 @@ const StudentCorrections = () => {
       title: a.title,
       instructions: a.instructions,
       course_id: a.course_id,
+      course_title: a.courses?.title ?? null,
       due_at: a.due_at,
     });
     setTopic(a.title);
     setNote("");
     setCourseId(a.course_id || "none");
     setFiles([]);
+    setStep(1); // 1단계: 주제 확인
     setOpen(true);
   };
 
@@ -220,7 +230,7 @@ const StudentCorrections = () => {
               손글씨로 작성한 답안을 사진으로 올리면 강사가 디지털로 첨삭해 드립니다.
             </p>
           </div>
-          <Button onClick={() => setOpen(true)} className="gap-2">
+          <Button onClick={openNewRequest} className="gap-2">
             <Plus className="h-4 w-4" /> 새 첨삭 요청
           </Button>
         </header>
@@ -256,7 +266,7 @@ const StudentCorrections = () => {
                   <li key={t.id}>
                     <button
                       type="button"
-                      onClick={() => openSubmitForAssignment(t)}
+                      onClick={() => openAssignmentReview(t)}
                       className="w-full text-left flex items-center gap-4 p-4 hover:bg-muted/40 transition-colors"
                     >
                       <FileText className="h-5 w-5 text-primary shrink-0" />
@@ -325,97 +335,170 @@ const StudentCorrections = () => {
       </div>
 
       <Dialog open={open} onOpenChange={(o) => { if (!submitting) { setOpen(o); if (!o) reset(); } }}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{activeAssignment ? "부여된 과제 제출" : "새 첨삭 요청"}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              {activeAssignment ? <><Sparkles className="h-5 w-5 text-primary" /> 부여된 에세이 과제</> : "새 첨삭 요청"}
+            </DialogTitle>
             <DialogDescription>
-              답안지를 사진으로 촬영해 올려주세요. 자동으로 WebP로 압축됩니다.
+              {activeAssignment
+                ? (step === 1 ? "강사/관리자가 부여한 주제와 내용을 먼저 확인하세요." : "에세이를 작성한 뒤 답안 사진을 올려 제출합니다.")
+                : "답안지를 사진으로 촬영해 올려주세요. 자동으로 WebP로 압축됩니다."}
             </DialogDescription>
           </DialogHeader>
+
+          {/* Step indicator (과제일 때만) */}
           {activeAssignment && (
-            <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm space-y-1">
-              <div className="font-medium flex items-center gap-1.5"><Sparkles className="h-4 w-4 text-primary" /> {activeAssignment.title}</div>
-              {activeAssignment.instructions && (
-                <div className="text-xs text-muted-foreground whitespace-pre-wrap">{activeAssignment.instructions}</div>
-              )}
-              {activeAssignment.due_at && (
-                <div className="text-xs text-muted-foreground">기한: {new Date(activeAssignment.due_at).toLocaleString()}</div>
-              )}
+            <div className="flex items-center gap-2 text-xs">
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${step === 1 ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-muted-foreground"}`}>
+                <span className="font-semibold">1</span> 주제 확인
+              </div>
+              <div className="h-px flex-1 bg-border" />
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${step === 2 ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-muted-foreground"}`}>
+                <span className="font-semibold">2</span> 에세이 작성 · 사진 업로드
+              </div>
             </div>
           )}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="topic">주제 / 과제명 *</Label>
-              <Input id="topic" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="예: 2024년 노무사 2차 행정쟁송법 사례" disabled={!!activeAssignment} />
-            </div>
-            <div>
-              <Label>관련 강의 (선택)</Label>
-              <Select value={courseId} onValueChange={setCourseId}>
-                <SelectTrigger><SelectValue placeholder="강의 선택" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">선택 안 함</SelectItem>
-                  {myCourses.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="note">요청 메모 (선택)</Label>
-              <Textarea id="note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="강사님께 전달할 메모를 적어주세요." rows={3} />
-            </div>
-            <div>
-              <Label>답안 사진 *</Label>
-              <div className="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-2">
-                {files.map((f, i) => {
-                  const url = URL.createObjectURL(f);
-                  return (
-                    <div key={i} className="relative aspect-[3/4] border rounded overflow-hidden bg-muted">
-                      <img src={url} alt="" className="w-full h-full object-cover" onLoad={() => URL.revokeObjectURL(url)} />
-                      <button
-                        type="button"
-                        onClick={() => removeFile(i)}
-                        className="absolute top-1 right-1 bg-background/90 rounded-full p-0.5 shadow"
-                        aria-label="삭제"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                      <div className="absolute bottom-1 left-1 text-[10px] bg-background/80 px-1 rounded">
-                        {i + 1}
-                      </div>
+
+          {/* STEP 1: 주제/내용 확인 */}
+          {activeAssignment && step === 1 && (
+            <div className="space-y-4">
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-3">
+                <div>
+                  <div className="text-xs text-muted-foreground mb-1">에세이 주제</div>
+                  <div className="text-base font-semibold flex items-start gap-2">
+                    <FileText className="h-4 w-4 text-primary mt-1 shrink-0" />
+                    <span>{activeAssignment.title}</span>
+                  </div>
+                </div>
+                {activeAssignment.instructions && (
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">작성 안내 / 내용</div>
+                    <div className="text-sm whitespace-pre-wrap leading-relaxed bg-background/60 rounded-md border p-3">
+                      {activeAssignment.instructions}
                     </div>
-                  );
-                })}
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="aspect-[3/4] border-2 border-dashed rounded flex flex-col items-center justify-center text-xs text-muted-foreground hover:bg-muted/40"
-                >
-                  <Camera className="h-5 w-5 mb-1" />
-                  추가
-                </button>
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-3 text-xs text-muted-foreground pt-1 border-t">
+                  {activeAssignment.course_title && (
+                    <span className="inline-flex items-center gap-1"><FileText className="h-3 w-3" /> {activeAssignment.course_title}</span>
+                  )}
+                  {activeAssignment.due_at && (
+                    <span className="inline-flex items-center gap-1">
+                      <Calendar className="h-3 w-3" /> 제출 기한 {new Date(activeAssignment.due_at).toLocaleString()}
+                    </span>
+                  )}
+                </div>
               </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                multiple
-                hidden
-                onChange={(e) => { onPickFiles(e.target.files); e.target.value = ""; }}
-              />
-              <p className="text-xs text-muted-foreground mt-2">최대 20장 · 자동 압축</p>
+              <div className="rounded-md bg-muted/40 p-3 text-xs text-muted-foreground">
+                다음 단계에서 직접 작성한 에세이 본문(선택)과 답안 사진을 올려 제출할 수 있어요.
+              </div>
             </div>
-          </div>
-          <DialogFooter>
+          )}
+
+          {/* STEP 2: 작성 + 업로드 */}
+          {(!activeAssignment || step === 2) && (
+            <div className="space-y-4">
+              {activeAssignment && (
+                <div className="rounded-md border bg-muted/30 p-3 text-sm">
+                  <div className="text-xs text-muted-foreground mb-0.5">제출 주제</div>
+                  <div className="font-medium">{activeAssignment.title}</div>
+                </div>
+              )}
+              {!activeAssignment && (
+                <div>
+                  <Label htmlFor="topic">주제 / 과제명 *</Label>
+                  <Input id="topic" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="예: 2024년 노무사 2차 행정쟁송법 사례" />
+                </div>
+              )}
+              {!activeAssignment && (
+                <div>
+                  <Label>관련 강의 (선택)</Label>
+                  <Select value={courseId} onValueChange={setCourseId}>
+                    <SelectTrigger><SelectValue placeholder="강의 선택" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">선택 안 함</SelectItem>
+                      {myCourses.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              <div>
+                <Label htmlFor="note">에세이 본문 / 메모 (선택)</Label>
+                <Textarea
+                  id="note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="직접 작성한 에세이 본문이나 강사님께 전달할 메모를 적어주세요."
+                  rows={6}
+                />
+                <p className="text-xs text-muted-foreground mt-1">손글씨 답안을 사진으로 올리는 경우 비워두셔도 됩니다.</p>
+              </div>
+              <div>
+                <Label>답안 사진 *</Label>
+                <div className="mt-2 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {files.map((f, i) => {
+                    const url = URL.createObjectURL(f);
+                    return (
+                      <div key={i} className="relative aspect-[3/4] border rounded overflow-hidden bg-muted">
+                        <img src={url} alt="" className="w-full h-full object-cover" onLoad={() => URL.revokeObjectURL(url)} />
+                        <button
+                          type="button"
+                          onClick={() => removeFile(i)}
+                          className="absolute top-1 right-1 bg-background/90 rounded-full p-0.5 shadow"
+                          aria-label="삭제"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                        <div className="absolute bottom-1 left-1 text-[10px] bg-background/80 px-1 rounded">
+                          {i + 1}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="aspect-[3/4] border-2 border-dashed rounded flex flex-col items-center justify-center text-xs text-muted-foreground hover:bg-muted/40"
+                  >
+                    <Camera className="h-5 w-5 mb-1" />
+                    추가
+                  </button>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  multiple
+                  hidden
+                  onChange={(e) => { onPickFiles(e.target.files); e.target.value = ""; }}
+                />
+                <p className="text-xs text-muted-foreground mt-2">최대 20장 · 자동 압축</p>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            {activeAssignment && step === 2 && (
+              <Button variant="ghost" onClick={() => setStep(1)} disabled={submitting}>← 주제 다시 보기</Button>
+            )}
             <Button variant="outline" onClick={() => setOpen(false)} disabled={submitting}>취소</Button>
-            <Button
-              onClick={() => { setSubmitting(true); submitMutation.mutate(); }}
-              disabled={submitting || !topic.trim() || files.length === 0}
-            >
-              {submitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-              요청 보내기
-            </Button>
+            {activeAssignment && step === 1 ? (
+              <Button onClick={() => setStep(2)} className="gap-1">
+                에세이 작성하기 →
+              </Button>
+            ) : (
+              <Button
+                onClick={() => { setSubmitting(true); submitMutation.mutate(); }}
+                disabled={submitting || !topic.trim() || files.length === 0}
+              >
+                {submitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                첨삭 요청 제출
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
