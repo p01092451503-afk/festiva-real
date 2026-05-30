@@ -1,6 +1,5 @@
 import { Search, BookOpen, Info, Clock, Star, ChevronRight, Layers, GraduationCap, Compass } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +19,6 @@ import { useInlineEnName } from "@/hooks/useI18nMaps";
 const StudentCourses = () => {
   const { user } = useUser();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -73,25 +71,6 @@ const StudentCourses = () => {
   });
   const localizeCatName = useInlineEnName();
   const localizedCategories = categories.map((c: any) => ({ ...c, name: localizeCatName(c) }));
-
-  const syncProgressMutation = useMutation({
-    mutationFn: async () => {
-      for (const enrollment of enrollments) {
-        const courseId = (enrollment as any).course_id;
-        const { data: contents } = await supabase.from("course_contents").select("id").eq("course_id", courseId).eq("is_published", true);
-        if (!contents || contents.length === 0) continue;
-        const { data: progress } = await supabase.from("content_progress").select("content_id, completed").eq("user_id", user!.id).in("content_id", contents.map(c => c.id));
-        const completedCount = (progress || []).filter(p => p.completed).length;
-        const percentage = Math.round((completedCount / contents.length) * 100);
-        await supabase.from("enrollments").update({ progress: percentage, completed_at: percentage >= 100 ? new Date().toISOString() : null }).eq("id", enrollment.id);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-enrollments"] });
-      toast({ title: t("course.syncComplete"), description: t("course.syncCompleteDesc") });
-    },
-    onError: (e: any) => toast({ title: t("common.error"), description: e.message, variant: "destructive" }),
-  });
 
   const categoryMap = new Map(localizedCategories.map((c: any) => [c.id, c]));
   const filtered = localizedEnrollments.filter((e: any) => e.courses?.title?.toLowerCase().includes(search.toLowerCase()));
@@ -210,12 +189,6 @@ const StudentCourses = () => {
                   <p>{t("course.courseInfoGuide2")}</p>
                   <p>{t("course.courseInfoGuide3")}</p>
                 </div>
-              </div>
-              <div className="flex justify-end">
-                <Button variant="outline" size="sm" className="gap-1.5 rounded-lg text-xs" onClick={() => syncProgressMutation.mutate()} disabled={syncProgressMutation.isPending}>
-                  <RefreshCw className={`h-3.5 w-3.5 ${syncProgressMutation.isPending ? "animate-spin" : ""}`} aria-hidden="true" />
-                  {syncProgressMutation.isPending ? t("course.syncing") : t("course.syncProgress")}
-                </Button>
               </div>
             </div>
 
