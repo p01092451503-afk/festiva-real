@@ -33,8 +33,6 @@ type LeaderboardEntry = {
 type LeaderboardEntryLocalized = LeaderboardEntry & { branch_en?: string; role_en?: string };
 
 const DEMO_LEADERBOARD: LeaderboardEntryLocalized[] = [
-  { person: "김민수", branch: "서울 본원", branch_en: "Seoul Main", role: "전임강사", role_en: "Lead Instructor", points: 4820, level: 49 },
-  { person: "이정환", branch: "강남 분원", branch_en: "Gangnam Branch", role: "전임강사", role_en: "Lead Instructor", points: 4150, level: 42 },
   { person: "박지영", branch: "서울 본원", branch_en: "Seoul Main", role: "2차 수험생", role_en: "Stage 2 Examinee", points: 3680, level: 37 },
   { person: "최현우", branch: "부산 분원", branch_en: "Busan Branch", role: "2차 수험생", role_en: "Stage 2 Examinee", points: 3220, level: 33 },
   { person: "이지은", branch: "강남 분원", branch_en: "Gangnam Branch", role: "1차 수험생", role_en: "Stage 1 Examinee", points: 2850, level: 29 },
