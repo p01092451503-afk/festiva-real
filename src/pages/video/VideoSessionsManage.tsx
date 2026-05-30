@@ -138,9 +138,10 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
     queryFn: async () => {
       if (!selectedCourseId) return [];
       const { data: enrolls } = await supabase
-        .from("course_enrollments")
+        .from("enrollments")
         .select("user_id")
         .eq("course_id", selectedCourseId);
+
       const ids = (enrolls ?? []).map((e: any) => e.user_id);
       if (ids.length === 0) return [];
       const { data: profs } = await supabase
