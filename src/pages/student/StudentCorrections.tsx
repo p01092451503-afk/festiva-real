@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  PenLine, Plus, Camera, X, Clock, CheckCircle2, Loader2, ChevronRight, AlertCircle,
+  PenLine, Plus, Camera, X, Clock, CheckCircle2, Loader2, ChevronRight, AlertCircle, FileText, Calendar, Sparkles,
 } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,9 @@ const StudentCorrections = () => {
   const [courseId, setCourseId] = useState<string>("none");
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [activeAssignment, setActiveAssignment] = useState<null | {
+    target_id: string; assignment_id: string; title: string; instructions: string | null; course_id: string | null; due_at: string | null;
+  }>(null);
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ["my-correction-requests", user?.id],
@@ -71,11 +74,52 @@ const StudentCorrections = () => {
     enabled: !!user?.id,
   });
 
+  // 부여된 에세이 과제 (미제출만 표시)
+  const { data: myAssignments = [] } = useQuery({
+    queryKey: ["my-essay-assignments", user?.id],
+    enabled: !!user?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("correction_assignment_targets")
+        .select(`
+          id, status, submitted_at, assignment_id,
+          correction_assignments!inner(id, title, instructions, course_id, due_at, courses:course_id(title))
+        `)
+        .eq("student_id", user!.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const pendingAssignments = useMemo(
+    () => myAssignments.filter((t: any) => t.status === "assigned"),
+    [myAssignments]
+  );
+
   const reset = () => {
     setTopic("");
     setNote("");
     setCourseId("none");
     setFiles([]);
+    setActiveAssignment(null);
+  };
+
+  const openSubmitForAssignment = (t: any) => {
+    const a = t.correction_assignments;
+    setActiveAssignment({
+      target_id: t.id,
+      assignment_id: a.id,
+      title: a.title,
+      instructions: a.instructions,
+      course_id: a.course_id,
+      due_at: a.due_at,
+    });
+    setTopic(a.title);
+    setNote("");
+    setCourseId(a.course_id || "none");
+    setFiles([]);
+    setOpen(true);
   };
 
   const onPickFiles = (incoming: FileList | null) => {
@@ -99,7 +143,6 @@ const StudentCorrections = () => {
       if (!topic.trim()) throw new Error("주제를 입력해주세요.");
       if (files.length === 0) throw new Error("답안 사진을 1장 이상 첨부해주세요.");
 
-      // 1) request 생성
       const { data: req, error: reqErr } = await supabase
         .from("correction_requests")
         .insert({
@@ -113,7 +156,6 @@ const StudentCorrections = () => {
         .single();
       if (reqErr) throw reqErr;
 
-      // 2) 각 페이지 압축 후 업로드 + correction_pages 생성
       for (let i = 0; i < files.length; i++) {
         const raw = files[i];
         const compressed = await compressAnswerImage(raw);
@@ -129,11 +171,24 @@ const StudentCorrections = () => {
         });
         if (pageErr) throw pageErr;
       }
+
+      // 과제 대상 → 제출 상태 연결
+      if (activeAssignment) {
+        await supabase
+          .from("correction_assignment_targets")
+          .update({
+            status: "submitted",
+            request_id: req.id,
+            submitted_at: new Date().toISOString(),
+          })
+          .eq("id", activeAssignment.target_id);
+      }
       return req.id;
     },
     onSuccess: () => {
       toast({ title: "첨삭 요청이 접수되었습니다." });
       qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
+      qc.invalidateQueries({ queryKey: ["my-essay-assignments"] });
       reset();
       setOpen(false);
     },
@@ -142,6 +197,7 @@ const StudentCorrections = () => {
     },
     onSettled: () => setSubmitting(false),
   });
+
 
   const stats = useMemo(() => {
     return {
@@ -182,6 +238,50 @@ const StudentCorrections = () => {
             </Card>
           ))}
         </div>
+
+        {pendingAssignments.length > 0 && (
+          <Card className="overflow-hidden border-primary/30">
+            <div className="p-4 border-b border-border bg-primary/5 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold">부여받은 에세이 과제 ({pendingAssignments.length})</h2>
+                <p className="text-xs text-muted-foreground">아래 과제를 클릭하면 답안 사진을 올려 바로 제출할 수 있어요.</p>
+              </div>
+            </div>
+            <ul className="divide-y-2 divide-border/80">
+              {pendingAssignments.map((t: any) => {
+                const a = t.correction_assignments;
+                const overdue = a.due_at && new Date(a.due_at) < new Date();
+                return (
+                  <li key={t.id}>
+                    <button
+                      type="button"
+                      onClick={() => openSubmitForAssignment(t)}
+                      className="w-full text-left flex items-center gap-4 p-4 hover:bg-muted/40 transition-colors"
+                    >
+                      <FileText className="h-5 w-5 text-primary shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium truncate">{a.title}</div>
+                        {a.instructions && (
+                          <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2 whitespace-pre-wrap">{a.instructions}</div>
+                        )}
+                        <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
+                          {a.courses?.title && <span>· {a.courses.title}</span>}
+                          {a.due_at && (
+                            <span className={`inline-flex items-center gap-1 ${overdue ? "text-destructive" : ""}`}>
+                              <Calendar className="h-3 w-3" /> 기한 {new Date(a.due_at).toLocaleDateString()}{overdue && " (지남)"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <Badge className="shrink-0">제출하기</Badge>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+        )}
 
         <Card className="overflow-hidden">
           {isLoading ? (
@@ -227,15 +327,26 @@ const StudentCorrections = () => {
       <Dialog open={open} onOpenChange={(o) => { if (!submitting) { setOpen(o); if (!o) reset(); } }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>새 첨삭 요청</DialogTitle>
+            <DialogTitle>{activeAssignment ? "부여된 과제 제출" : "새 첨삭 요청"}</DialogTitle>
             <DialogDescription>
               답안지를 사진으로 촬영해 올려주세요. 자동으로 WebP로 압축됩니다.
             </DialogDescription>
           </DialogHeader>
+          {activeAssignment && (
+            <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm space-y-1">
+              <div className="font-medium flex items-center gap-1.5"><Sparkles className="h-4 w-4 text-primary" /> {activeAssignment.title}</div>
+              {activeAssignment.instructions && (
+                <div className="text-xs text-muted-foreground whitespace-pre-wrap">{activeAssignment.instructions}</div>
+              )}
+              {activeAssignment.due_at && (
+                <div className="text-xs text-muted-foreground">기한: {new Date(activeAssignment.due_at).toLocaleString()}</div>
+              )}
+            </div>
+          )}
           <div className="space-y-4">
             <div>
               <Label htmlFor="topic">주제 / 과제명 *</Label>
-              <Input id="topic" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="예: 2024년 노무사 2차 행정쟁송법 사례" />
+              <Input id="topic" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="예: 2024년 노무사 2차 행정쟁송법 사례" disabled={!!activeAssignment} />
             </div>
             <div>
               <Label>관련 강의 (선택)</Label>
