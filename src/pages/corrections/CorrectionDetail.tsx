@@ -1,7 +1,7 @@
-import { useMemo, useState, useEffect, useCallback } from "react";
-import { useParams, Link, useLocation, Navigate } from "react-router-dom";
+import { useMemo, useState, useEffect, useRef } from "react";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText, Clock, Sparkles, AlertCircle, ImageIcon, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText, Clock, Sparkles, AlertCircle, ImageIcon, Eye, Trash2, Camera, Plus, X } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,10 +10,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+} from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useToast } from "@/hooks/use-toast";
+import { compressAnswerImage } from "@/lib/imageCompression";
 import CorrectionCanvas from "@/components/corrections/CorrectionCanvas";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -29,6 +37,8 @@ const CorrectionDetail = () => {
   const { primaryRole, roles } = useUserRole();
   const qc = useQueryClient();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const addFilesRef = useRef<HTMLInputElement>(null);
 
   const location = useLocation();
   const isStudentRoute = location.pathname.startsWith("/student/");
@@ -194,6 +204,99 @@ const CorrectionDetail = () => {
     onError: (e: any) => toast({ title: e?.message || "실패", variant: "destructive" }),
   });
 
+  // ─── 학생: 제출 내용 수정 / 사진 추가·삭제 / 요청 삭제 ───
+  const isOwnerStudent = !!user?.id && data?.req?.student_id === user.id;
+  const canStudentModify = isOwnerStudent && data?.req?.status === "pending";
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [editTopic, setEditTopic] = useState("");
+  const [editNote, setEditNote] = useState("");
+  useEffect(() => {
+    if (!data?.req) return;
+    setEditTopic(data.req.topic || "");
+    setEditNote(data.req.note || "");
+  }, [data?.req?.id]);
+
+  const updateRequestMutation = useMutation({
+    mutationFn: async () => {
+      if (!editTopic.trim()) throw new Error("주제를 입력해주세요.");
+      const { error } = await supabase
+        .from("correction_requests")
+        .update({ topic: editTopic.trim(), note: editNote.trim() || null })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "내용이 수정되었습니다." });
+      setEditOpen(false);
+      qc.invalidateQueries({ queryKey: ["correction-request-detail", id] });
+      qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
+    },
+    onError: (e: any) => toast({ title: e?.message || "수정 실패", variant: "destructive" }),
+  });
+
+  const deletePageMutation = useMutation({
+    mutationFn: async (page: { id: string; original_path: string }) => {
+      await supabase.storage.from("corrections").remove([page.original_path]);
+      const { error } = await supabase.from("correction_pages").delete().eq("id", page.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "사진을 삭제했습니다." });
+      setActivePageId(null);
+      qc.invalidateQueries({ queryKey: ["correction-request-detail", id] });
+    },
+    onError: (e: any) => toast({ title: e?.message || "삭제 실패", variant: "destructive" }),
+  });
+
+  const addPagesMutation = useMutation({
+    mutationFn: async (incoming: File[]) => {
+      if (!data?.req) return;
+      const startNo = (data.pages?.length || 0);
+      for (let i = 0; i < incoming.length; i++) {
+        const raw = incoming[i];
+        const compressed = await compressAnswerImage(raw);
+        const page_no = startNo + i + 1;
+        const path = `${data.req.id}/${page_no}/${Date.now()}_${compressed.name}`;
+        const { error: upErr } = await supabase.storage
+          .from("corrections")
+          .upload(path, compressed, { contentType: compressed.type, upsert: false });
+        if (upErr) throw upErr;
+        const { error: pageErr } = await supabase.from("correction_pages").insert({
+          request_id: data.req.id,
+          page_no,
+          original_path: path,
+        });
+        if (pageErr) throw pageErr;
+      }
+    },
+    onSuccess: () => {
+      toast({ title: "사진을 추가했습니다." });
+      qc.invalidateQueries({ queryKey: ["correction-request-detail", id] });
+    },
+    onError: (e: any) => toast({ title: e?.message || "업로드 실패", variant: "destructive" }),
+  });
+
+  const deleteRequestMutation = useMutation({
+    mutationFn: async () => {
+      if (!data?.pages?.length) {
+        const { error } = await supabase.from("correction_requests").delete().eq("id", id);
+        if (error) throw error;
+        return;
+      }
+      const paths = data.pages.map((p) => p.original_path);
+      await supabase.storage.from("corrections").remove(paths);
+      const { error } = await supabase.from("correction_requests").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "제출한 에세이를 삭제했습니다." });
+      qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
+      navigate("/student/corrections");
+    },
+    onError: (e: any) => toast({ title: e?.message || "삭제 실패", variant: "destructive" }),
+  });
+
   if (isLoading || !data?.req) {
     return (
       <DashboardLayout>
@@ -243,6 +346,59 @@ const CorrectionDetail = () => {
                       <span className="inline-flex items-center gap-1"><ImageIcon className="h-3 w-3" /> 제출 사진 {data.pages.length}장</span>
                       <span>· 제출일 {new Date(req.submitted_at).toLocaleString()}</span>
                     </div>
+                    {canStudentModify && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <Button size="sm" variant="outline" className="gap-1.5" onClick={() => setEditOpen(true)}>
+                          <Pencil className="h-3.5 w-3.5" /> 내용 수정
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1.5"
+                          onClick={() => addFilesRef.current?.click()}
+                          disabled={addPagesMutation.isPending}
+                        >
+                          {addPagesMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+                          사진 추가
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button size="sm" variant="outline" className="gap-1.5 text-destructive hover:text-destructive">
+                              <Trash2 className="h-3.5 w-3.5" /> 제출 삭제
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>제출한 에세이를 삭제하시겠습니까?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                업로드한 사진과 메모가 모두 삭제됩니다. 이 작업은 되돌릴 수 없어요.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>취소</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deleteRequestMutation.mutate()}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                삭제
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                        <input
+                          ref={addFilesRef}
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          hidden
+                          onChange={(e) => {
+                            const fl = Array.from(e.target.files || []).filter((f) => f.type.startsWith("image/"));
+                            if (fl.length) addPagesMutation.mutate(fl);
+                            e.target.value = "";
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -348,6 +504,36 @@ const CorrectionDetail = () => {
                           <Loader2 className="h-3 w-3 animate-spin" /> 첨삭 중
                         </div>
                       )}
+                      {canStudentModify && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button
+                              type="button"
+                              className="absolute top-2 right-2 inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border shadow-sm text-destructive hover:bg-destructive/10"
+                              aria-label="이 사진 삭제"
+                            >
+                              <Trash2 className="h-3 w-3" /> 사진 삭제
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>이 사진을 삭제할까요?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                페이지 {p.page_no}의 사진이 영구적으로 삭제됩니다.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>취소</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deletePageMutation.mutate({ id: p.id, original_path: p.original_path })}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                삭제
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
                   ) : (
                     <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">이미지 로딩 중…</div>
@@ -443,6 +629,33 @@ const CorrectionDetail = () => {
           </Card>
         ) : null}
       </div>
+
+      {/* 학생: 내용 수정 다이얼로그 */}
+      <Dialog open={editOpen} onOpenChange={(o) => !updateRequestMutation.isPending && setEditOpen(o)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>제출 내용 수정</DialogTitle>
+            <DialogDescription>주제와 메모를 수정할 수 있습니다. 첨삭이 시작되면 수정할 수 없어요.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="edit-topic">주제 *</Label>
+              <Input id="edit-topic" value={editTopic} onChange={(e) => setEditTopic(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="edit-note">에세이 본문 / 메모</Label>
+              <Textarea id="edit-note" rows={6} value={editNote} onChange={(e) => setEditNote(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)} disabled={updateRequestMutation.isPending}>취소</Button>
+            <Button onClick={() => updateRequestMutation.mutate()} disabled={updateRequestMutation.isPending || !editTopic.trim()} className="gap-2">
+              {updateRequestMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              저장
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 };
