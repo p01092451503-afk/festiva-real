@@ -224,18 +224,23 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       <style>{`
         .tldraw-correction .tl-background { background-color: transparent !important; }
         .tldraw-correction .tl-canvas { background: transparent !important; }
-        /* Movable toolbar: pinned top-center by default, then free position via CSS vars */
+        /* Movable toolbar: pinned top-center by default */
         .tldraw-correction .tlui-toolbar {
           position: absolute !important;
           bottom: auto !important;
-          left: calc(var(--ctb-anchor, 1) * 50% + (1 - var(--ctb-anchor, 1)) * var(--ctb-x, 0px)) !important;
-          top: calc(var(--ctb-anchor, 1) * 12px + (1 - var(--ctb-anchor, 1)) * var(--ctb-y, 0px)) !important;
-          transform: translateX(calc(var(--ctb-anchor, 1) * -50%)) !important;
+          left: 50% !important;
+          top: 12px !important;
+          transform: translateX(-50%) !important;
           z-index: 300 !important;
           width: max-content !important;
           max-width: calc(100% - 16px) !important;
         }
-        .tldraw-correction .tlui-toolbar__tools { padding-left: 4px; }
+        /* Once user drags, switch to pixel coordinates from CSS vars */
+        .tldraw-correction[data-tb-dragged="1"] .tlui-toolbar {
+          left: var(--ctb-x, 0px) !important;
+          top: var(--ctb-y, 12px) !important;
+          transform: none !important;
+        }
         .correction-toolbar-handle {
           display: flex;
           align-items: center;
@@ -243,12 +248,13 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           width: 22px;
           align-self: stretch;
           cursor: grab;
-          color: hsl(var(--muted-foreground) / 0.6);
+          color: rgba(0,0,0,0.45);
           touch-action: none;
           user-select: none;
         }
-        .correction-toolbar-handle:hover { color: hsl(var(--foreground)); }
+        .correction-toolbar-handle:hover { color: rgba(0,0,0,0.9); }
       `}</style>
+
     </div>
   );
 };
