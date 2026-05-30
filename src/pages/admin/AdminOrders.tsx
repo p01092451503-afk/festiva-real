@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   Receipt, Search, RotateCcw, DollarSign, ShoppingCart, CreditCard, TrendingUp,
   ChevronDown, ChevronUp, ExternalLink, Smartphone, Building2, Wallet, X,
-  CheckCircle2, Trash2, Ban, UserX,
+  CheckCircle2, Trash2, Ban, UserX, Calendar, Download, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +45,39 @@ const AdminOrders = () => {
   const [methodFilter, setMethodFilter] = useState("all");
   const [detailOrder, setDetailOrder] = useState<any>(null);
   const [cancelReason, setCancelReason] = useState("");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const toDateInput = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
+
+  const applyPreset = (key: "today" | "7d" | "15d" | "1m" | "3m" | "6m") => {
+    const end = new Date();
+    const start = new Date();
+    switch (key) {
+      case "today": break;
+      case "7d": start.setDate(end.getDate() - 6); break;
+      case "15d": start.setDate(end.getDate() - 14); break;
+      case "1m": start.setMonth(end.getMonth() - 1); break;
+      case "3m": start.setMonth(end.getMonth() - 3); break;
+      case "6m": start.setMonth(end.getMonth() - 6); break;
+    }
+    setDateFrom(toDateInput(start));
+    setDateTo(toDateInput(end));
+    setPage(1);
+  };
+
+  const resetDateRange = () => {
+    setDateFrom("");
+    setDateTo("");
+    setPage(1);
+  };
 
   const statusLabel: Record<string, string> = {
     pending: t("adminOrders.statusPending"),
@@ -197,7 +230,15 @@ const AdminOrders = () => {
       p?.email?.toLowerCase().includes(search.toLowerCase()) ||
       p?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
       o.card_approve_no?.toLowerCase().includes(search.toLowerCase());
-    return matchStatus && matchSearch && matchMethod;
+    // 날짜 범위 필터 (주문일 created_at 기준, 종료일 포함)
+    let matchDate = true;
+    if (dateFrom) {
+      matchDate = matchDate && !!o.created_at && new Date(o.created_at) >= new Date(`${dateFrom}T00:00:00`);
+    }
+    if (dateTo) {
+      matchDate = matchDate && !!o.created_at && new Date(o.created_at) <= new Date(`${dateTo}T23:59:59`);
+    }
+    return matchStatus && matchSearch && matchMethod && matchDate;
   });
 
   const paidOrders = orders.filter((o: any) => o.status === "paid");
@@ -211,6 +252,53 @@ const AdminOrders = () => {
   const paymentMethods = [...new Set(orders.map((o: any) => o.payment_method).filter(Boolean))];
 
   const formatDate = (d: string | null) => d ? new Date(d).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }) : "-";
+
+  // 페이지네이션
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  // CSV 내보내기 (필터 적용된 전체)
+  const handleExportCsv = () => {
+    if (filtered.length === 0) {
+      toast({ title: t("adminOrders.exportEmpty"), variant: "destructive" });
+      return;
+    }
+    const headers = ["주문번호", "주문자", "이메일", "강의", "결제수단", "결제액", "상태", "주문일", "결제일"];
+    const escape = (v: any) => {
+      const s = v === null || v === undefined ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = filtered.map((o: any) => {
+      const p = profileMap.get(o.user_id);
+      const items = o.order_items || [];
+      const names = items.map((i: any) => i.courses?.title).filter(Boolean).join(" | ");
+      return [
+        o.order_number,
+        p?.full_name || "",
+        p?.email || "",
+        names,
+        paymentMethodLabel(o),
+        o.final_amount ?? 0,
+        statusLabel[o.status] || o.status,
+        o.created_at ? new Date(o.created_at).toLocaleString("ko-KR") : "",
+        o.paid_at ? new Date(o.paid_at).toLocaleString("ko-KR") : "",
+      ].map(escape).join(",");
+    });
+    // UTF-8 BOM + CRLF (Excel 한글 호환)
+    const csv = "\uFEFF" + [headers.join(","), ...rows].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `orders_${toDateInput(new Date())}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+
 
   // B2C 기능이 비활성화된 경우 결제 관리 페이지 접근 차단
   if (!settingsLoading && siteSettings && siteSettings.b2c_enabled === false) {
@@ -267,29 +355,88 @@ const AdminOrders = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder={t("adminOrders.searchPlaceholder")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 rounded-xl" />
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input placeholder={t("adminOrders.searchPlaceholder")} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} className="pl-9 h-10 rounded-xl" />
+            </div>
+            <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
+              <SelectTrigger className="w-32 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colStatus")} /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("adminOrders.allStatus")}</SelectItem>
+                <SelectItem value="paid">{t("adminOrders.statusPaid")}</SelectItem>
+                <SelectItem value="pending">{t("adminOrders.statusPending")}</SelectItem>
+                <SelectItem value="cancelled">{t("adminOrders.statusCancelled")}</SelectItem>
+                <SelectItem value="refunded">{t("adminOrders.statusRefunded")}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={methodFilter} onValueChange={(v) => { setMethodFilter(v); setPage(1); }}>
+              <SelectTrigger className="w-36 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colMethod")} /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("adminOrders.allMethod")}</SelectItem>
+                {paymentMethods.map((m: string) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-32 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colStatus")} /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("adminOrders.allStatus")}</SelectItem>
-              <SelectItem value="paid">{t("adminOrders.statusPaid")}</SelectItem>
-              <SelectItem value="pending">{t("adminOrders.statusPending")}</SelectItem>
-              <SelectItem value="cancelled">{t("adminOrders.statusCancelled")}</SelectItem>
-              <SelectItem value="refunded">{t("adminOrders.statusRefunded")}</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={methodFilter} onValueChange={setMethodFilter}>
-            <SelectTrigger className="w-36 rounded-xl h-10"><SelectValue placeholder={t("adminOrders.colMethod")} /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("adminOrders.allMethod")}</SelectItem>
-              {paymentMethods.map((m: string) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
-            </SelectContent>
-          </Select>
+
+          {/* 기간 검색 + 빠른 프리셋 */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground px-2">
+              <Calendar className="h-3.5 w-3.5" />
+              {t("adminOrders.dateRange")}
+            </span>
+            <Input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => { setDateFrom(e.target.value); setPage(1); }}
+              className="w-[160px] h-9 rounded-xl"
+              aria-label={t("adminOrders.dateFrom")}
+            />
+            <span className="text-muted-foreground text-sm">~</span>
+            <Input
+              type="date"
+              value={dateTo}
+              onChange={(e) => { setDateTo(e.target.value); setPage(1); }}
+              className="w-[160px] h-9 rounded-xl"
+              aria-label={t("adminOrders.dateTo")}
+            />
+            <div className="flex items-center gap-1 ml-1 flex-wrap">
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("today")}>{t("adminOrders.datePresetToday")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("7d")}>{t("adminOrders.datePreset7d")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("15d")}>{t("adminOrders.datePreset15d")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("1m")}>{t("adminOrders.datePreset1m")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("3m")}>{t("adminOrders.datePreset3m")}</Button>
+              <Button type="button" variant="outline" size="sm" className="h-9 rounded-full px-3" onClick={() => applyPreset("6m")}>{t("adminOrders.datePreset6m")}</Button>
+              {(dateFrom || dateTo) && (
+                <Button type="button" variant="ghost" size="sm" className="h-9 rounded-full px-3 text-muted-foreground" onClick={resetDateRange}>
+                  <X className="h-3.5 w-3.5 mr-1" />{t("adminOrders.dateReset")}
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* 결과 헤더: 총 건수 / 페이지 크기 / CSV 내보내기 */}
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-sm text-muted-foreground">
+            {t("adminOrders.totalCount", { count: filtered.length.toLocaleString() })}
+          </p>
+          <div className="flex items-center gap-2">
+            <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setPage(1); }}>
+              <SelectTrigger className="w-[140px] h-9 rounded-xl text-sm"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="20">{t("adminOrders.perPage", { count: 20 })}</SelectItem>
+                <SelectItem value="50">{t("adminOrders.perPage", { count: 50 })}</SelectItem>
+                <SelectItem value="100">{t("adminOrders.perPage", { count: 100 })}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button type="button" variant="outline" size="sm" className="h-9 rounded-xl gap-1.5" onClick={handleExportCsv}>
+              <Download className="h-3.5 w-3.5" /> {t("adminOrders.exportCsv")}
+            </Button>
+          </div>
+        </div>
+
 
         {/* Desktop Table */}
         <div className="stat-card !p-0 overflow-x-auto hidden md:block">
@@ -307,7 +454,7 @@ const AdminOrders = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((order: any) => {
+              {paginated.map((order: any) => {
                 const p = profileMap.get(order.user_id);
                 const items = order.order_items || [];
                 const names = items.map((i: any) => i.courses?.title).filter(Boolean);
@@ -474,7 +621,7 @@ const AdminOrders = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-2">
-          {filtered.map((order: any) => {
+          {paginated.map((order: any) => {
             const p = profileMap.get(order.user_id);
             const items = order.order_items || [];
             const names = items.map((i: any) => i.courses?.title).filter(Boolean);
@@ -517,6 +664,35 @@ const AdminOrders = () => {
             <div className="stat-card !p-8 text-center text-sm text-muted-foreground">{t("adminOrders.noOrders")}</div>
           )}
         </div>
+
+        {/* Pagination */}
+        {filtered.length > 0 && totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 rounded-xl gap-1"
+              disabled={safePage <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+            >
+              <ChevronLeft className="h-3.5 w-3.5" /> {t("adminOrders.pagePrev")}
+            </Button>
+            <span className="text-sm text-muted-foreground px-3 whitespace-nowrap">
+              {t("adminOrders.pageInfo", { current: safePage, total: totalPages })}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-9 rounded-xl gap-1"
+              disabled={safePage >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            >
+              {t("adminOrders.pageNext")} <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Order Detail Dialog */}
