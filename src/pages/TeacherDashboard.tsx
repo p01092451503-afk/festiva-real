@@ -236,48 +236,26 @@ const TeacherDashboard = () => {
           </div>
         </div>
 
-        {/* === 제출 추세 + 강의 상태 도넛 === */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="rounded-xl border border-border bg-card p-5 lg:col-span-2">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <FileCheck2 className="h-4 w-4 text-[hsl(var(--chart-4))]" aria-hidden="true" />
-                {t("teacher.submissionsTrend", { defaultValue: "최근 14일 과제 제출 추세" })}
-              </h3>
-              <span className="text-xs text-muted-foreground">
-                {t("teacher.totalCount", { count: recentSubmissions.length, defaultValue: "총 {{count}}건" })}
-              </span>
-            </div>
-            <Suspense fallback={<div className="h-[200px]" />}>
-              <DashCharts.Trend
-                data={submissionTrend}
-                dataKey="value"
-                xKey="date"
-                color="hsl(var(--chart-4))"
-                height={200}
-              />
-            </Suspense>
+        {/* === 제출 추세 === */}
+        <div className="rounded-xl border border-border bg-card p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <FileCheck2 className="h-4 w-4 text-[hsl(var(--chart-4))]" aria-hidden="true" />
+              {t("teacher.submissionsTrend", { defaultValue: "최근 14일 과제 제출 추세" })}
+            </h3>
+            <span className="text-xs text-muted-foreground">
+              {t("teacher.totalCount", { count: recentSubmissions.length, defaultValue: "총 {{count}}건" })}
+            </span>
           </div>
-
-          <div className="rounded-xl border border-border bg-card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-[hsl(var(--chart-5))]" aria-hidden="true" />
-                {t("teacher.courseStatusBreakdown", { defaultValue: "강의 발행 상태" })}
-              </h3>
-            </div>
-            <Suspense fallback={<div className="h-[200px]" />}>
-              <DashCharts.Donut
-                data={[
-                  { name: t("teacher.published"), value: publishedCourses, color: "hsl(var(--chart-3))" },
-                  { name: t("teacher.unpublished"), value: draftCourses, color: "hsl(var(--muted-foreground))" },
-                ]}
-                height={200}
-                centerLabel={t("teacher.totalCoursesCount")}
-                centerValue={String(courses.length)}
-              />
-            </Suspense>
-          </div>
+          <Suspense fallback={<div className="h-[200px]" />}>
+            <DashCharts.Trend
+              data={submissionTrend}
+              dataKey="value"
+              xKey="date"
+              color="hsl(var(--chart-4))"
+              height={200}
+            />
+          </Suspense>
         </div>
 
         <div className="rounded-xl border border-border bg-card overflow-hidden">
