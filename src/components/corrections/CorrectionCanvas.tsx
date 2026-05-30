@@ -90,8 +90,8 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     [initialSnapshot, readOnly, onReady],
   );
 
-  // Aspect ratio container based on the image
-  const ratio = dims ? dims.h / dims.w : 11 / 8.5;
+
+
 
   // Make the tldraw toolbar movable. After mount, locate the toolbar element,
   // anchor it to the top-center of the canvas, and add a drag handle so users
