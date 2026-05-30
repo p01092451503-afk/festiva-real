@@ -91,6 +91,7 @@ const CourseDetail = () => {
   const [contentForm, setContentForm] = useState<ContentFormData>(emptyContent);
   const [contentEnForm, setContentEnForm] = useState<ContentI18nData>(emptyI18n);
   const [courseEditOpen, setCourseEditOpen] = useState(false);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [courseForm, setCourseForm] = useState({
     title: "", description: "", status: "draft", is_mandatory: false, deadline: "",
     category_id: "", difficulty_level: "beginner", estimated_duration_hours: "", max_students: "",
