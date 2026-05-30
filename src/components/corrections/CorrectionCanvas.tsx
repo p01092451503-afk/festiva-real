@@ -231,8 +231,8 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       <style>{`
         .tldraw-correction .tl-background { background-color: transparent !important; }
         .tldraw-correction .tl-canvas { background: transparent !important; }
-        /* Movable toolbar: pinned top-center by default */
-        .tldraw-correction .tlui-toolbar {
+        /* Movable toolbar (only the tagged one): pinned top-center by default */
+        .tldraw-correction .tlui-toolbar.correction-movable-toolbar {
           position: absolute !important;
           bottom: auto !important;
           left: 50% !important;
@@ -243,11 +243,12 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           max-width: calc(100% - 16px) !important;
         }
         /* Once user drags, switch to pixel coordinates from CSS vars */
-        .tldraw-correction[data-tb-dragged="1"] .tlui-toolbar {
+        .tldraw-correction[data-tb-dragged="1"] .tlui-toolbar.correction-movable-toolbar {
           left: var(--ctb-x, 0px) !important;
           top: var(--ctb-y, 12px) !important;
           transform: none !important;
         }
+
         .correction-toolbar-handle {
           display: flex;
           align-items: center;
