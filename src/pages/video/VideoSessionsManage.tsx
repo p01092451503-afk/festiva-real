@@ -103,11 +103,55 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
       const { data } = await supabase
         .from("profiles")
         .select("user_id, full_name, email")
-        .or(`full_name.ilike.%${participantQuery}%,email.ilike.%${participantQuery}%`)
-        .limit(10);
+        .ilike("full_name", `%${participantQuery}%`)
+        .limit(15);
       return data ?? [];
     },
   });
+
+  const { data: searchById = [] } = useQuery({
+    queryKey: ["video-participant-search-id", idQuery],
+    queryFn: async () => {
+      if (!idQuery || idQuery.length < 2) return [];
+      const { data } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, email, employee_id")
+        .or(`email.ilike.%${idQuery}%,employee_id.ilike.%${idQuery}%`)
+        .limit(15);
+      return data ?? [];
+    },
+  });
+
+  const { data: courseList = [] } = useQuery({
+    queryKey: ["video-invite-courses", profile?.user_id, isAdmin],
+    queryFn: async () => {
+      let q = supabase.from("courses").select("id, title, instructor_id").order("created_at", { ascending: false }).limit(200);
+      if (!isAdmin && profile?.user_id) q = q.eq("instructor_id", profile.user_id);
+      const { data } = await q;
+      return data ?? [];
+    },
+    enabled: !!profile?.user_id,
+  });
+
+  const { data: courseStudents = [] } = useQuery({
+    queryKey: ["video-invite-course-students", selectedCourseId],
+    queryFn: async () => {
+      if (!selectedCourseId) return [];
+      const { data: enrolls } = await supabase
+        .from("course_enrollments")
+        .select("user_id")
+        .eq("course_id", selectedCourseId);
+      const ids = (enrolls ?? []).map((e: any) => e.user_id);
+      if (ids.length === 0) return [];
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, email")
+        .in("user_id", ids);
+      return profs ?? [];
+    },
+    enabled: !!selectedCourseId,
+  });
+
 
   const resetForm = () => {
     setForm({
