@@ -124,48 +124,68 @@ const VideoSessionsManage = ({ role = "admin" }: { role?: "admin" | "teacher" })
       return;
     }
     setSubmitting(true);
-    const startTimestamp = koreaDateTimeLocalToDbTimestamp(form.scheduled_start);
-    const endTimestamp = koreaDateTimeLocalToDbTimestamp(form.scheduled_end);
-    const { data: created, error } = await supabase
-      .from("video_sessions")
-      .insert({
-        title: form.title,
-        description: form.description || null,
-        session_type: form.session_type,
-        host_user_id: profile!.user_id,
-        scheduled_start: startTimestamp,
-        scheduled_end: endTimestamp,
-        max_participants: form.max_participants,
-        recording_enabled: form.recording_enabled,
-      })
-      .select()
-      .single();
-    if (error) {
-      toast.error("생성 실패: " + error.message);
+    try {
+      const startTimestamp = koreaDateTimeLocalToDbTimestamp(form.scheduled_start);
+      const endTimestamp = koreaDateTimeLocalToDbTimestamp(form.scheduled_end);
+      const { data: created, error } = await supabase
+        .from("video_sessions")
+        .insert({
+          title: form.title,
+          description: form.description || null,
+          session_type: form.session_type,
+          host_user_id: profile!.user_id,
+          scheduled_start: startTimestamp,
+          scheduled_end: endTimestamp,
+          max_participants: form.max_participants,
+          recording_enabled: form.recording_enabled,
+        })
+        .select()
+        .single();
+      if (error || !created) {
+        toast.error("생성 실패: " + (error?.message ?? "unknown"));
+        return;
+      }
+
+      if (selectedParticipants.length) {
+        try {
+          await supabase.from("video_session_participants").insert(
+            selectedParticipants.map((p) => ({
+              session_id: created.id,
+              user_id: p.id,
+              role: "participant",
+            })),
+          );
+        } catch (e) {
+          console.error("participant insert failed", e);
+        }
+      }
+
+      // Daily room creation is best-effort — don't block dialog close on it.
+      toast.success("세션이 생성되었습니다.");
+      setOpen(false);
+      resetForm();
+      qc.invalidateQueries({ queryKey: ["video-sessions-manage"] });
+      qc.invalidateQueries({ queryKey: ["my-video-sessions"] });
+
+      try {
+        const { error: roomErr } = await supabase.functions.invoke("daily-create-room", {
+          body: { sessionId: created.id },
+        });
+        if (roomErr) {
+          console.error("daily-create-room error", roomErr);
+          toast.error("화상 룸은 입장 시 자동 생성됩니다.");
+        }
+      } catch (e) {
+        console.error("daily-create-room invoke threw", e);
+      }
+    } catch (e) {
+      console.error("create session failed", e);
+      toast.error("생성 실패: " + ((e as Error)?.message ?? String(e)));
+    } finally {
       setSubmitting(false);
-      return;
     }
-    if (selectedParticipants.length) {
-      await supabase.from("video_session_participants").insert(
-        selectedParticipants.map((p) => ({
-          session_id: created.id,
-          user_id: p.id,
-          role: "participant",
-        })),
-      );
-    }
-    // create Daily room immediately
-    const { error: roomErr } = await supabase.functions.invoke("daily-create-room", {
-      body: { sessionId: created.id },
-    });
-    if (roomErr) toast.error("화상 룸 생성 실패: " + roomErr.message);
-    else toast.success("세션이 생성되었습니다.");
-    setOpen(false);
-    resetForm();
-    setSubmitting(false);
-    qc.invalidateQueries({ queryKey: ["video-sessions-manage"] });
-    qc.invalidateQueries({ queryKey: ["my-video-sessions"] });
   };
+
 
   const handleDelete = async (id: string) => {
     if (!confirm("세션을 삭제하시겠습니까?")) return;
