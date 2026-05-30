@@ -37,6 +37,8 @@ const CorrectionDetail = () => {
   const { primaryRole, roles } = useUserRole();
   const qc = useQueryClient();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const addFilesRef = useRef<HTMLInputElement>(null);
 
   const location = useLocation();
   const isStudentRoute = location.pathname.startsWith("/student/");
