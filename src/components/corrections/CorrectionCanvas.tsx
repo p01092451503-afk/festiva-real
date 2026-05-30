@@ -204,7 +204,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       <div
         ref={containerRef}
         className="relative w-full border-2 border-border/60 rounded overflow-hidden bg-muted"
-        style={{ paddingTop: `${ratio * 100}%`, ["--ctb-anchor" as never]: "1" }}
+        style={{ paddingTop: `${ratio * 100}%` }}
       >
         <img
           src={imageUrl}
