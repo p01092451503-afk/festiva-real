@@ -182,18 +182,8 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       const all = Array.from(
         container.querySelectorAll<HTMLElement>(".tlui-toolbar"),
       );
-      // Debug: list all .tlui-toolbar candidates once per discovery
-      if (all.length && !(window as any).__tbLogged) {
-        (window as any).__tbLogged = true;
-        console.log("[CorrectionCanvas] toolbar candidates:", all.map(el => ({
-          cls: el.className,
-          buttons: Array.from(el.querySelectorAll("button")).map(b => ({
-            cls: b.className,
-            dataValue: b.getAttribute("data-value"),
-            title: b.getAttribute("title") || b.getAttribute("aria-label"),
-          })),
-        })));
-      }
+
+
       const tb =
         all.find((el) =>
           el.querySelector(
