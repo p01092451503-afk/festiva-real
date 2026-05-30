@@ -732,7 +732,7 @@ const ContentPlayer = () => {
                 <div className="relative" key={`video-wrap-${contentId}`}>
                   <div ref={videoContainerRef} className="aspect-video w-full relative bg-black group/video">
                     <iframe
-                      key={`video-${contentId}-${resumeChoice ?? "pending"}`}
+                      key={`video-${contentId}-${resumeChoice === "resume" ? "resume" : "initial"}`}
                       ref={isTrackableVideo ? videoIframeCallback : undefined}
                       id={`video-player-${contentId}`}
                       src={embedUrl}
