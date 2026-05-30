@@ -258,68 +258,6 @@ const TeacherDashboard = () => {
           </Suspense>
         </div>
 
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
-          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-semibold text-foreground">{t("teacher.myCoursesList")}</h2>
-              <p className="text-xs text-muted-foreground">{t("teacher.manageCourseDesc")}</p>
-            </div>
-            <Link to="/teacher/courses">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1" aria-label={t("common.viewAll")}>
-                {t("common.viewAll")} <ArrowRight className="h-3 w-3" aria-hidden="true" />
-              </Button>
-            </Link>
-          </div>
-
-          {courses.length === 0 ? (
-            <div className="text-center py-12">
-              <BookOpen className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" aria-hidden="true" />
-              <p className="text-sm text-muted-foreground">{t("teacher.noCourses")}</p>
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {courses.slice(0, 5).map((course: any) => {
-                const studentCount = enrollmentCountMap.get(course.id) || 0;
-                const courseEnrollments = enrollments.filter((e: any) => e.course_id === course.id);
-                const avgProgress = courseEnrollments.length > 0
-                  ? Math.round(courseEnrollments.reduce((s: number, e: any) => s + (Number(e.progress) || 0), 0) / courseEnrollments.length)
-                  : 0;
-
-                return (
-                  <Link key={course.id} to={`/teacher/courses/${course.id}`} className="flex items-center gap-4 px-5 py-3 hover:bg-accent/20 transition-colors group" aria-label={course.title}>
-                    {course.thumbnail_url ? (
-                      <img src={course.thumbnail_url} alt={course.title} className="h-10 w-14 rounded-lg object-cover shrink-0" />
-                    ) : (
-                      <div className="h-10 w-14 rounded-lg bg-accent flex items-center justify-center shrink-0" aria-hidden="true">
-                        <BookOpen className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-foreground truncate">{course.title}</span>
-                        <Badge
-                          variant="secondary"
-                          className={`text-[9px] h-4 shrink-0 ${
-                            course.status === "published"
-                              ? "bg-emerald-500 text-white dark:bg-emerald-500 dark:text-white"
-                              : "bg-secondary text-muted-foreground"
-                          }`}
-                        >
-                          {course.status === "published" ? t("teacher.published") : t("teacher.unpublished")}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-3 mt-0.5">
-                        <span className="text-[11px] text-muted-foreground"><Users className="h-3 w-3 inline mr-0.5" aria-hidden="true" />{studentCount}{t("common.people")}</span>
-                        <span className="text-[11px] text-muted-foreground">{t("teacher.progressPercent", { percent: avgProgress })}</span>
-                      </div>
-                    </div>
-                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" aria-hidden="true" />
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
 
         <div className="grid lg:grid-cols-2 gap-4">
           <div className="rounded-xl border border-border bg-card overflow-hidden">
