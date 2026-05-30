@@ -24,8 +24,8 @@ import { compressAnswerImage } from "@/lib/imageCompression";
 
 const STATUS_META: Record<string, { label: string; icon: any; cls: string }> = {
   pending: { label: "대기", icon: Clock, cls: "text-muted-foreground" },
-  in_progress: { label: "첨삭 진행 중", icon: Loader2, cls: "text-info" },
-  completed: { label: "첨삭 완료", icon: CheckCircle2, cls: "text-success" },
+  in_progress: { label: "에세이 진행 중", icon: Loader2, cls: "text-info" },
+  completed: { label: "에세이 완료", icon: CheckCircle2, cls: "text-success" },
   returned: { label: "반려", icon: AlertCircle, cls: "text-warning" },
 };
 
@@ -196,7 +196,7 @@ const StudentCorrections = () => {
       return req.id;
     },
     onSuccess: () => {
-      toast({ title: "첨삭 요청이 접수되었습니다." });
+      toast({ title: "에세이가 제출되었습니다." });
       qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
       qc.invalidateQueries({ queryKey: ["my-essay-assignments"] });
       reset();
@@ -298,7 +298,7 @@ const StudentCorrections = () => {
             <div className="p-8 text-center text-muted-foreground text-sm">불러오는 중…</div>
           ) : requests.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground text-sm">
-              아직 등록된 첨삭 요청이 없습니다.
+              아직 제출한 에세이가 없습니다.
             </div>
           ) : (
             <ul className="divide-y-2 divide-border/80">
@@ -338,7 +338,7 @@ const StudentCorrections = () => {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              {activeAssignment ? <><Sparkles className="h-5 w-5 text-primary" /> 부여된 에세이 과제</> : "새 첨삭 요청"}
+              {activeAssignment ? <><Sparkles className="h-5 w-5 text-primary" /> 부여된 에세이 과제</> : "새 에세이 작성"}
             </DialogTitle>
             <DialogDescription>
               {activeAssignment
@@ -496,7 +496,7 @@ const StudentCorrections = () => {
                 disabled={submitting || !topic.trim() || files.length === 0}
               >
                 {submitting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-                첨삭 요청 제출
+                에세이 제출
               </Button>
             )}
           </DialogFooter>
