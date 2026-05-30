@@ -36,6 +36,7 @@ import { formatDurationMs } from "@/lib/duration";
 import { useTranslation } from "react-i18next";
 import { useAssessmentI18n } from "@/hooks/useI18nMaps";
 import { useCdnAdminUnlock } from "@/components/admin/CdnAdminUnlock";
+import { BulkContentEditDialog } from "@/components/admin/BulkContentEditDialog";
 
 const contentTypeIcon: Record<string, React.ElementType> = {
   video: Video, document: FileText, quiz: BarChart3, assignment: FileText, live: Video,
@@ -90,6 +91,7 @@ const CourseDetail = () => {
   const [contentForm, setContentForm] = useState<ContentFormData>(emptyContent);
   const [contentEnForm, setContentEnForm] = useState<ContentI18nData>(emptyI18n);
   const [courseEditOpen, setCourseEditOpen] = useState(false);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
   const [courseForm, setCourseForm] = useState({
     title: "", description: "", status: "draft", is_mandatory: false, deadline: "",
     category_id: "", difficulty_level: "beginner", estimated_duration_hours: "", max_students: "",
@@ -566,10 +568,21 @@ const CourseDetail = () => {
           </section>
 
           <section className="overflow-hidden rounded-xl border border-border bg-card" aria-labelledby="teacher-content-list-heading">
-            <div className="border-b border-border bg-secondary/30 px-4 py-3">
+            <div className="flex items-center justify-between gap-2 border-b border-border bg-secondary/30 px-4 py-3">
               <h2 id="teacher-content-list-heading" className="text-sm font-semibold text-foreground">
                 {t("course.contentList")} ({contents.length})
               </h2>
+              {isTeacherOrAdmin && contents.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setBulkEditOpen(true)}
+                  className="h-7 gap-1.5 text-xs"
+                >
+                  <Pencil className="h-3 w-3" aria-hidden="true" />
+                  전체 수정
+                </Button>
+              )}
             </div>
             {contents.length === 0 ? (
               <div className="space-y-3 py-12 text-center" role="status" aria-live="polite">
@@ -713,6 +726,17 @@ const CourseDetail = () => {
           isPending={upsertContentMutation.isPending}
           t={t}
         />
+
+        {isTeacherOrAdmin && courseId && (
+          <BulkContentEditDialog
+            open={bulkEditOpen}
+            onOpenChange={setBulkEditOpen}
+            contents={contents}
+            courseId={courseId}
+          />
+        )}
+
+
 
         <CourseEditDialog
           open={courseEditOpen}
