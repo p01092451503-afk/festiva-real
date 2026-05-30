@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { useParams, Link, useLocation, Navigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText } from "lucide-react";
+import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText, Clock, Sparkles, AlertCircle, ImageIcon, Eye } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -225,6 +225,82 @@ const CorrectionDetail = () => {
           {req.note && <p className="text-sm text-muted-foreground whitespace-pre-wrap">메모: {req.note}</p>}
         </header>
 
+        {/* ───────────── 학생 안내 배너 ───────────── */}
+        {!isStaff && (
+          <>
+            {req.status === "pending" && (
+              <Card className="p-4 border-info/30 bg-info/5">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-info/10 p-2 shrink-0">
+                    <CheckCircle2 className="h-5 w-5 text-info" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm">에세이가 정상적으로 업로드되었습니다</div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      강사 배정 후 첨삭이 시작됩니다. 첨삭이 완료되면 결과를 이 페이지에서 확인할 수 있어요.
+                    </p>
+                    <div className="text-xs text-muted-foreground mt-2 flex items-center gap-3">
+                      <span className="inline-flex items-center gap-1"><ImageIcon className="h-3 w-3" /> 제출 사진 {data.pages.length}장</span>
+                      <span>· 제출일 {new Date(req.submitted_at).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )}
+            {req.status === "in_progress" && (
+              <Card className="p-4 border-warning/30 bg-warning/5">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-warning/10 p-2 shrink-0">
+                    <Loader2 className="h-5 w-5 text-warning animate-spin" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm">강사가 첨삭 중입니다</div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      첨삭이 완료되기 전까지는 강사의 주석과 코멘트가 공개되지 않습니다.
+                      완료되면 알림을 통해 안내해 드릴게요.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )}
+            {req.status === "completed" && (
+              <Card className="p-4 border-success/30 bg-success/5">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-success/10 p-2 shrink-0">
+                    <Sparkles className="h-5 w-5 text-success" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm">첨삭이 완료되었습니다</div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      아래에서 강사 주석, 페이지별 코멘트, 종합 평가를 확인할 수 있습니다.
+                    </p>
+                    {req.completed_at && (
+                      <div className="text-xs text-muted-foreground mt-2">
+                        완료일 {new Date(req.completed_at).toLocaleString()}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            )}
+            {req.status === "returned" && (
+              <Card className="p-4 border-destructive/30 bg-destructive/5">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-destructive/10 p-2 shrink-0">
+                    <AlertCircle className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm">에세이가 반려되었습니다</div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      강사의 안내에 따라 다시 작성 후 새 에세이로 제출해 주세요.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )}
+          </>
+        )}
+
         {isStaff && req.status === "pending" && (
           <Card className="p-4 flex items-center justify-between">
             <div className="text-sm">이 요청을 담당하시겠습니까?</div>
@@ -235,6 +311,7 @@ const CorrectionDetail = () => {
           </Card>
         )}
 
+        {/* ───────────── 페이지/이미지 표시 ───────────── */}
         {data.pages.length === 0 ? (
           <Card className="p-10 text-center text-sm text-muted-foreground">답안 페이지가 없습니다.</Card>
         ) : (
@@ -247,16 +324,31 @@ const CorrectionDetail = () => {
             {data.pages.map((p) => {
               const ann = data.anns.find((a) => a.page_id === p.id) || null;
               const url = signedUrls[p.id];
+              // 학생은 완료 전까지 강사 주석/스냅샷 비공개 — 원본 사진만 노출
+              const studentHideAnnotations = !isStaff && req.status !== "completed";
+              const snapshotForCanvas = studentHideAnnotations ? undefined : ann?.snapshot;
               return (
                 <TabsContent key={p.id} value={p.id} className="space-y-4 mt-4">
                   {url ? (
-                    <CorrectionCanvas
-                      key={p.id + (canEdit ? "-edit" : "-view")}
-                      imageUrl={url}
-                      initialSnapshot={ann?.snapshot}
-                      readOnly={!canEdit}
-                      onReady={(api) => { canvasApiRef.current = api; }}
-                    />
+                    <div className="relative">
+                      <CorrectionCanvas
+                        key={p.id + (canEdit ? "-edit" : "-view") + (studentHideAnnotations ? "-clean" : "-ann")}
+                        imageUrl={url}
+                        initialSnapshot={snapshotForCanvas}
+                        readOnly={!canEdit}
+                        onReady={(api) => { canvasApiRef.current = api; }}
+                      />
+                      {!isStaff && req.status === "pending" && (
+                        <div className="absolute top-2 left-2 inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border shadow-sm">
+                          <Eye className="h-3 w-3" /> 내가 제출한 답안
+                        </div>
+                      )}
+                      {!isStaff && req.status === "in_progress" && (
+                        <div className="absolute top-2 left-2 inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-warning/10 text-warning border border-warning/30 shadow-sm">
+                          <Loader2 className="h-3 w-3 animate-spin" /> 첨삭 중
+                        </div>
+                      )}
+                    </div>
                   ) : (
                     <div className="h-64 flex items-center justify-center text-muted-foreground text-sm">이미지 로딩 중…</div>
                   )}
@@ -284,9 +376,12 @@ const CorrectionDetail = () => {
                     </Card>
                   )}
 
-                  {!canEdit && ann?.comment && (
+                  {/* 학생: 완료 시에만 강사 코멘트 노출 */}
+                  {!canEdit && ann?.comment && (!isStaff ? req.status === "completed" : true) && (
                     <Card className="p-4">
-                      <div className="text-xs text-muted-foreground mb-1">강사 코멘트</div>
+                      <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                        <MessageSquareText className="h-3.5 w-3.5" /> 강사 코멘트
+                      </div>
                       <p className="text-sm whitespace-pre-wrap">{ann.comment}</p>
                     </Card>
                   )}
@@ -295,6 +390,7 @@ const CorrectionDetail = () => {
             })}
           </Tabs>
         )}
+
 
         {/* 종합 평가 */}
         {isStaff && req.status !== "completed" ? (
@@ -323,12 +419,27 @@ const CorrectionDetail = () => {
           </Card>
         ) : req.status === "completed" ? (
           <Card className="p-4 space-y-2">
-            <h2 className="font-semibold">종합 평가</h2>
+            <h2 className="font-semibold flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-success" /> 종합 평가
+            </h2>
             {req.score != null && <div className="text-sm">점수: <span className="font-medium">{req.score}점</span></div>}
             {req.summary && <div className="text-sm"><span className="text-muted-foreground">총평:</span> <span className="whitespace-pre-wrap">{req.summary}</span></div>}
             {req.next_recommendation && (
               <div className="text-sm"><span className="text-muted-foreground">다음 학습 추천:</span> <span className="whitespace-pre-wrap">{req.next_recommendation}</span></div>
             )}
+            {req.score == null && !req.summary && !req.next_recommendation && (
+              <div className="text-sm text-muted-foreground">강사가 별도의 종합 평가를 남기지 않았습니다.</div>
+            )}
+          </Card>
+        ) : !isStaff ? (
+          // 학생: 미완료 상태에서 종합평가 자리표시자
+          <Card className="p-4 border-dashed">
+            <h2 className="font-semibold flex items-center gap-2 text-muted-foreground">
+              <Clock className="h-4 w-4" /> 종합 평가 (대기 중)
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              첨삭이 완료되면 점수, 총평, 다음 학습 추천을 이곳에서 확인할 수 있습니다.
+            </p>
           </Card>
         ) : null}
       </div>
