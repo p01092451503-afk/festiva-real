@@ -21,7 +21,7 @@ const badgeIcons: Record<string, React.ElementType> = {
   star: Star, flame: Flame, target: Target, award: Award, zap: Zap,
 };
 
-// 글로벌 지점 데모 리더보드 - 신규 DB 조직(서울/도쿄/뉴욕/베벌리힐스/방콕/상파울루) 기반
+// 노무사 수험 학원 데모 리더보드 - 본원/분원 + 수강생/강사 직책 기반
 type LeaderboardEntry = {
   person: string;
   branch: string;
@@ -33,18 +33,18 @@ type LeaderboardEntry = {
 type LeaderboardEntryLocalized = LeaderboardEntry & { branch_en?: string; role_en?: string };
 
 const DEMO_LEADERBOARD: LeaderboardEntryLocalized[] = [
-  { person: "김민수", branch: "서울 강남점", branch_en: "Seoul Gangnam", role: "원장", role_en: "Director", points: 4820, level: 49 },
-  { person: "Sarah Johnson", branch: "Beverly Hills Clinic", branch_en: "Beverly Hills Clinic", role: "원장", role_en: "Director", points: 4150, level: 42 },
-  { person: "田中 美咲", branch: "東京銀座クリニック", branch_en: "Tokyo Ginza Clinic", role: "원장", role_en: "Director", points: 3680, level: 37 },
-  { person: "Michael Chen", branch: "Manhattan Medspa", branch_en: "Manhattan Medspa", role: "시술자", role_en: "Practitioner", points: 3220, level: 33 },
-  { person: "이지은", branch: "서울 강남점", branch_en: "Seoul Gangnam", role: "시술자", role_en: "Practitioner", points: 2850, level: 29 },
-  { person: "Camila Silva", branch: "São Paulo Clinic", branch_en: "São Paulo Clinic", role: "시술자", role_en: "Practitioner", points: 2410, level: 25 },
-  { person: "박철수", branch: "부산 해운대점", branch_en: "Busan Haeundae", role: "시술자", role_en: "Practitioner", points: 1980, level: 20 },
-  { person: "佐藤 健", branch: "東京銀座クリニック", branch_en: "Tokyo Ginza Clinic", role: "상담실장", role_en: "Consultation Manager", points: 1560, level: 16 },
-  { person: "Somchai Prasert", branch: "Bangkok Sukhumvit", branch_en: "Bangkok Sukhumvit", role: "상담실장", role_en: "Consultation Manager", points: 1240, level: 13 },
-  { person: "Emma Davis", branch: "Manhattan Medspa", branch_en: "Manhattan Medspa", role: "코디네이터", role_en: "Coordinator", points: 980, level: 10 },
-  { person: "최서연", branch: "서울 강남점", branch_en: "Seoul Gangnam", role: "코디네이터", role_en: "Coordinator", points: 860, level: 9 },
-  { person: "Lucas Martin", branch: "Beverly Hills Clinic", branch_en: "Beverly Hills Clinic", role: "시술자", role_en: "Practitioner", points: 1820, level: 19 },
+  { person: "김민수", branch: "서울 본원", branch_en: "Seoul Main", role: "전임강사", role_en: "Lead Instructor", points: 4820, level: 49 },
+  { person: "이정환", branch: "강남 분원", branch_en: "Gangnam Branch", role: "전임강사", role_en: "Lead Instructor", points: 4150, level: 42 },
+  { person: "박지영", branch: "서울 본원", branch_en: "Seoul Main", role: "2차 수험생", role_en: "Stage 2 Examinee", points: 3680, level: 37 },
+  { person: "최현우", branch: "부산 분원", branch_en: "Busan Branch", role: "2차 수험생", role_en: "Stage 2 Examinee", points: 3220, level: 33 },
+  { person: "이지은", branch: "강남 분원", branch_en: "Gangnam Branch", role: "1차 수험생", role_en: "Stage 1 Examinee", points: 2850, level: 29 },
+  { person: "정유진", branch: "대구 분원", branch_en: "Daegu Branch", role: "1차 수험생", role_en: "Stage 1 Examinee", points: 2410, level: 25 },
+  { person: "박철수", branch: "부산 분원", branch_en: "Busan Branch", role: "1차 수험생", role_en: "Stage 1 Examinee", points: 1980, level: 20 },
+  { person: "한소희", branch: "서울 본원", branch_en: "Seoul Main", role: "온라인 수강생", role_en: "Online Learner", points: 1560, level: 16 },
+  { person: "강민재", branch: "광주 분원", branch_en: "Gwangju Branch", role: "온라인 수강생", role_en: "Online Learner", points: 1240, level: 13 },
+  { person: "윤서아", branch: "대구 분원", branch_en: "Daegu Branch", role: "입문 수강생", role_en: "Beginner", points: 980, level: 10 },
+  { person: "최서연", branch: "강남 분원", branch_en: "Gangnam Branch", role: "입문 수강생", role_en: "Beginner", points: 860, level: 9 },
+  { person: "임도현", branch: "서울 본원", branch_en: "Seoul Main", role: "1차 수험생", role_en: "Stage 1 Examinee", points: 1820, level: 19 },
 ];
 
 const StudentAchievements = () => {
