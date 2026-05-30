@@ -990,10 +990,13 @@ const CreateCourse = () => {
 
         {/* Contents */}
         <div className="bg-accent/50 border border-accent rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-semibold text-foreground">{t("createCourse.contentSectionTitle")}</h2>
-              <p className="text-xs text-muted-foreground mt-0.5">{t("createCourse.contentSectionHint", "동영상 또는 기타 유형의 콘텐츠 차시를 추가하세요")}</p>
+          <div className="flex items-center justify-between gap-3 border-b border-border/60 pb-4">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <ListVideo className="h-5 w-5 text-primary shrink-0" aria-hidden="true" />
+              <div className="min-w-0">
+                <h2 className="text-lg font-semibold text-foreground leading-tight">{t("createCourse.contentSectionTitle")}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("createCourse.contentSectionHint", "동영상 또는 기타 유형의 콘텐츠 차시를 추가하세요")}</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Button
