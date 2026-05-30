@@ -239,6 +239,50 @@ const StudentCorrections = () => {
           ))}
         </div>
 
+        {pendingAssignments.length > 0 && (
+          <Card className="overflow-hidden border-primary/30">
+            <div className="p-4 border-b border-border bg-primary/5 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold">부여받은 에세이 과제 ({pendingAssignments.length})</h2>
+                <p className="text-xs text-muted-foreground">아래 과제를 클릭하면 답안 사진을 올려 바로 제출할 수 있어요.</p>
+              </div>
+            </div>
+            <ul className="divide-y-2 divide-border/80">
+              {pendingAssignments.map((t: any) => {
+                const a = t.correction_assignments;
+                const overdue = a.due_at && new Date(a.due_at) < new Date();
+                return (
+                  <li key={t.id}>
+                    <button
+                      type="button"
+                      onClick={() => openSubmitForAssignment(t)}
+                      className="w-full text-left flex items-center gap-4 p-4 hover:bg-muted/40 transition-colors"
+                    >
+                      <FileText className="h-5 w-5 text-primary shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium truncate">{a.title}</div>
+                        {a.instructions && (
+                          <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2 whitespace-pre-wrap">{a.instructions}</div>
+                        )}
+                        <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
+                          {a.courses?.title && <span>· {a.courses.title}</span>}
+                          {a.due_at && (
+                            <span className={`inline-flex items-center gap-1 ${overdue ? "text-destructive" : ""}`}>
+                              <Calendar className="h-3 w-3" /> 기한 {new Date(a.due_at).toLocaleDateString()}{overdue && " (지남)"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <Badge className="shrink-0">제출하기</Badge>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+        )}
+
         <Card className="overflow-hidden">
           {isLoading ? (
             <div className="p-8 text-center text-muted-foreground text-sm">불러오는 중…</div>
