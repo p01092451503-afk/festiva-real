@@ -210,13 +210,17 @@ const StudentCorrections = () => {
 
 
   const stats = useMemo(() => {
+    const pendingFromRequests = requests.filter((r: any) => r.status === "pending").length;
+    const inProgress = requests.filter((r: any) => r.status === "in_progress").length;
+    const completed = requests.filter((r: any) => r.status === "completed").length;
+    const pending = pendingAssignments.length + pendingFromRequests;
     return {
-      total: requests.length,
-      pending: requests.filter((r: any) => r.status === "pending").length,
-      inProgress: requests.filter((r: any) => r.status === "in_progress").length,
-      completed: requests.filter((r: any) => r.status === "completed").length,
+      total: pending + inProgress + completed,
+      pending,
+      inProgress,
+      completed,
     };
-  }, [requests]);
+  }, [requests, pendingAssignments]);
 
   return (
     <DashboardLayout>
