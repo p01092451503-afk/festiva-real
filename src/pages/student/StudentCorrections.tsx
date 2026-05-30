@@ -317,16 +317,19 @@ const StudentCorrections = () => {
                     >
                       <div className="min-w-0 flex-1">
                         <div className="font-medium truncate">{r.topic}</div>
-                        <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3">
-                          <span className={`flex items-center gap-1 ${meta.cls}`}>
-                            <Icon className="h-3.5 w-3.5" /> {meta.label}
+                        <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2 flex-wrap">
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted ${meta.cls}`}>
+                            <Icon className={`h-3.5 w-3.5 ${r.status === "in_progress" ? "animate-spin" : ""}`} /> {meta.label}
                           </span>
-                          <span>· {r.correction_pages?.length ?? 0}장</span>
+                          <span>· 사진 {r.correction_pages?.length ?? 0}장</span>
                           {r.score != null && <span>· 점수 {r.score}</span>}
                           <span className="hidden sm:inline">
-                            · {new Date(r.submitted_at).toLocaleDateString()}
+                            · 제출 {new Date(r.submitted_at).toLocaleDateString()}
                           </span>
                         </div>
+                        {meta.hint && (
+                          <div className="text-[11px] text-muted-foreground mt-1 truncate">{meta.hint}</div>
+                        )}
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </Link>
