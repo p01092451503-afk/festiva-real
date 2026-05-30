@@ -45,6 +45,39 @@ const AdminOrders = () => {
   const [methodFilter, setMethodFilter] = useState("all");
   const [detailOrder, setDetailOrder] = useState<any>(null);
   const [cancelReason, setCancelReason] = useState("");
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  const toDateInput = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
+
+  const applyPreset = (key: "today" | "7d" | "15d" | "1m" | "3m" | "6m") => {
+    const end = new Date();
+    const start = new Date();
+    switch (key) {
+      case "today": break;
+      case "7d": start.setDate(end.getDate() - 6); break;
+      case "15d": start.setDate(end.getDate() - 14); break;
+      case "1m": start.setMonth(end.getMonth() - 1); break;
+      case "3m": start.setMonth(end.getMonth() - 3); break;
+      case "6m": start.setMonth(end.getMonth() - 6); break;
+    }
+    setDateFrom(toDateInput(start));
+    setDateTo(toDateInput(end));
+    setPage(1);
+  };
+
+  const resetDateRange = () => {
+    setDateFrom("");
+    setDateTo("");
+    setPage(1);
+  };
 
   const statusLabel: Record<string, string> = {
     pending: t("adminOrders.statusPending"),
