@@ -404,7 +404,7 @@
     "noCompletedCourses": "아직 수강 완료한 강의가 없습니다.",
     "courseInfoGuide": "수강신청 후 '강의 시작' 버튼을 클릭하시면 수강이 시작됩니다.",
     "courseInfoGuide2": "강의 일수는 수강 시작일로부터 차감됩니다. (강의에 따라 일정시간 후 자동 강의시작이 될수도 있습니다.)",
-    "courseInfoGuide3": "진도율이 반영이 안될때는 진도율 반영 버튼을 클릭하시기 바랍니다.",
+    "courseInfoGuide3": "\n",
     "searchCourse": "강의 검색",
     "completionLabel": "수료 완료",
     "duration": "{{hours}}시간",
