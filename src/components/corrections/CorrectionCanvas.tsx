@@ -102,6 +102,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     if (readOnly) return;
     const container = containerRef.current;
     if (!container) return;
+    const tldrawHost = container.querySelector<HTMLElement>(".tldraw-correction");
 
     let handle: HTMLElement | null = null;
     let toolbar: HTMLElement | null = null;
@@ -123,28 +124,26 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       let originX = 0;
       let originY = 0;
 
-      const readVar = (name: string) =>
-        parseFloat(getComputedStyle(container).getPropertyValue(name)) || 0;
-
       const onPointerDown = (e: PointerEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        // Lock position to current visual location in pixels
         const tbRect = tb.getBoundingClientRect();
-        const cRect = container.getBoundingClientRect();
+        const cRect = (tldrawHost ?? container).getBoundingClientRect();
         originX = tbRect.left - cRect.left;
         originY = tbRect.top - cRect.top;
-        container.style.setProperty("--ctb-x", `${originX}px`);
-        container.style.setProperty("--ctb-y", `${originY}px`);
-        container.style.setProperty("--ctb-anchor", "0");
+        if (tldrawHost) {
+          tldrawHost.style.setProperty("--ctb-x", `${originX}px`);
+          tldrawHost.style.setProperty("--ctb-y", `${originY}px`);
+          tldrawHost.setAttribute("data-tb-dragged", "1");
+        }
         startX = e.clientX;
         startY = e.clientY;
         handle!.style.cursor = "grabbing";
         handle!.setPointerCapture(e.pointerId);
       };
       const onPointerMove = (e: PointerEvent) => {
-        if (!handle?.hasPointerCapture(e.pointerId)) return;
-        const cRect = container.getBoundingClientRect();
+        if (!handle?.hasPointerCapture(e.pointerId) || !tldrawHost) return;
+        const cRect = tldrawHost.getBoundingClientRect();
         const tbRect = tb.getBoundingClientRect();
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
@@ -152,8 +151,8 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         const maxY = cRect.height - tbRect.height;
         const nx = Math.max(0, Math.min(maxX, originX + dx));
         const ny = Math.max(0, Math.min(maxY, originY + dy));
-        container.style.setProperty("--ctb-x", `${nx}px`);
-        container.style.setProperty("--ctb-y", `${ny}px`);
+        tldrawHost.style.setProperty("--ctb-x", `${nx}px`);
+        tldrawHost.style.setProperty("--ctb-y", `${ny}px`);
       };
       const onPointerUp = (e: PointerEvent) => {
         if (handle?.hasPointerCapture(e.pointerId)) {
@@ -175,18 +174,13 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         handle?.remove();
         handle = null;
       };
-
-      // Suppress var() so the default CSS centering kicks in initially
-      container.style.setProperty("--ctb-anchor", "1");
     };
 
     const findAndAttach = () => {
       const tb = container.querySelector<HTMLElement>(".tlui-toolbar");
-      if (tb && tb !== toolbar) {
+      if (!tb) return;
+      if (tb !== toolbar || !tb.contains(handle as Node)) {
         toolbar = tb;
-        attachHandle(tb);
-      } else if (tb && handle && !tb.contains(handle)) {
-        // toolbar re-mounted by React; re-insert handle
         attachHandle(tb);
       }
     };
@@ -200,6 +194,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       cleanup?.();
     };
   }, [readOnly, dims]);
+
 
   // Aspect ratio container based on the image
   const ratio = dims ? dims.h / dims.w : 11 / 8.5;
