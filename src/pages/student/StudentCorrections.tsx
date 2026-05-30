@@ -338,7 +338,7 @@ const StudentCorrections = () => {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              {activeAssignment ? <><Sparkles className="h-5 w-5 text-primary" /> 부여된 에세이 과제</> : "새 에세이 작성"}
+              {activeAssignment ? <><Sparkles className="h-5 w-5 text-primary" /> 부여된 에세이 과제</> : "새 에세이(첨삭) 작성"}
             </DialogTitle>
             <DialogDescription>
               {activeAssignment
@@ -355,7 +355,7 @@ const StudentCorrections = () => {
               </div>
               <div className="h-px flex-1 bg-border" />
               <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${step === 2 ? "bg-primary text-primary-foreground border-primary" : "bg-muted text-muted-foreground"}`}>
-                <span className="font-semibold">2</span> 에세이 작성 · 사진 업로드
+                <span className="font-semibold">2</span> 에세이(첨삭) 작성 · 사진 업로드
               </div>
             </div>
           )}
@@ -488,7 +488,7 @@ const StudentCorrections = () => {
             <Button variant="outline" onClick={() => setOpen(false)} disabled={submitting}>취소</Button>
             {activeAssignment && step === 1 ? (
               <Button onClick={() => setStep(2)} className="gap-1">
-                에세이 작성하기 →
+                에세이(첨삭) 작성하기 →
               </Button>
             ) : (
               <Button
