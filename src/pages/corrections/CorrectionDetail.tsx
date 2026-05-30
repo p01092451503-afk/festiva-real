@@ -204,6 +204,99 @@ const CorrectionDetail = () => {
     onError: (e: any) => toast({ title: e?.message || "실패", variant: "destructive" }),
   });
 
+  // ─── 학생: 제출 내용 수정 / 사진 추가·삭제 / 요청 삭제 ───
+  const isOwnerStudent = !!user?.id && data?.req?.student_id === user.id;
+  const canStudentModify = isOwnerStudent && data?.req?.status === "pending";
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [editTopic, setEditTopic] = useState("");
+  const [editNote, setEditNote] = useState("");
+  useEffect(() => {
+    if (!data?.req) return;
+    setEditTopic(data.req.topic || "");
+    setEditNote(data.req.note || "");
+  }, [data?.req?.id]);
+
+  const updateRequestMutation = useMutation({
+    mutationFn: async () => {
+      if (!editTopic.trim()) throw new Error("주제를 입력해주세요.");
+      const { error } = await supabase
+        .from("correction_requests")
+        .update({ topic: editTopic.trim(), note: editNote.trim() || null })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "내용이 수정되었습니다." });
+      setEditOpen(false);
+      qc.invalidateQueries({ queryKey: ["correction-request-detail", id] });
+      qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
+    },
+    onError: (e: any) => toast({ title: e?.message || "수정 실패", variant: "destructive" }),
+  });
+
+  const deletePageMutation = useMutation({
+    mutationFn: async (page: { id: string; original_path: string }) => {
+      await supabase.storage.from("corrections").remove([page.original_path]);
+      const { error } = await supabase.from("correction_pages").delete().eq("id", page.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "사진을 삭제했습니다." });
+      setActivePageId(null);
+      qc.invalidateQueries({ queryKey: ["correction-request-detail", id] });
+    },
+    onError: (e: any) => toast({ title: e?.message || "삭제 실패", variant: "destructive" }),
+  });
+
+  const addPagesMutation = useMutation({
+    mutationFn: async (incoming: File[]) => {
+      if (!data?.req) return;
+      const startNo = (data.pages?.length || 0);
+      for (let i = 0; i < incoming.length; i++) {
+        const raw = incoming[i];
+        const compressed = await compressAnswerImage(raw);
+        const page_no = startNo + i + 1;
+        const path = `${data.req.id}/${page_no}/${Date.now()}_${compressed.name}`;
+        const { error: upErr } = await supabase.storage
+          .from("corrections")
+          .upload(path, compressed, { contentType: compressed.type, upsert: false });
+        if (upErr) throw upErr;
+        const { error: pageErr } = await supabase.from("correction_pages").insert({
+          request_id: data.req.id,
+          page_no,
+          original_path: path,
+        });
+        if (pageErr) throw pageErr;
+      }
+    },
+    onSuccess: () => {
+      toast({ title: "사진을 추가했습니다." });
+      qc.invalidateQueries({ queryKey: ["correction-request-detail", id] });
+    },
+    onError: (e: any) => toast({ title: e?.message || "업로드 실패", variant: "destructive" }),
+  });
+
+  const deleteRequestMutation = useMutation({
+    mutationFn: async () => {
+      if (!data?.pages?.length) {
+        const { error } = await supabase.from("correction_requests").delete().eq("id", id);
+        if (error) throw error;
+        return;
+      }
+      const paths = data.pages.map((p) => p.original_path);
+      await supabase.storage.from("corrections").remove(paths);
+      const { error } = await supabase.from("correction_requests").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "제출한 에세이를 삭제했습니다." });
+      qc.invalidateQueries({ queryKey: ["my-correction-requests"] });
+      navigate("/student/corrections");
+    },
+    onError: (e: any) => toast({ title: e?.message || "삭제 실패", variant: "destructive" }),
+  });
+
   if (isLoading || !data?.req) {
     return (
       <DashboardLayout>
