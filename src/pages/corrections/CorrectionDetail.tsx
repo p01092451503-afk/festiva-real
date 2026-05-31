@@ -113,7 +113,7 @@ const CorrectionDetail = () => {
   const activePage = data?.pages.find((p) => p.id === activePageId) || null;
   const activeAnnotation = data?.anns.find((a) => a.page_id === activePageId) || null;
 
-  const canvasApiRef = { current: null as null | { getSnapshot: () => any } };
+  const canvasApiRef = useRef<null | { getSnapshot: () => any }>(null);
   const [comment, setComment] = useState("");
   useEffect(() => {
     setComment(activeAnnotation?.comment || "");
