@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Tldraw,
-  DefaultToolbar,
   type Editor,
-  type TLComponents,
   type TLEditorSnapshot,
   type TLStoreSnapshot,
   loadSnapshot,
   getSnapshot,
 } from "tldraw";
+import { DefaultColorStyle, DefaultSizeStyle, type TLDefaultColorStyle, type TLDefaultSizeStyle } from "@tldraw/tlschema";
 import "tldraw/tldraw.css";
-import { GripHorizontal } from "lucide-react";
+import { ArrowUpRight, Eraser, Highlighter, MousePointer2, Pencil, Redo2, Type, Undo2 } from "lucide-react";
 
 interface Props {
   imageUrl: string;
@@ -19,114 +18,111 @@ interface Props {
   onReady?: (api: { getSnapshot: () => TLEditorSnapshot; editor: Editor }) => void;
 }
 
-/**
- * Draggable toolbar built on top of tldraw's DefaultToolbar. Position is
- * managed in React state, and dragging uses pointer events on a small grip
- * handle. The toolbar is rendered via tldraw's `components.Toolbar` slot so
- * tldraw never re-positions or re-creates it from underneath us.
- */
-const DraggableToolbar = ({
-  containerRef,
-}: {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}) => {
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  // null = use default centered position (top-center)
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-  const dragRef = useRef<{
-    startX: number;
-    startY: number;
-    originX: number;
-    originY: number;
-    pointerId: number;
-  } | null>(null);
+const TOOL_OPTIONS = [
+  { id: "select", label: "선택", icon: MousePointer2, lock: false },
+  { id: "draw", label: "펜", icon: Pencil, lock: true },
+  { id: "eraser", label: "지우개", icon: Eraser, lock: true },
+  { id: "highlight", label: "형광펜", icon: Highlighter, lock: true },
+  { id: "arrow", label: "화살표", icon: ArrowUpRight, lock: false },
+  { id: "text", label: "텍스트", icon: Type, lock: false },
+] as const;
 
-  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const wrapper = wrapperRef.current;
-    const container = containerRef.current;
-    if (!wrapper || !container) return;
-    const wRect = wrapper.getBoundingClientRect();
-    const cRect = container.getBoundingClientRect();
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      originX: wRect.left - cRect.left,
-      originY: wRect.top - cRect.top,
-      pointerId: e.pointerId,
-    };
-    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+const COLOR_OPTIONS: Array<{ value: TLDefaultColorStyle; label: string; cls: string }> = [
+  { value: "red", label: "빨강", cls: "bg-destructive" },
+  { value: "blue", label: "파랑", cls: "bg-primary" },
+  { value: "black", label: "검정", cls: "bg-foreground" },
+  { value: "orange", label: "주황", cls: "bg-warning" },
+];
+
+const SIZE_OPTIONS: Array<{ value: TLDefaultSizeStyle; label: string }> = [
+  { value: "s", label: "S" },
+  { value: "m", label: "M" },
+  { value: "l", label: "L" },
+  { value: "xl", label: "XL" },
+];
+
+const CorrectionToolbar = ({ editor }: { editor: Editor | null }) => {
+  const [activeTool, setActiveTool] = useState("draw");
+  const [activeColor, setActiveColor] = useState<TLDefaultColorStyle>("red");
+  const [activeSize, setActiveSize] = useState<TLDefaultSizeStyle>("m");
+
+  const setTool = (tool: (typeof TOOL_OPTIONS)[number]) => {
+    if (!editor) return;
+    editor.updateInstanceState({ isToolLocked: tool.lock });
+    editor.setCurrentTool(tool.id);
+    setActiveTool(tool.id);
   };
 
-  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (!drag || drag.pointerId !== e.pointerId) return;
-    const wrapper = wrapperRef.current;
-    const container = containerRef.current;
-    if (!wrapper || !container) return;
-    const wRect = wrapper.getBoundingClientRect();
-    const cRect = container.getBoundingClientRect();
-    const dx = e.clientX - drag.startX;
-    const dy = e.clientY - drag.startY;
-    const maxX = Math.max(0, cRect.width - wRect.width);
-    const maxY = Math.max(0, cRect.height - wRect.height);
-    const nx = Math.max(0, Math.min(maxX, drag.originX + dx));
-    const ny = Math.max(0, Math.min(maxY, drag.originY + dy));
-    setPos({ x: nx, y: ny });
+  const setColor = (color: TLDefaultColorStyle) => {
+    if (!editor) return;
+    editor.setStyleForNextShapes(DefaultColorStyle, color);
+    editor.setStyleForSelectedShapes(DefaultColorStyle, color);
+    setActiveColor(color);
   };
 
-  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (drag && drag.pointerId === e.pointerId) {
-      try {
-        (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
-      } catch {
-        /* noop */
-      }
-      dragRef.current = null;
-    }
+  const setSize = (size: TLDefaultSizeStyle) => {
+    if (!editor) return;
+    editor.setStyleForNextShapes(DefaultSizeStyle, size);
+    editor.setStyleForSelectedShapes(DefaultSizeStyle, size);
+    setActiveSize(size);
   };
-
-  const style: React.CSSProperties = pos
-    ? {
-        position: "absolute",
-        left: pos.x,
-        top: pos.y,
-        transform: "none",
-        zIndex: 300,
-        pointerEvents: "auto",
-      }
-    : {
-        position: "absolute",
-        left: "50%",
-        top: 12,
-        transform: "translateX(-50%)",
-        zIndex: 300,
-        pointerEvents: "auto",
-      };
 
   return (
-    <div
-      ref={wrapperRef}
-      style={style}
-      className="correction-draggable-toolbar flex items-stretch rounded-lg bg-background/95 backdrop-blur shadow-md border border-border/60"
-    >
-      <div
-        role="button"
-        aria-label="툴바 이동"
-        title="드래그하여 위치 이동"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-        className="flex items-center justify-center px-1.5 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground touch-none select-none border-r border-border/60"
-      >
-        <GripHorizontal size={14} />
-      </div>
-      <div className="correction-toolbar-inner">
-        <DefaultToolbar />
-      </div>
+    <div className="absolute left-1/2 top-3 z-[60] flex max-w-[calc(100%-1rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-1 rounded-lg border border-border/80 bg-background/95 p-1.5 shadow-lg backdrop-blur pointer-events-auto">
+      {TOOL_OPTIONS.map((tool) => {
+        const Icon = tool.icon;
+        const selected = activeTool === tool.id;
+        return (
+          <button
+            key={tool.id}
+            type="button"
+            title={tool.label}
+            aria-label={tool.label}
+            aria-pressed={selected}
+            onClick={() => setTool(tool)}
+            className={`inline-flex h-8 w-8 items-center justify-center rounded-md border text-sm transition-colors ${
+              selected ? "border-primary bg-primary text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
+            }`}
+          >
+            <Icon className="h-4 w-4" />
+          </button>
+        );
+      })}
+      <div className="mx-1 h-6 w-px bg-border" />
+      {COLOR_OPTIONS.map((color) => (
+        <button
+          key={color.value}
+          type="button"
+          title={color.label}
+          aria-label={color.label}
+          aria-pressed={activeColor === color.value}
+          onClick={() => setColor(color.value)}
+          className={`flex h-8 w-8 items-center justify-center rounded-md border transition-colors ${activeColor === color.value ? "border-primary bg-muted" : "border-transparent hover:bg-muted"}`}
+        >
+          <span className={`h-4 w-4 rounded-full border border-border ${color.cls}`} />
+        </button>
+      ))}
+      <div className="mx-1 h-6 w-px bg-border" />
+      {SIZE_OPTIONS.map((size) => (
+        <button
+          key={size.value}
+          type="button"
+          title={`두께 ${size.label}`}
+          aria-label={`두께 ${size.label}`}
+          aria-pressed={activeSize === size.value}
+          onClick={() => setSize(size.value)}
+          className={`h-8 min-w-8 rounded-md border px-2 text-xs font-medium transition-colors ${activeSize === size.value ? "border-primary bg-primary text-primary-foreground" : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+        >
+          {size.label}
+        </button>
+      ))}
+      <div className="mx-1 h-6 w-px bg-border" />
+      <button type="button" title="실행 취소" aria-label="실행 취소" onClick={() => editor?.undo()} className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground">
+        <Undo2 className="h-4 w-4" />
+      </button>
+      <button type="button" title="다시 실행" aria-label="다시 실행" onClick={() => editor?.redo()} className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground">
+        <Redo2 className="h-4 w-4" />
+      </button>
     </div>
   );
 };
@@ -134,6 +130,7 @@ const DraggableToolbar = ({
 const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Props) => {
   const editorRef = useRef<Editor | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [editor, setEditor] = useState<Editor | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
 
   useEffect(() => {
@@ -147,6 +144,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
   const handleMount = useCallback(
     (editor: Editor) => {
       editorRef.current = editor;
+      setEditor(editor);
       try {
         editor.user.updateUserPreferences({ colorScheme: "light" });
       } catch (error) {
@@ -166,6 +164,8 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       } else {
         try {
           editor.updateInstanceState({ isToolLocked: true });
+          editor.setStyleForNextShapes(DefaultColorStyle, "red");
+          editor.setStyleForNextShapes(DefaultSizeStyle, "m");
         } catch (error) {
           console.debug("[CorrectionCanvas] tool lock preference skipped", error);
         }
@@ -191,13 +191,6 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     [initialSnapshot, readOnly, onReady],
   );
 
-  // Inject a custom Toolbar component into tldraw's UI slot.
-  const components: TLComponents = readOnly
-    ? {}
-    : {
-        Toolbar: () => <DraggableToolbar containerRef={containerRef} />,
-      };
-
   const ratio = dims ? dims.h / dims.w : 11 / 8.5;
 
   return (
@@ -214,26 +207,13 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           draggable={false}
         />
         <div className="absolute inset-0 tldraw-correction">
-          <Tldraw onMount={handleMount} hideUi={!!readOnly} components={components} />
+          <Tldraw onMount={handleMount} hideUi />
         </div>
+        {!readOnly && <CorrectionToolbar editor={editor} />}
       </div>
       <style>{`
         .tldraw-correction .tl-background { background-color: transparent !important; }
         .tldraw-correction .tl-canvas { background: transparent !important; }
-        /* Let our absolutely-positioned wrapper escape tldraw's bottom layout. */
-        .tldraw-correction .tlui-layout__bottom { inset: 0 !important; pointer-events: none !important; }
-        .tldraw-correction .tlui-layout__bottom > * { pointer-events: auto; }
-        /* Strip the default toolbar chrome so our wrapper provides it. */
-        .correction-draggable-toolbar .tlui-toolbar {
-          position: static !important;
-          transform: none !important;
-          background: transparent !important;
-          box-shadow: none !important;
-          border: none !important;
-          padding: 2px !important;
-          width: max-content !important;
-        }
-        .correction-draggable-toolbar .tlui-toolbar__tools { background: transparent !important; }
       `}</style>
     </div>
   );
