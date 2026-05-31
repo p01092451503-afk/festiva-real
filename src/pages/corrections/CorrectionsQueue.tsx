@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { PenLine, ChevronRight, Clock, Loader2, CheckCircle2, AlertCircle, FileText, Inbox } from "lucide-react";
+import { PenLine, ChevronRight, Clock, Loader2, CheckCircle2, AlertCircle, FileText, Inbox, Mail, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -37,14 +39,14 @@ const CorrectionsQueue = ({ role }: Props) => {
       if (error) throw error;
       const rows = data || [];
       const studentIds = Array.from(new Set(rows.map((r: any) => r.student_id).filter(Boolean)));
-      let profileMap: Record<string, { full_name?: string; email?: string }> = {};
+      let profileMap: Record<string, { full_name?: string; email?: string; avatar_url?: string | null }> = {};
       if (studentIds.length) {
         const { data: profs } = await supabase
           .from("profiles")
-          .select("user_id, full_name, email")
+          .select("user_id, full_name, email, avatar_url")
           .in("user_id", studentIds);
         (profs || []).forEach((p: any) => {
-          profileMap[p.user_id] = { full_name: p.full_name, email: p.email };
+          profileMap[p.user_id] = { full_name: p.full_name, email: p.email, avatar_url: p.avatar_url };
         });
       }
       return rows.map((r: any) => ({ ...r, profiles: profileMap[r.student_id] || null }));
@@ -98,25 +100,47 @@ const CorrectionsQueue = ({ role }: Props) => {
                     <div className="p-10 text-center text-muted-foreground text-sm">해당 상태의 요청이 없습니다.</div>
                   ) : (
                     <ul className="divide-y-2 divide-border/80">
-                      {filtered.map((r: any) => (
-                        <li key={r.id}>
-                          <Link
-                            to={`${basePath}/${r.id}`}
-                            className="flex items-center gap-4 p-4 hover:bg-muted/40 transition-colors"
-                          >
-                            <div className="min-w-0 flex-1">
-                              <div className="font-medium truncate">{r.topic}</div>
-                              <div className="text-xs text-muted-foreground mt-1 flex items-center gap-3 flex-wrap">
-                                <span>{r.profiles?.full_name || r.profiles?.email || "익명"}</span>
-                                <span>· {r.correction_pages?.length ?? 0}장</span>
-                                {r.score != null && <span>· 점수 {r.score}</span>}
-                                <span>· {new Date(r.submitted_at).toLocaleDateString()}</span>
+                      {filtered.map((r: any) => {
+                        const name = r.profiles?.full_name || "이름 미등록";
+                        const email = r.profiles?.email;
+                        const initial = (name || email || "?").trim().charAt(0).toUpperCase();
+                        return (
+                          <li key={r.id}>
+                            <Link
+                              to={`${basePath}/${r.id}`}
+                              className="flex items-center gap-4 p-4 hover:bg-muted/40 transition-colors"
+                            >
+                              <Avatar className="h-11 w-11 shrink-0 border border-border/60">
+                                {r.profiles?.avatar_url && <AvatarImage src={r.profiles.avatar_url} alt={name} />}
+                                <AvatarFallback className="bg-muted text-foreground text-sm font-medium">
+                                  {initial}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="inline-flex items-center gap-1 font-semibold text-foreground">
+                                    <User className="h-3.5 w-3.5 text-muted-foreground" />
+                                    {name}
+                                  </span>
+                                  {email && (
+                                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                      <Mail className="h-3 w-3" />
+                                      {email}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-sm text-foreground mt-1 truncate">{r.topic}</div>
+                                <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2 flex-wrap">
+                                  <Badge variant="outline" className="text-[10px] py-0 h-5">{r.correction_pages?.length ?? 0}장</Badge>
+                                  {r.score != null && <span>· 점수 {r.score}</span>}
+                                  <span>· 제출 {new Date(r.submitted_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</span>
+                                </div>
                               </div>
-                            </div>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                          </Link>
-                        </li>
-                      ))}
+                              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                            </Link>
+                          </li>
+                        );
+                      })}
                     </ul>
                   )}
                 </Card>
