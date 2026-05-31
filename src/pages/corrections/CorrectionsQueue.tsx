@@ -39,14 +39,14 @@ const CorrectionsQueue = ({ role }: Props) => {
       if (error) throw error;
       const rows = data || [];
       const studentIds = Array.from(new Set(rows.map((r: any) => r.student_id).filter(Boolean)));
-      let profileMap: Record<string, { full_name?: string; email?: string }> = {};
+      let profileMap: Record<string, { full_name?: string; email?: string; avatar_url?: string | null; department?: string | null }> = {};
       if (studentIds.length) {
         const { data: profs } = await supabase
           .from("profiles")
-          .select("user_id, full_name, email")
+          .select("user_id, full_name, email, avatar_url, department")
           .in("user_id", studentIds);
         (profs || []).forEach((p: any) => {
-          profileMap[p.user_id] = { full_name: p.full_name, email: p.email };
+          profileMap[p.user_id] = { full_name: p.full_name, email: p.email, avatar_url: p.avatar_url, department: p.department };
         });
       }
       return rows.map((r: any) => ({ ...r, profiles: profileMap[r.student_id] || null }));
