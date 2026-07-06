@@ -171,28 +171,8 @@ const Auth = () => {
     }
   }, []);
 
-  // 자동 로그인: 데모 계정이 기본 입력된 상태에서 진입 시 자동 로그인
-  useEffect(() => {
-    if (isSignUp) return;
-    if (email === "test@test.co.kr" && password === "test1234") {
-      (async () => {
-        setIsLoading(true);
-        try {
-          const { error } = await supabase.auth.signInWithPassword({
-            email: "test@test.co.kr",
-            password: "test1234",
-          });
-          if (error) throw error;
-          navigate("/dashboard");
-        } catch (error: any) {
-          setAuthError(mapAuthError(error, "login"));
-        } finally {
-          setIsLoading(false);
-        }
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
