@@ -32,8 +32,8 @@ const Auth = () => {
   const { data: siteSettings } = useSiteSettings();
   const { activePreset } = useDemoPreset();
   const b2cDisabled = siteSettings?.b2c_enabled === false;
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@test.co.kr");
+  const [password, setPassword] = useState("test1234");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -169,6 +169,29 @@ const Auth = () => {
       setEmail(savedEmail);
       setRememberMe(true);
     }
+  }, []);
+
+  // 자동 로그인: 데모 계정이 기본 입력된 상태에서 진입 시 자동 로그인
+  useEffect(() => {
+    if (isSignUp) return;
+    if (email === "test@test.co.kr" && password === "test1234") {
+      (async () => {
+        setIsLoading(true);
+        try {
+          const { error } = await supabase.auth.signInWithPassword({
+            email: "test@test.co.kr",
+            password: "test1234",
+          });
+          if (error) throw error;
+          navigate("/dashboard");
+        } catch (error: any) {
+          setAuthError(mapAuthError(error, "login"));
+        } finally {
+          setIsLoading(false);
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAuth = async (e: React.FormEvent) => {
