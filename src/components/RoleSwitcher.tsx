@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ArrowLeftRight } from "lucide-react";
 import { Shield, GraduationCap, Users, Building2 } from "lucide-react";
 import {
   DropdownMenu,
