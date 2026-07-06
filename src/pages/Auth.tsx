@@ -32,8 +32,8 @@ const Auth = () => {
   const { data: siteSettings } = useSiteSettings();
   const { activePreset } = useDemoPreset();
   const b2cDisabled = siteSettings?.b2c_enabled === false;
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@test.co.kr");
+  const [password, setPassword] = useState("test1234");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
