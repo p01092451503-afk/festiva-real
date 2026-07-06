@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ArrowLeftRight } from "lucide-react";
 import { Shield, GraduationCap, Users, Building2 } from "lucide-react";
 import {
   DropdownMenu,
@@ -47,8 +48,10 @@ const RoleSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative" aria-label="Switch role">
+        <Button variant="ghost" size="sm" className="h-9 gap-1.5 px-2.5" aria-label="Switch role">
           <CurrentIcon className="h-[18px] w-[18px]" />
+          <ArrowLeftRight className="h-3.5 w-3.5" />
+          <span className="text-sm">{t("roles.switch", "역할 전환")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[140px]">
