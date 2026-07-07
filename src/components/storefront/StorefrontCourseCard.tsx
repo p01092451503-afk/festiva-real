@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
-import { Link } from "react-router-dom";
-import { BookOpen, Heart, Star, Users } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { BookOpen, Heart, Star, PlayCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/contexts/UserContext";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
@@ -46,10 +46,12 @@ interface StorefrontCourseCardProps {
   };
   rank?: number;
   isInWishlist?: boolean;
+  isEnrolled?: boolean;
   onWishlistToggle?: (courseId: string) => void;
 }
 
-const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, isInWishlist = false, onWishlistToggle }, _ref) => {
+const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, isInWishlist = false, isEnrolled = false, onWishlistToggle }, _ref) => {
+  const navigate = useNavigate();
   const { user } = useUser();
   const { toast } = useToast();
   const { getCourseTitle, getCourseThumbnail } = useDemoPreset();
