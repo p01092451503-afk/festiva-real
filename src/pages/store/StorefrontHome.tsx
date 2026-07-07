@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
+import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
 const CategoryCoursesSection = lazy(() => import("@/components/storefront/CategoryCoursesSection"));
@@ -218,6 +219,7 @@ const StorefrontHome = () => {
                 course={mapCourse(c)}
                 rank={idx + 1}
                 isInWishlist={wishlistSet.has(c.id)}
+                isEnrolled={enrolledIds.has(c.id)}
                 onWishlistToggle={(id) => toggleWishlist.mutate(id)}
               />
             ))}
@@ -248,6 +250,7 @@ const StorefrontHome = () => {
                   key={c.id}
                   course={mapCourse(c)}
                   isInWishlist={wishlistSet.has(c.id)}
+                  isEnrolled={enrolledIds.has(c.id)}
                   onWishlistToggle={(id) => toggleWishlist.mutate(id)}
                 />
               ))}
@@ -262,6 +265,7 @@ const StorefrontHome = () => {
           <CategoryCoursesSection
             categories={localizedCategories}
             wishlistSet={wishlistSet}
+            enrolledIds={enrolledIds}
             onWishlistToggle={(id) => toggleWishlist.mutate(id)}
           />
         </Suspense>
