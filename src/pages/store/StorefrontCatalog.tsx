@@ -11,6 +11,7 @@ import StorefrontHeader from "@/components/StorefrontHeader";
 import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
+import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
@@ -76,6 +77,8 @@ const StorefrontCatalog = () => {
     },
     enabled: !!user?.id,
   });
+  const { data: enrolledIds = new Set<string>() } = useEnrolledCourseIds();
+
 
   const wishlistToggle = useMutation({
     mutationFn: async (courseId: string) => {
@@ -234,6 +237,7 @@ const StorefrontCatalog = () => {
                     key={course.id}
                     course={course}
                     isInWishlist={wishlistSet.has(course.id)}
+                    isEnrolled={enrolledIds.has(course.id)}
                     onWishlistToggle={handleWishlistToggle}
                   />
                 ))}

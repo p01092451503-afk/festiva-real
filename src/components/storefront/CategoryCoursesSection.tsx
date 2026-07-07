@@ -10,10 +10,11 @@ import { useInlineEnName } from "@/hooks/useI18nMaps";
 interface CategoryCoursesProps {
   categories: { id: string; name: string; name_en?: string | null; slug: string }[];
   wishlistSet: Set<string>;
+  enrolledIds?: Set<string>;
   onWishlistToggle: (courseId: string) => void;
 }
 
-const CategoryCoursesSection = ({ categories, wishlistSet, onWishlistToggle }: CategoryCoursesProps) => {
+const CategoryCoursesSection = ({ categories, wishlistSet, enrolledIds, onWishlistToggle }: CategoryCoursesProps) => {
   const [activeCatId, setActiveCatId] = useState<string | null>(null);
   const localizeCatName = useInlineEnName();
   const localizedCategories = categories.map((c: any) => ({ ...c, name: localizeCatName(c) }));
@@ -112,6 +113,7 @@ const CategoryCoursesSection = ({ categories, wishlistSet, onWishlistToggle }: C
               instructor_name: c.instructor_id ? instructorMap.get(c.instructor_id) || null : null,
             }}
             isInWishlist={wishlistSet.has(c.id)}
+            isEnrolled={enrolledIds?.has(c.id)}
             onWishlistToggle={onWishlistToggle}
           />
         ))}

@@ -270,7 +270,16 @@ const CartPage = () => {
       <StorefrontHeader />
       <main className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="shrink-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              // 히스토리가 없거나(새 탭/딥링크), 이전 페이지가 없을 때 안전한 fallback
+              if (window.history.length > 1) navigate(-1);
+              else navigate("/store/courses");
+            }}
+            className="shrink-0"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-2xl font-semibold text-foreground">장바구니</h1>
