@@ -168,9 +168,14 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
           <span>{course.enrolled_count.toLocaleString()}명 수강</span>
         </div>
 
-        {/* Price */}
+        {/* Price / 수강중 상태 */}
         <div className="flex items-center gap-2 pt-0.5">
-          {isFree ? (
+          {isEnrolled ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+              <PlayCircle className="h-3.5 w-3.5" />
+              수강중 · 이어보기
+            </span>
+          ) : isFree ? (
             <Badge className="bg-green-600 hover:bg-green-600 text-white text-xs">무료</Badge>
           ) : (
             <>
