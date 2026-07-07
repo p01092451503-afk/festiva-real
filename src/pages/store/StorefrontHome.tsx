@@ -37,6 +37,9 @@ const StorefrontHome = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { data: enrolledIds = new Set<string>() } = useEnrolledCourseIds();
+
+
 
   const { data: categories = [] } = useQuery({
     queryKey: ["store-categories"],
