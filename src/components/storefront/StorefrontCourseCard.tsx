@@ -76,9 +76,17 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
     onWishlistToggle?.(course.id);
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (isEnrolled) {
+      e.preventDefault();
+      navigate(`/student/courses/${course.id}`);
+    }
+  };
+
   return (
     <Link
       to={`/store/courses/${course.id}`}
+      onClick={handleCardClick}
       className="group block rounded-2xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       aria-label={displayTitle}
     >
