@@ -237,6 +237,7 @@ const StorefrontCatalog = () => {
                     key={course.id}
                     course={course}
                     isInWishlist={wishlistSet.has(course.id)}
+                    isEnrolled={enrolledIds.has(course.id)}
                     onWishlistToggle={handleWishlistToggle}
                   />
                 ))}
