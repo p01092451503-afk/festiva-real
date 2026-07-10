@@ -3,8 +3,6 @@ import {
   Tldraw,
   type Editor,
   type TLEditorSnapshot,
-  type TLShape,
-  type TLShapePartial,
   type TLStoreSnapshot,
   loadSnapshot,
   getSnapshot,
@@ -41,46 +39,6 @@ const getPageCameraOptions = (dims: PageDimensions) => ({
   },
 });
 
-const getShapePageOffset = (editor: Editor, shape: TLShape, dims: PageDimensions) => {
-  const bounds = editor.getShapePageBounds(shape);
-  if (!bounds) return null;
-
-  let dx = 0;
-  let dy = 0;
-
-  if (bounds.w >= dims.w) {
-    dx = -bounds.x + (dims.w - bounds.w) / 2;
-  } else if (bounds.x < 0) {
-    dx = -bounds.x;
-  } else if (bounds.maxX > dims.w) {
-    dx = dims.w - bounds.maxX;
-  }
-
-  if (bounds.h >= dims.h) {
-    dy = -bounds.y + (dims.h - bounds.h) / 2;
-  } else if (bounds.y < 0) {
-    dy = -bounds.y;
-  } else if (bounds.maxY > dims.h) {
-    dy = dims.h - bounds.maxY;
-  }
-
-  if (Math.abs(dx) <= PAGE_EDGE_TOLERANCE && Math.abs(dy) <= PAGE_EDGE_TOLERANCE) return null;
-  return { dx, dy };
-};
-
-const confineShapeToPage = (editor: Editor, shape: TLShape, dims: PageDimensions) => {
-  const offset = getShapePageOffset(editor, shape, dims);
-  if (!offset) return;
-
-  editor.updateShapes([
-    {
-      id: shape.id,
-      type: shape.type,
-      x: shape.x + offset.dx,
-      y: shape.y + offset.dy,
-    } as TLShapePartial<TLShape>,
-  ]);
-};
 
 const TOOL_OPTIONS = [
   { id: "select", label: "선택", icon: MousePointer2, lock: false },
@@ -195,7 +153,7 @@ const CorrectionToolbar = ({ editor }: { editor: Editor | null }) => {
 const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Props) => {
   const editorRef = useRef<Editor | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const boundaryCleanupRef = useRef<(() => void) | null>(null);
+  
   const [editor, setEditor] = useState<Editor | null>(null);
   const [dims, setDims] = useState<PageDimensions | null>(null);
 
@@ -209,25 +167,6 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
 
   useEffect(() => {
     if (!editor || !dims) return;
-
-    boundaryCleanupRef.current?.();
-    boundaryCleanupRef.current = null;
-
-    let isAdjustingShape = false;
-    let animationFrame = 0;
-
-    const safeConfineShape = (shape: TLShape) => {
-      if (isAdjustingShape) return;
-      try {
-        isAdjustingShape = true;
-        confineShapeToPage(editor, shape, dims);
-      } catch (error) {
-        console.debug("[CorrectionCanvas] shape boundary skipped", error);
-      } finally {
-        isAdjustingShape = false;
-      }
-    };
-
     try {
       editor.user.updateUserPreferences({ edgeScrollSpeed: 0 });
       editor.setCameraOptions(getPageCameraOptions(dims));
@@ -235,37 +174,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     } catch (error) {
       console.debug("[CorrectionCanvas] page boundary setup skipped", error);
     }
-
-    const normalizeExistingShapes = () => {
-      editor.getCurrentPageShapes().forEach((shape) => safeConfineShape(shape));
-    };
-
-    normalizeExistingShapes();
-    animationFrame = window.requestAnimationFrame(normalizeExistingShapes);
-
-    const disposers = readOnly
-      ? []
-      : [
-          editor.sideEffects.registerAfterCreateHandler("shape", (shape, source) => {
-            if (source !== "user") return;
-            window.requestAnimationFrame(() => safeConfineShape(shape as TLShape));
-          }),
-          editor.sideEffects.registerAfterChangeHandler("shape", (_prev, next, source) => {
-            if (source !== "user" || isAdjustingShape) return;
-            safeConfineShape(next as TLShape);
-          }),
-        ];
-
-    boundaryCleanupRef.current = () => {
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      disposers.forEach((dispose) => dispose());
-    };
-
-    return () => {
-      boundaryCleanupRef.current?.();
-      boundaryCleanupRef.current = null;
-    };
-  }, [editor, dims, readOnly]);
+  }, [editor, dims]);
 
   const handleMount = useCallback(
     (editor: Editor) => {
