@@ -3,8 +3,6 @@ import {
   Tldraw,
   type Editor,
   type TLEditorSnapshot,
-  type TLShape,
-  type TLShapePartial,
   type TLStoreSnapshot,
   loadSnapshot,
   getSnapshot,
