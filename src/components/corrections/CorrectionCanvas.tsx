@@ -153,7 +153,7 @@ const CorrectionToolbar = ({ editor }: { editor: Editor | null }) => {
 const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Props) => {
   const editorRef = useRef<Editor | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const boundaryCleanupRef = useRef<(() => void) | null>(null);
+  
   const [editor, setEditor] = useState<Editor | null>(null);
   const [dims, setDims] = useState<PageDimensions | null>(null);
 
