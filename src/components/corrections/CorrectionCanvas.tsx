@@ -4,6 +4,7 @@ import {
   type Editor,
   type TLEditorSnapshot,
   type TLShape,
+  type TLShapePartial,
   type TLStoreSnapshot,
   loadSnapshot,
   getSnapshot,
@@ -77,7 +78,7 @@ const confineShapeToPage = (editor: Editor, shape: TLShape, dims: PageDimensions
       type: shape.type,
       x: shape.x + offset.dx,
       y: shape.y + offset.dy,
-    } as TLShape,
+    } as TLShapePartial<TLShape>,
   ]);
 };
 
@@ -196,7 +197,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
   const containerRef = useRef<HTMLDivElement | null>(null);
   const boundaryCleanupRef = useRef<(() => void) | null>(null);
   const [editor, setEditor] = useState<Editor | null>(null);
-  const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
+  const [dims, setDims] = useState<PageDimensions | null>(null);
 
   useEffect(() => {
     const img = new Image();
