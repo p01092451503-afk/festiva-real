@@ -51,6 +51,7 @@ const CorrectionToolbar = ({ editor }: { editor: Editor | null }) => {
     editor.updateInstanceState({ isToolLocked: tool.lock });
     editor.setCurrentTool(tool.id);
     setActiveTool(tool.id);
+    try { editor.focus(); } catch { /* noop */ }
   };
 
   const setColor = (color: TLDefaultColorStyle) => {
@@ -177,10 +178,9 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
       }
 
       try {
-        editor.setCameraOptions({ isLocked: true });
         editor.setCamera({ x: 0, y: 0, z: 1 });
       } catch (error) {
-        console.debug("[CorrectionCanvas] camera lock skipped", error);
+        console.debug("[CorrectionCanvas] camera reset skipped", error);
       }
 
       onReady?.({
