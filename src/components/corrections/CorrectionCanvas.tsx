@@ -51,6 +51,7 @@ const CorrectionToolbar = ({ editor }: { editor: Editor | null }) => {
     editor.updateInstanceState({ isToolLocked: tool.lock });
     editor.setCurrentTool(tool.id);
     setActiveTool(tool.id);
+    try { editor.focus(); } catch { /* noop */ }
   };
 
   const setColor = (color: TLDefaultColorStyle) => {
