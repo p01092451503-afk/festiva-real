@@ -39,46 +39,6 @@ const getPageCameraOptions = (dims: PageDimensions) => ({
   },
 });
 
-const getShapePageOffset = (editor: Editor, shape: TLShape, dims: PageDimensions) => {
-  const bounds = editor.getShapePageBounds(shape);
-  if (!bounds) return null;
-
-  let dx = 0;
-  let dy = 0;
-
-  if (bounds.w >= dims.w) {
-    dx = -bounds.x + (dims.w - bounds.w) / 2;
-  } else if (bounds.x < 0) {
-    dx = -bounds.x;
-  } else if (bounds.maxX > dims.w) {
-    dx = dims.w - bounds.maxX;
-  }
-
-  if (bounds.h >= dims.h) {
-    dy = -bounds.y + (dims.h - bounds.h) / 2;
-  } else if (bounds.y < 0) {
-    dy = -bounds.y;
-  } else if (bounds.maxY > dims.h) {
-    dy = dims.h - bounds.maxY;
-  }
-
-  if (Math.abs(dx) <= PAGE_EDGE_TOLERANCE && Math.abs(dy) <= PAGE_EDGE_TOLERANCE) return null;
-  return { dx, dy };
-};
-
-const confineShapeToPage = (editor: Editor, shape: TLShape, dims: PageDimensions) => {
-  const offset = getShapePageOffset(editor, shape, dims);
-  if (!offset) return;
-
-  editor.updateShapes([
-    {
-      id: shape.id,
-      type: shape.type,
-      x: shape.x + offset.dx,
-      y: shape.y + offset.dy,
-    } as TLShapePartial<TLShape>,
-  ]);
-};
 
 const TOOL_OPTIONS = [
   { id: "select", label: "선택", icon: MousePointer2, lock: false },
