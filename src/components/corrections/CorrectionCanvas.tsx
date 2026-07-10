@@ -3,6 +3,7 @@ import {
   Tldraw,
   type Editor,
   type TLEditorSnapshot,
+  type TLShape,
   type TLStoreSnapshot,
   loadSnapshot,
   getSnapshot,
@@ -17,6 +18,68 @@ interface Props {
   readOnly?: boolean;
   onReady?: (api: { getSnapshot: () => TLEditorSnapshot; editor: Editor }) => void;
 }
+
+type PageDimensions = { w: number; h: number };
+
+const PAGE_EDGE_TOLERANCE = 0.5;
+const TLDRAW_OPTIONS = { edgeScrollSpeed: 0 } as const;
+
+const getPageCameraOptions = (dims: PageDimensions) => ({
+  isLocked: false,
+  panSpeed: 0,
+  zoomSpeed: 0,
+  wheelBehavior: "none" as const,
+  zoomSteps: [1],
+  constraints: {
+    bounds: { x: 0, y: 0, w: dims.w, h: dims.h },
+    padding: { x: 0, y: 0 },
+    origin: { x: 0, y: 0 },
+    initialZoom: "fit-x" as const,
+    baseZoom: "fit-x" as const,
+    behavior: "fixed" as const,
+  },
+});
+
+const getShapePageOffset = (editor: Editor, shape: TLShape, dims: PageDimensions) => {
+  const bounds = editor.getShapePageBounds(shape);
+  if (!bounds) return null;
+
+  let dx = 0;
+  let dy = 0;
+
+  if (bounds.w >= dims.w) {
+    dx = -bounds.x + (dims.w - bounds.w) / 2;
+  } else if (bounds.x < 0) {
+    dx = -bounds.x;
+  } else if (bounds.maxX > dims.w) {
+    dx = dims.w - bounds.maxX;
+  }
+
+  if (bounds.h >= dims.h) {
+    dy = -bounds.y + (dims.h - bounds.h) / 2;
+  } else if (bounds.y < 0) {
+    dy = -bounds.y;
+  } else if (bounds.maxY > dims.h) {
+    dy = dims.h - bounds.maxY;
+  }
+
+  if (Math.abs(dx) <= PAGE_EDGE_TOLERANCE && Math.abs(dy) <= PAGE_EDGE_TOLERANCE) return null;
+  return { dx, dy };
+};
+
+const confineShapeToPage = (editor: Editor, shape: TLShape, dims: PageDimensions) => {
+  const offset = getShapePageOffset(editor, shape, dims);
+  if (!offset) return;
+
+  editor.updateShapes([
+    {
+      id: shape.id,
+      type: shape.type,
+      x: shape.x + offset.dx,
+      y: shape.y + offset.dy,
+    } as TLShape,
+  ]);
+};
 
 const TOOL_OPTIONS = [
   { id: "select", label: "선택", icon: MousePointer2, lock: false },
@@ -131,6 +194,7 @@ const CorrectionToolbar = ({ editor }: { editor: Editor | null }) => {
 const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Props) => {
   const editorRef = useRef<Editor | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const boundaryCleanupRef = useRef<(() => void) | null>(null);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
 
@@ -142,12 +206,72 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     img.src = imageUrl;
   }, [imageUrl]);
 
+  useEffect(() => {
+    if (!editor || !dims) return;
+
+    boundaryCleanupRef.current?.();
+    boundaryCleanupRef.current = null;
+
+    let isAdjustingShape = false;
+    let animationFrame = 0;
+
+    const safeConfineShape = (shape: TLShape) => {
+      if (isAdjustingShape) return;
+      try {
+        isAdjustingShape = true;
+        confineShapeToPage(editor, shape, dims);
+      } catch (error) {
+        console.debug("[CorrectionCanvas] shape boundary skipped", error);
+      } finally {
+        isAdjustingShape = false;
+      }
+    };
+
+    try {
+      editor.user.updateUserPreferences({ edgeScrollSpeed: 0 });
+      editor.setCameraOptions(getPageCameraOptions(dims));
+      editor.setCamera({ x: 0, y: 0, z: editor.getInitialZoom() }, { reset: true });
+    } catch (error) {
+      console.debug("[CorrectionCanvas] page boundary setup skipped", error);
+    }
+
+    const normalizeExistingShapes = () => {
+      editor.getCurrentPageShapes().forEach((shape) => safeConfineShape(shape));
+    };
+
+    normalizeExistingShapes();
+    animationFrame = window.requestAnimationFrame(normalizeExistingShapes);
+
+    const disposers = readOnly
+      ? []
+      : [
+          editor.sideEffects.registerAfterCreateHandler("shape", (shape, source) => {
+            if (source !== "user") return;
+            window.requestAnimationFrame(() => safeConfineShape(shape as TLShape));
+          }),
+          editor.sideEffects.registerAfterChangeHandler("shape", (_prev, next, source) => {
+            if (source !== "user" || isAdjustingShape) return;
+            safeConfineShape(next as TLShape);
+          }),
+        ];
+
+    boundaryCleanupRef.current = () => {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      disposers.forEach((dispose) => dispose());
+    };
+
+    return () => {
+      boundaryCleanupRef.current?.();
+      boundaryCleanupRef.current = null;
+    };
+  }, [editor, dims, readOnly]);
+
   const handleMount = useCallback(
     (editor: Editor) => {
       editorRef.current = editor;
       setEditor(editor);
       try {
-        editor.user.updateUserPreferences({ colorScheme: "light" });
+        editor.user.updateUserPreferences({ colorScheme: "light", edgeScrollSpeed: 0 });
       } catch (error) {
         console.debug("[CorrectionCanvas] color preference skipped", error);
       }
@@ -177,12 +301,6 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
         }
       }
 
-      try {
-        editor.setCamera({ x: 0, y: 0, z: 1 });
-      } catch (error) {
-        console.debug("[CorrectionCanvas] camera reset skipped", error);
-      }
-
       onReady?.({
         getSnapshot: () => getSnapshot(editor.store),
         editor,
@@ -207,7 +325,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
           draggable={false}
         />
         <div className="absolute inset-0 tldraw-correction">
-          <Tldraw onMount={handleMount} hideUi />
+          <Tldraw onMount={handleMount} hideUi options={TLDRAW_OPTIONS} />
         </div>
         {!readOnly && <CorrectionToolbar editor={editor} />}
       </div>
