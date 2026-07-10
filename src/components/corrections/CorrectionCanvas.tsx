@@ -209,25 +209,6 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
 
   useEffect(() => {
     if (!editor || !dims) return;
-
-    boundaryCleanupRef.current?.();
-    boundaryCleanupRef.current = null;
-
-    let isAdjustingShape = false;
-    let animationFrame = 0;
-
-    const safeConfineShape = (shape: TLShape) => {
-      if (isAdjustingShape) return;
-      try {
-        isAdjustingShape = true;
-        confineShapeToPage(editor, shape, dims);
-      } catch (error) {
-        console.debug("[CorrectionCanvas] shape boundary skipped", error);
-      } finally {
-        isAdjustingShape = false;
-      }
-    };
-
     try {
       editor.user.updateUserPreferences({ edgeScrollSpeed: 0 });
       editor.setCameraOptions(getPageCameraOptions(dims));
@@ -235,37 +216,7 @@ const CorrectionCanvas = ({ imageUrl, initialSnapshot, readOnly, onReady }: Prop
     } catch (error) {
       console.debug("[CorrectionCanvas] page boundary setup skipped", error);
     }
-
-    const normalizeExistingShapes = () => {
-      editor.getCurrentPageShapes().forEach((shape) => safeConfineShape(shape));
-    };
-
-    normalizeExistingShapes();
-    animationFrame = window.requestAnimationFrame(normalizeExistingShapes);
-
-    const disposers = readOnly
-      ? []
-      : [
-          editor.sideEffects.registerAfterCreateHandler("shape", (shape, source) => {
-            if (source !== "user") return;
-            window.requestAnimationFrame(() => safeConfineShape(shape as TLShape));
-          }),
-          editor.sideEffects.registerAfterChangeHandler("shape", (_prev, next, source) => {
-            if (source !== "user" || isAdjustingShape) return;
-            safeConfineShape(next as TLShape);
-          }),
-        ];
-
-    boundaryCleanupRef.current = () => {
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      disposers.forEach((dispose) => dispose());
-    };
-
-    return () => {
-      boundaryCleanupRef.current?.();
-      boundaryCleanupRef.current = null;
-    };
-  }, [editor, dims, readOnly]);
+  }, [editor, dims]);
 
   const handleMount = useCallback(
     (editor: Editor) => {
