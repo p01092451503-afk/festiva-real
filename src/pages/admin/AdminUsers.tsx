@@ -499,8 +499,8 @@ const AdminUsers = () => {
           <div className="stat-card !p-3 flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium text-foreground">{selectedIds.length}명 선택됨</span>
             <span className="flex-1" />
-            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkDeptOpen(true)}>
-              <Building2 className="h-3.5 w-3.5" /> 소속 변경
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkGradeOpen(true)}>
+              <BadgeCheck className="h-3.5 w-3.5" /> 회원등급 변경
             </Button>
             <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkStatusOpen(true)}>
               <ShieldCheck className="h-3.5 w-3.5" /> 상태 변경
