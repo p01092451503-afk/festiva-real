@@ -1195,6 +1195,98 @@ export type Database = {
           },
         ]
       }
+      bulk_message_recipients: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          message_id: string
+          sent_at: string | null
+          status: string
+          target_email: string | null
+          target_phone: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_id: string
+          sent_at?: string | null
+          status?: string
+          target_email?: string | null
+          target_phone?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_id?: string
+          sent_at?: string | null
+          status?: string
+          target_email?: string | null
+          target_phone?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bulk_message_recipients_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "bulk_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bulk_messages: {
+        Row: {
+          body: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          fail_count: number
+          id: string
+          recipient_count: number
+          status: string
+          subject: string | null
+          success_count: number
+          template_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          fail_count?: number
+          id?: string
+          recipient_count?: number
+          status?: string
+          subject?: string | null
+          success_count?: number
+          template_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          fail_count?: number
+          id?: string
+          recipient_count?: number
+          status?: string
+          subject?: string | null
+          success_count?: number
+          template_code?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           added_at: string
@@ -2621,6 +2713,8 @@ export type Database = {
       courses: {
         Row: {
           always_recruiting: boolean
+          apply_end_at: string | null
+          apply_start_at: string | null
           attachment_url: string | null
           auto_start_grace_days: number
           base_category: string | null
@@ -2646,6 +2740,8 @@ export type Database = {
           is_sequential: boolean
           keywords: string[]
           max_students: number | null
+          open_scheduled_at: string | null
+          operation_start_at: string | null
           period_mode: boolean
           preview_video_url: string | null
           price: number
@@ -2656,6 +2752,7 @@ export type Database = {
           retake_discount_percent: number | null
           sale_ends_at: string | null
           sale_price: number | null
+          sale_status: string
           seo_description: string | null
           seo_keywords: string | null
           seo_title: string | null
@@ -2684,6 +2781,8 @@ export type Database = {
         }
         Insert: {
           always_recruiting?: boolean
+          apply_end_at?: string | null
+          apply_start_at?: string | null
           attachment_url?: string | null
           auto_start_grace_days?: number
           base_category?: string | null
@@ -2709,6 +2808,8 @@ export type Database = {
           is_sequential?: boolean
           keywords?: string[]
           max_students?: number | null
+          open_scheduled_at?: string | null
+          operation_start_at?: string | null
           period_mode?: boolean
           preview_video_url?: string | null
           price?: number
@@ -2719,6 +2820,7 @@ export type Database = {
           retake_discount_percent?: number | null
           sale_ends_at?: string | null
           sale_price?: number | null
+          sale_status?: string
           seo_description?: string | null
           seo_keywords?: string | null
           seo_title?: string | null
@@ -2747,6 +2849,8 @@ export type Database = {
         }
         Update: {
           always_recruiting?: boolean
+          apply_end_at?: string | null
+          apply_start_at?: string | null
           attachment_url?: string | null
           auto_start_grace_days?: number
           base_category?: string | null
@@ -2772,6 +2876,8 @@ export type Database = {
           is_sequential?: boolean
           keywords?: string[]
           max_students?: number | null
+          open_scheduled_at?: string | null
+          operation_start_at?: string | null
           period_mode?: boolean
           preview_video_url?: string | null
           price?: number
@@ -2782,6 +2888,7 @@ export type Database = {
           retake_discount_percent?: number | null
           sale_ends_at?: string | null
           sale_price?: number | null
+          sale_status?: string
           seo_description?: string | null
           seo_keywords?: string | null
           seo_title?: string | null
@@ -4417,15 +4524,68 @@ export type Database = {
         }
         Relationships: []
       }
+      product_open_alerts: {
+        Row: {
+          contact_email: string | null
+          contact_phone: string | null
+          course_id: string | null
+          created_at: string
+          id: string
+          notified_at: string | null
+          product_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          notified_at?: string | null
+          product_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          contact_phone?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          notified_at?: string | null
+          product_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_open_alerts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_open_alerts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "store_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          admin_memo: string | null
           avatar_url: string | null
+          birth_date: string | null
           created_at: string | null
           department: string | null
           department_id: string | null
           email: string | null
           employee_id: string | null
           full_name: string | null
+          gender: string | null
+          last_login_at: string | null
+          member_status: string
           phone_number: string | null
           position: string | null
           team_name: string | null
@@ -4434,13 +4594,18 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          admin_memo?: string | null
           avatar_url?: string | null
+          birth_date?: string | null
           created_at?: string | null
           department?: string | null
           department_id?: string | null
           email?: string | null
           employee_id?: string | null
           full_name?: string | null
+          gender?: string | null
+          last_login_at?: string | null
+          member_status?: string
           phone_number?: string | null
           position?: string | null
           team_name?: string | null
@@ -4449,13 +4614,18 @@ export type Database = {
           user_id: string
         }
         Update: {
+          admin_memo?: string | null
           avatar_url?: string | null
+          birth_date?: string | null
           created_at?: string | null
           department?: string | null
           department_id?: string | null
           email?: string | null
           employee_id?: string | null
           full_name?: string | null
+          gender?: string | null
+          last_login_at?: string | null
+          member_status?: string
           phone_number?: string | null
           position?: string | null
           team_name?: string | null
@@ -5047,6 +5217,74 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: []
+      }
+      store_products: {
+        Row: {
+          apply_end_at: string | null
+          apply_start_at: string | null
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          linked_course_id: string | null
+          name: string
+          open_scheduled_at: string | null
+          operation_start_at: string | null
+          price: number
+          sale_price: number | null
+          sale_status: string
+          stock_quantity: number | null
+          updated_at: string
+        }
+        Insert: {
+          apply_end_at?: string | null
+          apply_start_at?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          linked_course_id?: string | null
+          name: string
+          open_scheduled_at?: string | null
+          operation_start_at?: string | null
+          price?: number
+          sale_price?: number | null
+          sale_status?: string
+          stock_quantity?: number | null
+          updated_at?: string
+        }
+        Update: {
+          apply_end_at?: string | null
+          apply_start_at?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          linked_course_id?: string | null
+          name?: string
+          open_scheduled_at?: string | null
+          operation_start_at?: string | null
+          price?: number
+          sale_price?: number | null
+          sale_status?: string
+          stock_quantity?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_products_linked_course_id_fkey"
+            columns: ["linked_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       survey_answers: {
         Row: {
