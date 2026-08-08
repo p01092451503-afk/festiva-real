@@ -813,7 +813,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                 <p className="px-3 py-6 text-center text-xs text-muted-foreground">
                   {t("nav.menuSearchEmpty", "검색 결과가 없습니다.")}
                 </p>
-              ) : null
+              ) : null)}
            </nav>
         </TooltipProvider>
 
