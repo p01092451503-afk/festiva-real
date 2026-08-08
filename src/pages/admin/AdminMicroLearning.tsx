@@ -1,19 +1,24 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Zap, Plus, Pencil, Trash2, Eye } from "lucide-react";
+import { Zap, Plus, Pencil, Trash2, Eye, UserPlus, Download, X } from "lucide-react";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 
 const PROVIDERS: Record<string, string> = { youtube: "YouTube", vimeo: "Vimeo", custom: "직접 URL" };
+
 
 const emptyForm = {
   id: "",
