@@ -149,6 +149,113 @@ const AdminMicroLearning = () => {
     qc.invalidateQueries({ queryKey: ["micro-contents"] });
   };
 
+  const contentMap = useMemo(() => new Map(contents.map((c: any) => [c.id, c])), [contents]);
+  const memberMap = useMemo(() => new Map(members.map((m: any) => [m.id, m])), [members]);
+  const viewMap = useMemo(() => {
+    const m = new Map<string, any>();
+    views.forEach((v: any) => m.set(`${v.content_id}:${v.user_id}`, v));
+    return m;
+  }, [views]);
+
+  /** 배정 목록 + 시청 데이터를 합쳐 수강 진도 행을 구성 */
+  const progressRows = useMemo(() => {
+    const rows = assignments
+      .filter((a) => (progressContentId === "all" ? true : a.content_id === progressContentId))
+      .map((a) => {
+        const content = contentMap.get(a.content_id);
+        const member = memberMap.get(a.user_id);
+        const view = viewMap.get(`${a.content_id}:${a.user_id}`);
+        const total = content?.duration_seconds || 0;
+        const watched = view?.watched_seconds || 0;
+        const rate = view?.is_completed ? 100 : total > 0 ? Math.min(100, Math.round((watched / total) * 100)) : 0;
+        return {
+          id: a.id,
+          contentId: a.content_id,
+          contentTitle: content?.title || "-",
+          userId: a.user_id,
+          userName: member?.full_name || "이름없음",
+          userEmail: member?.email || "-",
+          dueAt: a.due_at as string | null,
+          assignedAt: a.created_at as string,
+          watched,
+          total,
+          rate,
+          completed: !!view?.is_completed,
+          lastViewedAt: view?.updated_at || null,
+        };
+      });
+    return rows.sort((a, b) => a.contentTitle.localeCompare(b.contentTitle) || a.userName.localeCompare(b.userName));
+  }, [assignments, contentMap, memberMap, viewMap, progressContentId]);
+
+  const progressSummary = useMemo(() => {
+    const total = progressRows.length;
+    const done = progressRows.filter((r) => r.completed).length;
+    const started = progressRows.filter((r) => !r.completed && r.rate > 0).length;
+    const avg = total ? Math.round(progressRows.reduce((s, r) => s + r.rate, 0) / total) : 0;
+    return { total, done, started, notStarted: total - done - started, avg };
+  }, [progressRows]);
+
+  const filteredMembers = useMemo(
+    () =>
+      members.filter((m: any) =>
+        userKeyword
+          ? `${m.full_name || ""} ${m.email || ""}`.toLowerCase().includes(userKeyword.toLowerCase())
+          : true,
+      ),
+    [members, userKeyword],
+  );
+
+  const saveAssignments = async () => {
+    if (!assignContentId) return toast.error("배정할 숏폼을 선택하세요");
+    if (assignUserIds.length === 0) return toast.error("배정할 학습자를 선택하세요");
+    const { data: auth } = await supabase.auth.getUser();
+    const rows = assignUserIds.map((uid) => ({
+      content_id: assignContentId,
+      user_id: uid,
+      assigned_by: auth.user?.id ?? null,
+      due_at: assignDue ? new Date(assignDue).toISOString() : null,
+    }));
+    const { error } = await supabase
+      .from("micro_content_assignments")
+      .upsert(rows, { onConflict: "content_id,user_id" });
+    if (error) return toast.error(error.message);
+    toast.success(`${rows.length}명에게 배정되었습니다`);
+    setAssignOpen(false);
+    setAssignUserIds([]);
+    setAssignDue("");
+    setUserKeyword("");
+    qc.invalidateQueries({ queryKey: ["micro-assignments"] });
+  };
+
+  const removeAssignment = async (id: string) => {
+    const { error } = await supabase.from("micro_content_assignments").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("배정이 해제되었습니다");
+    qc.invalidateQueries({ queryKey: ["micro-assignments"] });
+  };
+
+  const exportProgress = () => {
+    if (progressRows.length === 0) return toast.error("내보낼 진도 데이터가 없습니다");
+    const sheet = XLSX.utils.json_to_sheet(
+      progressRows.map((r) => ({
+        숏폼: r.contentTitle,
+        학습자: r.userName,
+        이메일: r.userEmail,
+        배정일: new Date(r.assignedAt).toLocaleDateString("ko-KR"),
+        마감일: r.dueAt ? new Date(r.dueAt).toLocaleDateString("ko-KR") : "-",
+        진도율: `${r.rate}%`,
+        시청시간: `${r.watched}초 / ${r.total}초`,
+        완료여부: r.completed ? "완료" : r.rate > 0 ? "학습중" : "미시청",
+        최근학습일: r.lastViewedAt ? new Date(r.lastViewedAt).toLocaleDateString("ko-KR") : "-",
+      })),
+    );
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, sheet, "마이크로러닝진도");
+    XLSX.writeFile(wb, `마이크로러닝_수강진도_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    toast.success("엑셀 파일을 내려받았습니다");
+  };
+
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
