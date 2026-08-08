@@ -64,6 +64,7 @@ interface NavItem {
 interface NavGroup {
   id: string;
   label: string;
+  icon?: React.ElementType;
   items: NavItem[];
 }
 
