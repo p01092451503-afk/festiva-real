@@ -879,10 +879,6 @@ const AdminUserDetail = () => {
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label>{isEn ? "Position" : "직책"}</Label>
-              <Input value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} />
-            </div>
-            <div className="space-y-1.5">
               <Label>{isEn ? "Admin memo" : "관리자 메모"}</Label>
               <Textarea rows={3} value={form.admin_memo} onChange={(e) => setForm({ ...form, admin_memo: e.target.value })} />
             </div>
