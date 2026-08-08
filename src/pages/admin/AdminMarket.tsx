@@ -61,6 +61,9 @@ const AdminMarket = () => {
   const [shipEdit, setShipEdit] = useState<any>(null);
   const [selectedShipIds, setSelectedShipIds] = useState<string[]>([]);
   const [bulkCarrier, setBulkCarrier] = useState(CARRIERS[0]);
+  const [inline, setInline] = useState<Record<string, { price: string; sale_price: string; stock: string }>>({});
+  const [savingId, setSavingId] = useState<string | null>(null);
+
 
   const { data: categories = [] } = useQuery({
     queryKey: ["product-categories"],
