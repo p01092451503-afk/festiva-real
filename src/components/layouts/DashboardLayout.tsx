@@ -632,7 +632,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
             )}
             {effectiveRole === "admin" && !collapsed ? (
               filteredAdminGroups.map((group) => {
-                const isGroupOpen = normalizedMenuSearch || openGroups[group.id] || false;
+                const isGroupOpen = Boolean(normalizedMenuSearch || openGroups[group.id]);
                 const groupHasActive = group.items.some((i) => i.href === location.pathname);
                 return (
                   <div key={group.id} className="pb-2">
@@ -644,7 +644,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                           ? "bg-muted/70 hover:bg-muted"
                           : "bg-transparent hover:bg-muted/50"
                       }`}
-                      aria-expanded={isGroupOpen}
+                      aria-expanded={Boolean(isGroupOpen)}
                     >
                       <span className="flex items-center gap-2 min-w-0">
                         {group.icon && (
