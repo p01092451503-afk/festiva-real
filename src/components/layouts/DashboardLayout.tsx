@@ -21,7 +21,7 @@ import {
   MessageSquareText,
   LayoutTemplate, CalendarRange, Briefcase, FolderCheck, Award, ToggleRight, PenLine, UserCog,
   PieChart, ShieldAlert, Clapperboard, Store, LineChart, ListChecks, ScrollText, BadgeCheck,
-  Send, MessagesSquare, BookMarked,
+  Send, MessagesSquare, BookMarked, Search,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
