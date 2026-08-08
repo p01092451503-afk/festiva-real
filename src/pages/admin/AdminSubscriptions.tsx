@@ -259,7 +259,7 @@ const AdminSubscriptions = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() =>
+                      onClick={() => {
                         setPlanForm({
                           id: p.id,
                           name: p.name,
@@ -271,8 +271,9 @@ const AdminSubscriptions = () => {
                           benefits: Array.isArray(p.benefits) ? p.benefits.join("\n") : "",
                           is_active: p.is_active,
                           display_order: p.display_order,
-                        }) || setPlanOpen(true)
-                      }
+                        });
+                        setPlanOpen(true);
+                      }}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
