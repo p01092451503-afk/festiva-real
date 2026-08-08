@@ -347,6 +347,8 @@ const AdminDesignManager = () => {
                     <Button variant="ghost" size="icon" onClick={() => {
                       setBlockForm({
                         id: b.id, block_type: b.block_type, title: b.title || "", subtitle: b.subtitle || "",
+                        cta_text: (b.config as any)?.cta_text || "", cta_url: (b.config as any)?.cta_url || "",
+                        html: (b.config as any)?.html || "",
                         is_active: b.is_active, display_order: b.display_order,
                       });
                       setBlockOpen(true);
