@@ -127,10 +127,10 @@ const AdminMemberGroups = () => {
     run(async () => {
       if (!memberGroupId) throw new Error("그룹을 먼저 선택하세요.");
       const { data: p, error: e0 } = await supabase
-        .from("profiles").select("id").eq("email", memberEmail.trim()).maybeSingle();
+        .from("profiles").select("user_id").eq("email", memberEmail.trim()).maybeSingle();
       if (e0) throw e0;
       if (!p) throw new Error("해당 이메일의 회원을 찾을 수 없습니다.");
-      const { error } = await supabase.from("member_group_members").insert({ group_id: memberGroupId, user_id: p.id });
+      const { error } = await supabase.from("member_group_members").insert({ group_id: memberGroupId, user_id: p.user_id });
       if (error) throw error;
       setMemberEmail("");
     }, "회원이 그룹에 추가되었습니다.", ["member-group-members"]);
