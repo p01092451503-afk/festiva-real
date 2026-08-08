@@ -449,11 +449,16 @@ const AdminUsers = () => {
           )}
         </div>
 
-        {/* Search + Dept Filter */}
+        {/* Search + Filters */}
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder={t("admin.searchUser")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 rounded-xl border-border" />
+            <Input
+              placeholder="이름·이메일·전화번호 뒷자리·사번·소속·메모 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl border-border"
+            />
           </div>
           <Select value={deptFilter} onValueChange={setDeptFilter}>
             <SelectTrigger className="w-28 sm:w-40 rounded-xl">
@@ -466,16 +471,70 @@ const AdminUsers = () => {
               ))}
             </SelectContent>
           </Select>
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger className="w-24 sm:w-32 rounded-xl">
+              <SelectValue placeholder="등급" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체 등급</SelectItem>
+              {ROLE_PRIORITY.map((r) => (
+                <SelectItem key={r} value={r}>{roleLabel[r].text}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-24 sm:w-32 rounded-xl">
+              <SelectValue placeholder="상태" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체 상태</SelectItem>
+              {MEMBER_STATUS_ORDER.map((s) => (
+                <SelectItem key={s} value={s}>{memberStatusLabel(s)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+
+        {/* Bulk action bar */}
+        {selectedIds.length > 0 && (
+          <div className="stat-card !p-3 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-foreground">{selectedIds.length}명 선택됨</span>
+            <span className="flex-1" />
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkDeptOpen(true)}>
+              <Building2 className="h-3.5 w-3.5" /> 소속 변경
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkStatusOpen(true)}>
+              <ShieldCheck className="h-3.5 w-3.5" /> 상태 변경
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setMsgOpen(true)}>
+              <Send className="h-3.5 w-3.5" /> 메일/알림톡 발송
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={exportMembers}>
+              <Download className="h-3.5 w-3.5" /> 선택 다운로드
+            </Button>
+            <Button size="sm" variant="ghost" className="rounded-xl" onClick={() => setSelectedIds([])}>
+              선택 해제
+            </Button>
+          </div>
+        )}
 
         {/* User Table - Desktop */}
         <div className="stat-card !p-0 overflow-x-auto hidden md:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
+                <th className="px-4 py-3 w-10">
+                  <Checkbox
+                    checked={allFilteredSelected}
+                    onCheckedChange={(v) => toggleAllFiltered(v === true)}
+                    aria-label="전체 선택"
+                  />
+                </th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.nameColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">연락처</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("admin.departmentColumn")}</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.roleColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">상태</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("admin.positionColumn")}</th>
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3"></th>
               </tr>
