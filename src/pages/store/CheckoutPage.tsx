@@ -8,6 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { CreditCard, Loader2, BookOpen, AlertTriangle, X, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { TossPaymentsWidgets, WidgetAgreementWidget, WidgetPaymentMethodWidget } from "@tosspayments/tosspayments-sdk";
 
 interface CheckoutItem {
@@ -59,6 +64,8 @@ const CheckoutPage = () => {
   const agreementWidgetRef = useRef<WidgetAgreementWidget | null>(null);
   const initSequenceRef = useRef(0);
   const [tossError, setTossError] = useState<string | null>(null);
+  const [customFields, setCustomFields] = useState<any[]>([]);
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
 
   const handleClose = () => {
     navigate("/cart");
@@ -119,6 +126,24 @@ const CheckoutPage = () => {
       navigate("/cart");
     }
   }, []);
+
+  // Load checkout custom fields (공통 + 담긴 강의 대상)
+  useEffect(() => {
+    if (!checkoutData) return;
+    const load = async () => {
+      const courseIds = checkoutData.items.map((i) => i.course_id);
+      const { data } = await supabase
+        .from("course_custom_fields")
+        .select("*")
+        .eq("is_active", true)
+        .order("order_index");
+      const applicable = (data || []).filter(
+        (f: any) => !f.course_id || courseIds.includes(f.course_id),
+      );
+      setCustomFields(applicable);
+    };
+    load();
+  }, [checkoutData]);
 
   // Create pending order (skip if reusing existing order)
   useEffect(() => {
@@ -304,8 +329,32 @@ const CheckoutPage = () => {
       return;
     }
 
+    const missing = customFields.find(
+      (f) => f.is_required && !String(fieldValues[f.id] ?? "").trim(),
+    );
+    if (missing) {
+      toast({ title: `'${missing.label}' 항목을 입력해 주세요.`, variant: "destructive" });
+      return;
+    }
+
     setIsProcessing(true);
     try {
+      if (customFields.length > 0) {
+        await supabase.from("order_custom_field_values").delete().eq("order_id", orderId);
+        const rows = customFields
+          .filter((f) => String(fieldValues[f.id] ?? "").trim())
+          .map((f) => ({
+            order_id: orderId,
+            course_id: f.course_id,
+            field_id: f.id,
+            label: f.label,
+            value: fieldValues[f.id],
+          }));
+        if (rows.length > 0) {
+          await supabase.from("order_custom_field_values").insert(rows);
+        }
+      }
+
       const orderName =
         checkoutData.items.length === 1
           ? checkoutData.items[0].title
@@ -421,6 +470,55 @@ const CheckoutPage = () => {
                 ))}
               </div>
             </Card>
+
+            {/* 추가 정보 입력 */}
+            {customFields.length > 0 && (
+              <Card className="p-5 space-y-4">
+                <h2 className="text-sm font-semibold text-foreground">추가 정보 입력</h2>
+                {customFields.map((f) => (
+                  <div key={f.id} className="space-y-1.5">
+                    <Label className="text-sm">
+                      {f.label}
+                      {f.is_required && <span className="ml-1 text-destructive">*</span>}
+                    </Label>
+                    {f.field_type === "textarea" ? (
+                      <Textarea
+                        value={fieldValues[f.id] || ""}
+                        onChange={(e) => setFieldValues((p) => ({ ...p, [f.id]: e.target.value }))}
+                      />
+                    ) : f.field_type === "select" ? (
+                      <Select
+                        value={fieldValues[f.id] || ""}
+                        onValueChange={(v) => setFieldValues((p) => ({ ...p, [f.id]: v }))}
+                      >
+                        <SelectTrigger><SelectValue placeholder="선택해 주세요" /></SelectTrigger>
+                        <SelectContent>
+                          {(Array.isArray(f.options) ? f.options : []).map((o: string) => (
+                            <SelectItem key={o} value={o}>{o}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : f.field_type === "checkbox" ? (
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          checked={fieldValues[f.id] === "동의"}
+                          onCheckedChange={(v) =>
+                            setFieldValues((p) => ({ ...p, [f.id]: v ? "동의" : "" }))
+                          }
+                        />
+                        <span className="text-sm text-muted-foreground">동의합니다</span>
+                      </div>
+                    ) : (
+                      <Input
+                        type={f.field_type === "email" ? "email" : f.field_type === "tel" ? "tel" : "text"}
+                        value={fieldValues[f.id] || ""}
+                        onChange={(e) => setFieldValues((p) => ({ ...p, [f.id]: e.target.value }))}
+                      />
+                    )}
+                  </div>
+                ))}
+              </Card>
+            )}
 
             {/* Toss Payment Widget */}
             {tossError ? (
