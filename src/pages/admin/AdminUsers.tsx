@@ -638,7 +638,7 @@ const AdminUsers = () => {
                 );
               })}
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</td></tr>
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</td></tr>
               )}
             </tbody>
           </table>
