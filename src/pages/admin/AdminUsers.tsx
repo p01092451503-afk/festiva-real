@@ -771,27 +771,8 @@ const AdminUsers = () => {
               <Input type="password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} placeholder="••••••••" className="mt-1" />
             </div>
             <div>
-              <Label>{t("branch.branchTitle")}</Label>
-              <Select value={newUser.branchId} onValueChange={(v) => setNewUser({ ...newUser, branchId: v, departmentId: "" })}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder={t("branch.branchTitle")} /></SelectTrigger>
-                <SelectContent>
-                  {departments.filter((d: any) => !d.parent_department_id).map((d: any) => (
-                    <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>{t("admin.selectDept")}</Label>
-              <Select value={newUser.departmentId} onValueChange={(v) => setNewUser({ ...newUser, departmentId: v })} disabled={!newUser.branchId}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder={t("admin.selectDept")} /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__branch__">{departments.find((d: any) => d.id === newUser.branchId) ? (isEn ? (departments.find((d: any) => d.id === newUser.branchId) as any).name_en || (departments.find((d: any) => d.id === newUser.branchId) as any).name : (departments.find((d: any) => d.id === newUser.branchId) as any).name) + ` (${t("branch.branchTitle")})` : "-"}</SelectItem>
-                  {departments.filter((d: any) => d.parent_department_id === newUser.branchId).map((d: any) => (
-                    <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label>휴대폰 번호</Label>
+              <Input value={newUser.phone} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} placeholder="010-0000-0000" className="mt-1" />
             </div>
             <div>
               <Label>{t("admin.selectRole")}</Label>
