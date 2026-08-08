@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Lock, Camera, ArrowRight, UserCircle, BookOpen, Trophy, Star, TrendingUp, Award, Download, Heart, Receipt, CreditCard, XCircle, Trash2, Eye, Loader2 } from "lucide-react";
+import { User, Lock, Camera, ArrowRight, UserCircle, BookOpen, Trophy, Star, TrendingUp, Award, Download, Heart, Receipt, CreditCard, XCircle, Trash2, Eye, Loader2, Coins, Ticket, RotateCcw } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
