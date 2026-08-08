@@ -1,89 +1,72 @@
-# 유료 강의 개설 기능 업그레이드
+# 맑은소프트 LMS 대비 기능 격차 전면 개발 계획
 
-첨부 이미지(기본정보·운영정보·강의소개)의 모든 항목을 기존 `AdminCourses` 강의 관리에 통합합니다. 결제·평가 등 기존 도메인은 그대로 두고, 강의 메타데이터를 확장해 단과/패키지 판매가 가능하도록 만듭니다.
+기능명세서(39개 문서 분석본)와 웹헤즈 현재 관리자 기능을 대조해, 미보유 기능을 빠짐없이 개발합니다. 범위가 크므로 6단계로 나누어 순차 진행하며, 각 단계는 DB → 관리자 화면 → 학습자 화면 → 연동 검증 순으로 완결시킵니다.
 
-## 1. DB 스키마 확장
+## 격차 요약
 
-기존 `courses` 테이블에 컬럼 추가 + 신규 테이블 2개.
+현재 보유: 과정/차시, 수강신청, 평가(시험·과제·설문), 게시판, 쿠폰, 주문·토스결제, 회원관리, 발송(일괄), Bunny·Kollus 영상, 수료증, 통계 일부.
 
-**`courses` 추가 컬럼**
-- `course_type` text — `'single' | 'package'` (단과/패키지), 기본 `'single'`
-- `base_category` text — 기본 분류 (예: `'정규 교육과정'`)
-- `installment_enabled` bool, `installment_months` int — 무이자 할부
-- `retake_discount_enabled` bool, `retake_discount_percent` int, `retake_allow_coupon_stack` bool
-- `suspension_enabled` bool — 휴강 기능
-- `is_sequential` (이미 존재) 활용 = 순차학습
-- `visibility` text — `'shown' | 'hidden'`
-- `visibility_start_at`, `visibility_end_at` timestamptz — 표출 기간
-- `keywords` text[] — 키워드 설정
-- `always_recruiting` bool — 상시모집 노출
-- `period_mode` bool — 기간제 운영
-- `auto_start_grace_days` int — 학습자동시작 유예 (기본 30)
-- `daily_learning_limit_min` int — 1일 학습제한(분), null=안함
-- `attachment_url` text — 첨부파일(교재) URL
-- `intro_video_url` text, `intro_video_provider` text — 소개 영상 (CDN/youtube/vimeo)
-- `support_options` text[] — 신규/인기/최다판매 뱃지
-- `short_intro_html` text — 간략 소개(HTML)
-- `detail_intro_html` text — 강의 소개(HTML)
-- `seo_title`, `seo_description`, `seo_keywords` text — SEO 정보
+미보유(개발 대상): 콘텐츠 3계층 재사용 구조, 상태 3분리, 수강 연장/일시정지, 회원그룹·등급 할인, 환불 규정 자동계산, 발송 템플릿·학습독려 자동화, 자동쿠폰·포인트 정책, 강사정산, 통계 5종, 결제 추가정보 수집, 정기구독, 도서·마켓·배송·PDF 권한, 마이크로러닝, 자격검정, 노코드 디자인관리(팝업·페이지·메인·메뉴), 모듈형 대시보드·퀵메뉴, 개인정보조회기록.
 
-**신규 `course_pricing_tiers`** (단과 강의의 다중 가격행)
-- `course_id`, `duration_days`, `list_price`, `sale_price`, `points`, `display_name`, `sort_order`
-- RLS: 공개 SELECT(published 강의), admin 전체
+---
 
-**신규 `course_package_items`** (패키지 = 단과 강의 묶음)
-- `package_course_id`, `child_course_id`, `sort_order`
-- RLS 동일
+## 1단계 — 상품·수강 완결성 (P1 전반)
 
-각 테이블 `GRANT SELECT TO anon, authenticated` + admin RPC 권한.
+- 콘텐츠 3계층: `content_videos` → `lectures`(강의그룹 포함) → `course_lectures` 매핑. 역참조([사용과정]/[사용강의]) 화면 제공
+- 과정 상태 3분리: 판매상태 / 노출상태 / 사용상태 독립 제어, 신규 등록 시 숨김+판매중지 기본값
+- 수강료 노출 타입 3종(정가+수강료 / 무료 / 월가격), 라벨·이벤트 문구
+- 수강 연장(비용·일수), 일시정지(최대 횟수·기간, 학습독려 제외, 이력 기록)
 
-## 2. UI: `CourseEditDialog`(또는 신규 풀스크린 페이지)
+## 2단계 — 회원 정책 & 환불 (P1 후반)
 
-기존 `AdminCourses.tsx`의 편집 다이얼로그를 탭 구성으로 재설계:
+- `member_groups`, `member_grades`(할인율), 과정별 그룹·등급 할인(`course_discounts`)
+- 수강신청 대상 제한(그룹 지정), 자동승인 정책
+- 환불 규정 엔진: 수강일수 비례 자동 계산, 부분환불, 환불 승인 워크플로
+- 개인정보조회기록(`privacy_access_logs`), 마케팅 수신동의 관리
 
-```text
-[기본정보] [차시관리] [강사] [수료기준] [교재] [모의고사] [설문] [수강생관리] [자료실] [QnA]
-```
+## 3단계 — 발송·리텐션 자동화 (P2)
 
-**기본정보 탭** — 첨부 이미지 1·2·3의 모든 필드를 그대로 구현:
-- 기본 분류 (2단계 셀렉트)
-- 강의구분: 단과/패키지 라디오 (패키지 선택 시 하위 강의 선택 UI 노출)
-- 강좌명
-- 판매가격: 5행 그리드 (수강기간/정가/가격/포인트/표출명) — 행 추가/삭제
-- 무이자 할부 토글 + 개월수
-- 재수강 할인 토글 + % + 쿠폰중복허용
-- 휴강 기능 토글
-- 차시 표출(자동/수동) + 순차학습
-- 표출 여부 + 기간 datetime
-- 키워드 설정 (태그 입력)
-- 운영정보 섹션: 상시모집 / 기간제 / 학습자동시작 유예 / 인원제한 / 1일 학습제한
-- 강의소개 섹션: 강좌 이미지 업로드, 소개 영상 URL, 첨부파일(교재), 지원옵션 체크박스, 간략소개 textarea, 강의소개 RichTextEditor
-- SEO 정보 섹션
+- `message_templates`(메일/SMS/알림톡/시스템), 변수 치환, 미리보기
+- `message_logs` 발송 로그 대시보드(채널·대상·성공률)
+- 학습독려 자동 발송(진도 미달·미접속 자동 추출, 스케줄 실행)
+- 오픈알림 신청자 수집 → 오픈 시 일괄 발송(기존 판매상태와 연동)
 
-나머지 탭은 기존 페이지/컴포넌트(`AdminLearning`, `AdminAssessmentsStatus`, `AdminEnrollments` 등)로 라우팅하거나 임베드.
+## 4단계 — 수익화·정산·통계 (P2)
 
-## 3. Storefront 반영
+- 포인트 정책 엔진(적립률·한도·소멸) + 이용내역 + 일괄/수동 등록
+- 자동쿠폰(가입·생일·수료 등 조건 트리거)
+- 강사 정산(`instructor_settlements`: 비율/직접입력, 기간별 생성, 지급상태)
+- 통계 5종: 주문 / 주문항목 / 매출 / 환불 / 구독
+- 결제 시 추가정보 수집 폼(`course_custom_fields` + 값 저장, 엑셀 내보내기)
 
-- 메인 강의 카드: `sale_price`가 있으면 할인율 + 정가 strikethrough 표시 (이미 일부 존재 시 확장)
-- 강의 상세 페이지: 다중 가격 옵션이 있으면 라디오 선택 후 장바구니/결제
-- 패키지 강의: 포함된 단과 강의 목록 노출
+## 5단계 — 확장 상품 (P3)
 
-## 4. 안전 장치
+- 정기구독(구독 상품·주기·해지·회차 결제내역·재청구)
+- 도서/마켓: 카테고리, 재고, 배송관리(송장·일괄처리), 전자책 PDF 다운로드 권한·기간
+- 마이크로러닝(숏폼 콘텐츠·전용 메인)
+- 집합강의·연수(학점) 관리
 
-- 기존 `price`/`sale_price` 컬럼은 유지하고 `course_pricing_tiers`의 첫 행과 동기화 트리거 작성 → 기존 결제/주문 로직 무중단
-- 마이그레이션 후 권한별 접근 (학생: 공개강의만 SELECT, 관리자: 전체)
+## 6단계 — 노코드 운영 & 자격검정 (P3)
 
-## 5. 단계
+- 디자인관리: 팝업, 사이트 템플릿, 정적 페이지, 메인화면 블록 드래그 배치, 사이트 메뉴
+- 모듈형 대시보드 위젯 + 퀵메뉴 즐겨찾기
+- 자격관리: 자격개설, 검정시험 회차, 고사장, 통합응시/취득, 자격증 발급, 취득후기
 
-1. 마이그레이션 (스키마 + RLS + 트리거)
-2. 강의 편집 UI 재구성 (기본정보 탭 풀구현, 나머지 탭은 기존 링크)
-3. Storefront 카드/상세에 다중 가격·패키지 노출
-4. 한국어/영어 i18n 키 추가
+## 상시 과제
 
-## 기술 세부
+- 목록 공통 컴포넌트: 필터 검색 → 정렬 → 다중선택 일괄처리 → 엑셀(출력항목 선택) → 드래그 순서저장
+- 위시리스트 현황(과정/상품/도서), 콘텐츠 사용량(전송량·스토리지) 대시보드
 
-- 가격 그리드는 `useFieldArray` 패턴(직접 state)로 5행 고정 + "행 추가" 버튼으로 확장
-- 패키지 하위 강의 선택은 `Command`(shadcn) 멀티셀렉트
-- 키워드는 `Badge` + Enter 입력
-- RichText는 기존 `RichTextEditor` 컴포넌트 재사용
-- 이미지/첨부 업로드는 기존 `course-thumbnails`, 신규 `course-attachments` 스토리지 버킷
+---
+
+## 기술 노트
+
+- 신규 테이블은 모두 `public` 스키마 + GRANT + RLS(admin/super_admin 정책 포함)로 생성
+- 기존 `courses`, `course_contents`는 유지하고 `lectures`/`course_lectures`를 병행 도입 후 마이그레이션(기존 데이터 무손실)
+- 자동화(학습독려·자동쿠폰·구독 청구)는 edge function + 스케줄 호출
+- 관리자 화면은 기존 디자인 시스템(차콜/화이트, border-b-2 리스트, 좌측정렬 헤더)을 그대로 사용
+- i18n(KO/EN) 키를 신규 화면마다 함께 추가
+
+## 진행 방식
+
+승인 후 1단계부터 착수합니다. 각 단계는 마이그레이션 → 화면 → 검증 순으로 완료 보고 후 다음 단계로 넘어갑니다.
