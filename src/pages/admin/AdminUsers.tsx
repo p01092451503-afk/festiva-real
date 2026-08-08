@@ -550,7 +550,14 @@ const AdminUsers = () => {
                     : null;
 
                 return (
-                  <tr key={profile.user_id} className="hover:bg-accent/30 transition-colors">
+                  <tr key={profile.user_id} className={`transition-colors ${selectedSet.has(profile.user_id) ? "bg-accent/40" : "hover:bg-accent/30"}`}>
+                    <td className="px-4 py-3">
+                      <Checkbox
+                        checked={selectedSet.has(profile.user_id)}
+                        onCheckedChange={(v) => toggleOne(profile.user_id, v === true)}
+                        aria-label={`${profile.full_name || "회원"} 선택`}
+                      />
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center text-xs font-semibold text-accent-foreground shrink-0">
@@ -562,11 +569,19 @@ const AdminUsers = () => {
                         </div>
                       </div>
                     </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      <span className="text-sm text-muted-foreground">{profile.phone_number || "-"}</span>
+                    </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
                       <span className="text-sm text-muted-foreground">{getDeptName(profile.department_id)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-block whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-block whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full border ${memberStatusClass(profile.member_status)}`}>
+                        {memberStatusLabel(profile.member_status)}
+                      </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <span className="text-sm text-muted-foreground">{profile.position || "-"}</span>
