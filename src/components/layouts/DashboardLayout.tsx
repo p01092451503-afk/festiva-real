@@ -242,6 +242,8 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "admin.contentLibrary", label: t("nav.contentLibrary", "콘텐츠 라이브러리"), href: "/admin/content-library", icon: Film },
     { navKey: "admin.courseOptions", label: t("nav.courseOptions", "강의 판매·운영 옵션"), href: "/admin/course-options", icon: SlidersHorizontal },
     { navKey: "admin.courseOps", label: t("nav.courseOps", "수강 연장·일시정지"), href: "/admin/course-ops", icon: CalendarClock },
+    { navKey: "admin.memberGroups", label: t("nav.memberGroups", "회원 그룹·등급"), href: "/admin/member-groups", icon: Users2 },
+    { navKey: "admin.refunds", label: t("nav.refunds", "환불 관리"), href: "/admin/refunds", icon: Receipt },
     { navKey: "admin.instructors", label: t("nav.instructorManagement", "강사 관리"), href: "/admin/instructors", icon: UserCog },
     { navKey: "admin.tracks", label: t("nav.trackManagement", "학습 트랙 관리"), href: "/admin/tracks", icon: Layers },
     { navKey: "admin.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/admin/video-sessions", icon: Video },
