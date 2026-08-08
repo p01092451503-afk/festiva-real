@@ -402,6 +402,9 @@ const AdminUsers = () => {
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("admin.userManagementDesc")}</p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" className="rounded-xl gap-2 flex-1 sm:flex-none" onClick={exportMembers}>
+              <Download className="h-4 w-4" /> 엑셀 다운로드
+            </Button>
             <Button variant="outline" className="rounded-xl gap-2 flex-1 sm:flex-none" onClick={() => setBulkOpen(true)}>
               <FileSpreadsheet className="h-4 w-4" /> 대량 추가
             </Button>
@@ -425,12 +428,12 @@ const AdminUsers = () => {
           />
           <RichStatCard
             label={t("admin.activeUsers")}
-            value={profiles.length}
+            value={activeCount}
             sub={isEn ? "Active accounts" : "활성 계정"}
             icon={UserCheck}
             tone="emerald"
             visual="ring"
-            ringValue={100}
+            ringValue={profiles.length ? Math.round((activeCount / profiles.length) * 100) : 0}
           />
           {teacherRoleEnabled && (
             <RichStatCard
