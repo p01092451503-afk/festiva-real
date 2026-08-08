@@ -572,7 +572,7 @@ const AdminUsers = () => {
                       <span className="text-sm text-muted-foreground">{profile.phone_number || "-"}</span>
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <span className="text-sm text-muted-foreground">{getDeptName(profile.department_id)}</span>
+                      <span className="text-sm text-muted-foreground">{getGradeName(profile.grade_id)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-block whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
@@ -583,7 +583,9 @@ const AdminUsers = () => {
                       </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-sm text-muted-foreground">{profile.position || "-"}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {profile.created_at ? new Date(profile.created_at).toLocaleDateString("ko-KR") : "-"}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
