@@ -673,7 +673,7 @@ const AdminUsers = () => {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-semibold text-foreground truncate">{profile.full_name || "-"}</p>
-                        <p className="text-xs text-muted-foreground truncate">{profile.email || profile.employee_id || "-"}</p>
+                        <p className="text-xs text-muted-foreground truncate">{profile.email || "-"}</p>
                         {profile.phone_number && (
                           <p className="text-xs text-muted-foreground truncate">{profile.phone_number}</p>
                         )}
@@ -685,13 +685,13 @@ const AdminUsers = () => {
                         </span>
                       </div>
                     </div>
-                    {(deptName !== "-" || profile.position) && (
-                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
-                        {deptName !== "-" && <span className="truncate">{deptName}</span>}
-                        {deptName !== "-" && profile.position && <span className="text-border">·</span>}
-                        {profile.position && <span className="truncate">{profile.position}</span>}
-                      </div>
-                    )}
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+                      {gradeName !== "-" && <span className="truncate">{gradeName}</span>}
+                      {gradeName !== "-" && profile.created_at && <span className="text-border">·</span>}
+                      {profile.created_at && (
+                        <span className="truncate">가입 {new Date(profile.created_at).toLocaleDateString("ko-KR")}</span>
+                      )}
+                    </div>
                     <div className="mt-2.5 flex items-center justify-end gap-1 -mr-1">
                       <Button
                         variant="ghost"
