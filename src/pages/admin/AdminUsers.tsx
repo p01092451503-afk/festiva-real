@@ -891,30 +891,30 @@ const AdminUsers = () => {
         </DialogContent>
       </Dialog>
 
-      {/* 일괄 소속 변경 */}
-      <Dialog open={bulkDeptOpen} onOpenChange={setBulkDeptOpen}>
+      {/* 일괄 회원등급 변경 */}
+      <Dialog open={bulkGradeOpen} onOpenChange={setBulkGradeOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><Building2 className="h-4 w-4" /> 소속 일괄 변경</DialogTitle>
-            <DialogDescription>선택한 {selectedIds.length}명의 소속을 한 번에 변경합니다.</DialogDescription>
+            <DialogTitle className="flex items-center gap-2"><UserCog className="h-4 w-4" /> 회원등급 일괄 변경</DialogTitle>
+            <DialogDescription>선택한 {selectedIds.length}명의 회원등급을 한 번에 변경합니다.</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label>변경할 소속</Label>
-            <Select value={bulkDeptId} onValueChange={setBulkDeptId}>
-              <SelectTrigger><SelectValue placeholder="소속 선택" /></SelectTrigger>
+            <Label>변경할 회원등급</Label>
+            <Select value={bulkGradeId} onValueChange={setBulkGradeId}>
+              <SelectTrigger><SelectValue placeholder="등급 선택" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">소속 없음</SelectItem>
-                {departments.map((d: any) => (
-                  <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
+                <SelectItem value="__none__">등급 없음</SelectItem>
+                {grades.map((g) => (
+                  <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBulkDeptOpen(false)}>{t("common.cancel")}</Button>
+            <Button variant="outline" onClick={() => setBulkGradeOpen(false)}>{t("common.cancel")}</Button>
             <Button
               disabled={bulkUpdateMutation.isPending}
-              onClick={() => bulkUpdateMutation.mutate({ department_id: bulkDeptId === "__none__" ? null : bulkDeptId })}
+              onClick={() => bulkUpdateMutation.mutate({ grade_id: bulkGradeId === "__none__" ? null : bulkGradeId })}
             >
               {bulkUpdateMutation.isPending ? t("common.processing") : "변경"}
             </Button>
