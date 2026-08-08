@@ -1,23 +1,32 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft, User, Mail, Building2, BookOpen, GraduationCap, Award,
   ClipboardCheck, Layers, Activity, CheckCircle2, XCircle, Clock,
+  Pencil, Phone, Cake, Star, ShoppingBag, MousePointerClick,
 } from "lucide-react";
 import { formatDistanceToNow, format as fmtDate } from "date-fns";
 import { ko, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
+import { MEMBER_STATUS_ORDER, memberStatusClass, memberStatusLabel, GENDER_LABEL } from "@/lib/statusMeta";
 
 const AdminUserDetail = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { i18n } = useTranslation();
   const isEn = i18n.language?.startsWith("en");
   const locale = isEn ? enUS : ko;
@@ -28,7 +37,7 @@ const AdminUserDetail = () => {
       if (!userId) return null;
       const { data, error } = await supabase
         .from("profiles")
-        .select("user_id, full_name, email, employee_id, position, department_id, created_at, avatar_url")
+        .select("user_id, full_name, email, employee_id, position, department_id, created_at, avatar_url, phone_number, birth_date, gender, member_status, admin_memo, last_login_at")
         .eq("user_id", userId)
         .maybeSingle();
       if (error) throw error;
@@ -36,6 +45,100 @@ const AdminUserDetail = () => {
     },
     enabled: !!userId,
   });
+
+  // ---- Inline edit of member info ----
+  const [editOpen, setEditOpen] = useState(false);
+  const [form, setForm] = useState({
+    full_name: "", phone_number: "", birth_date: "", gender: "unknown",
+    position: "", member_status: "active", admin_memo: "",
+  });
+
+  useEffect(() => {
+    if (!profile) return;
+    setForm({
+      full_name: profile.full_name || "",
+      phone_number: (profile as any).phone_number || "",
+      birth_date: (profile as any).birth_date || "",
+      gender: (profile as any).gender || "unknown",
+      position: profile.position || "",
+      member_status: (profile as any).member_status || "active",
+      admin_memo: (profile as any).admin_memo || "",
+    });
+  }, [profile]);
+
+  const saveProfile = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: form.full_name || null,
+          phone_number: form.phone_number || null,
+          birth_date: form.birth_date || null,
+          gender: form.gender,
+          position: form.position || null,
+          member_status: form.member_status,
+          admin_memo: form.admin_memo || null,
+        } as any)
+        .eq("user_id", userId!);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(isEn ? "Saved" : "저장되었습니다");
+      setEditOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["admin-user-detail-profile", userId] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  // ---- Unified activity data ----
+  const { data: accessLogs = [] } = useQuery({
+    queryKey: ["admin-user-detail-access", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("traffic_logs")
+        .select("id, path, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: userReviews = [] } = useQuery({
+    queryKey: ["admin-user-detail-reviews", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("id, course_id, rating, comment, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: userOrders = [] } = useQuery({
+    queryKey: ["admin-user-detail-orders", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("orders")
+        .select("id, order_number, status, total_amount, coupon_code, discount_amount, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
 
   const { data: roles = [] } = useQuery({
     queryKey: ["admin-user-detail-roles", userId],
