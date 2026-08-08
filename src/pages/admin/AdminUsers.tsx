@@ -814,22 +814,30 @@ const AdminUsers = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <StaffEditDialog
-        open={!!staffEdit}
-        onOpenChange={(open) => !open && setStaffEdit(null)}
-        draft={staffEdit}
-        onDraftChange={setStaffEdit}
-        departments={departments}
-        isEn={isEn}
-        saving={updateStaffMutation.isPending}
-        onSave={() => staffEdit && updateStaffMutation.mutate(staffEdit)}
+      <MemberEditDialog
+        open={!!memberEdit}
+        onOpenChange={(open) => !open && setMemberEdit(null)}
+        draft={memberEdit}
+        onDraftChange={setMemberEdit}
+        grades={grades}
+        saving={updateMemberMutation.isPending}
+        onSave={() => memberEdit && updateMemberMutation.mutate(memberEdit)}
         teacherRoleEnabled={teacherRoleEnabled}
+        resetting={resetPasswordMutation.isPending}
+        canResetPassword={
+          !!memberEdit &&
+          (!hasProtectedRole(memberEdit.userId) ||
+            roles.some((r: any) => r.user_id === user?.id && r.role === "super_admin"))
+        }
+        onResetPassword={(newPassword) =>
+          memberEdit && resetPasswordMutation.mutate({ userId: memberEdit.userId, newPassword })
+        }
       />
 
       <BulkStaffUploadDialog
         open={bulkOpen}
         onOpenChange={setBulkOpen}
-        departments={departments}
+        departments={[]}
         teacherRoleEnabled={teacherRoleEnabled}
         isEn={isEn}
         onCompleted={() => {
