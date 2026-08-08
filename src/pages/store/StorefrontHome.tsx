@@ -160,54 +160,49 @@ const StorefrontHome = () => {
     return <StorefrontHomeSkeleton />;
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <StorefrontHeader />
+  const renderHero = () => <HeroBanner key="hero" />;
 
-      <main>
-        {/* Hero */}
-        <HeroBanner />
-
-      {/* Quick Category Navigation — app-icon style */}
-      {localizedCategories.length > 0 && (
-        <section className="border-b border-border">
-          <div className="max-w-6xl mx-auto px-4 py-10">
-            <div className="flex items-center justify-center gap-8 sm:gap-12 overflow-x-auto scrollbar-hide pb-1">
-              {localizedCategories.map((cat: any, idx: number) => {
-                const style = categoryStyles[idx % categoryStyles.length];
-                const Icon = style.icon;
-                return (
-                  <Link
-                    key={cat.id}
-                    to={`/store/courses?category=${cat.slug}`}
-                    className="flex flex-col items-center gap-3 group shrink-0"
+  const renderCategories = () =>
+    localizedCategories.length > 0 ? (
+      <section key="categories" className="border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 py-10">
+          <div className="flex items-center justify-center gap-8 sm:gap-12 overflow-x-auto scrollbar-hide pb-1">
+            {localizedCategories.map((cat: any, idx: number) => {
+              const style = categoryStyles[idx % categoryStyles.length];
+              const Icon = style.icon;
+              return (
+                <Link
+                  key={cat.id}
+                  to={`/store/courses?category=${cat.slug}`}
+                  className="flex flex-col items-center gap-3 group shrink-0"
+                >
+                  <div
+                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-105"
+                    style={{ background: style.bg }}
                   >
-                    <div
-                      className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-105"
-                      style={{ background: style.bg }}
-                    >
-                      <Icon className="h-5 w-5 sm:h-[22px] sm:w-[22px]" style={{ color: style.iconColor }} strokeWidth={1.6} />
-                    </div>
-                    <span className="text-xs sm:text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
-                      {cat.name}
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
+                    <Icon className="h-5 w-5 sm:h-[22px] sm:w-[22px]" style={{ color: style.iconColor }} strokeWidth={1.6} />
+                  </div>
+                  <span className="text-xs sm:text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
+                    {cat.name}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+    ) : null;
 
-      {/* Featured courses — "지금 가장 주목받는 강의" with ranking numbers */}
+  const renderCourses = (title?: string | null, subtitle?: string | null) => (
+    <div key="courses">
       {featuredCourses.length > 0 && (
         <section className="max-w-6xl mx-auto px-4 pt-14 pb-10">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
-                지금 가장 주목받는 강의
+                {title || "지금 가장 주목받는 강의"}
               </h2>
-              <p className="text-sm text-muted-foreground mt-1">실시간 인기 과정을 확인하세요</p>
+              <p className="text-sm text-muted-foreground mt-1">{subtitle || "실시간 인기 과정을 확인하세요"}</p>
             </div>
             <Button variant="ghost" size="sm" asChild className="gap-1 text-muted-foreground hover:text-foreground">
               <Link to="/store/courses">
@@ -230,15 +225,12 @@ const StorefrontHome = () => {
         </section>
       )}
 
-      {/* New courses — "새로 오픈한 강의" */}
       {newCourses.length > 0 && (
         <section className="bg-accent/30">
           <div className="max-w-6xl mx-auto px-4 py-14">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
-                  새로 오픈한 강의
-                </h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">새로 오픈한 강의</h2>
                 <p className="text-sm text-muted-foreground mt-1">최신 과정을 놓치지 마세요</p>
               </div>
               <Button variant="ghost" size="sm" asChild className="gap-1 text-muted-foreground hover:text-foreground">
@@ -262,7 +254,6 @@ const StorefrontHome = () => {
         </section>
       )}
 
-      {/* Category courses — "가장 많이 구매한 분류" */}
       {localizedCategories.length > 0 && (
         <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-14 min-h-[400px]" />}>
           <CategoryCoursesSection
@@ -273,13 +264,83 @@ const StorefrontHome = () => {
           />
         </Suspense>
       )}
+    </div>
+  );
 
+  const renderBlock = (b: MainPageBlock) => {
+    switch (b.block_type) {
+      case "hero":
+        return <div key={b.id}>{renderHero()}</div>;
+      case "categories":
+        return <div key={b.id}>{renderCategories()}</div>;
+      case "courses":
+        return <div key={b.id}>{renderCourses(b.title, b.subtitle)}</div>;
+      case "reviews":
+        return (
+          <Suspense key={b.id} fallback={<div className="min-h-[200px]" />}>
+            <HomeReviewsSection title={b.title} subtitle={b.subtitle} />
+          </Suspense>
+        );
+      case "instructors":
+        return (
+          <Suspense key={b.id} fallback={<div className="min-h-[200px]" />}>
+            <HomeInstructorsSection title={b.title} subtitle={b.subtitle} />
+          </Suspense>
+        );
+      case "notice":
+        return (
+          <Suspense key={b.id} fallback={<div className="min-h-[200px]" />}>
+            <HomeNoticeSection title={b.title} subtitle={b.subtitle} />
+          </Suspense>
+        );
+      case "cta":
+        return (
+          <Suspense key={b.id} fallback={<div className="min-h-[200px]" />}>
+            <HomeCtaSection
+              title={b.title}
+              subtitle={b.subtitle}
+              ctaText={b.config?.cta_text}
+              ctaUrl={b.config?.cta_url}
+            />
+          </Suspense>
+        );
+      case "custom":
+        return b.config?.html ? (
+          <section key={b.id} className="max-w-6xl mx-auto px-4 py-14">
+            {b.title && <h2 className="text-xl sm:text-2xl font-bold tracking-tight mb-6">{b.title}</h2>}
+            <div
+              className="prose max-w-none dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(b.config.html)) }}
+            />
+          </section>
+        ) : null;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <StorefrontHeader />
+
+      <main>
+        {blocks.length > 0 ? (
+          blocks.map(renderBlock)
+        ) : (
+          <>
+            {renderHero()}
+            {renderCategories()}
+            {renderCourses()}
+          </>
+        )}
       </main>
 
       {/* Footer */}
       <Suspense fallback={<div className="min-h-[200px]" />}>
         <SiteFooter />
       </Suspense>
+
+      <SitePopups />
     </div>
   );
 };
