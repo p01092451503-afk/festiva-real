@@ -3536,6 +3536,92 @@ export type Database = {
           },
         ]
       }
+      ebook_download_logs: {
+        Row: {
+          created_at: string
+          entitlement_id: string
+          id: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entitlement_id: string
+          id?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entitlement_id?: string
+          id?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebook_download_logs_entitlement_id_fkey"
+            columns: ["entitlement_id"]
+            isOneToOne: false
+            referencedRelation: "ebook_entitlements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ebook_entitlements: {
+        Row: {
+          created_at: string
+          download_count: number
+          download_limit: number
+          expires_at: string | null
+          id: string
+          is_revoked: boolean
+          order_id: string | null
+          product_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          download_count?: number
+          download_limit?: number
+          expires_at?: string | null
+          id?: string
+          is_revoked?: boolean
+          order_id?: string | null
+          product_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          download_count?: number
+          download_limit?: number
+          expires_at?: string | null
+          id?: string
+          is_revoked?: boolean
+          order_id?: string | null
+          product_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebook_entitlements_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ebook_entitlements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "store_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       english_corrections: {
         Row: {
           alternatives: Json | null
@@ -4760,6 +4846,109 @@ export type Database = {
         }
         Relationships: []
       }
+      micro_content_views: {
+        Row: {
+          content_id: string
+          created_at: string
+          id: string
+          is_completed: boolean
+          liked: boolean
+          updated_at: string
+          user_id: string
+          watched_seconds: number
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          liked?: boolean
+          updated_at?: string
+          user_id: string
+          watched_seconds?: number
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          liked?: boolean
+          updated_at?: string
+          user_id?: string
+          watched_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "micro_content_views_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "micro_contents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      micro_contents: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number
+          duration_seconds: number
+          id: string
+          is_published: boolean
+          linked_course_id: string | null
+          tags: string[]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          video_provider: string
+          video_url: string | null
+          view_count: number
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          duration_seconds?: number
+          id?: string
+          is_published?: boolean
+          linked_course_id?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          video_provider?: string
+          video_url?: string | null
+          view_count?: number
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          duration_seconds?: number
+          id?: string
+          is_published?: boolean
+          linked_course_id?: string | null
+          tags?: string[]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          video_provider?: string
+          video_url?: string | null
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "micro_contents_linked_course_id_fkey"
+            columns: ["linked_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nav_items: {
         Row: {
           created_at: string
@@ -5001,6 +5190,116 @@ export type Database = {
             referencedColumns: ["client_id"]
           },
         ]
+      }
+      offline_class_enrollments: {
+        Row: {
+          admin_memo: string | null
+          attended: boolean
+          attended_hours: number
+          certificate_issued: boolean
+          class_id: string
+          created_at: string
+          credits_awarded: number
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_memo?: string | null
+          attended?: boolean
+          attended_hours?: number
+          certificate_issued?: boolean
+          class_id: string
+          created_at?: string
+          credits_awarded?: number
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_memo?: string | null
+          attended?: boolean
+          attended_hours?: number
+          certificate_issued?: boolean
+          class_id?: string
+          created_at?: string
+          credits_awarded?: number
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offline_class_enrollments_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "offline_classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      offline_classes: {
+        Row: {
+          address: string | null
+          apply_end_at: string | null
+          apply_start_at: string | null
+          capacity: number
+          created_at: string
+          credit_hours: number
+          description: string | null
+          end_at: string | null
+          id: string
+          instructor_name: string | null
+          price: number
+          start_at: string | null
+          status: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          venue: string | null
+        }
+        Insert: {
+          address?: string | null
+          apply_end_at?: string | null
+          apply_start_at?: string | null
+          capacity?: number
+          created_at?: string
+          credit_hours?: number
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          instructor_name?: string | null
+          price?: number
+          start_at?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Update: {
+          address?: string | null
+          apply_end_at?: string | null
+          apply_start_at?: string | null
+          capacity?: number
+          created_at?: string
+          credit_hours?: number
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          instructor_name?: string | null
+          price?: number
+          start_at?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Relationships: []
       }
       one_time_login_tokens: {
         Row: {
@@ -5557,6 +5856,47 @@ export type Database = {
         }
         Relationships: []
       }
+      product_categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          parent_id: string | null
+          slug: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          parent_id?: string | null
+          slug?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          parent_id?: string | null
+          slug?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "product_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_open_alerts: {
         Row: {
           contact_email: string | null
@@ -5598,6 +5938,87 @@ export type Database = {
           },
           {
             foreignKeyName: "product_open_alerts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "store_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_shipments: {
+        Row: {
+          address1: string
+          address2: string | null
+          admin_memo: string | null
+          carrier: string | null
+          created_at: string
+          delivered_at: string | null
+          delivery_memo: string | null
+          id: string
+          order_id: string | null
+          postcode: string | null
+          product_id: string | null
+          quantity: number
+          recipient_name: string
+          recipient_phone: string
+          shipped_at: string | null
+          status: string
+          tracking_no: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address1: string
+          address2?: string | null
+          admin_memo?: string | null
+          carrier?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_memo?: string | null
+          id?: string
+          order_id?: string | null
+          postcode?: string | null
+          product_id?: string | null
+          quantity?: number
+          recipient_name: string
+          recipient_phone: string
+          shipped_at?: string | null
+          status?: string
+          tracking_no?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address1?: string
+          address2?: string | null
+          admin_memo?: string | null
+          carrier?: string | null
+          created_at?: string
+          delivered_at?: string | null
+          delivery_memo?: string | null
+          id?: string
+          order_id?: string | null
+          postcode?: string | null
+          product_id?: string | null
+          quantity?: number
+          recipient_name?: string
+          recipient_phone?: string
+          shipped_at?: string | null
+          status?: string
+          tracking_no?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_shipments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_shipments_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "store_products"
@@ -6433,61 +6854,104 @@ export type Database = {
         Row: {
           apply_end_at: string | null
           apply_start_at: string | null
+          author: string | null
+          category_id: string | null
           created_at: string
           description: string | null
           display_order: number
+          ebook_access_days: number
+          ebook_download_limit: number
+          ebook_file_url: string | null
           id: string
           image_url: string | null
           is_active: boolean
+          isbn: string | null
           linked_course_id: string | null
           name: string
           open_scheduled_at: string | null
           operation_start_at: string | null
           price: number
+          product_type: string
+          publisher: string | null
+          requires_shipping: boolean
           sale_price: number | null
           sale_status: string
+          shipping_fee: number
+          sku: string | null
+          stock_alert_threshold: number
           stock_quantity: number | null
           updated_at: string
         }
         Insert: {
           apply_end_at?: string | null
           apply_start_at?: string | null
+          author?: string | null
+          category_id?: string | null
           created_at?: string
           description?: string | null
           display_order?: number
+          ebook_access_days?: number
+          ebook_download_limit?: number
+          ebook_file_url?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          isbn?: string | null
           linked_course_id?: string | null
           name: string
           open_scheduled_at?: string | null
           operation_start_at?: string | null
           price?: number
+          product_type?: string
+          publisher?: string | null
+          requires_shipping?: boolean
           sale_price?: number | null
           sale_status?: string
+          shipping_fee?: number
+          sku?: string | null
+          stock_alert_threshold?: number
           stock_quantity?: number | null
           updated_at?: string
         }
         Update: {
           apply_end_at?: string | null
           apply_start_at?: string | null
+          author?: string | null
+          category_id?: string | null
           created_at?: string
           description?: string | null
           display_order?: number
+          ebook_access_days?: number
+          ebook_download_limit?: number
+          ebook_file_url?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          isbn?: string | null
           linked_course_id?: string | null
           name?: string
           open_scheduled_at?: string | null
           operation_start_at?: string | null
           price?: number
+          product_type?: string
+          publisher?: string | null
+          requires_shipping?: boolean
           sale_price?: number | null
           sale_status?: string
+          shipping_fee?: number
+          sku?: string | null
+          stock_alert_threshold?: number
           stock_quantity?: number | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "store_products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "product_categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "store_products_linked_course_id_fkey"
             columns: ["linked_course_id"]
@@ -6496,6 +6960,110 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscription_invoices: {
+        Row: {
+          amount: number
+          billing_date: string
+          created_at: string
+          cycle_no: number
+          failure_reason: string | null
+          id: string
+          paid_at: string | null
+          payment_key: string | null
+          retry_count: number
+          status: string
+          subscription_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          billing_date?: string
+          created_at?: string
+          cycle_no?: number
+          failure_reason?: string | null
+          id?: string
+          paid_at?: string | null
+          payment_key?: string | null
+          retry_count?: number
+          status?: string
+          subscription_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          billing_date?: string
+          created_at?: string
+          cycle_no?: number
+          failure_reason?: string | null
+          id?: string
+          paid_at?: string | null
+          payment_key?: string | null
+          retry_count?: number
+          status?: string
+          subscription_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_invoices_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "user_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_plans: {
+        Row: {
+          benefits: Json
+          billing_interval: number
+          billing_period: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          included_course_ids: string[]
+          is_active: boolean
+          name: string
+          price: number
+          trial_days: number
+          updated_at: string
+        }
+        Insert: {
+          benefits?: Json
+          billing_interval?: number
+          billing_period?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          included_course_ids?: string[]
+          is_active?: boolean
+          name: string
+          price?: number
+          trial_days?: number
+          updated_at?: string
+        }
+        Update: {
+          benefits?: Json
+          billing_interval?: number
+          billing_period?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          included_course_ids?: string[]
+          is_active?: boolean
+          name?: string
+          price?: number
+          trial_days?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       survey_answers: {
         Row: {
@@ -7075,6 +7643,68 @@ export type Database = {
         }
         Relationships: []
       }
+      user_subscriptions: {
+        Row: {
+          admin_memo: string | null
+          billing_key: string | null
+          cancel_at_period_end: boolean
+          cancel_reason: string | null
+          canceled_at: string | null
+          created_at: string
+          current_period_end: string
+          current_period_start: string
+          id: string
+          next_billing_at: string | null
+          plan_id: string
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_memo?: string | null
+          billing_key?: string | null
+          cancel_at_period_end?: boolean
+          cancel_reason?: string | null
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          next_billing_at?: string | null
+          plan_id: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_memo?: string | null
+          billing_key?: string | null
+          cancel_at_period_end?: boolean
+          cancel_reason?: string | null
+          canceled_at?: string | null
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          next_billing_at?: string | null
+          plan_id?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_track_progress: {
         Row: {
           completed_at: string | null
@@ -7383,6 +8013,10 @@ export type Database = {
           p_toss_payment_key: string
         }
         Returns: undefined
+      }
+      consume_ebook_download: {
+        Args: { p_entitlement_id: string }
+        Returns: Json
       }
       detect_i18n_drift: { Args: never; Returns: Json }
       evaluate_auto_coupons: {
