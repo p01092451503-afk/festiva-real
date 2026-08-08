@@ -900,6 +900,69 @@ const AdminUsers = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* 일괄 소속 변경 */}
+      <Dialog open={bulkDeptOpen} onOpenChange={setBulkDeptOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><Building2 className="h-4 w-4" /> 소속 일괄 변경</DialogTitle>
+            <DialogDescription>선택한 {selectedIds.length}명의 소속을 한 번에 변경합니다.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label>변경할 소속</Label>
+            <Select value={bulkDeptId} onValueChange={setBulkDeptId}>
+              <SelectTrigger><SelectValue placeholder="소속 선택" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">소속 없음</SelectItem>
+                {departments.map((d: any) => (
+                  <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkDeptOpen(false)}>{t("common.cancel")}</Button>
+            <Button
+              disabled={bulkUpdateMutation.isPending}
+              onClick={() => bulkUpdateMutation.mutate({ department_id: bulkDeptId === "__none__" ? null : bulkDeptId })}
+            >
+              {bulkUpdateMutation.isPending ? t("common.processing") : "변경"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 일괄 상태 변경 */}
+      <Dialog open={bulkStatusOpen} onOpenChange={setBulkStatusOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> 회원 상태 일괄 변경</DialogTitle>
+            <DialogDescription>선택한 {selectedIds.length}명의 회원 상태를 변경합니다.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label>변경할 상태</Label>
+            <Select value={bulkStatus} onValueChange={setBulkStatus}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {MEMBER_STATUS_ORDER.map((s) => (
+                  <SelectItem key={s} value={s}>{memberStatusLabel(s)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkStatusOpen(false)}>{t("common.cancel")}</Button>
+            <Button
+              disabled={bulkUpdateMutation.isPending}
+              onClick={() => bulkUpdateMutation.mutate({ member_status: bulkStatus })}
+            >
+              {bulkUpdateMutation.isPending ? t("common.processing") : "변경"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <BulkMessageDialog open={msgOpen} onOpenChange={setMsgOpen} targets={selectedProfiles as any} />
     </DashboardLayout>
   );
 };
