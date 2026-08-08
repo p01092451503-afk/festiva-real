@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Lock, Camera, ArrowRight, UserCircle, BookOpen, Trophy, Star, TrendingUp, Award, Download, Heart, Receipt, CreditCard, XCircle, Trash2, Eye, Loader2 } from "lucide-react";
+import { User, Lock, Camera, ArrowRight, UserCircle, BookOpen, Trophy, Star, TrendingUp, Award, Download, Heart, Receipt, CreditCard, XCircle, Trash2, Eye, Loader2, Coins, Ticket, RotateCcw } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import AvatarTab from "@/components/mypage/AvatarTab";
+import PointsTab from "@/components/mypage/PointsTab";
+import CouponsTab from "@/components/mypage/CouponsTab";
+import SubscriptionTab from "@/components/mypage/SubscriptionTab";
+import RefundsTab from "@/components/mypage/RefundsTab";
 import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -440,7 +444,7 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
 
         {/* Content */}
         <Tabs defaultValue={defaultTab} className="space-y-6">
-          <TabsList className="bg-secondary/50 rounded-xl p-1">
+          <TabsList className="bg-secondary/50 rounded-xl p-1 flex flex-wrap h-auto justify-start gap-1">
             <TabsTrigger value="profile" className="rounded-lg gap-1.5 text-sm">
               <User className="h-4 w-4" /> {t("mypage.profileTab")}
             </TabsTrigger>
@@ -457,6 +461,18 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
                 </TabsTrigger>
                 <TabsTrigger value="orders" className="rounded-lg gap-1.5 text-sm">
                   <Receipt className="h-4 w-4" /> {t("mypage.ordersTab")}
+                </TabsTrigger>
+                <TabsTrigger value="points" className="rounded-lg gap-1.5 text-sm">
+                  <Coins className="h-4 w-4" /> {t("mypage.pointsTab", "포인트")}
+                </TabsTrigger>
+                <TabsTrigger value="coupons" className="rounded-lg gap-1.5 text-sm">
+                  <Ticket className="h-4 w-4" /> {t("mypage.couponsTab", "쿠폰함")}
+                </TabsTrigger>
+                <TabsTrigger value="subscription" className="rounded-lg gap-1.5 text-sm">
+                  <CreditCard className="h-4 w-4" /> {t("mypage.subscriptionTab", "구독")}
+                </TabsTrigger>
+                <TabsTrigger value="refunds" className="rounded-lg gap-1.5 text-sm">
+                  <RotateCcw className="h-4 w-4" /> {t("mypage.refundsTab", "환불")}
                 </TabsTrigger>
               </>
             )}
@@ -925,6 +941,13 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
               )}
             </div>
           </TabsContent>
+
+          <TabsContent value="points"><PointsTab /></TabsContent>
+          <TabsContent value="coupons"><CouponsTab /></TabsContent>
+          <TabsContent value="subscription"><SubscriptionTab /></TabsContent>
+          <TabsContent value="refunds"><RefundsTab /></TabsContent>
+
+
 
           <TabsContent value="password">
             <div className="max-w-lg space-y-6">

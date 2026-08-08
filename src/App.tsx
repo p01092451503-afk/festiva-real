@@ -241,6 +241,10 @@ const App = () => (
               <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
               <Route path="/my/orders" element={<ProtectedRoute><MyPage defaultTab="orders" /></ProtectedRoute>} />
               <Route path="/my/wishlist" element={<ProtectedRoute><MyPage defaultTab="wishlist" /></ProtectedRoute>} />
+              <Route path="/my/points" element={<ProtectedRoute><MyPage defaultTab="points" /></ProtectedRoute>} />
+              <Route path="/my/coupons" element={<ProtectedRoute><MyPage defaultTab="coupons" /></ProtectedRoute>} />
+              <Route path="/my/subscription" element={<ProtectedRoute><MyPage defaultTab="subscription" /></ProtectedRoute>} />
+              <Route path="/my/refunds" element={<ProtectedRoute><MyPage defaultTab="refunds" /></ProtectedRoute>} />
               <Route path="/student/announcements" element={<ProtectedRoute><StudentAnnouncements /></ProtectedRoute>} />
               <Route path="/student/board" element={<ProtectedRoute><StudentBoard /></ProtectedRoute>} />
               <Route path="/student/community" element={<ProtectedRoute><StudentCommunity /></ProtectedRoute>} />
