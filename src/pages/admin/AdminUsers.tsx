@@ -531,10 +531,10 @@ const AdminUsers = () => {
                 </th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.nameColumn")}</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">연락처</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("admin.departmentColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">회원등급</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.roleColumn")}</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">상태</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("admin.positionColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">가입일</th>
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3"></th>
               </tr>
             </thead>
