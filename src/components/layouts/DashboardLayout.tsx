@@ -610,9 +610,15 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                       }`}
                       aria-expanded={isGroupOpen}
                     >
-                      <span className="flex items-center gap-1.5 min-w-0">
+                      <span className="flex items-center gap-2 min-w-0">
+                        {group.icon && (
+                          <group.icon
+                            className={`h-4 w-4 shrink-0 ${groupHasActive ? "text-foreground" : "text-muted-foreground/70"}`}
+                            aria-hidden="true"
+                          />
+                        )}
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-wide ${
+                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-wide truncate ${
                             groupHasActive
                               ? "bg-foreground/85 text-background"
                               : "bg-muted-foreground/15 text-muted-foreground"
@@ -637,18 +643,22 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                               key={item.href}
                               to={item.href}
                               onClick={() => setSidebarOpen(false)}
-                              className={`nav-item ${isActive ? "nav-item-active" : ""}`}
+                              className={`nav-item min-w-0 ${isActive ? "nav-item-active" : ""}`}
                               aria-current={isActive ? "page" : undefined}
                               {...(item.tourId ? { "data-tour": item.tourId } : {})}
                             >
-                              <item.icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
-                              <span>{item.label}</span>
+                              <item.icon
+                                className={`h-[18px] w-[18px] shrink-0 ${isActive ? "" : "text-muted-foreground/80"}`}
+                                aria-hidden="true"
+                                strokeWidth={1.75}
+                              />
+                              <span className="flex-1 min-w-0 truncate text-left">{item.label}</span>
                               {item.showNew && (
-                                <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold leading-none rounded bg-destructive text-destructive-foreground animate-pulse">
+                                <span className="ml-1.5 shrink-0 px-1.5 py-0.5 text-[10px] font-bold leading-none rounded bg-destructive text-destructive-foreground animate-pulse">
                                   NEW
                                 </span>
                               )}
-                              {isActive && <ChevronRight className="h-3.5 w-3.5 ml-auto" aria-hidden="true" />}
+                              {isActive && <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
                             </Link>
                           );
                         })}
