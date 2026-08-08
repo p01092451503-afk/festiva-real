@@ -105,7 +105,7 @@ const Community = () => {
     if (search.trim()) {
       const s = search.toLowerCase();
       list = list.filter(
-        (p: any) => p.title.toLowerCase().includes(s) || (p.content || "").toLowerCase().includes(s)
+        (p: any) => p.title.toLowerCase().includes(s) || stripHtml(p.content).toLowerCase().includes(s)
       );
     }
     if (sort === "popular") {
@@ -326,7 +326,7 @@ const Community = () => {
                           <span className="text-[11px] text-muted-foreground">· {timeAgo(p.created_at)}</span>
                         </div>
                         <h3 className="font-medium text-foreground truncate">{p.title}</h3>
-                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.content}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{stripHtml(p.content)}</p>
                         <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Eye className="h-3 w-3" />
@@ -369,7 +369,7 @@ const Community = () => {
 
       {/* Composer */}
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>새 글 작성</DialogTitle>
           </DialogHeader>
@@ -456,7 +456,7 @@ const Community = () => {
                 </DialogHeader>
 
                 <div className="space-y-4">
-                  <p className="text-sm text-foreground whitespace-pre-wrap">{selectedPost.content}</p>
+                  <RichTextContent html={selectedPost.content} />
 
                   {selectedPost.image_urls?.length > 0 && (
                     <div className="grid grid-cols-2 gap-2">

@@ -104,7 +104,7 @@ const StudentCommunity = () => {
     let list = rawPosts;
     if (search.trim()) {
       const s = search.toLowerCase();
-      list = list.filter((p: any) => p.title.toLowerCase().includes(s) || (p.content || "").toLowerCase().includes(s));
+      list = list.filter((p: any) => p.title.toLowerCase().includes(s) || stripHtml(p.content).toLowerCase().includes(s));
     }
     if (sort === "popular") {
       list = [...list].sort((a: any, b: any) => {
@@ -348,7 +348,7 @@ const StudentCommunity = () => {
                               <span className="text-[11px] text-muted-foreground">· {timeAgo(p.created_at)}</span>
                             </div>
                             <h3 className="font-medium text-foreground truncate">{p.title}</h3>
-                            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.content}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{stripHtml(p.content)}</p>
                             <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
                               <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{p.view_count}</span>
                               <span className="flex items-center gap-1"><Heart className="h-3 w-3" />{stats.likes[p.id] || 0}</span>
@@ -372,7 +372,7 @@ const StudentCommunity = () => {
 
       {/* 작성 다이얼로그 */}
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader><DialogTitle>새 글 작성</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <Select value={composer.category_id} onValueChange={(v) => setComposer((s) => ({ ...s, category_id: v }))}>
@@ -424,7 +424,7 @@ const StudentCommunity = () => {
                     <span>· {timeAgo(selectedPost.created_at)}</span>
                     <span className="ml-auto flex items-center gap-1"><Eye className="h-3 w-3" />{selectedPost.view_count + 1}</span>
                   </div>
-                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{selectedPost.content}</p>
+                  <RichTextContent html={selectedPost.content} />
                   {(selectedPost.image_urls?.length || 0) > 0 && (
                     <div className="grid grid-cols-2 gap-2">
                       {selectedPost.image_urls.map((u: string, i: number) => (
