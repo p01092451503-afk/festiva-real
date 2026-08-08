@@ -5,6 +5,7 @@ import {
   ArrowLeft, User, Mail, Building2, BookOpen, GraduationCap, Award,
   ClipboardCheck, Layers, Activity, CheckCircle2, XCircle, Clock,
   Pencil, Phone, Cake, Star, ShoppingBag, MousePointerClick,
+  Calendar,
 } from "lucide-react";
 import { formatDistanceToNow, format as fmtDate } from "date-fns";
 import { ko, enUS } from "date-fns/locale";
