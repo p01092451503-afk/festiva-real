@@ -214,7 +214,7 @@ const AdminCheckoutFields = () => {
                             <Button
                               size="icon"
                               variant="ghost"
-                              onClick={() =>
+                              onClick={() => {
                                 setForm({
                                   id: f.id,
                                   course_id: f.course_id || "all",
@@ -224,8 +224,10 @@ const AdminCheckoutFields = () => {
                                   is_required: f.is_required,
                                   order_index: f.order_index,
                                   is_active: f.is_active,
-                                }) || setOpen(true)
-                              }
+                                });
+                                setOpen(true);
+                              }}
+
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
