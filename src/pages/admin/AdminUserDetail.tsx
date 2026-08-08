@@ -430,9 +430,10 @@ const AdminUserDetail = () => {
                 <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" />{(profile as any).phone_number || "-"}</span>
                 <span className="flex items-center gap-1.5"><Cake className="h-3.5 w-3.5" />{(profile as any).birth_date || "-"}</span>
                 <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{GENDER_LABEL[(profile as any).gender || "unknown"]}</span>
-                <span className="flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5" />{deptLabel}</span>
-                {profile.position && <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{profile.position}</span>}
-                {profile.employee_id && <span className="text-xs">ID: {profile.employee_id}</span>}
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {profile.created_at ? new Date(profile.created_at).toLocaleDateString("ko-KR") : "-"} 가입
+                </span>
               </div>
               {(profile as any).admin_memo && (
                 <p className="mt-2 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">{(profile as any).admin_memo}</p>
