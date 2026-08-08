@@ -160,6 +160,12 @@ const AdminDesignManager = () => {
       block_type: blockForm.block_type,
       title: blockForm.title || null,
       subtitle: blockForm.subtitle || null,
+      config: {
+        ...(blockForm.block_type === "cta"
+          ? { cta_text: blockForm.cta_text || null, cta_url: blockForm.cta_url || null }
+          : {}),
+        ...(blockForm.block_type === "custom" ? { html: blockForm.html || null } : {}),
+      },
       is_active: blockForm.is_active,
       display_order: Number(blockForm.display_order) || blocks.length,
     };
