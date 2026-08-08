@@ -4127,13 +4127,19 @@ export type Database = {
         Row: {
           course_id: string | null
           created_at: string
+          enrollment_count: number
           gross_amount: number
           id: string
           instructor_id: string
           memo: string | null
+          order_count: number
           paid_at: string | null
           period_end: string
           period_start: string
+          refund_amount: number
+          reject_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           settle_amount: number
           share_type: string
           share_value: number
@@ -4143,13 +4149,19 @@ export type Database = {
         Insert: {
           course_id?: string | null
           created_at?: string
+          enrollment_count?: number
           gross_amount?: number
           id?: string
           instructor_id: string
           memo?: string | null
+          order_count?: number
           paid_at?: string | null
           period_end: string
           period_start: string
+          refund_amount?: number
+          reject_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           settle_amount?: number
           share_type?: string
           share_value?: number
@@ -4159,13 +4171,19 @@ export type Database = {
         Update: {
           course_id?: string | null
           created_at?: string
+          enrollment_count?: number
           gross_amount?: number
           id?: string
           instructor_id?: string
           memo?: string | null
+          order_count?: number
           paid_at?: string | null
           period_end?: string
           period_start?: string
+          refund_amount?: number
+          reject_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           settle_amount?: number
           share_type?: string
           share_value?: number
