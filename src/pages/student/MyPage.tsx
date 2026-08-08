@@ -444,7 +444,7 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
 
         {/* Content */}
         <Tabs defaultValue={defaultTab} className="space-y-6">
-          <TabsList className="bg-secondary/50 rounded-xl p-1">
+          <TabsList className="bg-secondary/50 rounded-xl p-1 flex flex-wrap h-auto justify-start gap-1">
             <TabsTrigger value="profile" className="rounded-lg gap-1.5 text-sm">
               <User className="h-4 w-4" /> {t("mypage.profileTab")}
             </TabsTrigger>
