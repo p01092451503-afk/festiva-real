@@ -13,10 +13,17 @@ import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
 import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
+import { useMainPageBlocks, type MainPageBlock } from "@/hooks/useMainPageBlocks";
+import SitePopups from "@/components/storefront/SitePopups";
+import DOMPurify from "dompurify";
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
 const CategoryCoursesSection = lazy(() => import("@/components/storefront/CategoryCoursesSection"));
 const SiteFooter = lazy(() => import("@/components/SiteFooter"));
+const HomeReviewsSection = lazy(() => import("@/components/storefront/HomeReviewsSection"));
+const HomeInstructorsSection = lazy(() => import("@/components/storefront/HomeInstructorsSection"));
+const HomeNoticeSection = lazy(() => import("@/components/storefront/HomeNoticeSection"));
+const HomeCtaSection = lazy(() => import("@/components/storefront/HomeCtaSection"));
 
 interface CourseRow {
   id: string;
