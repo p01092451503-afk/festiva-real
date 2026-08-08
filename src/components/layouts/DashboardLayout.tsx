@@ -515,11 +515,13 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       };
     })
     .filter((group) => group.items.length > 0);
-  const filteredNavItems = navItems.filter((item) => {
-    if (!normalizedMenuSearch) return true;
-    if (matchesMenuSearch(item.label)) return true;
-    return item.children?.some((child) => matchesMenuSearch(child.label)) ?? false;
-  });
+  const filteredNavItems = navItems
+    .map((item) => {
+      if (!normalizedMenuSearch || matchesMenuSearch(item.label) || !item.children) return item;
+      const matchingChildren = item.children.filter((child) => matchesMenuSearch(child.label));
+      return matchingChildren.length > 0 ? { ...item, children: matchingChildren } : null;
+    })
+    .filter((item): item is NavItem => item !== null);
 
   // Solid, high-visibility chip
   const roleBadgeClass =
@@ -704,7 +706,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                 );
               })
             ) : (
-              filteredNavItems.map((item) => {
+              filteredNavItems.length > 0 ? filteredNavItems.map((item) => {
               // Inline collapsible group (used by student/teacher communication group)
               if (item.children && item.children.length > 0) {
                 const groupId = `inline-${item.navKey || item.href}`;
@@ -807,9 +809,12 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                   <TooltipContent side="right" className="hidden lg:block">{item.label}</TooltipContent>
                 </Tooltip>
               );
-              })
-            )}
-          </nav>
+               }) : normalizedMenuSearch ? (
+                <p className="px-3 py-6 text-center text-xs text-muted-foreground">
+                  {t("nav.menuSearchEmpty", "검색 결과가 없습니다.")}
+                </p>
+              ) : null}
+           </nav>
         </TooltipProvider>
 
         <div className={`border-t border-sidebar-border ${collapsed ? "lg:p-2 p-4" : "p-4"}`}>
