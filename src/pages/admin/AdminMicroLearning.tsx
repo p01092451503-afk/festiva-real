@@ -264,11 +264,19 @@ const AdminMicroLearning = () => {
             <Zap className="h-5 w-5" /> 마이크로러닝
           </h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            1~3분 숏폼 학습 콘텐츠를 등록하고 시청 현황을 확인합니다.
+            숏폼 콘텐츠를 등록하고, 학습자에게 배정한 뒤 완료율까지 관리합니다.
           </p>
         </div>
 
+        <Tabs defaultValue="contents">
+          <TabsList>
+            <TabsTrigger value="contents">콘텐츠</TabsTrigger>
+            <TabsTrigger value="progress">배정·수강 진도</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="contents" className="space-y-4 pt-4">
         <div className="flex flex-wrap gap-2 items-center justify-between">
+
           <Input
             placeholder="제목·카테고리 검색"
             value={keyword}
