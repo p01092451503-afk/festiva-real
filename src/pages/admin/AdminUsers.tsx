@@ -1,22 +1,31 @@
-import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet } from "lucide-react";
+import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet, Download, Send, Building2, ShieldCheck } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import StaffEditDialog, { type StaffEditDraft, type StaffRole } from "@/components/admin/StaffEditDialog";
 import BulkStaffUploadDialog from "@/components/admin/BulkStaffUploadDialog";
+import BulkMessageDialog from "@/components/admin/BulkMessageDialog";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
 import { useUser } from "@/contexts/UserContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { downloadCsv, todayStamp } from "@/lib/exportCsv";
+import {
+  MEMBER_STATUS_ORDER,
+  memberStatusClass,
+  memberStatusLabel,
+  GENDER_LABEL,
+} from "@/lib/statusMeta";
 
 const ROLE_PRIORITY = ["super_admin", "admin", "teacher", "student"] as const;
 
@@ -24,6 +33,14 @@ const AdminUsers = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [deptFilter, setDeptFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [msgOpen, setMsgOpen] = useState(false);
+  const [bulkDeptOpen, setBulkDeptOpen] = useState(false);
+  const [bulkStatusOpen, setBulkStatusOpen] = useState(false);
+  const [bulkDeptId, setBulkDeptId] = useState("__none__");
+  const [bulkStatus, setBulkStatus] = useState("active");
   const [addOpen, setAddOpen] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ userId: string; name: string } | null>(null);
@@ -168,20 +185,88 @@ const AdminUsers = () => {
 
   const filtered = profiles.filter((profile: any) => {
     const q = search.toLowerCase().trim();
+    const digits = q.replace(/[^0-9]/g, "");
+    const phoneDigits = (profile.phone_number || "").replace(/[^0-9]/g, "");
     const searchableValues = [
       profile.full_name || "",
       profile.email || "",
       profile.department || "",
       profile.position || "",
+      profile.employee_id || "",
+      profile.phone_number || "",
+      profile.birth_date || "",
+      profile.admin_memo || "",
+      memberStatusLabel(profile.member_status),
+      GENDER_LABEL[profile.gender] || "",
+      (rolesByUser.get(profile.user_id) ?? []).join(" "),
       getDeptName(profile.department_id),
     ];
 
-    const matchesSearch = !q || searchableValues.some((value) => value.toLowerCase().includes(q));
+    const matchesSearch =
+      !q ||
+      searchableValues.some((value) => String(value).toLowerCase().includes(q)) ||
+      (digits.length >= 2 && phoneDigits.includes(digits));
     const matchesDept = deptFilter === "all" || profile.department_id === deptFilter;
-    return matchesSearch && matchesDept;
+    const matchesStatus = statusFilter === "all" || (profile.member_status || "active") === statusFilter;
+    const matchesRole =
+      roleFilter === "all" || (rolesByUser.get(profile.user_id) ?? []).includes(roleFilter as StaffRole);
+    return matchesSearch && matchesDept && matchesStatus && matchesRole;
   });
 
   const teacherCount = profiles.filter((profile: any) => getPrimaryRole(profile.user_id) === "teacher").length;
+  const activeCount = profiles.filter((p: any) => (p.member_status || "active") === "active").length;
+
+  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const selectedProfiles = useMemo(
+    () => profiles.filter((p: any) => selectedSet.has(p.user_id)),
+    [profiles, selectedSet],
+  );
+  const allFilteredSelected = filtered.length > 0 && filtered.every((p: any) => selectedSet.has(p.user_id));
+
+  const toggleOne = (userId: string, on: boolean) =>
+    setSelectedIds((prev) => (on ? [...new Set([...prev, userId])] : prev.filter((id) => id !== userId)));
+
+  const toggleAllFiltered = (on: boolean) =>
+    setSelectedIds((prev) =>
+      on
+        ? [...new Set([...prev, ...filtered.map((p: any) => p.user_id)])]
+        : prev.filter((id) => !filtered.some((p: any) => p.user_id === id)),
+    );
+
+  const bulkUpdateMutation = useMutation({
+    mutationFn: async (patch: { department_id?: string | null; member_status?: string }) => {
+      const { error } = await supabase.from("profiles").update(patch).in("user_id", selectedIds);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(`${selectedIds.length}명 일괄 변경 완료`);
+      queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
+      setBulkDeptOpen(false);
+      setBulkStatusOpen(false);
+      setSelectedIds([]);
+    },
+    onError: (err: any) => toast.error(err?.message || "일괄 변경에 실패했습니다."),
+  });
+
+  const exportMembers = () => {
+    const rows = (selectedIds.length > 0 ? selectedProfiles : filtered) as any[];
+    downloadCsv(`회원목록_${todayStamp()}`, rows, [
+      { header: "이름", value: (r) => r.full_name },
+      { header: "이메일", value: (r) => r.email },
+      { header: "전화번호", value: (r) => r.phone_number },
+      { header: "생년월일", value: (r) => r.birth_date },
+      { header: "성별", value: (r) => GENDER_LABEL[r.gender] || "" },
+      { header: "회원상태", value: (r) => memberStatusLabel(r.member_status) },
+      { header: "역할", value: (r) => (rolesByUser.get(r.user_id) ?? []).join("/") },
+      { header: "소속", value: (r) => getDeptName(r.department_id) },
+      { header: "직책", value: (r) => r.position },
+      { header: "사번", value: (r) => r.employee_id },
+      { header: "가입일", value: (r) => (r.created_at ? new Date(r.created_at).toLocaleDateString("ko-KR") : "") },
+      { header: "최근접속", value: (r) => (r.last_login_at ? new Date(r.last_login_at).toLocaleString("ko-KR") : "") },
+      { header: "관리자메모", value: (r) => r.admin_memo },
+    ]);
+    toast.success(`${rows.length}명 엑셀(CSV) 다운로드`);
+  };
 
   const openStaffEdit = (profile: any) => {
     const primaryRole = getPrimaryRole(profile.user_id);
@@ -317,6 +402,9 @@ const AdminUsers = () => {
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">{t("admin.userManagementDesc")}</p>
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" className="rounded-xl gap-2 flex-1 sm:flex-none" onClick={exportMembers}>
+              <Download className="h-4 w-4" /> 엑셀 다운로드
+            </Button>
             <Button variant="outline" className="rounded-xl gap-2 flex-1 sm:flex-none" onClick={() => setBulkOpen(true)}>
               <FileSpreadsheet className="h-4 w-4" /> 대량 추가
             </Button>
@@ -340,12 +428,12 @@ const AdminUsers = () => {
           />
           <RichStatCard
             label={t("admin.activeUsers")}
-            value={profiles.length}
+            value={activeCount}
             sub={isEn ? "Active accounts" : "활성 계정"}
             icon={UserCheck}
             tone="emerald"
             visual="ring"
-            ringValue={100}
+            ringValue={profiles.length ? Math.round((activeCount / profiles.length) * 100) : 0}
           />
           {teacherRoleEnabled && (
             <RichStatCard
@@ -361,11 +449,16 @@ const AdminUsers = () => {
           )}
         </div>
 
-        {/* Search + Dept Filter */}
+        {/* Search + Filters */}
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder={t("admin.searchUser")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 h-10 rounded-xl border-border" />
+            <Input
+              placeholder="이름·이메일·전화번호 뒷자리·사번·소속·메모 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl border-border"
+            />
           </div>
           <Select value={deptFilter} onValueChange={setDeptFilter}>
             <SelectTrigger className="w-28 sm:w-40 rounded-xl">
@@ -378,16 +471,70 @@ const AdminUsers = () => {
               ))}
             </SelectContent>
           </Select>
+          <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <SelectTrigger className="w-24 sm:w-32 rounded-xl">
+              <SelectValue placeholder="등급" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체 등급</SelectItem>
+              {ROLE_PRIORITY.map((r) => (
+                <SelectItem key={r} value={r}>{roleLabel[r].text}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-24 sm:w-32 rounded-xl">
+              <SelectValue placeholder="상태" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">전체 상태</SelectItem>
+              {MEMBER_STATUS_ORDER.map((s) => (
+                <SelectItem key={s} value={s}>{memberStatusLabel(s)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
+
+        {/* Bulk action bar */}
+        {selectedIds.length > 0 && (
+          <div className="stat-card !p-3 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-foreground">{selectedIds.length}명 선택됨</span>
+            <span className="flex-1" />
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkDeptOpen(true)}>
+              <Building2 className="h-3.5 w-3.5" /> 소속 변경
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkStatusOpen(true)}>
+              <ShieldCheck className="h-3.5 w-3.5" /> 상태 변경
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setMsgOpen(true)}>
+              <Send className="h-3.5 w-3.5" /> 메일/알림톡 발송
+            </Button>
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={exportMembers}>
+              <Download className="h-3.5 w-3.5" /> 선택 다운로드
+            </Button>
+            <Button size="sm" variant="ghost" className="rounded-xl" onClick={() => setSelectedIds([])}>
+              선택 해제
+            </Button>
+          </div>
+        )}
 
         {/* User Table - Desktop */}
         <div className="stat-card !p-0 overflow-x-auto hidden md:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
+                <th className="px-4 py-3 w-10">
+                  <Checkbox
+                    checked={allFilteredSelected}
+                    onCheckedChange={(v) => toggleAllFiltered(v === true)}
+                    aria-label="전체 선택"
+                  />
+                </th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.nameColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">연락처</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("admin.departmentColumn")}</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.roleColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">상태</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("admin.positionColumn")}</th>
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3"></th>
               </tr>
@@ -403,7 +550,14 @@ const AdminUsers = () => {
                     : null;
 
                 return (
-                  <tr key={profile.user_id} className="hover:bg-accent/30 transition-colors">
+                  <tr key={profile.user_id} className={`transition-colors ${selectedSet.has(profile.user_id) ? "bg-accent/40" : "hover:bg-accent/30"}`}>
+                    <td className="px-4 py-3">
+                      <Checkbox
+                        checked={selectedSet.has(profile.user_id)}
+                        onCheckedChange={(v) => toggleOne(profile.user_id, v === true)}
+                        aria-label={`${profile.full_name || "회원"} 선택`}
+                      />
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center text-xs font-semibold text-accent-foreground shrink-0">
@@ -415,11 +569,19 @@ const AdminUsers = () => {
                         </div>
                       </div>
                     </td>
+                    <td className="px-4 py-3 hidden lg:table-cell">
+                      <span className="text-sm text-muted-foreground">{profile.phone_number || "-"}</span>
+                    </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
                       <span className="text-sm text-muted-foreground">{getDeptName(profile.department_id)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-block whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-block whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full border ${memberStatusClass(profile.member_status)}`}>
+                        {memberStatusLabel(profile.member_status)}
+                      </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <span className="text-sm text-muted-foreground">{profile.position || "-"}</span>
@@ -476,7 +638,7 @@ const AdminUsers = () => {
                 );
               })}
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</td></tr>
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</td></tr>
               )}
             </tbody>
           </table>
@@ -497,6 +659,12 @@ const AdminUsers = () => {
             return (
               <div key={profile.user_id} className="stat-card !p-3">
                 <div className="flex items-start gap-3">
+                  <Checkbox
+                    className="mt-1"
+                    checked={selectedSet.has(profile.user_id)}
+                    onCheckedChange={(v) => toggleOne(profile.user_id, v === true)}
+                    aria-label={`${profile.full_name || "회원"} 선택`}
+                  />
                   <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center text-sm font-semibold text-accent-foreground shrink-0">
                     {(profile.full_name || "?").slice(0, 1)}
                   </div>
@@ -505,8 +673,16 @@ const AdminUsers = () => {
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-semibold text-foreground truncate">{profile.full_name || "-"}</p>
                         <p className="text-xs text-muted-foreground truncate">{profile.email || profile.employee_id || "-"}</p>
+                        {profile.phone_number && (
+                          <p className="text-xs text-muted-foreground truncate">{profile.phone_number}</p>
+                        )}
                       </div>
-                      <span className={`shrink-0 whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className={`shrink-0 whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
+                        <span className={`shrink-0 whitespace-nowrap text-[10px] font-medium px-2 py-0.5 rounded-full border ${memberStatusClass(profile.member_status)}`}>
+                          {memberStatusLabel(profile.member_status)}
+                        </span>
+                      </div>
                     </div>
                     {(deptName !== "-" || profile.position) && (
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
@@ -724,6 +900,69 @@ const AdminUsers = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* 일괄 소속 변경 */}
+      <Dialog open={bulkDeptOpen} onOpenChange={setBulkDeptOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><Building2 className="h-4 w-4" /> 소속 일괄 변경</DialogTitle>
+            <DialogDescription>선택한 {selectedIds.length}명의 소속을 한 번에 변경합니다.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label>변경할 소속</Label>
+            <Select value={bulkDeptId} onValueChange={setBulkDeptId}>
+              <SelectTrigger><SelectValue placeholder="소속 선택" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">소속 없음</SelectItem>
+                {departments.map((d: any) => (
+                  <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkDeptOpen(false)}>{t("common.cancel")}</Button>
+            <Button
+              disabled={bulkUpdateMutation.isPending}
+              onClick={() => bulkUpdateMutation.mutate({ department_id: bulkDeptId === "__none__" ? null : bulkDeptId })}
+            >
+              {bulkUpdateMutation.isPending ? t("common.processing") : "변경"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 일괄 상태 변경 */}
+      <Dialog open={bulkStatusOpen} onOpenChange={setBulkStatusOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> 회원 상태 일괄 변경</DialogTitle>
+            <DialogDescription>선택한 {selectedIds.length}명의 회원 상태를 변경합니다.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label>변경할 상태</Label>
+            <Select value={bulkStatus} onValueChange={setBulkStatus}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {MEMBER_STATUS_ORDER.map((s) => (
+                  <SelectItem key={s} value={s}>{memberStatusLabel(s)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkStatusOpen(false)}>{t("common.cancel")}</Button>
+            <Button
+              disabled={bulkUpdateMutation.isPending}
+              onClick={() => bulkUpdateMutation.mutate({ member_status: bulkStatus })}
+            >
+              {bulkUpdateMutation.isPending ? t("common.processing") : "변경"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <BulkMessageDialog open={msgOpen} onOpenChange={setMsgOpen} targets={selectedProfiles as any} />
     </DashboardLayout>
   );
 };

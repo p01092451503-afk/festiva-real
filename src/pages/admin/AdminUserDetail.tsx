@@ -1,23 +1,32 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft, User, Mail, Building2, BookOpen, GraduationCap, Award,
   ClipboardCheck, Layers, Activity, CheckCircle2, XCircle, Clock,
+  Pencil, Phone, Cake, Star, ShoppingBag, MousePointerClick,
 } from "lucide-react";
 import { formatDistanceToNow, format as fmtDate } from "date-fns";
 import { ko, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
+import { MEMBER_STATUS_ORDER, memberStatusClass, memberStatusLabel, GENDER_LABEL } from "@/lib/statusMeta";
 
 const AdminUserDetail = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { i18n } = useTranslation();
   const isEn = i18n.language?.startsWith("en");
   const locale = isEn ? enUS : ko;
@@ -28,7 +37,7 @@ const AdminUserDetail = () => {
       if (!userId) return null;
       const { data, error } = await supabase
         .from("profiles")
-        .select("user_id, full_name, email, employee_id, position, department_id, created_at, avatar_url")
+        .select("user_id, full_name, email, employee_id, position, department_id, created_at, avatar_url, phone_number, birth_date, gender, member_status, admin_memo, last_login_at")
         .eq("user_id", userId)
         .maybeSingle();
       if (error) throw error;
@@ -36,6 +45,100 @@ const AdminUserDetail = () => {
     },
     enabled: !!userId,
   });
+
+  // ---- Inline edit of member info ----
+  const [editOpen, setEditOpen] = useState(false);
+  const [form, setForm] = useState({
+    full_name: "", phone_number: "", birth_date: "", gender: "unknown",
+    position: "", member_status: "active", admin_memo: "",
+  });
+
+  useEffect(() => {
+    if (!profile) return;
+    setForm({
+      full_name: profile.full_name || "",
+      phone_number: (profile as any).phone_number || "",
+      birth_date: (profile as any).birth_date || "",
+      gender: (profile as any).gender || "unknown",
+      position: profile.position || "",
+      member_status: (profile as any).member_status || "active",
+      admin_memo: (profile as any).admin_memo || "",
+    });
+  }, [profile]);
+
+  const saveProfile = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          full_name: form.full_name || null,
+          phone_number: form.phone_number || null,
+          birth_date: form.birth_date || null,
+          gender: form.gender,
+          position: form.position || null,
+          member_status: form.member_status,
+          admin_memo: form.admin_memo || null,
+        } as any)
+        .eq("user_id", userId!);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(isEn ? "Saved" : "저장되었습니다");
+      setEditOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["admin-user-detail-profile", userId] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  // ---- Unified activity data ----
+  const { data: accessLogs = [] } = useQuery({
+    queryKey: ["admin-user-detail-access", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("traffic_logs")
+        .select("id, path, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: userReviews = [] } = useQuery({
+    queryKey: ["admin-user-detail-reviews", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("id, course_id, rating, comment, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: userOrders = [] } = useQuery({
+    queryKey: ["admin-user-detail-orders", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("orders")
+        .select("id, order_number, status, total_amount, coupon_code, discount_amount, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
 
   const { data: roles = [] } = useQuery({
     queryKey: ["admin-user-detail-roles", userId],
@@ -318,15 +421,28 @@ const AdminUserDetail = () => {
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl sm:text-2xl font-semibold text-foreground">{profile.full_name || "-"}</h1>
                 <Badge variant="outline" className="text-[10px]">{roleLabel[primaryRole]}</Badge>
+                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${memberStatusClass((profile as any).member_status)}`}>
+                  {memberStatusLabel((profile as any).member_status)}
+                </span>
               </div>
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" />{profile.email || "-"}</span>
+                <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" />{(profile as any).phone_number || "-"}</span>
+                <span className="flex items-center gap-1.5"><Cake className="h-3.5 w-3.5" />{(profile as any).birth_date || "-"}</span>
+                <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{GENDER_LABEL[(profile as any).gender || "unknown"]}</span>
                 <span className="flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5" />{deptLabel}</span>
                 {profile.position && <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{profile.position}</span>}
                 {profile.employee_id && <span className="text-xs">ID: {profile.employee_id}</span>}
               </div>
+              {(profile as any).admin_memo && (
+                <p className="mt-2 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">{(profile as any).admin_memo}</p>
+              )}
             </div>
+            <Button variant="outline" size="sm" className="rounded-xl gap-1.5 shrink-0" onClick={() => setEditOpen(true)}>
+              <Pencil className="h-3.5 w-3.5" />{isEn ? "Edit info" : "회원정보 수정"}
+            </Button>
           </div>
+
 
           {/* KPI grid */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-5">
@@ -639,8 +755,147 @@ const AdminUserDetail = () => {
             </ol>
           )}
         </div>
+
+        {/* Unified activity: access / reviews / orders & coupons */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <MousePointerClick className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Recent access" : "최근 접속"}
+            </h2>
+            {accessLogs.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No records." : "기록이 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {accessLogs.map((l: any) => (
+                  <li key={l.id} className="flex items-center justify-between gap-2 border-b-2 border-border/80 pb-2 last:border-0">
+                    <span className="text-xs text-foreground truncate">{l.path}</span>
+                    <span className="text-[11px] text-muted-foreground shrink-0">
+                      {fmtDate(new Date(l.created_at), "MM.dd HH:mm")}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <Star className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Reviews" : "작성 후기"} ({userReviews.length})
+            </h2>
+            {userReviews.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No reviews." : "작성한 후기가 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {userReviews.map((r: any) => (
+                  <li key={r.id} className="border-b-2 border-border/80 pb-2 last:border-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-foreground truncate">
+                        {(courseMap.get(r.course_id) as any)?.title || "-"}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground shrink-0">★ {r.rating}</span>
+                    </div>
+                    {r.comment && <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{r.comment}</p>}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Orders & coupons" : "구매 · 쿠폰"} ({userOrders.length})
+            </h2>
+            {userOrders.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No orders." : "구매 내역이 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {userOrders.map((o: any) => (
+                  <li key={o.id} className="border-b-2 border-border/80 pb-2 last:border-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-foreground truncate">{o.order_number}</span>
+                      <Badge variant="outline" className="text-[10px] shrink-0">{o.status}</Badge>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {Number(o.total_amount || 0).toLocaleString()}원
+                      {o.coupon_code ? ` · ${o.coupon_code} (-${Number(o.discount_amount || 0).toLocaleString()}원)` : ""}
+                      {" · "}{fmtDate(new Date(o.created_at), "yyyy.MM.dd")}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Edit member info */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{isEn ? "Edit member info" : "회원정보 수정"}</DialogTitle>
+            <DialogDescription>{isEn ? "Update contact and status details." : "연락처와 상태 정보를 수정합니다."}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label>{isEn ? "Name" : "이름"}</Label>
+              <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Phone" : "전화번호"}</Label>
+                <Input value={form.phone_number} onChange={(e) => setForm({ ...form, phone_number: e.target.value })} placeholder="010-0000-0000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Birth date" : "생년월일"}</Label>
+                <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Gender" : "성별"}</Label>
+                <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(GENDER_LABEL).map(([v, label]) => (
+                      <SelectItem key={v} value={v}>{label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Status" : "회원 상태"}</Label>
+                <Select value={form.member_status} onValueChange={(v) => setForm({ ...form, member_status: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {MEMBER_STATUS_ORDER.map((s) => (
+                      <SelectItem key={s} value={s}>{memberStatusLabel(s)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>{isEn ? "Position" : "직책"}</Label>
+              <Input value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>{isEn ? "Admin memo" : "관리자 메모"}</Label>
+              <Textarea rows={3} value={form.admin_memo} onChange={(e) => setForm({ ...form, admin_memo: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>{isEn ? "Cancel" : "취소"}</Button>
+            <Button onClick={() => saveProfile.mutate()} disabled={saveProfile.isPending}>
+              {saveProfile.isPending ? (isEn ? "Saving..." : "저장 중...") : (isEn ? "Save" : "저장")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
+
   );
 };
 
