@@ -1,4 +1,4 @@
-import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet, Download, Send, ShieldCheck } from "lucide-react";
+import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet, Download, Send, ShieldCheck, UserCog } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -500,7 +500,7 @@ const AdminUsers = () => {
             <span className="text-sm font-medium text-foreground">{selectedIds.length}명 선택됨</span>
             <span className="flex-1" />
             <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkGradeOpen(true)}>
-              <BadgeCheck className="h-3.5 w-3.5" /> 회원등급 변경
+              <UserCog className="h-3.5 w-3.5" /> 회원등급 변경
             </Button>
             <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkStatusOpen(true)}>
               <ShieldCheck className="h-3.5 w-3.5" /> 상태 변경
@@ -603,7 +603,7 @@ const AdminUsers = () => {
                           variant="outline"
                           size="sm"
                           className="h-8 rounded-full gap-1.5 px-3"
-                          onClick={() => openStaffEdit(profile)}
+                          onClick={() => openMemberEdit(profile)}
                         >
                           <Pencil className="h-3.5 w-3.5" />
                           <span className="hidden sm:inline">{t("common.edit")}</span>
@@ -709,7 +709,7 @@ const AdminUsers = () => {
                         className="h-8 w-8 rounded-full"
                         title={t("common.edit")}
                         aria-label={t("common.edit")}
-                        onClick={() => openStaffEdit(profile)}
+                        onClick={() => openMemberEdit(profile)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
