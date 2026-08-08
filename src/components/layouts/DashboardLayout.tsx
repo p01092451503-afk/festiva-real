@@ -5,7 +5,7 @@ import {
   LayoutDashboard, BookOpen, ClipboardList, Trophy, Users, Settings, Compass, UserCircle, ClipboardCheck, Library,
   LogOut, Menu, X, ChevronRight, GraduationCap, CalendarCheck, Activity, Building2, Bell, Megaphone, FileText, BarChart3, Video,
   CreditCard, ImageIcon, Palette, Layers, Globe2, PanelLeftClose, PanelLeftOpen, NotebookPen, ChevronDown, Languages, BookText,
-  Info, ShieldCheck, Sparkles, Newspaper,
+  Info, ShieldCheck, Sparkles, Newspaper, Film, SlidersHorizontal, CalendarClock,
   Users2,
   Rss,
   KeyRound,
