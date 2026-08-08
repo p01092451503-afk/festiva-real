@@ -255,6 +255,7 @@ const App = () => (
               <Route path="/community/posts/:postId" element={<ProtectedRoute><CommunityPostDetail /></ProtectedRoute>} />
               <Route path="/student/tracks" element={<Navigate to="/dashboard/courses?tab=tracks" replace />} />
               <Route path="/student/notes" element={<ProtectedRoute><StudentNotes /></ProtectedRoute>} />
+              <Route path="/student/micro-learning" element={<ProtectedRoute><StudentMicroLearning /></ProtectedRoute>} />
               <Route path="/articles" element={<ProtectedRoute><StudentArticles /></ProtectedRoute>} />
               <Route path="/articles/:id" element={<ProtectedRoute><StudentArticleDetail /></ProtectedRoute>} />
               <Route path="/student/programs" element={<ProtectedRoute><StudentPrograms /></ProtectedRoute>} />
