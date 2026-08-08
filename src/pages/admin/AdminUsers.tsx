@@ -452,20 +452,21 @@ const AdminUsers = () => {
           <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="이름·이메일·전화번호 뒷자리·사번·소속·메모 검색"
+              placeholder="이름·이메일·휴대폰 뒷자리·생년월일·메모 검색"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9 h-10 rounded-xl border-border"
             />
           </div>
-          <Select value={deptFilter} onValueChange={setDeptFilter}>
+          <Select value={gradeFilter} onValueChange={setGradeFilter}>
             <SelectTrigger className="w-28 sm:w-40 rounded-xl">
-              <SelectValue placeholder={t("admin.allDepts")} />
+              <SelectValue placeholder="회원등급" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("admin.allDepts")}</SelectItem>
-              {departments.map((d: any) => (
-                <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
+              <SelectItem value="all">전체 회원등급</SelectItem>
+              <SelectItem value="__none__">등급 없음</SelectItem>
+              {grades.map((g) => (
+                <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
