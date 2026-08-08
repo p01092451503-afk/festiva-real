@@ -786,34 +786,40 @@ export type Database = {
       }
       auto_coupon_rules: {
         Row: {
+          condition_value: number
           coupon_id: string | null
           created_at: string
           id: string
           is_active: boolean
           issued_count: number
           name: string
+          once_per_user: boolean
           trigger_type: string
           updated_at: string
           valid_days: number
         }
         Insert: {
+          condition_value?: number
           coupon_id?: string | null
           created_at?: string
           id?: string
           is_active?: boolean
           issued_count?: number
           name: string
+          once_per_user?: boolean
           trigger_type?: string
           updated_at?: string
           valid_days?: number
         }
         Update: {
+          condition_value?: number
           coupon_id?: string | null
           created_at?: string
           id?: string
           is_active?: boolean
           issued_count?: number
           name?: string
+          once_per_user?: boolean
           trigger_type?: string
           updated_at?: string
           valid_days?: number
@@ -5355,24 +5361,36 @@ export type Database = {
           action_type: string
           created_at: string | null
           description: string | null
+          expired_at: string | null
+          expires_at: string | null
           id: string
           points: number
+          ref_id: string | null
+          ref_type: string | null
           user_id: string
         }
         Insert: {
           action_type: string
           created_at?: string | null
           description?: string | null
+          expired_at?: string | null
+          expires_at?: string | null
           id?: string
           points: number
+          ref_id?: string | null
+          ref_type?: string | null
           user_id: string
         }
         Update: {
           action_type?: string
           created_at?: string | null
           description?: string | null
+          expired_at?: string | null
+          expires_at?: string | null
           id?: string
           points?: number
+          ref_id?: string | null
+          ref_type?: string | null
           user_id?: string
         }
         Relationships: []
@@ -6791,6 +6809,63 @@ export type Database = {
           },
         ]
       }
+      user_coupons: {
+        Row: {
+          coupon_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          issued_at: string
+          order_id: string | null
+          rule_id: string | null
+          status: string
+          updated_at: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          coupon_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          issued_at?: string
+          order_id?: string | null
+          rule_id?: string | null
+          status?: string
+          updated_at?: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          coupon_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          issued_at?: string
+          order_id?: string | null
+          rule_id?: string | null
+          status?: string
+          updated_at?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_coupons_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_coupons_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "auto_coupon_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_department_roles: {
         Row: {
           created_at: string | null
@@ -7214,6 +7289,11 @@ export type Database = {
         Returns: undefined
       }
       detect_i18n_drift: { Args: never; Returns: Json }
+      evaluate_auto_coupons: {
+        Args: { _trigger: string; _user_id: string }
+        Returns: number
+      }
+      expire_points_and_coupons: { Args: never; Returns: Json }
       export_i18n_rows: {
         Args: { p_content_type: string }
         Returns: {
@@ -7341,6 +7421,16 @@ export type Database = {
         Returns: string[]
       }
       get_user_branch_id: { Args: { _user_id: string }; Returns: string }
+      grant_points_by_policy: {
+        Args: {
+          _action_type: string
+          _base_amount?: number
+          _ref_id?: string
+          _ref_type?: string
+          _user_id: string
+        }
+        Returns: number
+      }
       has_branch_capability: {
         Args: { _branch_id: string; _capability: string; _user_id: string }
         Returns: boolean
@@ -7375,6 +7465,10 @@ export type Database = {
       is_video_session_participant: {
         Args: { _session_id: string; _user_id: string }
         Returns: boolean
+      }
+      issue_auto_coupon: {
+        Args: { _rule_id: string; _user_id: string }
+        Returns: string
       }
       publish_scheduled_articles: { Args: never; Returns: number }
       recommend_articles: {
@@ -7432,11 +7526,25 @@ export type Database = {
         }
         Returns: Json
       }
+      spend_points: {
+        Args: {
+          _description?: string
+          _points: number
+          _ref_id?: string
+          _ref_type?: string
+          _user_id: string
+        }
+        Returns: number
+      }
       submit_and_grade_assessment: {
         Args: { p_answers: Json; p_attempt_id: string }
         Returns: Json
       }
       update_streak: { Args: { p_user_id: string }; Returns: undefined }
+      use_user_coupon: {
+        Args: { _order_id?: string; _user_coupon_id: string }
+        Returns: boolean
+      }
       user_has_any_branch_capability: {
         Args: { _capability: string; _user_id: string }
         Returns: boolean
