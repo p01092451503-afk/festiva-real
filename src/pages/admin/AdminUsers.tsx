@@ -234,7 +234,7 @@ const AdminUsers = () => {
     );
 
   const bulkUpdateMutation = useMutation({
-    mutationFn: async (patch: Record<string, any>) => {
+    mutationFn: async (patch: { department_id?: string | null; member_status?: string }) => {
       const { error } = await supabase.from("profiles").update(patch).in("user_id", selectedIds);
       if (error) throw error;
     },
