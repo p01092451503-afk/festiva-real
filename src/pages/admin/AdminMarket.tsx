@@ -173,6 +173,82 @@ const AdminMarket = () => {
     qc.invalidateQueries({ queryKey: ["market-products"] });
   };
 
+  /** 목록에서 바로 가격·재고를 수정 */
+  const inlineOf = (p: any) =>
+    inline[p.id] ?? {
+      price: String(p.price ?? 0),
+      sale_price: p.sale_price === null || p.sale_price === undefined ? "" : String(p.sale_price),
+      stock: String(p.stock_quantity ?? 0),
+    };
+
+  const setInlineField = (p: any, key: "price" | "sale_price" | "stock", value: string) =>
+    setInline((prev) => ({ ...prev, [p.id]: { ...inlineOf(p), [key]: value } }));
+
+  const saveInline = async (p: any) => {
+    const v = inlineOf(p);
+    setSavingId(p.id);
+    const patch: any = {
+      price: Number(v.price) || 0,
+      sale_price: v.sale_price === "" ? null : Number(v.sale_price),
+    };
+    if (p.product_type !== "ebook") patch.stock_quantity = Number(v.stock) || 0;
+    const { error } = await supabase.from("store_products").update(patch).eq("id", p.id);
+    setSavingId(null);
+    if (error) return toast.error(error.message);
+    toast.success("반영되었습니다");
+    setInline((prev) => {
+      const next = { ...prev };
+      delete next[p.id];
+      return next;
+    });
+    qc.invalidateQueries({ queryKey: ["market-products"] });
+  };
+
+  const adjustStock = async (p: any, delta: number) => {
+    const next = Math.max(0, (p.stock_quantity ?? 0) + delta);
+    const { error } = await supabase.from("store_products").update({ stock_quantity: next }).eq("id", p.id);
+    if (error) return toast.error(error.message);
+    setInline((prev) => {
+      const c = { ...prev };
+      delete c[p.id];
+      return c;
+    });
+    qc.invalidateQueries({ queryKey: ["market-products"] });
+  };
+
+  const toggleActive = async (p: any) => {
+    const { error } = await supabase.from("store_products").update({ is_active: !p.is_active }).eq("id", p.id);
+    if (error) return toast.error(error.message);
+    qc.invalidateQueries({ queryKey: ["market-products"] });
+  };
+
+  /** 주문(배송) 상태를 한 번에 변경 */
+  const changeShipStatus = async (s: any, status: string) => {
+    const patch: any = { status };
+    if (status === "shipped" && !s.shipped_at) patch.shipped_at = new Date().toISOString();
+    if (status === "delivered") {
+      if (!s.shipped_at) patch.shipped_at = new Date().toISOString();
+      if (!s.delivered_at) patch.delivered_at = new Date().toISOString();
+    }
+    const { error } = await supabase.from("product_shipments").update(patch).eq("id", s.id);
+    if (error) return toast.error(error.message);
+    toast.success(`${SHIP_STATUS[status]} 처리되었습니다`);
+    qc.invalidateQueries({ queryKey: ["product-shipments"] });
+  };
+
+  const bulkStatus = async (status: string) => {
+    if (selectedShipIds.length === 0) return toast.error("주문을 선택하세요");
+    const patch: any = { status };
+    if (status === "shipped") patch.shipped_at = new Date().toISOString();
+    if (status === "delivered") patch.delivered_at = new Date().toISOString();
+    const { error } = await supabase.from("product_shipments").update(patch).in("id", selectedShipIds);
+    if (error) return toast.error(error.message);
+    toast.success(`${selectedShipIds.length}건을 ${SHIP_STATUS[status]} 처리했습니다`);
+    setSelectedShipIds([]);
+    qc.invalidateQueries({ queryKey: ["product-shipments"] });
+  };
+
+
   const addCategory = async () => {
     if (!catName.trim()) return;
     const { error } = await supabase.from("product_categories").insert({ name: catName.trim() });
