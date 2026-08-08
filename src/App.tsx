@@ -209,6 +209,9 @@ const App = () => (
               <Route path="/store" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/store/courses" element={<StorefrontGate><StorefrontCatalog /></StorefrontGate>} />
               <Route path="/store/courses/:courseId" element={<StorefrontGate><StorefrontCourseDetail /></StorefrontGate>} />
+              <Route path="/store/books" element={<StorefrontGate><StorefrontBooks /></StorefrontGate>} />
+              <Route path="/store/subscriptions" element={<StorefrontGate><StorefrontSubscriptions /></StorefrontGate>} />
+              <Route path="/store/classes" element={<StorefrontGate><StorefrontClasses /></StorefrontGate>} />
               <Route path="/community" element={<StorefrontGate><Community /></StorefrontGate>} />
 
               {/* Auth */}
