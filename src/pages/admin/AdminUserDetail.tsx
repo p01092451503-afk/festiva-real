@@ -755,8 +755,147 @@ const AdminUserDetail = () => {
             </ol>
           )}
         </div>
+
+        {/* Unified activity: access / reviews / orders & coupons */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <MousePointerClick className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Recent access" : "최근 접속"}
+            </h2>
+            {accessLogs.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No records." : "기록이 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {accessLogs.map((l: any) => (
+                  <li key={l.id} className="flex items-center justify-between gap-2 border-b-2 border-border/80 pb-2 last:border-0">
+                    <span className="text-xs text-foreground truncate">{l.path}</span>
+                    <span className="text-[11px] text-muted-foreground shrink-0">
+                      {fmtDate(new Date(l.created_at), "MM.dd HH:mm")}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <Star className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Reviews" : "작성 후기"} ({userReviews.length})
+            </h2>
+            {userReviews.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No reviews." : "작성한 후기가 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {userReviews.map((r: any) => (
+                  <li key={r.id} className="border-b-2 border-border/80 pb-2 last:border-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-foreground truncate">
+                        {(courseMap.get(r.course_id) as any)?.title || "-"}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground shrink-0">★ {r.rating}</span>
+                    </div>
+                    {r.comment && <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{r.comment}</p>}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Orders & coupons" : "구매 · 쿠폰"} ({userOrders.length})
+            </h2>
+            {userOrders.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No orders." : "구매 내역이 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {userOrders.map((o: any) => (
+                  <li key={o.id} className="border-b-2 border-border/80 pb-2 last:border-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-foreground truncate">{o.order_number}</span>
+                      <Badge variant="outline" className="text-[10px] shrink-0">{o.status}</Badge>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      {Number(o.total_amount || 0).toLocaleString()}원
+                      {o.coupon_code ? ` · ${o.coupon_code} (-${Number(o.discount_amount || 0).toLocaleString()}원)` : ""}
+                      {" · "}{fmtDate(new Date(o.created_at), "yyyy.MM.dd")}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Edit member info */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{isEn ? "Edit member info" : "회원정보 수정"}</DialogTitle>
+            <DialogDescription>{isEn ? "Update contact and status details." : "연락처와 상태 정보를 수정합니다."}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label>{isEn ? "Name" : "이름"}</Label>
+              <Input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Phone" : "전화번호"}</Label>
+                <Input value={form.phone_number} onChange={(e) => setForm({ ...form, phone_number: e.target.value })} placeholder="010-0000-0000" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Birth date" : "생년월일"}</Label>
+                <Input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Gender" : "성별"}</Label>
+                <Select value={form.gender} onValueChange={(v) => setForm({ ...form, gender: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(GENDER_LABEL).map(([v, label]) => (
+                      <SelectItem key={v} value={v}>{label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>{isEn ? "Status" : "회원 상태"}</Label>
+                <Select value={form.member_status} onValueChange={(v) => setForm({ ...form, member_status: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {MEMBER_STATUS_ORDER.map((s) => (
+                      <SelectItem key={s} value={s}>{memberStatusLabel(s)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>{isEn ? "Position" : "직책"}</Label>
+              <Input value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>{isEn ? "Admin memo" : "관리자 메모"}</Label>
+              <Textarea rows={3} value={form.admin_memo} onChange={(e) => setForm({ ...form, admin_memo: e.target.value })} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)}>{isEn ? "Cancel" : "취소"}</Button>
+            <Button onClick={() => saveProfile.mutate()} disabled={saveProfile.isPending}>
+              {saveProfile.isPending ? (isEn ? "Saving..." : "저장 중...") : (isEn ? "Save" : "저장")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
+
   );
 };
 
