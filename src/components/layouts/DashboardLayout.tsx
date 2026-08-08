@@ -480,6 +480,11 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     } catch {}
     return {};
   });
+  const [menuSearch, setMenuSearch] = useState("");
+  const normalizedMenuSearch = menuSearch.trim().toLocaleLowerCase();
+  const matchesMenuSearch = (value: string) =>
+    value.toLocaleLowerCase().includes(normalizedMenuSearch);
+
   // Auto-expand the group containing the active route
   useEffect(() => {
     if (effectiveRole !== "admin") return;
@@ -496,6 +501,24 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
   }, [openGroups]);
   const toggleGroup = (id: string) =>
     setOpenGroups((s) => ({ ...s, [id]: !s[id] }));
+
+  const filteredAdminGroups = adminGroups
+    .map((group) => {
+      const groupMatches = matchesMenuSearch(group.label);
+      return {
+        ...group,
+        items: groupMatches
+          ? group.items
+          : group.items.filter((item) => matchesMenuSearch(item.label)),
+        searchMatch: groupMatches,
+      };
+    })
+    .filter((group) => group.items.length > 0);
+  const filteredNavItems = navItems.filter((item) => {
+    if (!normalizedMenuSearch) return true;
+    if (matchesMenuSearch(item.label)) return true;
+    return item.children?.some((child) => matchesMenuSearch(child.label)) ?? false;
+  });
 
   // Solid, high-visibility chip
   const roleBadgeClass =
