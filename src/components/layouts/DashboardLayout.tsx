@@ -172,6 +172,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "student.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/student/video-sessions", icon: Video },
     { navKey: "student.notes", label: t("nav.myNotes", "내 학습 메모"), href: "/student/notes", icon: NotebookPen },
     { navKey: "student.microLearning", label: t("nav.microLearning", "마이크로러닝"), href: "/student/micro-learning", icon: Zap },
+    { navKey: "student.qualifications", label: t("nav.qualifications", "자격검정"), href: "/student/qualifications", icon: Award },
     { navKey: "student.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
     { navKey: "student.articles", label: t("nav.articles", "아티클"), href: "/articles", icon: Newspaper },
     { navKey: "student.assignments", label: t("nav.assignments"), href: "/dashboard/assignments", icon: ClipboardList, tourId: "nav-assignments" },
