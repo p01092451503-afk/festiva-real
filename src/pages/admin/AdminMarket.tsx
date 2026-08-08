@@ -382,7 +382,54 @@ const AdminMarket = () => {
                       {p.publisher ? ` / ${p.publisher}` : ""}
                     </p>
                   </div>
+                  <div className="flex flex-wrap items-end gap-2 shrink-0">
+                    <div>
+                      <Label className="text-[11px] text-muted-foreground">정가</Label>
+                      <Input
+                        type="number"
+                        className="mt-0.5 h-8 w-24"
+                        value={inlineOf(p).price}
+                        onChange={(e) => setInlineField(p, "price", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[11px] text-muted-foreground">판매가</Label>
+                      <Input
+                        type="number"
+                        className="mt-0.5 h-8 w-24"
+                        placeholder="없음"
+                        value={inlineOf(p).sale_price}
+                        onChange={(e) => setInlineField(p, "sale_price", e.target.value)}
+                      />
+                    </div>
+                    {p.product_type !== "ebook" && (
+                      <div>
+                        <Label className="text-[11px] text-muted-foreground">재고</Label>
+                        <div className="mt-0.5 flex items-center gap-1">
+                          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => adjustStock(p, -1)}>
+                            <Minus className="h-3.5 w-3.5" />
+                          </Button>
+                          <Input
+                            type="number"
+                            className="h-8 w-20"
+                            value={inlineOf(p).stock}
+                            onChange={(e) => setInlineField(p, "stock", e.target.value)}
+                          />
+                          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => adjustStock(p, 1)}>
+                            <Plus className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    <Button size="sm" className="h-8" disabled={savingId === p.id} onClick={() => saveInline(p)}>
+                      <Save className="h-3.5 w-3.5 mr-1" /> 적용
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-8" onClick={() => toggleActive(p)}>
+                      {p.is_active ? "판매중지" : "판매재개"}
+                    </Button>
+                  </div>
                   <div className="flex gap-1 shrink-0">
+
                     <Button
                       variant="ghost"
                       size="icon"
