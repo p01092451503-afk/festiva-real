@@ -21,10 +21,11 @@ import {
   MessageSquareText,
   LayoutTemplate, CalendarRange, Briefcase, FolderCheck, Award, ToggleRight, PenLine, UserCog,
   PieChart, ShieldAlert, Clapperboard, Store, LineChart, ListChecks, ScrollText, BadgeCheck,
-  Send, MessagesSquare, BookMarked,
+  Send, MessagesSquare, BookMarked, Search,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -480,6 +481,11 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     } catch {}
     return {};
   });
+  const [menuSearch, setMenuSearch] = useState("");
+  const normalizedMenuSearch = menuSearch.trim().toLocaleLowerCase();
+  const matchesMenuSearch = (value: string) =>
+    value.toLocaleLowerCase().includes(normalizedMenuSearch);
+
   // Auto-expand the group containing the active route
   useEffect(() => {
     if (effectiveRole !== "admin") return;
@@ -496,6 +502,26 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
   }, [openGroups]);
   const toggleGroup = (id: string) =>
     setOpenGroups((s) => ({ ...s, [id]: !s[id] }));
+
+  const filteredAdminGroups = adminGroups
+    .map((group) => {
+      const groupMatches = matchesMenuSearch(group.label);
+      return {
+        ...group,
+        items: groupMatches
+          ? group.items
+          : group.items.filter((item) => matchesMenuSearch(item.label)),
+        searchMatch: groupMatches,
+      };
+    })
+    .filter((group) => group.items.length > 0);
+  const filteredNavItems = navItems
+    .map((item) => {
+      if (!normalizedMenuSearch || matchesMenuSearch(item.label) || !item.children) return item;
+      const matchingChildren = item.children.filter((child) => matchesMenuSearch(child.label));
+      return matchingChildren.length > 0 ? { ...item, children: matchingChildren } : null;
+    })
+    .filter((item): item is NavItem => item !== null);
 
   // Solid, high-visibility chip
   const roleBadgeClass =
@@ -594,9 +620,21 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
 
         <TooltipProvider delayDuration={150}>
           <nav className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
+            {!collapsed && (
+              <div className="relative px-1 pb-3">
+                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                <Input
+                  value={menuSearch}
+                  onChange={(event) => setMenuSearch(event.target.value)}
+                  placeholder={t("nav.menuSearchPlaceholder", "메뉴 검색")}
+                  aria-label={t("nav.menuSearch", "메뉴 검색")}
+                  className="h-9 rounded-md bg-background/70 pl-9 pr-3 text-sm"
+                />
+              </div>
+            )}
             {effectiveRole === "admin" && !collapsed ? (
-              adminGroups.map((group) => {
-                const isGroupOpen = openGroups[group.id] ?? false;
+              filteredAdminGroups.map((group) => {
+                const isGroupOpen = Boolean(normalizedMenuSearch || openGroups[group.id]);
                 const groupHasActive = group.items.some((i) => i.href === location.pathname);
                 return (
                   <div key={group.id} className="pb-2">
@@ -608,7 +646,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                           ? "bg-muted/70 hover:bg-muted"
                           : "bg-transparent hover:bg-muted/50"
                       }`}
-                      aria-expanded={isGroupOpen}
+                      aria-expanded={Boolean(isGroupOpen)}
                     >
                       <span className="flex items-center gap-2 min-w-0">
                         {group.icon && (
@@ -668,7 +706,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                 );
               })
             ) : (
-              navItems.map((item) => {
+              filteredNavItems.length > 0 ? filteredNavItems.map((item) => {
               // Inline collapsible group (used by student/teacher communication group)
               if (item.children && item.children.length > 0) {
                 const groupId = `inline-${item.navKey || item.href}`;
@@ -771,9 +809,12 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                   <TooltipContent side="right" className="hidden lg:block">{item.label}</TooltipContent>
                 </Tooltip>
               );
-              })
-            )}
-          </nav>
+              }) : normalizedMenuSearch ? (
+                <p className="px-3 py-6 text-center text-xs text-muted-foreground">
+                  {t("nav.menuSearchEmpty", "검색 결과가 없습니다.")}
+                </p>
+              ) : null)}
+           </nav>
         </TooltipProvider>
 
         <div className={`border-t border-sidebar-border ${collapsed ? "lg:p-2 p-4" : "p-4"}`}>
