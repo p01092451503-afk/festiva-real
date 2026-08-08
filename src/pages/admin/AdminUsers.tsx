@@ -81,35 +81,36 @@ const AdminUsers = () => {
     },
   });
 
-  const { data: departments = [] } = useQuery({
-    queryKey: ["departments"],
+  const { data: grades = [] } = useQuery({
+    queryKey: ["member-grades"],
     queryFn: async () => {
-      const { data } = await supabase.from("departments").select("*").eq("is_active", true).order("display_order");
-      return data || [];
+      const { data } = await supabase.from("member_grades").select("id, name").order("name");
+      return (data || []) as { id: string; name: string }[];
     },
   });
 
   // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: async () => {
-      const effectiveDeptId = newUser.departmentId === "__branch__" ? newUser.branchId : newUser.departmentId;
       const { data, error } = await supabase.functions.invoke("create-user", {
         body: {
           email: newUser.email,
           password: newUser.password,
           fullName: newUser.name,
           role: newUser.role,
-          departmentId: effectiveDeptId || undefined,
         },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
+      if (newUser.phone.trim()) {
+        await supabase.from("profiles").update({ phone_number: newUser.phone.trim() }).eq("email", newUser.email);
+      }
       return data;
     },
     onSuccess: () => {
       toast.success(t("admin.userCreated"), { description: t("admin.userCreatedDesc", { name: newUser.name }) });
       setAddOpen(false);
-      setNewUser({ name: "", email: "", password: "", role: "student", departmentId: "", branchId: "" });
+      setNewUser({ name: "", email: "", password: "", phone: "", role: "student" });
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
       queryClient.invalidateQueries({ queryKey: ["admin-user-roles"] });
     },
