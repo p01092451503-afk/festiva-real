@@ -2517,6 +2517,50 @@ export type Database = {
           },
         ]
       }
+      course_custom_fields: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          field_type: string
+          id: string
+          is_active: boolean
+          is_required: boolean
+          label: string
+          options: Json
+          order_index: number
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          field_type?: string
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          label: string
+          options?: Json
+          order_index?: number
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          field_type?: string
+          id?: string
+          is_active?: boolean
+          is_required?: boolean
+          label?: string
+          options?: Json
+          order_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_custom_fields_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_detail_blocks: {
         Row: {
           block_type: string
@@ -5209,6 +5253,58 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      order_custom_field_values: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          field_id: string | null
+          id: string
+          label: string
+          order_id: string
+          value: string | null
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          field_id?: string | null
+          id?: string
+          label: string
+          order_id: string
+          value?: string | null
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          field_id?: string | null
+          id?: string
+          label?: string
+          order_id?: string
+          value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_custom_field_values_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_custom_field_values_field_id_fkey"
+            columns: ["field_id"]
+            isOneToOne: false
+            referencedRelation: "course_custom_fields"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_custom_field_values_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
