@@ -71,6 +71,9 @@ const AdminCourseOptions = lazy(() => import("./pages/admin/AdminCourseOptions")
 const AdminCourseOps = lazy(() => import("./pages/admin/AdminCourseOps"));
 const AdminMemberGroups = lazy(() => import("./pages/admin/AdminMemberGroups"));
 const AdminRefunds = lazy(() => import("./pages/admin/AdminRefunds"));
+const AdminMessaging = lazy(() => import("./pages/admin/AdminMessaging"));
+const AdminPoints = lazy(() => import("./pages/admin/AdminPoints"));
+const AdminSettlements = lazy(() => import("./pages/admin/AdminSettlements"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const ApiClients = lazy(() => import("./pages/admin/ApiClients"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
@@ -276,6 +279,9 @@ const App = () => (
               <Route path="/admin/course-ops" element={<AdminRoute><AdminCourseOps /></AdminRoute>} />
               <Route path="/admin/member-groups" element={<AdminRoute><AdminMemberGroups /></AdminRoute>} />
               <Route path="/admin/refunds" element={<AdminRoute><AdminRefunds /></AdminRoute>} />
+              <Route path="/admin/messaging" element={<AdminRoute><AdminMessaging /></AdminRoute>} />
+              <Route path="/admin/points" element={<AdminRoute><AdminPoints /></AdminRoute>} />
+              <Route path="/admin/settlements" element={<AdminRoute><AdminSettlements /></AdminRoute>} />
 
               <Route path="/admin/courses/new" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/courses/:courseId/edit" element={<AdminRoute><CreateCourse /></AdminRoute>} />
