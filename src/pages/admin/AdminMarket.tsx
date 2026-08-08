@@ -512,10 +512,23 @@ const AdminMarket = () => {
                 <Button size="sm" variant="outline" className="gap-1.5" onClick={bulkShip}>
                   <Truck className="h-4 w-4" /> 선택 발송처리 ({selectedShipIds.length})
                 </Button>
+                <Button size="sm" variant="outline" className="gap-1.5" onClick={() => bulkStatus("preparing")}>
+                  <PackageCheck className="h-4 w-4" /> 배송준비
+                </Button>
+                <Button size="sm" variant="outline" className="gap-1.5" onClick={() => bulkStatus("delivered")}>
+                  <CheckCircle2 className="h-4 w-4" /> 배송완료
+                </Button>
               </div>
               <Button variant="outline" size="sm" className="gap-1.5" onClick={exportShipments}>
                 <FileSpreadsheet className="h-4 w-4" /> 엑셀 다운로드
               </Button>
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+              {Object.entries(SHIP_STATUS).map(([v, l]) => (
+                <span key={v} className="rounded-full border px-2.5 py-1">
+                  {l} {shipments.filter((s: any) => s.status === v).length}건
+                </span>
+              ))}
             </div>
             <div className="rounded-xl border divide-y">
               {filteredShipments.length === 0 && (
@@ -546,11 +559,26 @@ const AdminMarket = () => {
                   <Badge variant={s.status === "delivered" ? "default" : "secondary"} className="whitespace-nowrap">
                     {SHIP_STATUS[s.status] || s.status}
                   </Badge>
+                  <div className="flex flex-wrap gap-1 shrink-0">
+                    {(["pending", "preparing", "shipped", "delivered"] as const).map((st) => (
+                      <Button
+                        key={st}
+                        size="sm"
+                        variant={s.status === st ? "default" : "outline"}
+                        className="h-8"
+                        disabled={s.status === st}
+                        onClick={() => changeShipStatus(s, st)}
+                      >
+                        {SHIP_STATUS[st]}
+                      </Button>
+                    ))}
+                  </div>
                   <Button variant="ghost" size="icon" onClick={() => setShipEdit({ ...s })}>
                     <Pencil className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
+
             </div>
           </TabsContent>
 
