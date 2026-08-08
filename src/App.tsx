@@ -163,6 +163,9 @@ const ContentRedirect = lazy(() => import("./components/ContentRedirect"));
 const StorefrontHome = lazy(() => import("./pages/store/StorefrontHome"));
 const StorefrontCatalog = lazy(() => import("./pages/store/StorefrontCatalog"));
 const StorefrontCourseDetail = lazy(() => import("./pages/store/StorefrontCourseDetail"));
+const StorefrontBooks = lazy(() => import("./pages/store/StorefrontBooks"));
+const StorefrontSubscriptions = lazy(() => import("./pages/store/StorefrontSubscriptions"));
+const StorefrontClasses = lazy(() => import("./pages/store/StorefrontClasses"));
 const CartPage = lazy(() => import("./pages/store/CartPage"));
 const CheckoutPage = lazy(() => import("./pages/store/CheckoutPage"));
 const CheckoutSuccess = lazy(() => import("./pages/store/CheckoutSuccess"));
@@ -206,6 +209,9 @@ const App = () => (
               <Route path="/store" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/store/courses" element={<StorefrontGate><StorefrontCatalog /></StorefrontGate>} />
               <Route path="/store/courses/:courseId" element={<StorefrontGate><StorefrontCourseDetail /></StorefrontGate>} />
+              <Route path="/store/books" element={<StorefrontGate><StorefrontBooks /></StorefrontGate>} />
+              <Route path="/store/subscriptions" element={<StorefrontGate><StorefrontSubscriptions /></StorefrontGate>} />
+              <Route path="/store/classes" element={<StorefrontGate><StorefrontClasses /></StorefrontGate>} />
               <Route path="/community" element={<StorefrontGate><Community /></StorefrontGate>} />
 
               {/* Auth */}
