@@ -938,6 +938,13 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
             </div>
           </TabsContent>
 
+          <TabsContent value="points"><PointsTab /></TabsContent>
+          <TabsContent value="coupons"><CouponsTab /></TabsContent>
+          <TabsContent value="subscription"><SubscriptionTab /></TabsContent>
+          <TabsContent value="refunds"><RefundsTab /></TabsContent>
+
+
+
           <TabsContent value="password">
             <div className="max-w-lg space-y-6">
               <div className="space-y-1">
