@@ -618,9 +618,21 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
 
         <TooltipProvider delayDuration={150}>
           <nav className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
+            {!collapsed && (
+              <div className="relative px-1 pb-3">
+                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                <Input
+                  value={menuSearch}
+                  onChange={(event) => setMenuSearch(event.target.value)}
+                  placeholder={t("nav.menuSearchPlaceholder", "메뉴 검색")}
+                  aria-label={t("nav.menuSearch", "메뉴 검색")}
+                  className="h-9 rounded-md bg-background/70 pl-9 pr-3 text-sm"
+                />
+              </div>
+            )}
             {effectiveRole === "admin" && !collapsed ? (
-              adminGroups.map((group) => {
-                const isGroupOpen = openGroups[group.id] ?? false;
+              filteredAdminGroups.map((group) => {
+                const isGroupOpen = normalizedMenuSearch || openGroups[group.id] || false;
                 const groupHasActive = group.items.some((i) => i.href === location.pathname);
                 return (
                   <div key={group.id} className="pb-2">
@@ -692,7 +704,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                 );
               })
             ) : (
-              navItems.map((item) => {
+              filteredNavItems.map((item) => {
               // Inline collapsible group (used by student/teacher communication group)
               if (item.children && item.children.length > 0) {
                 const groupId = `inline-${item.navKey || item.href}`;
