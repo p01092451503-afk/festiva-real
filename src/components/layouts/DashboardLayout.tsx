@@ -299,9 +299,10 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     {
       id: "insights",
       label: t("nav.groupInsights", "인사이트·통계"),
+      icon: PieChart,
       items: [
         { navKey: "admin.dashboard", label: t("nav.dashboard", "관리자 대시보드"), href: "/admin", icon: LayoutDashboard, tourId: "nav-dashboard" },
-        { navKey: "admin.traffic", label: t("nav.trafficMonitoring", "통계 현황"), href: "/admin/traffic", icon: BarChart3, tourId: "nav-traffic" },
+        { navKey: "admin.traffic", label: t("nav.trafficMonitoring", "통계 현황"), href: "/admin/traffic", icon: Activity, tourId: "nav-traffic" },
         { navKey: "admin.salesStats", label: t("nav.salesStats", "매출·주문 통계"), href: "/admin/sales-stats", icon: BarChart3 },
         { navKey: "admin.globalDashboard", label: t("nav.globalDashboard", "글로벌 대시보드"), href: "/admin/global-dashboard", icon: Globe2 },
       ],
@@ -309,23 +310,25 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     {
       id: "members",
       label: t("nav.groupMembers", "회원·조직"),
+      icon: Users,
       items: [
         { navKey: "admin.users", label: t("nav.learnerManagement", "학습자 관리"), href: "/admin/users", icon: Users, tourId: "nav-user-mgmt" },
         { navKey: "admin.memberGroups", label: t("nav.memberGroups", "회원 그룹·등급"), href: "/admin/member-groups", icon: Users2 },
         { navKey: "admin.instructors", label: t("nav.instructorManagement", "강사 관리"), href: "/admin/instructors", icon: UserCog },
         { navKey: "admin.branches", label: t("nav.branchManagement", "지점 관리"), href: "/admin/branches", icon: Building2, tourId: "nav-branch-mgmt" },
         { navKey: "admin.branchAdmins", label: t("nav.branchAdminMgmt", "중간관리자 관리"), href: "/admin/branch-admins", icon: ShieldCheck },
-        { navKey: "admin.privacyAudit", label: t("nav.privacyAudit", "개인정보 감사"), href: "/admin/privacy-audit", icon: ShieldCheck },
+        { navKey: "admin.privacyAudit", label: t("nav.privacyAudit", "개인정보 감사"), href: "/admin/privacy-audit", icon: ShieldAlert },
       ],
     },
     {
       id: "content",
       label: t("nav.groupContent", "강의·콘텐츠"),
+      icon: Library,
       items: [
         { navKey: "admin.courses", label: t("nav.courseManagement"), href: "/admin/courses", icon: BookOpen, tourId: "nav-course-mgmt" },
         { navKey: "admin.tracks", label: t("nav.trackManagement", "학습 트랙 관리"), href: "/admin/tracks", icon: Layers },
         { navKey: "admin.contentLibrary", label: t("nav.contentLibrary", "콘텐츠 라이브러리"), href: "/admin/content-library", icon: Film },
-        { navKey: "admin.videos", label: t("nav.videoManagement", "동영상 관리"), href: "/admin/videos", icon: Video },
+        { navKey: "admin.videos", label: t("nav.videoManagement", "동영상 관리"), href: "/admin/videos", icon: Clapperboard },
         { navKey: "admin.microLearning", label: t("nav.microLearning", "마이크로러닝"), href: "/admin/micro-learning", icon: Zap },
         { navKey: "admin.cms", label: t("nav.cms", "CMS · 아티클"), href: "/admin/cms", icon: Newspaper },
       ],
@@ -333,8 +336,9 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     {
       id: "commerce",
       label: t("nav.groupCommerce", "판매·결제"),
+      icon: CreditCard,
       items: [
-        { navKey: "admin.saleStatus", label: t("nav.saleStatus", "상품 판매 상태"), href: "/admin/sale-status", icon: BookOpen },
+        { navKey: "admin.saleStatus", label: t("nav.saleStatus", "상품 판매 상태"), href: "/admin/sale-status", icon: Store },
         { navKey: "admin.courseOptions", label: t("nav.courseOptions", "강의 판매·운영 옵션"), href: "/admin/course-options", icon: SlidersHorizontal },
         ...(siteSettings?.b2c_enabled !== false && !isModuleEnabled("closed_lms" as any)
           ? [{ navKey: "admin.orders", label: t("nav.paymentManagement", "결제 관리"), href: "/admin/orders", icon: CreditCard }]
@@ -350,6 +354,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     {
       id: "operations",
       label: t("nav.groupOperations", "학습 운영"),
+      icon: GraduationCap,
       items: [
         { navKey: "admin.enrollments", label: t("nav.enrollmentManagement"), href: "/admin/enrollments", icon: ClipboardCheck, tourId: "nav-enrollment-mgmt" },
         { navKey: "admin.courseOps", label: t("nav.courseOps", "수강 연장·일시정지"), href: "/admin/course-ops", icon: CalendarClock },
@@ -357,38 +362,41 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
         { navKey: "admin.attendance", label: t("nav.attendanceManagement"), href: "/admin/attendance", icon: CalendarCheck },
         { navKey: "admin.offlineClasses", label: t("nav.offlineClasses", "집합강의·연수"), href: "/admin/offline-classes", icon: CalendarDays },
         { navKey: "admin.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/admin/video-sessions", icon: Video },
-        { navKey: "admin.aiProgressPrediction", label: t("nav.aiProgressPrediction", "AI 진도 예측"), href: "/admin/ai-progress-prediction", icon: TrendingUp },
+        { navKey: "admin.aiProgressPrediction", label: t("nav.aiProgressPrediction", "AI 진도 예측"), href: "/admin/ai-progress-prediction", icon: LineChart },
       ],
     },
     {
       id: "assessment",
       label: t("nav.groupAssessment", "평가·자격"),
+      icon: Award,
       items: [
-        { navKey: "admin.assessments", label: t("nav.assessmentStatus", "평가 현황"), href: "/admin/assessments", icon: ClipboardCheck },
+        { navKey: "admin.assessments", label: t("nav.assessmentStatus", "평가 현황"), href: "/admin/assessments", icon: ListChecks },
         { navKey: "admin.questionBank", label: t("nav.questionBank", "문제은행"), href: "/admin/question-bank", icon: Library },
         { navKey: "admin.corrections", label: t("nav.correctionsMgmt", "첨삭 관리"), href: "/admin/corrections", icon: PenLine },
         { navKey: "admin.aiFeedback", label: t("nav.aiFeedback", "AI 과제 피드백"), href: "/admin/ai-feedback", icon: MessageSquareText },
         { navKey: "admin.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
         { navKey: "admin.completion", label: t("nav.completionManagement"), href: "/admin/completion", icon: Trophy, tourId: "nav-completion-mgmt" },
-        { navKey: "admin.bulkCertificates", label: t("nav.bulkCertificates", "수료증 일괄 발급"), href: "/branch-admin/certificates", icon: Award },
-        { navKey: "admin.qualifications", label: t("nav.qualifications", "자격검정 관리"), href: "/admin/qualifications", icon: Award },
+        { navKey: "admin.bulkCertificates", label: t("nav.bulkCertificates", "수료증 일괄 발급"), href: "/branch-admin/certificates", icon: ScrollText },
+        { navKey: "admin.qualifications", label: t("nav.qualifications", "자격검정 관리"), href: "/admin/qualifications", icon: BadgeCheck },
       ],
     },
     {
       id: "communication",
       label: t("nav.groupCommunication", "커뮤니케이션"),
+      icon: MessageSquare,
       items: [
-        { navKey: "admin.messaging", label: t("nav.messaging", "발송 관리"), href: "/admin/messaging", icon: MessageSquare },
+        { navKey: "admin.messaging", label: t("nav.messaging", "발송 관리"), href: "/admin/messaging", icon: Send },
         { navKey: "admin.notifications", label: t("nav.notificationManagement", "알림 관리"), href: "/admin/notifications", icon: Bell },
         { navKey: "admin.announcements", label: t("nav.announcementManagement", "공지사항 관리"), href: "/admin/announcements", icon: Megaphone, showNew: hasNewAnnouncement },
         { navKey: "admin.board", label: t("nav.boardManagement", "게시판 관리"), href: "/admin/board", icon: FileText, showNew: hasNewBoardPost },
-        { navKey: "admin.community", label: t("nav.communityManagement", "커뮤니티 관리"), href: "/admin/community", icon: Users2 },
+        { navKey: "admin.community", label: t("nav.communityManagement", "커뮤니티 관리"), href: "/admin/community", icon: MessagesSquare },
         { navKey: "admin.surveys", label: t("nav.surveyManagement", "설문 관리"), href: "/admin/surveys", icon: ClipboardList },
       ],
     },
     {
       id: "site",
       label: t("nav.groupSite", "사이트·디자인"),
+      icon: Palette,
       items: [
         { navKey: "admin.designManager", label: t("nav.designManager", "디자인 관리"), href: "/admin/design-manager", icon: LayoutTemplate },
         { navKey: "admin.siteSettings", label: t("nav.siteSettings", "사이트 설정"), href: "/admin/site-settings", icon: Palette },
@@ -397,6 +405,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     {
       id: "i18n",
       label: t("nav.groupI18n", "다국어"),
+      icon: Languages,
       items: [
         { navKey: "admin.i18nDashboard", label: t("nav.i18nDashboard", "다국어 관리"), href: "/admin/i18n-dashboard", icon: Languages },
         { navKey: "admin.translationGlossary", label: t("nav.translationGlossary", "다국어 용어 관리"), href: "/admin/translation-glossary", icon: BookText },
@@ -405,12 +414,13 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     {
       id: "system",
       label: t("nav.groupSystem", "시스템"),
+      icon: Settings,
       items: [
         { navKey: "admin.settings", label: t("nav.settings", "시스템 설정"), href: "/admin/settings", icon: Settings, tourId: "nav-settings" },
         { navKey: "admin.moduleSettings", label: "기능 모듈", href: "/admin/settings/modules", icon: ToggleRight },
         { navKey: "admin.apiClients", label: t("nav.apiClients", "API 클라이언트"), href: "/admin/api-clients", icon: KeyRound },
         { navKey: "admin.systemInfo", label: t("nav.systemInfo", "시스템 정보"), href: "/admin/system-info", icon: Info },
-        { navKey: "admin.manual", label: t("nav.manual", "사용자 매뉴얼"), href: "/admin/manual", icon: BookOpen },
+        { navKey: "admin.manual", label: t("nav.manual", "사용자 매뉴얼"), href: "/admin/manual", icon: BookMarked },
       ],
     },
   ];
