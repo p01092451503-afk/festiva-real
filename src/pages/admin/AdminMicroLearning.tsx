@@ -40,6 +40,12 @@ const AdminMicroLearning = () => {
   const [form, setForm] = useState(emptyForm);
   const [open, setOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assignContentId, setAssignContentId] = useState("");
+  const [assignDue, setAssignDue] = useState("");
+  const [assignUserIds, setAssignUserIds] = useState<string[]>([]);
+  const [userKeyword, setUserKeyword] = useState("");
+  const [progressContentId, setProgressContentId] = useState("all");
 
   const { data: contents = [] } = useQuery({
     queryKey: ["micro-contents"],
@@ -53,11 +59,38 @@ const AdminMicroLearning = () => {
   const { data: views = [] } = useQuery({
     queryKey: ["micro-views"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("micro_content_views").select("content_id, is_completed, liked");
+      const { data, error } = await supabase
+        .from("micro_content_views")
+        .select("content_id, user_id, is_completed, liked, watched_seconds, updated_at");
       if (error) throw error;
-      return data;
+      return data as any[];
     },
   });
+
+  const { data: assignments = [] } = useQuery({
+    queryKey: ["micro-assignments"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("micro_content_assignments")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+
+  const { data: members = [] } = useQuery({
+    queryKey: ["micro-members"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .order("full_name");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+
 
   const statMap = useMemo(() => {
     const m = new Map<string, { views: number; completed: number; likes: number }>();
