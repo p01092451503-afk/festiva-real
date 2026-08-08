@@ -659,6 +659,12 @@ const AdminUsers = () => {
             return (
               <div key={profile.user_id} className="stat-card !p-3">
                 <div className="flex items-start gap-3">
+                  <Checkbox
+                    className="mt-1"
+                    checked={selectedSet.has(profile.user_id)}
+                    onCheckedChange={(v) => toggleOne(profile.user_id, v === true)}
+                    aria-label={`${profile.full_name || "회원"} 선택`}
+                  />
                   <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center text-sm font-semibold text-accent-foreground shrink-0">
                     {(profile.full_name || "?").slice(0, 1)}
                   </div>
@@ -667,8 +673,16 @@ const AdminUsers = () => {
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-semibold text-foreground truncate">{profile.full_name || "-"}</p>
                         <p className="text-xs text-muted-foreground truncate">{profile.email || profile.employee_id || "-"}</p>
+                        {profile.phone_number && (
+                          <p className="text-xs text-muted-foreground truncate">{profile.phone_number}</p>
+                        )}
                       </div>
-                      <span className={`shrink-0 whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className={`shrink-0 whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
+                        <span className={`shrink-0 whitespace-nowrap text-[10px] font-medium px-2 py-0.5 rounded-full border ${memberStatusClass(profile.member_status)}`}>
+                          {memberStatusLabel(profile.member_status)}
+                        </span>
+                      </div>
                     </div>
                     {(deptName !== "-" || profile.position) && (
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
