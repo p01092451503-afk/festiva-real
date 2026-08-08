@@ -421,15 +421,28 @@ const AdminUserDetail = () => {
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl sm:text-2xl font-semibold text-foreground">{profile.full_name || "-"}</h1>
                 <Badge variant="outline" className="text-[10px]">{roleLabel[primaryRole]}</Badge>
+                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${memberStatusClass((profile as any).member_status)}`}>
+                  {memberStatusLabel((profile as any).member_status)}
+                </span>
               </div>
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" />{profile.email || "-"}</span>
+                <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" />{(profile as any).phone_number || "-"}</span>
+                <span className="flex items-center gap-1.5"><Cake className="h-3.5 w-3.5" />{(profile as any).birth_date || "-"}</span>
+                <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{GENDER_LABEL[(profile as any).gender || "unknown"]}</span>
                 <span className="flex items-center gap-1.5"><Building2 className="h-3.5 w-3.5" />{deptLabel}</span>
                 {profile.position && <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{profile.position}</span>}
                 {profile.employee_id && <span className="text-xs">ID: {profile.employee_id}</span>}
               </div>
+              {(profile as any).admin_memo && (
+                <p className="mt-2 text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">{(profile as any).admin_memo}</p>
+              )}
             </div>
+            <Button variant="outline" size="sm" className="rounded-xl gap-1.5 shrink-0" onClick={() => setEditOpen(true)}>
+              <Pencil className="h-3.5 w-3.5" />{isEn ? "Edit info" : "회원정보 수정"}
+            </Button>
           </div>
+
 
           {/* KPI grid */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-5">
