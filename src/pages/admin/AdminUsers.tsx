@@ -185,20 +185,88 @@ const AdminUsers = () => {
 
   const filtered = profiles.filter((profile: any) => {
     const q = search.toLowerCase().trim();
+    const digits = q.replace(/[^0-9]/g, "");
+    const phoneDigits = (profile.phone_number || "").replace(/[^0-9]/g, "");
     const searchableValues = [
       profile.full_name || "",
       profile.email || "",
       profile.department || "",
       profile.position || "",
+      profile.employee_id || "",
+      profile.phone_number || "",
+      profile.birth_date || "",
+      profile.admin_memo || "",
+      memberStatusLabel(profile.member_status),
+      GENDER_LABEL[profile.gender] || "",
+      (rolesByUser.get(profile.user_id) ?? []).join(" "),
       getDeptName(profile.department_id),
     ];
 
-    const matchesSearch = !q || searchableValues.some((value) => value.toLowerCase().includes(q));
+    const matchesSearch =
+      !q ||
+      searchableValues.some((value) => String(value).toLowerCase().includes(q)) ||
+      (digits.length >= 2 && phoneDigits.includes(digits));
     const matchesDept = deptFilter === "all" || profile.department_id === deptFilter;
-    return matchesSearch && matchesDept;
+    const matchesStatus = statusFilter === "all" || (profile.member_status || "active") === statusFilter;
+    const matchesRole =
+      roleFilter === "all" || (rolesByUser.get(profile.user_id) ?? []).includes(roleFilter as StaffRole);
+    return matchesSearch && matchesDept && matchesStatus && matchesRole;
   });
 
   const teacherCount = profiles.filter((profile: any) => getPrimaryRole(profile.user_id) === "teacher").length;
+  const activeCount = profiles.filter((p: any) => (p.member_status || "active") === "active").length;
+
+  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const selectedProfiles = useMemo(
+    () => profiles.filter((p: any) => selectedSet.has(p.user_id)),
+    [profiles, selectedSet],
+  );
+  const allFilteredSelected = filtered.length > 0 && filtered.every((p: any) => selectedSet.has(p.user_id));
+
+  const toggleOne = (userId: string, on: boolean) =>
+    setSelectedIds((prev) => (on ? [...new Set([...prev, userId])] : prev.filter((id) => id !== userId)));
+
+  const toggleAllFiltered = (on: boolean) =>
+    setSelectedIds((prev) =>
+      on
+        ? [...new Set([...prev, ...filtered.map((p: any) => p.user_id)])]
+        : prev.filter((id) => !filtered.some((p: any) => p.user_id === id)),
+    );
+
+  const bulkUpdateMutation = useMutation({
+    mutationFn: async (patch: Record<string, any>) => {
+      const { error } = await supabase.from("profiles").update(patch).in("user_id", selectedIds);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(`${selectedIds.length}명 일괄 변경 완료`);
+      queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
+      setBulkDeptOpen(false);
+      setBulkStatusOpen(false);
+      setSelectedIds([]);
+    },
+    onError: (err: any) => toast.error(err?.message || "일괄 변경에 실패했습니다."),
+  });
+
+  const exportMembers = () => {
+    const rows = (selectedIds.length > 0 ? selectedProfiles : filtered) as any[];
+    downloadCsv(`회원목록_${todayStamp()}`, rows, [
+      { header: "이름", value: (r) => r.full_name },
+      { header: "이메일", value: (r) => r.email },
+      { header: "전화번호", value: (r) => r.phone_number },
+      { header: "생년월일", value: (r) => r.birth_date },
+      { header: "성별", value: (r) => GENDER_LABEL[r.gender] || "" },
+      { header: "회원상태", value: (r) => memberStatusLabel(r.member_status) },
+      { header: "역할", value: (r) => (rolesByUser.get(r.user_id) ?? []).join("/") },
+      { header: "소속", value: (r) => getDeptName(r.department_id) },
+      { header: "직책", value: (r) => r.position },
+      { header: "사번", value: (r) => r.employee_id },
+      { header: "가입일", value: (r) => (r.created_at ? new Date(r.created_at).toLocaleDateString("ko-KR") : "") },
+      { header: "최근접속", value: (r) => (r.last_login_at ? new Date(r.last_login_at).toLocaleString("ko-KR") : "") },
+      { header: "관리자메모", value: (r) => r.admin_memo },
+    ]);
+    toast.success(`${rows.length}명 엑셀(CSV) 다운로드`);
+  };
 
   const openStaffEdit = (profile: any) => {
     const primaryRole = getPrimaryRole(profile.user_id);
