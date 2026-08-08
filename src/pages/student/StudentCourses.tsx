@@ -15,6 +15,7 @@ import TracksPanel, { useTrackCourseIds, useAssignedTracksCount, useCourseTrackM
 import { CourseCatalogContent } from "@/pages/student/CourseCatalog";
 import { useCourseI18n } from "@/hooks/useI18nMaps";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
+import CourseAccessActions from "@/components/student/CourseAccessActions";
 
 const StudentCourses = () => {
   const { user } = useUser();
