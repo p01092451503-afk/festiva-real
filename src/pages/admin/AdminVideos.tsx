@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Video, Plus, Search, Trash2, Copy, Edit, ExternalLink, HardDrive, Clock } from "lucide-react";
+import { Video, Plus, Search, Trash2, Copy, Edit, ExternalLink, HardDrive, Clock, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/hooks/use-toast";
 import BunnyUploader from "@/components/admin/BunnyUploader";
+import DirectVideoUploader from "@/components/admin/DirectVideoUploader";
 import BunnyDurationSyncDialog from "@/components/admin/BunnyDurationSyncDialog";
 import BunnyImportDialog from "@/components/admin/BunnyImportDialog";
 import BunnyMultiUploadDialog from "@/components/admin/BunnyMultiUploadDialog";
@@ -37,6 +38,7 @@ interface VideoAsset {
   video_url: string;
   video_provider: string;
   bunny_video_guid: string | null;
+  storage_path?: string | null;
   duration_minutes: number | null;
   file_size_mb: number | null;
   description: string | null;
@@ -63,6 +65,7 @@ const AdminVideos = () => {
     youtube: t("videoMgmt.providerYoutube"),
     vimeo: t("videoMgmt.providerVimeo"),
     upload: t("videoMgmt.providerUpload"),
+    storage: "CDN 직접 업로드",
     bunny: t("videoMgmt.providerBunny"),
     cloudflare: t("videoMgmt.providerCloudflare"),
     kollus: t("videoMgmt.providerKollus"),
@@ -95,6 +98,12 @@ const AdminVideos = () => {
           placeholder: "https://customer-xxxx.cloudflarestream.com/.../manifest/video.m3u8",
           hint: "Cloudflare Stream의 HLS(.m3u8) 또는 iframe URL을 입력하세요.",
         };
+      case "storage":
+        return {
+          label: "CDN 직접 업로드",
+          placeholder: "업로드 완료 시 자동으로 입력됩니다.",
+          hint: "영상 파일을 우리 CDN 스토리지에 직접 업로드합니다.",
+        };
       case "upload":
         return {
           label: "CDN 업로드",
@@ -116,6 +125,7 @@ const AdminVideos = () => {
     video_url: "",
     video_provider: "custom",
     bunny_video_guid: "",
+    storage_path: "",
     duration_minutes: "",
     file_size_mb: "",
     description: "",
@@ -123,7 +133,7 @@ const AdminVideos = () => {
   });
 
   const resetForm = () => {
-    setForm({ title: "", video_url: "", video_provider: "custom", bunny_video_guid: "", duration_minutes: "", file_size_mb: "", description: "", thumbnail_url: "" });
+    setForm({ title: "", video_url: "", video_provider: "custom", bunny_video_guid: "", storage_path: "", duration_minutes: "", file_size_mb: "", description: "", thumbnail_url: "" });
     setEditingId(null);
   };
 
@@ -146,6 +156,7 @@ const AdminVideos = () => {
         video_url: form.video_url,
         video_provider: form.video_provider,
         bunny_video_guid: form.bunny_video_guid || null,
+        storage_path: form.storage_path || null,
         duration_minutes: form.duration_minutes ? parseFloat(form.duration_minutes) : null,
         file_size_mb: form.file_size_mb ? parseFloat(form.file_size_mb) : null,
         description: form.description || null,
@@ -192,6 +203,7 @@ const AdminVideos = () => {
       video_url: v.video_url,
       video_provider: v.video_provider,
       bunny_video_guid: v.bunny_video_guid || "",
+      storage_path: v.storage_path || "",
       duration_minutes: v.duration_minutes?.toString() || "",
       file_size_mb: v.file_size_mb?.toString() || "",
       description: v.description || "",
@@ -209,6 +221,7 @@ const AdminVideos = () => {
 
   const urlMeta = getUrlFieldMeta(form.video_provider);
   const isUploadMode = form.video_provider === "upload";
+  const isStorageMode = form.video_provider === "storage";
 
   const totalSizeMb = videos.reduce((sum, v) => sum + (v.file_size_mb || 0), 0);
   const totalDuration = videos.reduce((sum, v) => sum + (v.duration_minutes || 0), 0);
@@ -229,6 +242,16 @@ const AdminVideos = () => {
             {cdnUnlockButton}
             <BunnyImportDialog />
             <BunnyDurationSyncDialog />
+            <Button
+              variant="outline"
+              onClick={() => {
+                resetForm();
+                setForm((prev) => ({ ...prev, video_provider: "storage" }));
+                setDialogOpen(true);
+              }}
+            >
+              <Upload className="h-4 w-4 mr-1" /> CDN 직접 업로드
+            </Button>
             <Button onClick={() => setUploadOpen(true)}>
               <Plus className="h-4 w-4 mr-1" /> 동영상 업로드
             </Button>
@@ -366,7 +389,11 @@ const AdminVideos = () => {
               <Label>{t("videoMgmt.fieldTitle")}</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={t("videoMgmt.fieldTitlePlaceholder")} />
             </div>
-            {isUploadMode ? (
+            {isStorageMode ? (
+              <div className="rounded-md border border-dashed bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
+                영상 파일을 선택하면 우리 CDN 스토리지에 바로 업로드되고, 재생 URL이 자동으로 채워집니다.
+              </div>
+            ) : isUploadMode ? (
               <div className="rounded-md border border-dashed bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground">
                 아래 버튼으로 동영상 파일을 선택하면 CDN에 자동으로 업로드됩니다. 업로드가 완료되면 영상이 등록 준비됩니다.
               </div>
@@ -404,6 +431,20 @@ const AdminVideos = () => {
                 }
               />
             )}
+            {isStorageMode && !editingId && (
+              <DirectVideoUploader
+                title={form.title}
+                onComplete={({ video_url, storage_path, file_size_mb, duration_minutes }) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    video_url,
+                    storage_path,
+                    file_size_mb: String(file_size_mb),
+                    duration_minutes: duration_minutes != null ? String(duration_minutes) : prev.duration_minutes,
+                  }))
+                }
+              />
+            )}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>{t("videoMgmt.fieldProvider")}</Label>
@@ -414,8 +455,9 @@ const AdminVideos = () => {
                       ...prev,
                       video_provider: v,
                       // Reset URL & GUID when switching to/from upload mode to prevent leftover values
-                      video_url: v === "upload" ? "" : prev.video_url,
+                      video_url: v === "upload" || v === "storage" ? "" : prev.video_url,
                       bunny_video_guid: v === "upload" ? "" : prev.bunny_video_guid,
+                      storage_path: v === "storage" ? "" : prev.storage_path,
                     }))
                   }
                 >
@@ -423,6 +465,7 @@ const AdminVideos = () => {
                   <SelectContent>
                     <SelectItem value="custom">{t("videoMgmt.providerCustom")}</SelectItem>
                     <SelectItem value="upload">{t("videoMgmt.providerUpload")}</SelectItem>
+                    <SelectItem value="storage">CDN 직접 업로드</SelectItem>
                     <SelectItem value="youtube">{t("videoMgmt.providerYoutube")}</SelectItem>
                     <SelectItem value="vimeo">{t("videoMgmt.providerVimeo")}</SelectItem>
                     <SelectItem value="cloudflare">{t("videoMgmt.providerCloudflare")}</SelectItem>
