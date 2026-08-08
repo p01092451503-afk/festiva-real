@@ -1,0 +1,443 @@
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { LayoutTemplate, Plus, Pencil, Trash2, ArrowUp, ArrowDown } from "lucide-react";
+import { toast } from "sonner";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
+
+const POSITIONS: Record<string, string> = {
+  center: "화면 중앙",
+  "top-left": "좌측 상단",
+  "top-right": "우측 상단",
+  bottom: "하단",
+};
+
+const BLOCK_TYPES: Record<string, string> = {
+  hero: "히어로 배너",
+  courses: "추천 강의",
+  categories: "카테고리",
+  reviews: "수강 후기",
+  notice: "공지사항",
+  instructors: "강사 소개",
+  cta: "가입 유도(CTA)",
+  custom: "자유 HTML",
+};
+
+const emptyPopup = {
+  id: "",
+  title: "",
+  content: "",
+  image_url: "",
+  link_url: "",
+  position: "center",
+  width: 420,
+  height: 480,
+  start_at: "",
+  end_at: "",
+  is_active: false,
+  display_order: 0,
+};
+
+const emptyPage = {
+  id: "",
+  slug: "",
+  title: "",
+  content: "",
+  meta_description: "",
+  is_published: false,
+  display_order: 0,
+};
+
+const emptyBlock = {
+  id: "",
+  block_type: "hero",
+  title: "",
+  subtitle: "",
+  is_active: true,
+  display_order: 0,
+};
+
+const toLocalInput = (v: string | null) => (v ? new Date(v).toISOString().slice(0, 16) : "");
+
+/** 디자인 관리 — 팝업 · 정적 페이지 · 메인화면 블록 배치 */
+const AdminDesignManager = () => {
+  const qc = useQueryClient();
+  const [popupForm, setPopupForm] = useState(emptyPopup);
+  const [pageForm, setPageForm] = useState(emptyPage);
+  const [blockForm, setBlockForm] = useState(emptyBlock);
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [pageOpen, setPageOpen] = useState(false);
+  const [blockOpen, setBlockOpen] = useState(false);
+
+  const { data: popups = [] } = useQuery({
+    queryKey: ["site-popups"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("site_popups").select("*").order("display_order");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+
+  const { data: pages = [] } = useQuery({
+    queryKey: ["static-pages"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("static_pages").select("*").order("display_order");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+
+  const { data: blocks = [] } = useQuery({
+    queryKey: ["main-page-blocks"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("main_page_blocks").select("*").order("display_order");
+      if (error) throw error;
+      return data as any[];
+    },
+  });
+
+  const invalidate = (key: string) => qc.invalidateQueries({ queryKey: [key] });
+
+  const savePopup = async () => {
+    if (!popupForm.title.trim()) return toast.error("팝업 제목을 입력하세요");
+    const payload = {
+      title: popupForm.title.trim(),
+      content: popupForm.content || null,
+      image_url: popupForm.image_url || null,
+      link_url: popupForm.link_url || null,
+      position: popupForm.position,
+      width: Number(popupForm.width) || 420,
+      height: Number(popupForm.height) || 480,
+      start_at: popupForm.start_at ? new Date(popupForm.start_at).toISOString() : null,
+      end_at: popupForm.end_at ? new Date(popupForm.end_at).toISOString() : null,
+      is_active: popupForm.is_active,
+      display_order: Number(popupForm.display_order) || 0,
+    };
+    const { error } = popupForm.id
+      ? await supabase.from("site_popups").update(payload).eq("id", popupForm.id)
+      : await supabase.from("site_popups").insert(payload);
+    if (error) return toast.error(error.message);
+    toast.success("저장되었습니다");
+    setPopupOpen(false);
+    setPopupForm(emptyPopup);
+    invalidate("site-popups");
+  };
+
+  const savePage = async () => {
+    if (!pageForm.title.trim() || !pageForm.slug.trim()) return toast.error("제목과 주소(slug)를 입력하세요");
+    const payload = {
+      slug: pageForm.slug.trim().replace(/^\/+/, ""),
+      title: pageForm.title.trim(),
+      content: pageForm.content || null,
+      meta_description: pageForm.meta_description || null,
+      is_published: pageForm.is_published,
+      display_order: Number(pageForm.display_order) || 0,
+    };
+    const { error } = pageForm.id
+      ? await supabase.from("static_pages").update(payload).eq("id", pageForm.id)
+      : await supabase.from("static_pages").insert(payload);
+    if (error) return toast.error(error.message);
+    toast.success("저장되었습니다");
+    setPageOpen(false);
+    setPageForm(emptyPage);
+    invalidate("static-pages");
+  };
+
+  const saveBlock = async () => {
+    const payload = {
+      block_type: blockForm.block_type,
+      title: blockForm.title || null,
+      subtitle: blockForm.subtitle || null,
+      is_active: blockForm.is_active,
+      display_order: Number(blockForm.display_order) || blocks.length,
+    };
+    const { error } = blockForm.id
+      ? await supabase.from("main_page_blocks").update(payload).eq("id", blockForm.id)
+      : await supabase.from("main_page_blocks").insert(payload);
+    if (error) return toast.error(error.message);
+    toast.success("저장되었습니다");
+    setBlockOpen(false);
+    setBlockForm(emptyBlock);
+    invalidate("main-page-blocks");
+  };
+
+  const remove = async (table: "site_popups" | "static_pages" | "main_page_blocks", id: string, key: string) => {
+    const { error } = await supabase.from(table).delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success("삭제되었습니다");
+    invalidate(key);
+  };
+
+  const moveBlock = async (index: number, dir: -1 | 1) => {
+    const target = blocks[index + dir];
+    const current = blocks[index];
+    if (!target || !current) return;
+    await supabase.from("main_page_blocks").update({ display_order: target.display_order }).eq("id", current.id);
+    await supabase.from("main_page_blocks").update({ display_order: current.display_order }).eq("id", target.id);
+    invalidate("main-page-blocks");
+  };
+
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
+            <LayoutTemplate className="h-5 w-5" /> 디자인 관리
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm">
+            팝업, 정적 페이지, 메인화면 블록 배치를 코드 수정 없이 운영합니다.
+          </p>
+        </div>
+
+        <Tabs defaultValue="popups">
+          <TabsList>
+            <TabsTrigger value="popups">팝업</TabsTrigger>
+            <TabsTrigger value="pages">정적 페이지</TabsTrigger>
+            <TabsTrigger value="blocks">메인화면 블록</TabsTrigger>
+          </TabsList>
+
+          {/* 팝업 */}
+          <TabsContent value="popups" className="space-y-4 pt-4">
+            <div className="flex justify-end">
+              <Button size="sm" className="gap-1.5" onClick={() => { setPopupForm(emptyPopup); setPopupOpen(true); }}>
+                <Plus className="h-4 w-4" /> 팝업 등록
+              </Button>
+            </div>
+            <div className="rounded-xl border divide-y">
+              {popups.length === 0 && <p className="p-6 text-sm text-muted-foreground text-center">등록된 팝업이 없습니다.</p>}
+              {popups.map((p) => (
+                <div key={p.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium truncate">{p.title}</span>
+                      <Badge variant={p.is_active ? "default" : "secondary"} className="whitespace-nowrap">
+                        {p.is_active ? "노출중" : "중지"}
+                      </Badge>
+                      <Badge variant="outline" className="whitespace-nowrap">{POSITIONS[p.position] || p.position}</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {p.width}×{p.height}px
+                      {p.start_at && ` · ${new Date(p.start_at).toLocaleDateString("ko-KR")} ~ `}
+                      {p.end_at && new Date(p.end_at).toLocaleDateString("ko-KR")}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Switch
+                      checked={p.is_active}
+                      onCheckedChange={async () => {
+                        await supabase.from("site_popups").update({ is_active: !p.is_active }).eq("id", p.id);
+                        invalidate("site-popups");
+                      }}
+                    />
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      setPopupForm({
+                        id: p.id, title: p.title, content: p.content || "", image_url: p.image_url || "",
+                        link_url: p.link_url || "", position: p.position, width: p.width, height: p.height,
+                        start_at: toLocalInput(p.start_at), end_at: toLocalInput(p.end_at),
+                        is_active: p.is_active, display_order: p.display_order,
+                      });
+                      setPopupOpen(true);
+                    }}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove("site_popups", p.id, "site-popups")}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* 정적 페이지 */}
+          <TabsContent value="pages" className="space-y-4 pt-4">
+            <div className="flex justify-end">
+              <Button size="sm" className="gap-1.5" onClick={() => { setPageForm(emptyPage); setPageOpen(true); }}>
+                <Plus className="h-4 w-4" /> 페이지 등록
+              </Button>
+            </div>
+            <div className="rounded-xl border divide-y">
+              {pages.length === 0 && <p className="p-6 text-sm text-muted-foreground text-center">등록된 페이지가 없습니다.</p>}
+              {pages.map((p) => (
+                <div key={p.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium truncate">{p.title}</span>
+                      <Badge variant={p.is_published ? "default" : "secondary"} className="whitespace-nowrap">
+                        {p.is_published ? "공개" : "비공개"}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">/p/{p.slug}</p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Switch
+                      checked={p.is_published}
+                      onCheckedChange={async () => {
+                        await supabase.from("static_pages").update({ is_published: !p.is_published }).eq("id", p.id);
+                        invalidate("static-pages");
+                      }}
+                    />
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      setPageForm({
+                        id: p.id, slug: p.slug, title: p.title, content: p.content || "",
+                        meta_description: p.meta_description || "", is_published: p.is_published,
+                        display_order: p.display_order,
+                      });
+                      setPageOpen(true);
+                    }}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove("static_pages", p.id, "static-pages")}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* 메인화면 블록 */}
+          <TabsContent value="blocks" className="space-y-4 pt-4">
+            <div className="flex justify-end">
+              <Button size="sm" className="gap-1.5" onClick={() => { setBlockForm({ ...emptyBlock, display_order: blocks.length }); setBlockOpen(true); }}>
+                <Plus className="h-4 w-4" /> 블록 추가
+              </Button>
+            </div>
+            <div className="rounded-xl border divide-y">
+              {blocks.length === 0 && <p className="p-6 text-sm text-muted-foreground text-center">등록된 블록이 없습니다.</p>}
+              {blocks.map((b, i) => (
+                <div key={b.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs text-muted-foreground w-6">{i + 1}</span>
+                      <span className="font-medium truncate">{b.title || BLOCK_TYPES[b.block_type] || b.block_type}</span>
+                      <Badge variant="outline" className="whitespace-nowrap">{BLOCK_TYPES[b.block_type] || b.block_type}</Badge>
+                      <Badge variant={b.is_active ? "default" : "secondary"} className="whitespace-nowrap">
+                        {b.is_active ? "표시" : "숨김"}
+                      </Badge>
+                    </div>
+                    {b.subtitle && <p className="text-xs text-muted-foreground mt-1 truncate">{b.subtitle}</p>}
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Button variant="ghost" size="icon" disabled={i === 0} onClick={() => moveBlock(i, -1)}>
+                      <ArrowUp className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" disabled={i === blocks.length - 1} onClick={() => moveBlock(i, 1)}>
+                      <ArrowDown className="h-4 w-4" />
+                    </Button>
+                    <Switch
+                      checked={b.is_active}
+                      onCheckedChange={async () => {
+                        await supabase.from("main_page_blocks").update({ is_active: !b.is_active }).eq("id", b.id);
+                        invalidate("main-page-blocks");
+                      }}
+                    />
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      setBlockForm({
+                        id: b.id, block_type: b.block_type, title: b.title || "", subtitle: b.subtitle || "",
+                        is_active: b.is_active, display_order: b.display_order,
+                      });
+                      setBlockOpen(true);
+                    }}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => remove("main_page_blocks", b.id, "main-page-blocks")}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      {/* 팝업 다이얼로그 */}
+      <Dialog open={popupOpen} onOpenChange={setPopupOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader><DialogTitle>{popupForm.id ? "팝업 수정" : "팝업 등록"}</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <div><Label>제목</Label><Input value={popupForm.title} onChange={(e) => setPopupForm({ ...popupForm, title: e.target.value })} /></div>
+            <div><Label>내용</Label><Textarea rows={3} value={popupForm.content} onChange={(e) => setPopupForm({ ...popupForm, content: e.target.value })} /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>이미지 URL</Label><Input value={popupForm.image_url} onChange={(e) => setPopupForm({ ...popupForm, image_url: e.target.value })} /></div>
+              <div><Label>클릭 시 이동 URL</Label><Input value={popupForm.link_url} onChange={(e) => setPopupForm({ ...popupForm, link_url: e.target.value })} /></div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <Label>노출 위치</Label>
+                <Select value={popupForm.position} onValueChange={(v) => setPopupForm({ ...popupForm, position: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{Object.entries(POSITIONS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div><Label>가로(px)</Label><Input type="number" value={popupForm.width} onChange={(e) => setPopupForm({ ...popupForm, width: Number(e.target.value) })} /></div>
+              <div><Label>세로(px)</Label><Input type="number" value={popupForm.height} onChange={(e) => setPopupForm({ ...popupForm, height: Number(e.target.value) })} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><Label>노출 시작</Label><Input type="datetime-local" value={popupForm.start_at} onChange={(e) => setPopupForm({ ...popupForm, start_at: e.target.value })} /></div>
+              <div><Label>노출 종료</Label><Input type="datetime-local" value={popupForm.end_at} onChange={(e) => setPopupForm({ ...popupForm, end_at: e.target.value })} /></div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch checked={popupForm.is_active} onCheckedChange={(v) => setPopupForm({ ...popupForm, is_active: v })} />
+              <span className="text-sm">즉시 노출</span>
+            </div>
+          </div>
+          <DialogFooter><Button onClick={savePopup}>저장</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 정적 페이지 다이얼로그 */}
+      <Dialog open={pageOpen} onOpenChange={setPageOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader><DialogTitle>{pageForm.id ? "페이지 수정" : "페이지 등록"}</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <div><Label>페이지 제목</Label><Input value={pageForm.title} onChange={(e) => setPageForm({ ...pageForm, title: e.target.value })} /></div>
+            <div><Label>주소(slug)</Label><Input placeholder="about" value={pageForm.slug} onChange={(e) => setPageForm({ ...pageForm, slug: e.target.value })} /></div>
+            <div><Label>본문</Label><Textarea rows={6} value={pageForm.content} onChange={(e) => setPageForm({ ...pageForm, content: e.target.value })} /></div>
+            <div><Label>검색 설명(meta)</Label><Input value={pageForm.meta_description} onChange={(e) => setPageForm({ ...pageForm, meta_description: e.target.value })} /></div>
+            <div className="flex items-center gap-2">
+              <Switch checked={pageForm.is_published} onCheckedChange={(v) => setPageForm({ ...pageForm, is_published: v })} />
+              <span className="text-sm">공개</span>
+            </div>
+          </div>
+          <DialogFooter><Button onClick={savePage}>저장</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 블록 다이얼로그 */}
+      <Dialog open={blockOpen} onOpenChange={setBlockOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader><DialogTitle>{blockForm.id ? "블록 수정" : "블록 추가"}</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>블록 종류</Label>
+              <Select value={blockForm.block_type} onValueChange={(v) => setBlockForm({ ...blockForm, block_type: v })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>{Object.entries(BLOCK_TYPES).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
+              </Select>
+            </div>
+            <div><Label>제목</Label><Input value={blockForm.title} onChange={(e) => setBlockForm({ ...blockForm, title: e.target.value })} /></div>
+            <div><Label>부제</Label><Input value={blockForm.subtitle} onChange={(e) => setBlockForm({ ...blockForm, subtitle: e.target.value })} /></div>
+            <div className="flex items-center gap-2">
+              <Switch checked={blockForm.is_active} onCheckedChange={(v) => setBlockForm({ ...blockForm, is_active: v })} />
+              <span className="text-sm">메인에 표시</span>
+            </div>
+          </div>
+          <DialogFooter><Button onClick={saveBlock}>저장</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </DashboardLayout>
+  );
+};
+
+export default AdminDesignManager;

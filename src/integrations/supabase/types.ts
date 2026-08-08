@@ -3378,6 +3378,33 @@ export type Database = {
           },
         ]
       }
+      dashboard_widgets: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_visible: boolean
+          user_id: string
+          widget_key: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_visible?: boolean
+          user_id: string
+          widget_key: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_visible?: boolean
+          user_id?: string
+          widget_key?: string
+        }
+        Relationships: []
+      }
       demo_preset_courses: {
         Row: {
           course_id: string
@@ -3857,6 +3884,161 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      exam_applications: {
+        Row: {
+          applicant_name: string | null
+          created_at: string
+          id: string
+          is_passed: boolean | null
+          note: string | null
+          paid: boolean
+          score: number | null
+          seat_no: string | null
+          session_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          applicant_name?: string | null
+          created_at?: string
+          id?: string
+          is_passed?: boolean | null
+          note?: string | null
+          paid?: boolean
+          score?: number | null
+          seat_no?: string | null
+          session_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          applicant_name?: string | null
+          created_at?: string
+          id?: string
+          is_passed?: boolean | null
+          note?: string | null
+          paid?: boolean
+          score?: number | null
+          seat_no?: string | null
+          session_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_applications_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "exam_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_sessions: {
+        Row: {
+          apply_end_at: string | null
+          apply_start_at: string | null
+          capacity: number
+          created_at: string
+          exam_at: string | null
+          id: string
+          pass_score: number
+          qualification_id: string
+          result_at: string | null
+          round_no: number
+          status: string
+          title: string
+          updated_at: string
+          venue_id: string | null
+        }
+        Insert: {
+          apply_end_at?: string | null
+          apply_start_at?: string | null
+          capacity?: number
+          created_at?: string
+          exam_at?: string | null
+          id?: string
+          pass_score?: number
+          qualification_id: string
+          result_at?: string | null
+          round_no?: number
+          status?: string
+          title: string
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Update: {
+          apply_end_at?: string | null
+          apply_start_at?: string | null
+          capacity?: number
+          created_at?: string
+          exam_at?: string | null
+          id?: string
+          pass_score?: number
+          qualification_id?: string
+          result_at?: string | null
+          round_no?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_sessions_qualification_id_fkey"
+            columns: ["qualification_id"]
+            isOneToOne: false
+            referencedRelation: "qualifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_sessions_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "exam_venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_venues: {
+        Row: {
+          address: string | null
+          capacity: number
+          contact: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          region: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          capacity?: number
+          contact?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          region?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          capacity?: number
+          contact?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          region?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       feature_modules: {
         Row: {
@@ -4658,6 +4840,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      main_page_blocks: {
+        Row: {
+          block_type: string
+          config: Json
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          subtitle: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          block_type: string
+          config?: Json
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          block_type?: string
+          config?: Json
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       member_grades: {
         Row: {
@@ -6318,6 +6536,146 @@ export type Database = {
         }
         Relationships: []
       }
+      qualification_certificates: {
+        Row: {
+          application_id: string | null
+          cert_number: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_revoked: boolean
+          issued_at: string
+          qualification_id: string
+          recipient_name: string | null
+          user_id: string
+        }
+        Insert: {
+          application_id?: string | null
+          cert_number: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_revoked?: boolean
+          issued_at?: string
+          qualification_id: string
+          recipient_name?: string | null
+          user_id: string
+        }
+        Update: {
+          application_id?: string | null
+          cert_number?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_revoked?: boolean
+          issued_at?: string
+          qualification_id?: string
+          recipient_name?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualification_certificates_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "exam_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qualification_certificates_qualification_id_fkey"
+            columns: ["qualification_id"]
+            isOneToOne: false
+            referencedRelation: "qualifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qualification_reviews: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_published: boolean
+          qualification_id: string
+          rating: number
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          qualification_id: string
+          rating?: number
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          qualification_id?: string
+          rating?: number
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualification_reviews_qualification_id_fkey"
+            columns: ["qualification_id"]
+            isOneToOne: false
+            referencedRelation: "qualifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qualifications: {
+        Row: {
+          code: string | null
+          created_at: string
+          description: string | null
+          display_order: number
+          fee: number
+          grade: string | null
+          id: string
+          is_active: boolean
+          issuing_body: string | null
+          name: string
+          updated_at: string
+          validity_months: number | null
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          fee?: number
+          grade?: string | null
+          id?: string
+          is_active?: boolean
+          issuing_body?: string | null
+          name: string
+          updated_at?: string
+          validity_months?: number | null
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          fee?: number
+          grade?: string | null
+          id?: string
+          is_active?: boolean
+          issuing_body?: string | null
+          name?: string
+          updated_at?: string
+          validity_months?: number | null
+        }
+        Relationships: []
+      }
       question_bank: {
         Row: {
           category_id: string | null
@@ -6423,6 +6781,33 @@ export type Database = {
           name_en?: string | null
           slug?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      quick_menu_favorites: {
+        Row: {
+          created_at: string
+          display_order: number
+          href: string
+          id: string
+          label: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          href: string
+          id?: string
+          label: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          href?: string
+          id?: string
+          label?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -6619,6 +7004,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      site_popups: {
+        Row: {
+          content: string | null
+          created_at: string
+          display_order: number
+          end_at: string | null
+          height: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          link_url: string | null
+          position: string
+          start_at: string | null
+          title: string
+          updated_at: string
+          width: number
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          end_at?: string | null
+          height?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string | null
+          position?: string
+          start_at?: string | null
+          title: string
+          updated_at?: string
+          width?: number
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          end_at?: string | null
+          height?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          link_url?: string | null
+          position?: string
+          start_at?: string | null
+          title?: string
+          updated_at?: string
+          width?: number
+        }
+        Relationships: []
       }
       site_settings: {
         Row: {
@@ -6847,6 +7283,42 @@ export type Database = {
           template_key?: string
           updated_at?: string
           updated_by?: string | null
+        }
+        Relationships: []
+      }
+      static_pages: {
+        Row: {
+          content: string | null
+          created_at: string
+          display_order: number
+          id: string
+          is_published: boolean
+          meta_description: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          meta_description?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          meta_description?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
