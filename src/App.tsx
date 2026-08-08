@@ -65,6 +65,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
 const AdminUserDetail = lazy(() => import("./pages/admin/AdminUserDetail"));
 const AdminCourses = lazy(() => import("./pages/admin/AdminCourses"));
+const AdminSaleStatus = lazy(() => import("./pages/admin/AdminSaleStatus"));
 const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const ApiClients = lazy(() => import("./pages/admin/ApiClients"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
@@ -264,6 +265,7 @@ const App = () => (
               <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
               <Route path="/admin/users/:userId" element={<AdminRoute><AdminUserDetail /></AdminRoute>} />
               <Route path="/admin/courses" element={<AdminRoute><AdminCourses /></AdminRoute>} />
+              <Route path="/admin/sale-status" element={<AdminRoute><AdminSaleStatus /></AdminRoute>} />
               <Route path="/admin/courses/new" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/courses/:courseId/edit" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
