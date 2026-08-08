@@ -62,6 +62,9 @@ const emptyBlock = {
   block_type: "hero",
   title: "",
   subtitle: "",
+  cta_text: "",
+  cta_url: "",
+  html: "",
   is_active: true,
   display_order: 0,
 };
@@ -157,6 +160,12 @@ const AdminDesignManager = () => {
       block_type: blockForm.block_type,
       title: blockForm.title || null,
       subtitle: blockForm.subtitle || null,
+      config: {
+        ...(blockForm.block_type === "cta"
+          ? { cta_text: blockForm.cta_text || null, cta_url: blockForm.cta_url || null }
+          : {}),
+        ...(blockForm.block_type === "custom" ? { html: blockForm.html || null } : {}),
+      },
       is_active: blockForm.is_active,
       display_order: Number(blockForm.display_order) || blocks.length,
     };
@@ -344,6 +353,8 @@ const AdminDesignManager = () => {
                     <Button variant="ghost" size="icon" onClick={() => {
                       setBlockForm({
                         id: b.id, block_type: b.block_type, title: b.title || "", subtitle: b.subtitle || "",
+                        cta_text: (b.config as any)?.cta_text || "", cta_url: (b.config as any)?.cta_url || "",
+                        html: (b.config as any)?.html || "",
                         is_active: b.is_active, display_order: b.display_order,
                       });
                       setBlockOpen(true);
@@ -428,6 +439,18 @@ const AdminDesignManager = () => {
             </div>
             <div><Label>제목</Label><Input value={blockForm.title} onChange={(e) => setBlockForm({ ...blockForm, title: e.target.value })} /></div>
             <div><Label>부제</Label><Input value={blockForm.subtitle} onChange={(e) => setBlockForm({ ...blockForm, subtitle: e.target.value })} /></div>
+            {blockForm.block_type === "cta" && (
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label>버튼 문구</Label><Input value={blockForm.cta_text} onChange={(e) => setBlockForm({ ...blockForm, cta_text: e.target.value })} /></div>
+                <div><Label>버튼 링크</Label><Input placeholder="/auth" value={blockForm.cta_url} onChange={(e) => setBlockForm({ ...blockForm, cta_url: e.target.value })} /></div>
+              </div>
+            )}
+            {blockForm.block_type === "custom" && (
+              <div>
+                <Label>HTML 내용</Label>
+                <Textarea rows={6} value={blockForm.html} onChange={(e) => setBlockForm({ ...blockForm, html: e.target.value })} />
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Switch checked={blockForm.is_active} onCheckedChange={(v) => setBlockForm({ ...blockForm, is_active: v })} />
               <span className="text-sm">메인에 표시</span>
