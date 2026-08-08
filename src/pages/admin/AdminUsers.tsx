@@ -10,7 +10,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import StaffEditDialog, { type StaffEditDraft, type StaffRole } from "@/components/admin/StaffEditDialog";
+import MemberEditDialog, { type MemberEditDraft, type MemberRole } from "@/components/admin/MemberEditDialog";
+import { type StaffRole } from "@/components/admin/StaffEditDialog";
 import BulkStaffUploadDialog from "@/components/admin/BulkStaffUploadDialog";
 import BulkMessageDialog from "@/components/admin/BulkMessageDialog";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
