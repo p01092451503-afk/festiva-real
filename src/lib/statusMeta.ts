@@ -78,6 +78,7 @@ export const memberStatusClass = (status?: string | null) =>
   "text-muted-foreground bg-secondary border-border";
 
 export const GENDER_LABEL: Record<string, string> = {
+  unknown: "미입력",
   male: "남성",
   female: "여성",
   other: "기타",
