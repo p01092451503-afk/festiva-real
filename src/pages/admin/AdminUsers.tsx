@@ -655,7 +655,7 @@ const AdminUsers = () => {
               : hasProtectedRole(profile.user_id)
                 ? t("admin.cannotManageSuperAdmin")
                 : null;
-            const deptName = getDeptName(profile.department_id);
+            const gradeName = getGradeName(profile.grade_id);
 
             return (
               <div key={profile.user_id} className="stat-card !p-3">
