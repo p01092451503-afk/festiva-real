@@ -45,6 +45,7 @@ const StorefrontHome = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { data: enrolledIds = new Set<string>() } = useEnrolledCourseIds();
+  const { data: blocks = [] } = useMainPageBlocks();
 
 
 
