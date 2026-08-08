@@ -1,4 +1,4 @@
-import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet, Download, Send, Building2, ShieldCheck } from "lucide-react";
+import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet, Download, Send, ShieldCheck, UserCog } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import StaffEditDialog, { type StaffEditDraft, type StaffRole } from "@/components/admin/StaffEditDialog";
+import MemberEditDialog, { type MemberEditDraft, type MemberRole } from "@/components/admin/MemberEditDialog";
+import { type StaffRole } from "@/components/admin/StaffEditDialog";
 import BulkStaffUploadDialog from "@/components/admin/BulkStaffUploadDialog";
 import BulkMessageDialog from "@/components/admin/BulkMessageDialog";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
@@ -32,20 +33,20 @@ const ROLE_PRIORITY = ["super_admin", "admin", "teacher", "student"] as const;
 const AdminUsers = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [deptFilter, setDeptFilter] = useState("all");
+  const [gradeFilter, setGradeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [msgOpen, setMsgOpen] = useState(false);
-  const [bulkDeptOpen, setBulkDeptOpen] = useState(false);
+  const [bulkGradeOpen, setBulkGradeOpen] = useState(false);
   const [bulkStatusOpen, setBulkStatusOpen] = useState(false);
-  const [bulkDeptId, setBulkDeptId] = useState("__none__");
+  const [bulkGradeId, setBulkGradeId] = useState("__none__");
   const [bulkStatus, setBulkStatus] = useState("active");
   const [addOpen, setAddOpen] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ userId: string; name: string } | null>(null);
-  const [staffEdit, setStaffEdit] = useState<StaffEditDraft | null>(null);
-  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", role: "student", departmentId: "", branchId: "" });
+  const [memberEdit, setMemberEdit] = useState<MemberEditDraft | null>(null);
+  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", phone: "", role: "student" });
   const [resetTarget, setResetTarget] = useState<{ userId: string; name: string } | null>(null);
   const [resetPwd, setResetPwd] = useState({ pw: "", confirm: "" });
   const { t, i18n } = useTranslation();
@@ -80,35 +81,36 @@ const AdminUsers = () => {
     },
   });
 
-  const { data: departments = [] } = useQuery({
-    queryKey: ["departments"],
+  const { data: grades = [] } = useQuery({
+    queryKey: ["member-grades"],
     queryFn: async () => {
-      const { data } = await supabase.from("departments").select("*").eq("is_active", true).order("display_order");
-      return data || [];
+      const { data } = await supabase.from("member_grades").select("id, name").order("name");
+      return (data || []) as { id: string; name: string }[];
     },
   });
 
   // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: async () => {
-      const effectiveDeptId = newUser.departmentId === "__branch__" ? newUser.branchId : newUser.departmentId;
       const { data, error } = await supabase.functions.invoke("create-user", {
         body: {
           email: newUser.email,
           password: newUser.password,
           fullName: newUser.name,
           role: newUser.role,
-          departmentId: effectiveDeptId || undefined,
         },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
+      if (newUser.phone.trim()) {
+        await supabase.from("profiles").update({ phone_number: newUser.phone.trim() }).eq("email", newUser.email);
+      }
       return data;
     },
     onSuccess: () => {
       toast.success(t("admin.userCreated"), { description: t("admin.userCreatedDesc", { name: newUser.name }) });
       setAddOpen(false);
-      setNewUser({ name: "", email: "", password: "", role: "student", departmentId: "", branchId: "" });
+      setNewUser({ name: "", email: "", password: "", phone: "", role: "student" });
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
       queryClient.invalidateQueries({ queryKey: ["admin-user-roles"] });
     },
@@ -176,11 +178,9 @@ const AdminUsers = () => {
 
   const hasProtectedRole = (userId: string) => (rolesByUser.get(userId) ?? []).includes("super_admin");
 
-  const getDeptName = (deptId: string | null) => {
-    if (!deptId) return "-";
-    const dept = departments.find((d: any) => d.id === deptId);
-    if (!dept) return "-";
-    return isEn ? (dept as any).name_en || (dept as any).name : (dept as any).name;
+  const getGradeName = (gradeId: string | null) => {
+    if (!gradeId) return "-";
+    return grades.find((g) => g.id === gradeId)?.name || "-";
   };
 
   const filtered = profiles.filter((profile: any) => {
@@ -190,27 +190,26 @@ const AdminUsers = () => {
     const searchableValues = [
       profile.full_name || "",
       profile.email || "",
-      profile.department || "",
-      profile.position || "",
-      profile.employee_id || "",
       profile.phone_number || "",
       profile.birth_date || "",
       profile.admin_memo || "",
       memberStatusLabel(profile.member_status),
       GENDER_LABEL[profile.gender] || "",
       (rolesByUser.get(profile.user_id) ?? []).join(" "),
-      getDeptName(profile.department_id),
+      getGradeName(profile.grade_id),
     ];
 
     const matchesSearch =
       !q ||
       searchableValues.some((value) => String(value).toLowerCase().includes(q)) ||
       (digits.length >= 2 && phoneDigits.includes(digits));
-    const matchesDept = deptFilter === "all" || profile.department_id === deptFilter;
+    const matchesGrade =
+      gradeFilter === "all" ||
+      (gradeFilter === "__none__" ? !profile.grade_id : profile.grade_id === gradeFilter);
     const matchesStatus = statusFilter === "all" || (profile.member_status || "active") === statusFilter;
     const matchesRole =
       roleFilter === "all" || (rolesByUser.get(profile.user_id) ?? []).includes(roleFilter as StaffRole);
-    return matchesSearch && matchesDept && matchesStatus && matchesRole;
+    return matchesSearch && matchesGrade && matchesStatus && matchesRole;
   });
 
   const teacherCount = profiles.filter((profile: any) => getPrimaryRole(profile.user_id) === "teacher").length;
@@ -234,14 +233,14 @@ const AdminUsers = () => {
     );
 
   const bulkUpdateMutation = useMutation({
-    mutationFn: async (patch: { department_id?: string | null; member_status?: string }) => {
+    mutationFn: async (patch: { grade_id?: string | null; member_status?: string }) => {
       const { error } = await supabase.from("profiles").update(patch).in("user_id", selectedIds);
       if (error) throw error;
     },
     onSuccess: () => {
       toast.success(`${selectedIds.length}명 일괄 변경 완료`);
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
-      setBulkDeptOpen(false);
+      setBulkGradeOpen(false);
       setBulkStatusOpen(false);
       setSelectedIds([]);
     },
@@ -258,9 +257,10 @@ const AdminUsers = () => {
       { header: "성별", value: (r) => GENDER_LABEL[r.gender] || "" },
       { header: "회원상태", value: (r) => memberStatusLabel(r.member_status) },
       { header: "역할", value: (r) => (rolesByUser.get(r.user_id) ?? []).join("/") },
-      { header: "소속", value: (r) => getDeptName(r.department_id) },
-      { header: "직책", value: (r) => r.position },
-      { header: "사번", value: (r) => r.employee_id },
+      { header: "회원등급", value: (r) => getGradeName(r.grade_id) },
+      { header: "이메일수신", value: (r) => (r.marketing_email ? "동의" : "미동의") },
+      { header: "SMS수신", value: (r) => (r.marketing_sms ? "동의" : "미동의") },
+      { header: "카카오수신", value: (r) => (r.marketing_kakao ? "동의" : "미동의") },
       { header: "가입일", value: (r) => (r.created_at ? new Date(r.created_at).toLocaleDateString("ko-KR") : "") },
       { header: "최근접속", value: (r) => (r.last_login_at ? new Date(r.last_login_at).toLocaleString("ko-KR") : "") },
       { header: "관리자메모", value: (r) => r.admin_memo },
@@ -268,44 +268,42 @@ const AdminUsers = () => {
     toast.success(`${rows.length}명 엑셀(CSV) 다운로드`);
   };
 
-  const openStaffEdit = (profile: any) => {
+  const openMemberEdit = (profile: any) => {
     const primaryRole = getPrimaryRole(profile.user_id);
-    const deptId = profile.department_id || "";
-    const dept = departments.find((d: any) => d.id === deptId);
-    let branchId = "__none__";
-    let departmentId = "__none__";
-    if (dept) {
-      if ((dept as any).parent_department_id) {
-        branchId = (dept as any).parent_department_id;
-        departmentId = dept.id;
-      } else {
-        branchId = dept.id;
-        departmentId = "__none__";
-      }
-    }
-
-    const currentRoles = (rolesByUser.get(profile.user_id) ?? []).filter(
-      (r) => r !== "super_admin",
-    );
-    setStaffEdit({
+    setMemberEdit({
       userId: profile.user_id,
-      name: profile.full_name || "-",
-      branchId,
-      departmentId,
-      position: profile.position || "",
-      roles: currentRoles.length > 0 ? (currentRoles as any) : ["student"],
+      email: profile.email || "",
+      fullName: profile.full_name || "",
+      phoneNumber: profile.phone_number || "",
+      birthDate: profile.birth_date || "",
+      gender: profile.gender || "unknown",
+      memberStatus: profile.member_status || "active",
+      gradeId: profile.grade_id || "__none__",
+      marketingEmail: !!profile.marketing_email,
+      marketingSms: !!profile.marketing_sms,
+      marketingKakao: !!profile.marketing_kakao,
+      adminMemo: profile.admin_memo || "",
+      role: (primaryRole === "super_admin" ? "admin" : primaryRole) as MemberRole,
       roleLocked: hasProtectedRole(profile.user_id) || profile.user_id === user?.id,
     });
   };
 
-  const updateStaffMutation = useMutation({
-    mutationFn: async (draft: StaffEditDraft) => {
-      const departmentId = draft.departmentId !== "__none__" ? draft.departmentId : (draft.branchId !== "__none__" ? draft.branchId : null);
-      const position = draft.position.trim();
-
+  const updateMemberMutation = useMutation({
+    mutationFn: async (draft: MemberEditDraft) => {
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ department_id: departmentId, position: position || null })
+        .update({
+          full_name: draft.fullName.trim() || null,
+          phone_number: draft.phoneNumber.trim() || null,
+          birth_date: draft.birthDate || null,
+          gender: draft.gender || "unknown",
+          member_status: draft.memberStatus,
+          grade_id: draft.gradeId === "__none__" ? null : draft.gradeId,
+          marketing_email: draft.marketingEmail,
+          marketing_sms: draft.marketingSms,
+          marketing_kakao: draft.marketingKakao,
+          admin_memo: draft.adminMemo.trim() || null,
+        })
         .eq("user_id", draft.userId);
       if (profileError) throw profileError;
 
@@ -321,6 +319,8 @@ const AdminUsers = () => {
         throw new Error("Cannot delete super admin");
       }
 
+      if ((currentRoles ?? []).length === 1 && currentRoles![0].role === draft.role) return;
+
       const { error: deleteRoleError } = await supabase
         .from("user_roles")
         .delete()
@@ -328,18 +328,16 @@ const AdminUsers = () => {
         .neq("role", "super_admin");
       if (deleteRoleError) throw deleteRoleError;
 
-      const rolesToInsert = (draft.roles.length > 0 ? draft.roles : ["student"]).map((role) => ({
-        user_id: draft.userId,
-        role: role as StaffRole,
-      }));
-      const { error: insertRoleError } = await supabase.from("user_roles").insert(rolesToInsert);
+      const { error: insertRoleError } = await supabase
+        .from("user_roles")
+        .insert([{ user_id: draft.userId, role: draft.role as StaffRole }]);
       if (insertRoleError) throw insertRoleError;
     },
     onSuccess: () => {
-      toast.success(t("admin.staffUpdated"));
+      toast.success("회원 정보가 저장되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
       queryClient.invalidateQueries({ queryKey: ["admin-user-roles"] });
-      setStaffEdit(null);
+      setMemberEdit(null);
     },
     onError: (err: any) => {
       const message = err?.message || "";
@@ -454,20 +452,21 @@ const AdminUsers = () => {
           <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="이름·이메일·전화번호 뒷자리·사번·소속·메모 검색"
+              placeholder="이름·이메일·휴대폰 뒷자리·생년월일·메모 검색"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9 h-10 rounded-xl border-border"
             />
           </div>
-          <Select value={deptFilter} onValueChange={setDeptFilter}>
+          <Select value={gradeFilter} onValueChange={setGradeFilter}>
             <SelectTrigger className="w-28 sm:w-40 rounded-xl">
-              <SelectValue placeholder={t("admin.allDepts")} />
+              <SelectValue placeholder="회원등급" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("admin.allDepts")}</SelectItem>
-              {departments.map((d: any) => (
-                <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
+              <SelectItem value="all">전체 회원등급</SelectItem>
+              <SelectItem value="__none__">등급 없음</SelectItem>
+              {grades.map((g) => (
+                <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -500,8 +499,8 @@ const AdminUsers = () => {
           <div className="stat-card !p-3 flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium text-foreground">{selectedIds.length}명 선택됨</span>
             <span className="flex-1" />
-            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkDeptOpen(true)}>
-              <Building2 className="h-3.5 w-3.5" /> 소속 변경
+            <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkGradeOpen(true)}>
+              <UserCog className="h-3.5 w-3.5" /> 회원등급 변경
             </Button>
             <Button size="sm" variant="outline" className="rounded-xl gap-1.5" onClick={() => setBulkStatusOpen(true)}>
               <ShieldCheck className="h-3.5 w-3.5" /> 상태 변경
@@ -532,10 +531,10 @@ const AdminUsers = () => {
                 </th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.nameColumn")}</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">연락처</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("admin.departmentColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">회원등급</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.roleColumn")}</th>
                 <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">상태</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("admin.positionColumn")}</th>
+                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">가입일</th>
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3"></th>
               </tr>
             </thead>
@@ -573,7 +572,7 @@ const AdminUsers = () => {
                       <span className="text-sm text-muted-foreground">{profile.phone_number || "-"}</span>
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <span className="text-sm text-muted-foreground">{getDeptName(profile.department_id)}</span>
+                      <span className="text-sm text-muted-foreground">{getGradeName(profile.grade_id)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-block whitespace-nowrap text-[10px] font-medium px-2 py-1 rounded-full ${role.className}`}>{role.text}</span>
@@ -584,7 +583,9 @@ const AdminUsers = () => {
                       </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-sm text-muted-foreground">{profile.position || "-"}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {profile.created_at ? new Date(profile.created_at).toLocaleDateString("ko-KR") : "-"}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -602,7 +603,7 @@ const AdminUsers = () => {
                           variant="outline"
                           size="sm"
                           className="h-8 rounded-full gap-1.5 px-3"
-                          onClick={() => openStaffEdit(profile)}
+                          onClick={() => openMemberEdit(profile)}
                         >
                           <Pencil className="h-3.5 w-3.5" />
                           <span className="hidden sm:inline">{t("common.edit")}</span>
@@ -654,7 +655,7 @@ const AdminUsers = () => {
               : hasProtectedRole(profile.user_id)
                 ? t("admin.cannotManageSuperAdmin")
                 : null;
-            const deptName = getDeptName(profile.department_id);
+            const gradeName = getGradeName(profile.grade_id);
 
             return (
               <div key={profile.user_id} className="stat-card !p-3">
@@ -672,7 +673,7 @@ const AdminUsers = () => {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-semibold text-foreground truncate">{profile.full_name || "-"}</p>
-                        <p className="text-xs text-muted-foreground truncate">{profile.email || profile.employee_id || "-"}</p>
+                        <p className="text-xs text-muted-foreground truncate">{profile.email || "-"}</p>
                         {profile.phone_number && (
                           <p className="text-xs text-muted-foreground truncate">{profile.phone_number}</p>
                         )}
@@ -684,13 +685,13 @@ const AdminUsers = () => {
                         </span>
                       </div>
                     </div>
-                    {(deptName !== "-" || profile.position) && (
-                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
-                        {deptName !== "-" && <span className="truncate">{deptName}</span>}
-                        {deptName !== "-" && profile.position && <span className="text-border">·</span>}
-                        {profile.position && <span className="truncate">{profile.position}</span>}
-                      </div>
-                    )}
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
+                      {gradeName !== "-" && <span className="truncate">{gradeName}</span>}
+                      {gradeName !== "-" && profile.created_at && <span className="text-border">·</span>}
+                      {profile.created_at && (
+                        <span className="truncate">가입 {new Date(profile.created_at).toLocaleDateString("ko-KR")}</span>
+                      )}
+                    </div>
                     <div className="mt-2.5 flex items-center justify-end gap-1 -mr-1">
                       <Button
                         variant="ghost"
@@ -708,7 +709,7 @@ const AdminUsers = () => {
                         className="h-8 w-8 rounded-full"
                         title={t("common.edit")}
                         aria-label={t("common.edit")}
-                        onClick={() => openStaffEdit(profile)}
+                        onClick={() => openMemberEdit(profile)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -770,27 +771,8 @@ const AdminUsers = () => {
               <Input type="password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} placeholder="••••••••" className="mt-1" />
             </div>
             <div>
-              <Label>{t("branch.branchTitle")}</Label>
-              <Select value={newUser.branchId} onValueChange={(v) => setNewUser({ ...newUser, branchId: v, departmentId: "" })}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder={t("branch.branchTitle")} /></SelectTrigger>
-                <SelectContent>
-                  {departments.filter((d: any) => !d.parent_department_id).map((d: any) => (
-                    <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>{t("admin.selectDept")}</Label>
-              <Select value={newUser.departmentId} onValueChange={(v) => setNewUser({ ...newUser, departmentId: v })} disabled={!newUser.branchId}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder={t("admin.selectDept")} /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__branch__">{departments.find((d: any) => d.id === newUser.branchId) ? (isEn ? (departments.find((d: any) => d.id === newUser.branchId) as any).name_en || (departments.find((d: any) => d.id === newUser.branchId) as any).name : (departments.find((d: any) => d.id === newUser.branchId) as any).name) + ` (${t("branch.branchTitle")})` : "-"}</SelectItem>
-                  {departments.filter((d: any) => d.parent_department_id === newUser.branchId).map((d: any) => (
-                    <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label>휴대폰 번호</Label>
+              <Input value={newUser.phone} onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} placeholder="010-0000-0000" className="mt-1" />
             </div>
             <div>
               <Label>{t("admin.selectRole")}</Label>
@@ -832,22 +814,30 @@ const AdminUsers = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <StaffEditDialog
-        open={!!staffEdit}
-        onOpenChange={(open) => !open && setStaffEdit(null)}
-        draft={staffEdit}
-        onDraftChange={setStaffEdit}
-        departments={departments}
-        isEn={isEn}
-        saving={updateStaffMutation.isPending}
-        onSave={() => staffEdit && updateStaffMutation.mutate(staffEdit)}
+      <MemberEditDialog
+        open={!!memberEdit}
+        onOpenChange={(open) => !open && setMemberEdit(null)}
+        draft={memberEdit}
+        onDraftChange={setMemberEdit}
+        grades={grades}
+        saving={updateMemberMutation.isPending}
+        onSave={() => memberEdit && updateMemberMutation.mutate(memberEdit)}
         teacherRoleEnabled={teacherRoleEnabled}
+        resetting={resetPasswordMutation.isPending}
+        canResetPassword={
+          !!memberEdit &&
+          (!hasProtectedRole(memberEdit.userId) ||
+            roles.some((r: any) => r.user_id === user?.id && r.role === "super_admin"))
+        }
+        onResetPassword={(newPassword) =>
+          memberEdit && resetPasswordMutation.mutate({ userId: memberEdit.userId, newPassword })
+        }
       />
 
       <BulkStaffUploadDialog
         open={bulkOpen}
         onOpenChange={setBulkOpen}
-        departments={departments}
+        departments={[]}
         teacherRoleEnabled={teacherRoleEnabled}
         isEn={isEn}
         onCompleted={() => {
@@ -901,30 +891,30 @@ const AdminUsers = () => {
         </DialogContent>
       </Dialog>
 
-      {/* 일괄 소속 변경 */}
-      <Dialog open={bulkDeptOpen} onOpenChange={setBulkDeptOpen}>
+      {/* 일괄 회원등급 변경 */}
+      <Dialog open={bulkGradeOpen} onOpenChange={setBulkGradeOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><Building2 className="h-4 w-4" /> 소속 일괄 변경</DialogTitle>
-            <DialogDescription>선택한 {selectedIds.length}명의 소속을 한 번에 변경합니다.</DialogDescription>
+            <DialogTitle className="flex items-center gap-2"><UserCog className="h-4 w-4" /> 회원등급 일괄 변경</DialogTitle>
+            <DialogDescription>선택한 {selectedIds.length}명의 회원등급을 한 번에 변경합니다.</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Label>변경할 소속</Label>
-            <Select value={bulkDeptId} onValueChange={setBulkDeptId}>
-              <SelectTrigger><SelectValue placeholder="소속 선택" /></SelectTrigger>
+            <Label>변경할 회원등급</Label>
+            <Select value={bulkGradeId} onValueChange={setBulkGradeId}>
+              <SelectTrigger><SelectValue placeholder="등급 선택" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">소속 없음</SelectItem>
-                {departments.map((d: any) => (
-                  <SelectItem key={d.id} value={d.id}>{isEn ? d.name_en || d.name : d.name}</SelectItem>
+                <SelectItem value="__none__">등급 없음</SelectItem>
+                {grades.map((g) => (
+                  <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBulkDeptOpen(false)}>{t("common.cancel")}</Button>
+            <Button variant="outline" onClick={() => setBulkGradeOpen(false)}>{t("common.cancel")}</Button>
             <Button
               disabled={bulkUpdateMutation.isPending}
-              onClick={() => bulkUpdateMutation.mutate({ department_id: bulkDeptId === "__none__" ? null : bulkDeptId })}
+              onClick={() => bulkUpdateMutation.mutate({ grade_id: bulkGradeId === "__none__" ? null : bulkGradeId })}
             >
               {bulkUpdateMutation.isPending ? t("common.processing") : "변경"}
             </Button>
