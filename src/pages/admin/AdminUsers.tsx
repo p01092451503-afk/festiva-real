@@ -178,11 +178,9 @@ const AdminUsers = () => {
 
   const hasProtectedRole = (userId: string) => (rolesByUser.get(userId) ?? []).includes("super_admin");
 
-  const getDeptName = (deptId: string | null) => {
-    if (!deptId) return "-";
-    const dept = departments.find((d: any) => d.id === deptId);
-    if (!dept) return "-";
-    return isEn ? (dept as any).name_en || (dept as any).name : (dept as any).name;
+  const getGradeName = (gradeId: string | null) => {
+    if (!gradeId) return "-";
+    return grades.find((g) => g.id === gradeId)?.name || "-";
   };
 
   const filtered = profiles.filter((profile: any) => {
@@ -192,27 +190,26 @@ const AdminUsers = () => {
     const searchableValues = [
       profile.full_name || "",
       profile.email || "",
-      profile.department || "",
-      profile.position || "",
-      profile.employee_id || "",
       profile.phone_number || "",
       profile.birth_date || "",
       profile.admin_memo || "",
       memberStatusLabel(profile.member_status),
       GENDER_LABEL[profile.gender] || "",
       (rolesByUser.get(profile.user_id) ?? []).join(" "),
-      getDeptName(profile.department_id),
+      getGradeName(profile.grade_id),
     ];
 
     const matchesSearch =
       !q ||
       searchableValues.some((value) => String(value).toLowerCase().includes(q)) ||
       (digits.length >= 2 && phoneDigits.includes(digits));
-    const matchesDept = deptFilter === "all" || profile.department_id === deptFilter;
+    const matchesGrade =
+      gradeFilter === "all" ||
+      (gradeFilter === "__none__" ? !profile.grade_id : profile.grade_id === gradeFilter);
     const matchesStatus = statusFilter === "all" || (profile.member_status || "active") === statusFilter;
     const matchesRole =
       roleFilter === "all" || (rolesByUser.get(profile.user_id) ?? []).includes(roleFilter as StaffRole);
-    return matchesSearch && matchesDept && matchesStatus && matchesRole;
+    return matchesSearch && matchesGrade && matchesStatus && matchesRole;
   });
 
   const teacherCount = profiles.filter((profile: any) => getPrimaryRole(profile.user_id) === "teacher").length;
@@ -236,14 +233,14 @@ const AdminUsers = () => {
     );
 
   const bulkUpdateMutation = useMutation({
-    mutationFn: async (patch: { department_id?: string | null; member_status?: string }) => {
+    mutationFn: async (patch: { grade_id?: string | null; member_status?: string }) => {
       const { error } = await supabase.from("profiles").update(patch).in("user_id", selectedIds);
       if (error) throw error;
     },
     onSuccess: () => {
       toast.success(`${selectedIds.length}명 일괄 변경 완료`);
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
-      setBulkDeptOpen(false);
+      setBulkGradeOpen(false);
       setBulkStatusOpen(false);
       setSelectedIds([]);
     },
@@ -260,9 +257,10 @@ const AdminUsers = () => {
       { header: "성별", value: (r) => GENDER_LABEL[r.gender] || "" },
       { header: "회원상태", value: (r) => memberStatusLabel(r.member_status) },
       { header: "역할", value: (r) => (rolesByUser.get(r.user_id) ?? []).join("/") },
-      { header: "소속", value: (r) => getDeptName(r.department_id) },
-      { header: "직책", value: (r) => r.position },
-      { header: "사번", value: (r) => r.employee_id },
+      { header: "회원등급", value: (r) => getGradeName(r.grade_id) },
+      { header: "이메일수신", value: (r) => (r.marketing_email ? "동의" : "미동의") },
+      { header: "SMS수신", value: (r) => (r.marketing_sms ? "동의" : "미동의") },
+      { header: "카카오수신", value: (r) => (r.marketing_kakao ? "동의" : "미동의") },
       { header: "가입일", value: (r) => (r.created_at ? new Date(r.created_at).toLocaleDateString("ko-KR") : "") },
       { header: "최근접속", value: (r) => (r.last_login_at ? new Date(r.last_login_at).toLocaleString("ko-KR") : "") },
       { header: "관리자메모", value: (r) => r.admin_memo },
