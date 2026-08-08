@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Package, Plus, Pencil, Trash2, Truck, FileSpreadsheet, BookOpen } from "lucide-react";
+import { Package, Plus, Minus, Save, Pencil, Trash2, Truck, FileSpreadsheet, BookOpen, PackageCheck, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -61,6 +61,9 @@ const AdminMarket = () => {
   const [shipEdit, setShipEdit] = useState<any>(null);
   const [selectedShipIds, setSelectedShipIds] = useState<string[]>([]);
   const [bulkCarrier, setBulkCarrier] = useState(CARRIERS[0]);
+  const [inline, setInline] = useState<Record<string, { price: string; sale_price: string; stock: string }>>({});
+  const [savingId, setSavingId] = useState<string | null>(null);
+
 
   const { data: categories = [] } = useQuery({
     queryKey: ["product-categories"],
@@ -169,6 +172,82 @@ const AdminMarket = () => {
     toast.success("삭제되었습니다");
     qc.invalidateQueries({ queryKey: ["market-products"] });
   };
+
+  /** 목록에서 바로 가격·재고를 수정 */
+  const inlineOf = (p: any) =>
+    inline[p.id] ?? {
+      price: String(p.price ?? 0),
+      sale_price: p.sale_price === null || p.sale_price === undefined ? "" : String(p.sale_price),
+      stock: String(p.stock_quantity ?? 0),
+    };
+
+  const setInlineField = (p: any, key: "price" | "sale_price" | "stock", value: string) =>
+    setInline((prev) => ({ ...prev, [p.id]: { ...inlineOf(p), [key]: value } }));
+
+  const saveInline = async (p: any) => {
+    const v = inlineOf(p);
+    setSavingId(p.id);
+    const patch: any = {
+      price: Number(v.price) || 0,
+      sale_price: v.sale_price === "" ? null : Number(v.sale_price),
+    };
+    if (p.product_type !== "ebook") patch.stock_quantity = Number(v.stock) || 0;
+    const { error } = await supabase.from("store_products").update(patch).eq("id", p.id);
+    setSavingId(null);
+    if (error) return toast.error(error.message);
+    toast.success("반영되었습니다");
+    setInline((prev) => {
+      const next = { ...prev };
+      delete next[p.id];
+      return next;
+    });
+    qc.invalidateQueries({ queryKey: ["market-products"] });
+  };
+
+  const adjustStock = async (p: any, delta: number) => {
+    const next = Math.max(0, (p.stock_quantity ?? 0) + delta);
+    const { error } = await supabase.from("store_products").update({ stock_quantity: next }).eq("id", p.id);
+    if (error) return toast.error(error.message);
+    setInline((prev) => {
+      const c = { ...prev };
+      delete c[p.id];
+      return c;
+    });
+    qc.invalidateQueries({ queryKey: ["market-products"] });
+  };
+
+  const toggleActive = async (p: any) => {
+    const { error } = await supabase.from("store_products").update({ is_active: !p.is_active }).eq("id", p.id);
+    if (error) return toast.error(error.message);
+    qc.invalidateQueries({ queryKey: ["market-products"] });
+  };
+
+  /** 주문(배송) 상태를 한 번에 변경 */
+  const changeShipStatus = async (s: any, status: string) => {
+    const patch: any = { status };
+    if (status === "shipped" && !s.shipped_at) patch.shipped_at = new Date().toISOString();
+    if (status === "delivered") {
+      if (!s.shipped_at) patch.shipped_at = new Date().toISOString();
+      if (!s.delivered_at) patch.delivered_at = new Date().toISOString();
+    }
+    const { error } = await supabase.from("product_shipments").update(patch).eq("id", s.id);
+    if (error) return toast.error(error.message);
+    toast.success(`${SHIP_STATUS[status]} 처리되었습니다`);
+    qc.invalidateQueries({ queryKey: ["product-shipments"] });
+  };
+
+  const bulkStatus = async (status: string) => {
+    if (selectedShipIds.length === 0) return toast.error("주문을 선택하세요");
+    const patch: any = { status };
+    if (status === "shipped") patch.shipped_at = new Date().toISOString();
+    if (status === "delivered") patch.delivered_at = new Date().toISOString();
+    const { error } = await supabase.from("product_shipments").update(patch).in("id", selectedShipIds);
+    if (error) return toast.error(error.message);
+    toast.success(`${selectedShipIds.length}건을 ${SHIP_STATUS[status]} 처리했습니다`);
+    setSelectedShipIds([]);
+    qc.invalidateQueries({ queryKey: ["product-shipments"] });
+  };
+
 
   const addCategory = async () => {
     if (!catName.trim()) return;
@@ -303,7 +382,54 @@ const AdminMarket = () => {
                       {p.publisher ? ` / ${p.publisher}` : ""}
                     </p>
                   </div>
+                  <div className="flex flex-wrap items-end gap-2 shrink-0">
+                    <div>
+                      <Label className="text-[11px] text-muted-foreground">정가</Label>
+                      <Input
+                        type="number"
+                        className="mt-0.5 h-8 w-24"
+                        value={inlineOf(p).price}
+                        onChange={(e) => setInlineField(p, "price", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[11px] text-muted-foreground">판매가</Label>
+                      <Input
+                        type="number"
+                        className="mt-0.5 h-8 w-24"
+                        placeholder="없음"
+                        value={inlineOf(p).sale_price}
+                        onChange={(e) => setInlineField(p, "sale_price", e.target.value)}
+                      />
+                    </div>
+                    {p.product_type !== "ebook" && (
+                      <div>
+                        <Label className="text-[11px] text-muted-foreground">재고</Label>
+                        <div className="mt-0.5 flex items-center gap-1">
+                          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => adjustStock(p, -1)}>
+                            <Minus className="h-3.5 w-3.5" />
+                          </Button>
+                          <Input
+                            type="number"
+                            className="h-8 w-20"
+                            value={inlineOf(p).stock}
+                            onChange={(e) => setInlineField(p, "stock", e.target.value)}
+                          />
+                          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => adjustStock(p, 1)}>
+                            <Plus className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    <Button size="sm" className="h-8" disabled={savingId === p.id} onClick={() => saveInline(p)}>
+                      <Save className="h-3.5 w-3.5 mr-1" /> 적용
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-8" onClick={() => toggleActive(p)}>
+                      {p.is_active ? "판매중지" : "판매재개"}
+                    </Button>
+                  </div>
                   <div className="flex gap-1 shrink-0">
+
                     <Button
                       variant="ghost"
                       size="icon"
@@ -386,10 +512,23 @@ const AdminMarket = () => {
                 <Button size="sm" variant="outline" className="gap-1.5" onClick={bulkShip}>
                   <Truck className="h-4 w-4" /> 선택 발송처리 ({selectedShipIds.length})
                 </Button>
+                <Button size="sm" variant="outline" className="gap-1.5" onClick={() => bulkStatus("preparing")}>
+                  <PackageCheck className="h-4 w-4" /> 배송준비
+                </Button>
+                <Button size="sm" variant="outline" className="gap-1.5" onClick={() => bulkStatus("delivered")}>
+                  <CheckCircle2 className="h-4 w-4" /> 배송완료
+                </Button>
               </div>
               <Button variant="outline" size="sm" className="gap-1.5" onClick={exportShipments}>
                 <FileSpreadsheet className="h-4 w-4" /> 엑셀 다운로드
               </Button>
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+              {Object.entries(SHIP_STATUS).map(([v, l]) => (
+                <span key={v} className="rounded-full border px-2.5 py-1">
+                  {l} {shipments.filter((s: any) => s.status === v).length}건
+                </span>
+              ))}
             </div>
             <div className="rounded-xl border divide-y">
               {filteredShipments.length === 0 && (
@@ -420,11 +559,26 @@ const AdminMarket = () => {
                   <Badge variant={s.status === "delivered" ? "default" : "secondary"} className="whitespace-nowrap">
                     {SHIP_STATUS[s.status] || s.status}
                   </Badge>
+                  <div className="flex flex-wrap gap-1 shrink-0">
+                    {(["pending", "preparing", "shipped", "delivered"] as const).map((st) => (
+                      <Button
+                        key={st}
+                        size="sm"
+                        variant={s.status === st ? "default" : "outline"}
+                        className="h-8"
+                        disabled={s.status === st}
+                        onClick={() => changeShipStatus(s, st)}
+                      >
+                        {SHIP_STATUS[st]}
+                      </Button>
+                    ))}
+                  </div>
                   <Button variant="ghost" size="icon" onClick={() => setShipEdit({ ...s })}>
                     <Pencil className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
+
             </div>
           </TabsContent>
 
