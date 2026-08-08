@@ -4186,11 +4186,13 @@ export type Database = {
         Row: {
           channel: string
           condition_type: string
+          cooldown_days: number
           course_id: string | null
           created_at: string
           id: string
           is_active: boolean
           last_run_at: string | null
+          last_sent_count: number
           name: string
           schedule_cron: string | null
           template_id: string | null
@@ -4200,11 +4202,13 @@ export type Database = {
         Insert: {
           channel?: string
           condition_type?: string
+          cooldown_days?: number
           course_id?: string | null
           created_at?: string
           id?: string
           is_active?: boolean
           last_run_at?: string | null
+          last_sent_count?: number
           name: string
           schedule_cron?: string | null
           template_id?: string | null
@@ -4214,11 +4218,13 @@ export type Database = {
         Update: {
           channel?: string
           condition_type?: string
+          cooldown_days?: number
           course_id?: string | null
           created_at?: string
           id?: string
           is_active?: boolean
           last_run_at?: string | null
+          last_sent_count?: number
           name?: string
           schedule_cron?: string | null
           template_id?: string | null
