@@ -269,6 +269,9 @@ const App = () => (
               <Route path="/admin/users/:userId" element={<AdminRoute><AdminUserDetail /></AdminRoute>} />
               <Route path="/admin/courses" element={<AdminRoute><AdminCourses /></AdminRoute>} />
               <Route path="/admin/sale-status" element={<AdminRoute><AdminSaleStatus /></AdminRoute>} />
+              <Route path="/admin/content-library" element={<AdminRoute><AdminContentLibrary /></AdminRoute>} />
+              <Route path="/admin/course-options" element={<AdminRoute><AdminCourseOptions /></AdminRoute>} />
+              <Route path="/admin/course-ops" element={<AdminRoute><AdminCourseOps /></AdminRoute>} />
               <Route path="/admin/courses/new" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/courses/:courseId/edit" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
