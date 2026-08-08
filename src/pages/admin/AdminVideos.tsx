@@ -182,8 +182,13 @@ const AdminVideos = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
+      const target = videos.find((v) => v.id === id);
       const { error } = await supabase.from("video_assets").delete().eq("id", id);
       if (error) throw error;
+      // CDN 직접 업로드 영상은 스토리지 원본 파일도 함께 삭제한다.
+      if (target?.storage_path) {
+        await supabase.storage.from("course-videos").remove([target.storage_path]);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["video-assets"] });
