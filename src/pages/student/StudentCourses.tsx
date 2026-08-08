@@ -152,6 +152,8 @@ const StudentCourses = () => {
 
         <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" aria-hidden="true" />
       </Link>
+      {!isCompleted && <CourseAccessActions enrollment={enrollment} course={course} userId={user?.id} />}
+      </div>
     );
   };
 
