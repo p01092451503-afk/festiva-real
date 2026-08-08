@@ -458,6 +458,18 @@ const MyPage = ({ defaultTab = "profile" }: { defaultTab?: string }) => {
                 <TabsTrigger value="orders" className="rounded-lg gap-1.5 text-sm">
                   <Receipt className="h-4 w-4" /> {t("mypage.ordersTab")}
                 </TabsTrigger>
+                <TabsTrigger value="points" className="rounded-lg gap-1.5 text-sm">
+                  <Coins className="h-4 w-4" /> {t("mypage.pointsTab", "포인트")}
+                </TabsTrigger>
+                <TabsTrigger value="coupons" className="rounded-lg gap-1.5 text-sm">
+                  <Ticket className="h-4 w-4" /> {t("mypage.couponsTab", "쿠폰함")}
+                </TabsTrigger>
+                <TabsTrigger value="subscription" className="rounded-lg gap-1.5 text-sm">
+                  <CreditCard className="h-4 w-4" /> {t("mypage.subscriptionTab", "구독")}
+                </TabsTrigger>
+                <TabsTrigger value="refunds" className="rounded-lg gap-1.5 text-sm">
+                  <RotateCcw className="h-4 w-4" /> {t("mypage.refundsTab", "환불")}
+                </TabsTrigger>
               </>
             )}
             <TabsTrigger value="password" className="rounded-lg gap-1.5 text-sm">
