@@ -268,44 +268,42 @@ const AdminUsers = () => {
     toast.success(`${rows.length}명 엑셀(CSV) 다운로드`);
   };
 
-  const openStaffEdit = (profile: any) => {
+  const openMemberEdit = (profile: any) => {
     const primaryRole = getPrimaryRole(profile.user_id);
-    const deptId = profile.department_id || "";
-    const dept = departments.find((d: any) => d.id === deptId);
-    let branchId = "__none__";
-    let departmentId = "__none__";
-    if (dept) {
-      if ((dept as any).parent_department_id) {
-        branchId = (dept as any).parent_department_id;
-        departmentId = dept.id;
-      } else {
-        branchId = dept.id;
-        departmentId = "__none__";
-      }
-    }
-
-    const currentRoles = (rolesByUser.get(profile.user_id) ?? []).filter(
-      (r) => r !== "super_admin",
-    );
-    setStaffEdit({
+    setMemberEdit({
       userId: profile.user_id,
-      name: profile.full_name || "-",
-      branchId,
-      departmentId,
-      position: profile.position || "",
-      roles: currentRoles.length > 0 ? (currentRoles as any) : ["student"],
+      email: profile.email || "",
+      fullName: profile.full_name || "",
+      phoneNumber: profile.phone_number || "",
+      birthDate: profile.birth_date || "",
+      gender: profile.gender || "unknown",
+      memberStatus: profile.member_status || "active",
+      gradeId: profile.grade_id || "__none__",
+      marketingEmail: !!profile.marketing_email,
+      marketingSms: !!profile.marketing_sms,
+      marketingKakao: !!profile.marketing_kakao,
+      adminMemo: profile.admin_memo || "",
+      role: (primaryRole === "super_admin" ? "admin" : primaryRole) as MemberRole,
       roleLocked: hasProtectedRole(profile.user_id) || profile.user_id === user?.id,
     });
   };
 
-  const updateStaffMutation = useMutation({
-    mutationFn: async (draft: StaffEditDraft) => {
-      const departmentId = draft.departmentId !== "__none__" ? draft.departmentId : (draft.branchId !== "__none__" ? draft.branchId : null);
-      const position = draft.position.trim();
-
+  const updateMemberMutation = useMutation({
+    mutationFn: async (draft: MemberEditDraft) => {
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({ department_id: departmentId, position: position || null })
+        .update({
+          full_name: draft.fullName.trim() || null,
+          phone_number: draft.phoneNumber.trim() || null,
+          birth_date: draft.birthDate || null,
+          gender: draft.gender || "unknown",
+          member_status: draft.memberStatus,
+          grade_id: draft.gradeId === "__none__" ? null : draft.gradeId,
+          marketing_email: draft.marketingEmail,
+          marketing_sms: draft.marketingSms,
+          marketing_kakao: draft.marketingKakao,
+          admin_memo: draft.adminMemo.trim() || null,
+        })
         .eq("user_id", draft.userId);
       if (profileError) throw profileError;
 
@@ -321,6 +319,8 @@ const AdminUsers = () => {
         throw new Error("Cannot delete super admin");
       }
 
+      if ((currentRoles ?? []).length === 1 && currentRoles![0].role === draft.role) return;
+
       const { error: deleteRoleError } = await supabase
         .from("user_roles")
         .delete()
@@ -328,18 +328,16 @@ const AdminUsers = () => {
         .neq("role", "super_admin");
       if (deleteRoleError) throw deleteRoleError;
 
-      const rolesToInsert = (draft.roles.length > 0 ? draft.roles : ["student"]).map((role) => ({
-        user_id: draft.userId,
-        role: role as StaffRole,
-      }));
-      const { error: insertRoleError } = await supabase.from("user_roles").insert(rolesToInsert);
+      const { error: insertRoleError } = await supabase
+        .from("user_roles")
+        .insert([{ user_id: draft.userId, role: draft.role as StaffRole }]);
       if (insertRoleError) throw insertRoleError;
     },
     onSuccess: () => {
-      toast.success(t("admin.staffUpdated"));
+      toast.success("회원 정보가 저장되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["admin-profiles"] });
       queryClient.invalidateQueries({ queryKey: ["admin-user-roles"] });
-      setStaffEdit(null);
+      setMemberEdit(null);
     },
     onError: (err: any) => {
       const message = err?.message || "";
