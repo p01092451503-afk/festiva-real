@@ -348,7 +348,137 @@ const AdminMicroLearning = () => {
             );
           })}
         </div>
+          </TabsContent>
+
+          {/* 배정 · 수강 진도 */}
+          <TabsContent value="progress" className="space-y-4 pt-4">
+            <div className="flex flex-wrap gap-2 items-center justify-between">
+              <Select value={progressContentId} onValueChange={setProgressContentId}>
+                <SelectTrigger className="w-64"><SelectValue placeholder="숏폼 선택" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 숏폼</SelectItem>
+                  {contents.map((c: any) => (
+                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" className="gap-1.5" onClick={exportProgress}>
+                  <Download className="h-4 w-4" /> 엑셀 내보내기
+                </Button>
+                <Button size="sm" className="gap-1.5" onClick={() => { setAssignContentId(progressContentId === "all" ? "" : progressContentId); setAssignOpen(true); }}>
+                  <UserPlus className="h-4 w-4" /> 학습자 배정
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { label: "배정 인원", value: `${progressSummary.total}명` },
+                { label: "완료", value: `${progressSummary.done}명` },
+                { label: "학습중", value: `${progressSummary.started}명` },
+                { label: "평균 진도율", value: `${progressSummary.avg}%` },
+              ].map((s) => (
+                <div key={s.label} className="rounded-xl border p-4">
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                  <p className="text-lg font-semibold mt-1">{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-xl border divide-y">
+              {progressRows.length === 0 && (
+                <p className="p-6 text-sm text-muted-foreground text-center">배정된 학습자가 없습니다.</p>
+              )}
+              {progressRows.map((r) => (
+                <div key={r.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium truncate">{r.userName}</span>
+                      <Badge variant={r.completed ? "default" : "secondary"} className="whitespace-nowrap">
+                        {r.completed ? "완료" : r.rate > 0 ? "학습중" : "미시청"}
+                      </Badge>
+                      {r.dueAt && (
+                        <Badge variant="outline" className="whitespace-nowrap">
+                          마감 {new Date(r.dueAt).toLocaleDateString("ko-KR")}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 truncate">
+                      {r.contentTitle} · {r.userEmail}
+                      {r.lastViewedAt && ` · 최근 학습 ${new Date(r.lastViewedAt).toLocaleDateString("ko-KR")}`}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2 max-w-sm">
+                      <Progress value={r.rate} className="h-2" />
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{r.rate}%</span>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => removeAssignment(r.id)}>
+                    <X className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
+
+      {/* 배정 다이얼로그 */}
+      <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader><DialogTitle>학습자 배정</DialogTitle></DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>숏폼 콘텐츠</Label>
+              <Select value={assignContentId} onValueChange={setAssignContentId}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="선택" /></SelectTrigger>
+                <SelectContent>
+                  {contents.map((c: any) => (
+                    <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>학습 마감일 (선택)</Label>
+              <Input type="date" className="mt-1" value={assignDue} onChange={(e) => setAssignDue(e.target.value)} />
+            </div>
+            <div>
+              <Label>학습자 선택 ({assignUserIds.length}명)</Label>
+              <Input
+                className="mt-1"
+                placeholder="이름·이메일 검색"
+                value={userKeyword}
+                onChange={(e) => setUserKeyword(e.target.value)}
+              />
+              <div className="mt-2 max-h-56 overflow-y-auto rounded-lg border divide-y">
+                {filteredMembers.length === 0 && (
+                  <p className="p-4 text-sm text-muted-foreground text-center">검색 결과가 없습니다.</p>
+                )}
+                {filteredMembers.map((m: any) => (
+                  <label key={m.id} className="flex items-center gap-3 p-2.5 cursor-pointer min-w-0">
+                    <Checkbox
+                      checked={assignUserIds.includes(m.id)}
+                      onCheckedChange={(v) =>
+                        setAssignUserIds((prev) => (v ? [...prev, m.id] : prev.filter((x) => x !== m.id)))
+                      }
+                    />
+                    <span className="text-sm truncate">
+                      {m.full_name || "이름없음"}
+                      <span className="text-muted-foreground"> · {m.email}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAssignOpen(false)}>취소</Button>
+            <Button onClick={saveAssignments}>배정</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-lg">
