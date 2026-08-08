@@ -274,6 +274,9 @@ const App = () => (
               <Route path="/admin/content-library" element={<AdminRoute><AdminContentLibrary /></AdminRoute>} />
               <Route path="/admin/course-options" element={<AdminRoute><AdminCourseOptions /></AdminRoute>} />
               <Route path="/admin/course-ops" element={<AdminRoute><AdminCourseOps /></AdminRoute>} />
+              <Route path="/admin/member-groups" element={<AdminRoute><AdminMemberGroups /></AdminRoute>} />
+              <Route path="/admin/refunds" element={<AdminRoute><AdminRefunds /></AdminRoute>} />
+
               <Route path="/admin/courses/new" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/courses/:courseId/edit" element={<AdminRoute><CreateCourse /></AdminRoute>} />
               <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
