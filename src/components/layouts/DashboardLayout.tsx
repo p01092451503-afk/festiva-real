@@ -706,7 +706,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                 );
               })
             ) : (
-              filteredNavItems.length > 0 ? filteredNavItems.map((item) => {
+              filteredNavItems.map((item) => {
               // Inline collapsible group (used by student/teacher communication group)
               if (item.children && item.children.length > 0) {
                 const groupId = `inline-${item.navKey || item.href}`;
