@@ -9,6 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/community/RichTextEditor";
+import RichTextContent from "@/components/community/RichTextContent";
+const stripHtml = (html: string) => (html || "").replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").trim();
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
@@ -391,11 +394,10 @@ const Community = () => {
               value={composer.title}
               onChange={(e) => setComposer((s) => ({ ...s, title: e.target.value }))}
             />
-            <Textarea
-              placeholder="내용을 입력하세요"
-              rows={8}
+            <RichTextEditor
               value={composer.content}
-              onChange={(e) => setComposer((s) => ({ ...s, content: e.target.value }))}
+              onChange={(html) => setComposer((s) => ({ ...s, content: html }))}
+              placeholder="내용을 입력하세요"
             />
             <div>
               <label className="text-xs text-muted-foreground">이미지 첨부 (최대 5장)</label>
@@ -417,7 +419,7 @@ const Community = () => {
             </Button>
             <Button
               onClick={() => createPost.mutate()}
-              disabled={!composer.title.trim() || !composer.content.trim() || createPost.isPending}
+              disabled={!composer.title.trim() || !stripHtml(composer.content) || createPost.isPending}
             >
               {createPost.isPending ? "등록 중..." : "등록"}
             </Button>
