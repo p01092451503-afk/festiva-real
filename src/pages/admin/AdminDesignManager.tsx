@@ -62,6 +62,9 @@ const emptyBlock = {
   block_type: "hero",
   title: "",
   subtitle: "",
+  cta_text: "",
+  cta_url: "",
+  html: "",
   is_active: true,
   display_order: 0,
 };
