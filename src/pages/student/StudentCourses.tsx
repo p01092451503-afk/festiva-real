@@ -15,6 +15,7 @@ import TracksPanel, { useTrackCourseIds, useAssignedTracksCount, useCourseTrackM
 import { CourseCatalogContent } from "@/pages/student/CourseCatalog";
 import { useCourseI18n } from "@/hooks/useI18nMaps";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
+import CourseAccessActions from "@/components/student/CourseAccessActions";
 
 const StudentCourses = () => {
   const { user } = useUser();
@@ -96,10 +97,10 @@ const StudentCourses = () => {
     const isTrackCourse = trackCourseIds.has(course.id);
 
     return (
+      <div key={enrollment.id} className="border-b-2 border-border/80 last:border-b-0">
       <Link
-        key={enrollment.id}
         to={`/student/courses/${course.id}?view=learn`}
-        className={`group flex items-center gap-4 p-4 hover:shadow-md transition-all border-b-2 border-border/80 last:border-b-0`}
+        className={`group flex items-center gap-4 p-4 hover:shadow-md transition-all`}
       >
         {/* Thumbnail - small */}
         {course.thumbnail_url ? (
@@ -152,6 +153,8 @@ const StudentCourses = () => {
 
         <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" aria-hidden="true" />
       </Link>
+      {!isCompleted && <CourseAccessActions enrollment={enrollment} course={course} userId={user?.id} />}
+      </div>
     );
   };
 

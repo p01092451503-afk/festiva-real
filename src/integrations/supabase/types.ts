@@ -2006,6 +2006,66 @@ export type Database = {
           },
         ]
       }
+      content_videos: {
+        Row: {
+          category: string | null
+          created_at: string
+          created_by: string | null
+          drm_enabled: boolean
+          duration_seconds: number
+          encoding_status: string
+          file_size_bytes: number | null
+          id: string
+          is_active: boolean
+          memo: string | null
+          provider: string
+          resolution: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          video_key: string | null
+          video_url: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          drm_enabled?: boolean
+          duration_seconds?: number
+          encoding_status?: string
+          file_size_bytes?: number | null
+          id?: string
+          is_active?: boolean
+          memo?: string | null
+          provider?: string
+          resolution?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          video_key?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          drm_enabled?: boolean
+          duration_seconds?: number
+          encoding_status?: string
+          file_size_bytes?: number | null
+          id?: string
+          is_active?: boolean
+          memo?: string | null
+          provider?: string
+          resolution?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          video_key?: string | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       correction_annotations: {
         Row: {
           author_id: string
@@ -2457,6 +2517,67 @@ export type Database = {
           },
         ]
       }
+      course_discounts: {
+        Row: {
+          course_id: string
+          created_at: string
+          discount_type: string
+          discount_value: number
+          grade_id: string | null
+          group_id: string | null
+          id: string
+          is_active: boolean
+          target_type: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          grade_id?: string | null
+          group_id?: string | null
+          id?: string
+          is_active?: boolean
+          target_type: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          discount_type?: string
+          discount_value?: number
+          grade_id?: string | null
+          group_id?: string | null
+          id?: string
+          is_active?: boolean
+          target_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_discounts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_discounts_grade_id_fkey"
+            columns: ["grade_id"]
+            isOneToOne: false
+            referencedRelation: "member_grades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_discounts_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "member_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_drafts: {
         Row: {
           created_at: string
@@ -2480,6 +2601,72 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      course_extensions: {
+        Row: {
+          course_id: string
+          created_at: string
+          enrollment_id: string
+          extend_days: number
+          id: string
+          new_end_at: string | null
+          note: string | null
+          previous_end_at: string | null
+          price: number
+          processed_at: string | null
+          processed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          enrollment_id: string
+          extend_days: number
+          id?: string
+          new_end_at?: string | null
+          note?: string | null
+          previous_end_at?: string | null
+          price?: number
+          processed_at?: string | null
+          processed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          enrollment_id?: string
+          extend_days?: number
+          id?: string
+          new_end_at?: string | null
+          note?: string | null
+          previous_end_at?: string | null
+          price?: number
+          processed_at?: string | null
+          processed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_extensions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_extensions_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       course_i18n: {
         Row: {
@@ -2594,6 +2781,54 @@ export type Database = {
         }
         Relationships: []
       }
+      course_lectures: {
+        Row: {
+          course_id: string
+          created_at: string
+          credit_time_override: number | null
+          id: string
+          is_required: boolean
+          lecture_id: string
+          order_index: number
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          credit_time_override?: number | null
+          id?: string
+          is_required?: boolean
+          lecture_id: string
+          order_index?: number
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          credit_time_override?: number | null
+          id?: string
+          is_required?: boolean
+          lecture_id?: string
+          order_index?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_lectures_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_lectures_lecture_id_fkey"
+            columns: ["lecture_id"]
+            isOneToOne: false
+            referencedRelation: "lectures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_package_items: {
         Row: {
           child_course_id: string
@@ -2680,6 +2915,66 @@ export type Database = {
           },
         ]
       }
+      course_suspensions: {
+        Row: {
+          course_id: string
+          created_at: string
+          days_used: number
+          end_at: string | null
+          enrollment_id: string
+          id: string
+          planned_end_at: string | null
+          reason: string | null
+          start_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          days_used?: number
+          end_at?: string | null
+          enrollment_id: string
+          id?: string
+          planned_end_at?: string | null
+          reason?: string | null
+          start_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          days_used?: number
+          end_at?: string | null
+          enrollment_id?: string
+          id?: string
+          planned_end_at?: string | null
+          reason?: string | null
+          start_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_suspensions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_suspensions_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_target_departments: {
         Row: {
           course_id: string
@@ -2712,10 +3007,12 @@ export type Database = {
       }
       courses: {
         Row: {
+          allow_duplicate_enrollment: boolean
           always_recruiting: boolean
           apply_end_at: string | null
           apply_start_at: string | null
           attachment_url: string | null
+          auto_approve_enrollment: boolean
           auto_start_grace_days: number
           base_category: string | null
           category_id: string | null
@@ -2728,6 +3025,13 @@ export type Database = {
           difficulty_level: string | null
           enrolled_count: number
           estimated_duration_hours: number | null
+          event_text: string | null
+          extension_days: number
+          extension_enabled: boolean
+          extension_price: number
+          free_price_label: string | null
+          grade_discount_enabled: boolean
+          group_discount_enabled: boolean
           id: string
           installment_enabled: boolean
           installment_months: number | null
@@ -2740,13 +3044,19 @@ export type Database = {
           is_sequential: boolean
           keywords: string[]
           max_students: number | null
+          monthly_price: number | null
           open_scheduled_at: string | null
           operation_start_at: string | null
           period_mode: boolean
           preview_video_url: string | null
           price: number
+          price_display_type: string
+          promo_label_color: string | null
+          promo_label_text: string | null
           rating_avg: number
           rating_count: number
+          refund_policy_id: string | null
+          restrict_group_ids: string[]
           retake_allow_coupon_stack: boolean
           retake_discount_enabled: boolean
           retake_discount_percent: number | null
@@ -2761,6 +3071,8 @@ export type Database = {
           subtitle: string | null
           support_options: string[]
           suspension_enabled: boolean
+          suspension_max_count: number
+          suspension_max_days: number
           tags: string[] | null
           target_departments: string[] | null
           textbook_author: string | null
@@ -2774,16 +3086,20 @@ export type Database = {
           thumbnail_url: string | null
           title: string
           updated_at: string | null
+          use_status: string
+          vat_exempt: boolean
           version: number | null
           visibility: string
           visibility_end_at: string | null
           visibility_start_at: string | null
         }
         Insert: {
+          allow_duplicate_enrollment?: boolean
           always_recruiting?: boolean
           apply_end_at?: string | null
           apply_start_at?: string | null
           attachment_url?: string | null
+          auto_approve_enrollment?: boolean
           auto_start_grace_days?: number
           base_category?: string | null
           category_id?: string | null
@@ -2796,6 +3112,13 @@ export type Database = {
           difficulty_level?: string | null
           enrolled_count?: number
           estimated_duration_hours?: number | null
+          event_text?: string | null
+          extension_days?: number
+          extension_enabled?: boolean
+          extension_price?: number
+          free_price_label?: string | null
+          grade_discount_enabled?: boolean
+          group_discount_enabled?: boolean
           id?: string
           installment_enabled?: boolean
           installment_months?: number | null
@@ -2808,13 +3131,19 @@ export type Database = {
           is_sequential?: boolean
           keywords?: string[]
           max_students?: number | null
+          monthly_price?: number | null
           open_scheduled_at?: string | null
           operation_start_at?: string | null
           period_mode?: boolean
           preview_video_url?: string | null
           price?: number
+          price_display_type?: string
+          promo_label_color?: string | null
+          promo_label_text?: string | null
           rating_avg?: number
           rating_count?: number
+          refund_policy_id?: string | null
+          restrict_group_ids?: string[]
           retake_allow_coupon_stack?: boolean
           retake_discount_enabled?: boolean
           retake_discount_percent?: number | null
@@ -2829,6 +3158,8 @@ export type Database = {
           subtitle?: string | null
           support_options?: string[]
           suspension_enabled?: boolean
+          suspension_max_count?: number
+          suspension_max_days?: number
           tags?: string[] | null
           target_departments?: string[] | null
           textbook_author?: string | null
@@ -2842,16 +3173,20 @@ export type Database = {
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
+          use_status?: string
+          vat_exempt?: boolean
           version?: number | null
           visibility?: string
           visibility_end_at?: string | null
           visibility_start_at?: string | null
         }
         Update: {
+          allow_duplicate_enrollment?: boolean
           always_recruiting?: boolean
           apply_end_at?: string | null
           apply_start_at?: string | null
           attachment_url?: string | null
+          auto_approve_enrollment?: boolean
           auto_start_grace_days?: number
           base_category?: string | null
           category_id?: string | null
@@ -2864,6 +3199,13 @@ export type Database = {
           difficulty_level?: string | null
           enrolled_count?: number
           estimated_duration_hours?: number | null
+          event_text?: string | null
+          extension_days?: number
+          extension_enabled?: boolean
+          extension_price?: number
+          free_price_label?: string | null
+          grade_discount_enabled?: boolean
+          group_discount_enabled?: boolean
           id?: string
           installment_enabled?: boolean
           installment_months?: number | null
@@ -2876,13 +3218,19 @@ export type Database = {
           is_sequential?: boolean
           keywords?: string[]
           max_students?: number | null
+          monthly_price?: number | null
           open_scheduled_at?: string | null
           operation_start_at?: string | null
           period_mode?: boolean
           preview_video_url?: string | null
           price?: number
+          price_display_type?: string
+          promo_label_color?: string | null
+          promo_label_text?: string | null
           rating_avg?: number
           rating_count?: number
+          refund_policy_id?: string | null
+          restrict_group_ids?: string[]
           retake_allow_coupon_stack?: boolean
           retake_discount_enabled?: boolean
           retake_discount_percent?: number | null
@@ -2897,6 +3245,8 @@ export type Database = {
           subtitle?: string | null
           support_options?: string[]
           suspension_enabled?: boolean
+          suspension_max_count?: number
+          suspension_max_days?: number
           tags?: string[] | null
           target_departments?: string[] | null
           textbook_author?: string | null
@@ -2910,6 +3260,8 @@ export type Database = {
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
+          use_status?: string
+          vat_exempt?: boolean
           version?: number | null
           visibility?: string
           visibility_end_at?: string | null
@@ -2921,6 +3273,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "courses_refund_policy_id_fkey"
+            columns: ["refund_policy_id"]
+            isOneToOne: false
+            referencedRelation: "refund_policies"
             referencedColumns: ["id"]
           },
         ]
@@ -3774,6 +4133,126 @@ export type Database = {
         }
         Relationships: []
       }
+      lecture_groups: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          manager_id: string | null
+          name: string
+          order_index: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          manager_id?: string | null
+          name: string
+          order_index?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          manager_id?: string | null
+          name?: string
+          order_index?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lectures: {
+        Row: {
+          admin_memo: string | null
+          ai_chat_enabled: boolean
+          content_height: number | null
+          content_type: string
+          content_url: string | null
+          content_width: number | null
+          created_at: string
+          created_by: string | null
+          credit_time_seconds: number
+          description: string | null
+          group_id: string | null
+          handout_name: string | null
+          handout_url: string | null
+          id: string
+          is_active: boolean
+          manager_id: string | null
+          play_time_seconds: number
+          status: string
+          title: string
+          updated_at: string
+          video_id: string | null
+        }
+        Insert: {
+          admin_memo?: string | null
+          ai_chat_enabled?: boolean
+          content_height?: number | null
+          content_type?: string
+          content_url?: string | null
+          content_width?: number | null
+          created_at?: string
+          created_by?: string | null
+          credit_time_seconds?: number
+          description?: string | null
+          group_id?: string | null
+          handout_name?: string | null
+          handout_url?: string | null
+          id?: string
+          is_active?: boolean
+          manager_id?: string | null
+          play_time_seconds?: number
+          status?: string
+          title: string
+          updated_at?: string
+          video_id?: string | null
+        }
+        Update: {
+          admin_memo?: string | null
+          ai_chat_enabled?: boolean
+          content_height?: number | null
+          content_type?: string
+          content_url?: string | null
+          content_width?: number | null
+          created_at?: string
+          created_by?: string | null
+          credit_time_seconds?: number
+          description?: string | null
+          group_id?: string | null
+          handout_name?: string | null
+          handout_url?: string | null
+          id?: string
+          is_active?: boolean
+          manager_id?: string | null
+          play_time_seconds?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lectures_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "lecture_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lectures_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "content_videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_corrections: {
         Row: {
           content_id: string
@@ -3856,6 +4335,104 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      member_grades: {
+        Row: {
+          code: string | null
+          created_at: string
+          description: string | null
+          discount_percent: number
+          id: string
+          is_active: boolean
+          name: string
+          rank: number
+          updated_at: string
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_percent?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          rank?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_percent?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          rank?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      member_group_members: {
+        Row: {
+          created_at: string
+          group_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          group_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          group_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "member_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_groups: {
+        Row: {
+          code: string | null
+          created_at: string
+          description: string | null
+          discount_percent: number
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_percent?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          discount_percent?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       nav_items: {
         Row: {
@@ -4524,6 +5101,33 @@ export type Database = {
         }
         Relationships: []
       }
+      privacy_access_logs: {
+        Row: {
+          action: string
+          actor_id: string
+          context: string | null
+          created_at: string
+          id: string
+          target_user_id: string
+        }
+        Insert: {
+          action?: string
+          actor_id: string
+          context?: string | null
+          created_at?: string
+          id?: string
+          target_user_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          context?: string | null
+          created_at?: string
+          id?: string
+          target_user_id?: string
+        }
+        Relationships: []
+      }
       product_open_alerts: {
         Row: {
           contact_email: string | null
@@ -4584,7 +5188,12 @@ export type Database = {
           employee_id: string | null
           full_name: string | null
           gender: string | null
+          grade_id: string | null
           last_login_at: string | null
+          marketing_agreed_at: string | null
+          marketing_email: boolean
+          marketing_kakao: boolean
+          marketing_sms: boolean
           member_status: string
           phone_number: string | null
           position: string | null
@@ -4604,7 +5213,12 @@ export type Database = {
           employee_id?: string | null
           full_name?: string | null
           gender?: string | null
+          grade_id?: string | null
           last_login_at?: string | null
+          marketing_agreed_at?: string | null
+          marketing_email?: boolean
+          marketing_kakao?: boolean
+          marketing_sms?: boolean
           member_status?: string
           phone_number?: string | null
           position?: string | null
@@ -4624,7 +5238,12 @@ export type Database = {
           employee_id?: string | null
           full_name?: string | null
           gender?: string | null
+          grade_id?: string | null
           last_login_at?: string | null
+          marketing_agreed_at?: string | null
+          marketing_email?: boolean
+          marketing_kakao?: boolean
+          marketing_sms?: boolean
           member_status?: string
           phone_number?: string | null
           position?: string | null
@@ -4639,6 +5258,13 @@ export type Database = {
             columns: ["department_id"]
             isOneToOne: false
             referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_grade_id_fkey"
+            columns: ["grade_id"]
+            isOneToOne: false
+            referencedRelation: "member_grades"
             referencedColumns: ["id"]
           },
           {
@@ -4949,6 +5575,162 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      refund_policies: {
+        Row: {
+          basis: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_default: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          basis?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          basis?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      refund_policy_rules: {
+        Row: {
+          created_at: string
+          from_value: number
+          id: string
+          order_index: number
+          policy_id: string
+          refund_percent: number
+          to_value: number | null
+        }
+        Insert: {
+          created_at?: string
+          from_value?: number
+          id?: string
+          order_index?: number
+          policy_id: string
+          refund_percent?: number
+          to_value?: number | null
+        }
+        Update: {
+          created_at?: string
+          from_value?: number
+          id?: string
+          order_index?: number
+          policy_id?: string
+          refund_percent?: number
+          to_value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refund_policy_rules_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "refund_policies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      refund_requests: {
+        Row: {
+          admin_note: string | null
+          calculated_amount: number
+          course_id: string | null
+          created_at: string
+          elapsed_days: number
+          enrollment_id: string | null
+          final_amount: number
+          id: string
+          is_partial: boolean
+          order_id: string | null
+          paid_amount: number
+          processed_at: string | null
+          processed_by: string | null
+          progress_percent: number
+          reason: string | null
+          refund_percent: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          calculated_amount?: number
+          course_id?: string | null
+          created_at?: string
+          elapsed_days?: number
+          enrollment_id?: string | null
+          final_amount?: number
+          id?: string
+          is_partial?: boolean
+          order_id?: string | null
+          paid_amount?: number
+          processed_at?: string | null
+          processed_by?: string | null
+          progress_percent?: number
+          reason?: string | null
+          refund_percent?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          calculated_amount?: number
+          course_id?: string | null
+          created_at?: string
+          elapsed_days?: number
+          enrollment_id?: string | null
+          final_amount?: number
+          id?: string
+          is_partial?: boolean
+          order_id?: string | null
+          paid_amount?: number
+          processed_at?: string | null
+          processed_by?: string | null
+          progress_percent?: number
+          reason?: string | null
+          refund_percent?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refund_requests_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refund_requests_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refund_requests_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -6085,6 +6867,15 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      calculate_refund_amount: {
+        Args: {
+          p_course_id: string
+          p_elapsed_days: number
+          p_paid_amount: number
+          p_progress_percent: number
+        }
+        Returns: Json
       }
       can_manage_correction_assignment: {
         Args: { _assignment_id: string }
