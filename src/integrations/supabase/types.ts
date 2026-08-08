@@ -784,6 +784,50 @@ export type Database = {
           },
         ]
       }
+      auto_coupon_rules: {
+        Row: {
+          coupon_id: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          issued_count: number
+          name: string
+          trigger_type: string
+          updated_at: string
+          valid_days: number
+        }
+        Insert: {
+          coupon_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          issued_count?: number
+          name: string
+          trigger_type?: string
+          updated_at?: string
+          valid_days?: number
+        }
+        Update: {
+          coupon_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          issued_count?: number
+          name?: string
+          trigger_type?: string
+          updated_at?: string
+          valid_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auto_coupon_rules_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       badges: {
         Row: {
           badge_type: string
@@ -4079,6 +4123,125 @@ export type Database = {
         }
         Relationships: []
       }
+      instructor_settlements: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          gross_amount: number
+          id: string
+          instructor_id: string
+          memo: string | null
+          paid_at: string | null
+          period_end: string
+          period_start: string
+          settle_amount: number
+          share_type: string
+          share_value: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          gross_amount?: number
+          id?: string
+          instructor_id: string
+          memo?: string | null
+          paid_at?: string | null
+          period_end: string
+          period_start: string
+          settle_amount?: number
+          share_type?: string
+          share_value?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          gross_amount?: number
+          id?: string
+          instructor_id?: string
+          memo?: string | null
+          paid_at?: string | null
+          period_end?: string
+          period_start?: string
+          settle_amount?: number
+          share_type?: string
+          share_value?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "instructor_settlements_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_nudge_rules: {
+        Row: {
+          channel: string
+          condition_type: string
+          course_id: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          last_run_at: string | null
+          name: string
+          schedule_cron: string | null
+          template_id: string | null
+          threshold: number
+          updated_at: string
+        }
+        Insert: {
+          channel?: string
+          condition_type?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          name: string
+          schedule_cron?: string | null
+          template_id?: string | null
+          threshold?: number
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          condition_type?: string
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_run_at?: string | null
+          name?: string
+          schedule_cron?: string | null
+          template_id?: string | null
+          threshold?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_nudge_rules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_nudge_rules_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_tracks: {
         Row: {
           created_at: string
@@ -4431,6 +4594,95 @@ export type Database = {
           is_active?: boolean
           name?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      message_logs: {
+        Row: {
+          body: string | null
+          channel: string
+          error_message: string | null
+          id: string
+          recipient_address: string | null
+          recipient_user_id: string | null
+          sent_at: string
+          source: string | null
+          status: string
+          subject: string | null
+          template_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          channel?: string
+          error_message?: string | null
+          id?: string
+          recipient_address?: string | null
+          recipient_user_id?: string | null
+          sent_at?: string
+          source?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          channel?: string
+          error_message?: string | null
+          id?: string
+          recipient_address?: string | null
+          recipient_user_id?: string | null
+          sent_at?: string
+          source?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_logs_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_templates: {
+        Row: {
+          body: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          name: string
+          subject: string | null
+          updated_at: string
+          variables: string[]
+        }
+        Insert: {
+          body: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          subject?: string | null
+          updated_at?: string
+          variables?: string[]
+        }
+        Update: {
+          body?: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          subject?: string | null
+          updated_at?: string
+          variables?: string[]
         }
         Relationships: []
       }
@@ -5098,6 +5350,45 @@ export type Database = {
           id?: string
           points?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      point_policies: {
+        Row: {
+          action_type: string
+          created_at: string
+          earn_type: string
+          earn_value: number
+          expire_days: number | null
+          id: string
+          is_active: boolean
+          max_per_action: number | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          earn_type?: string
+          earn_value?: number
+          expire_days?: number | null
+          id?: string
+          is_active?: boolean
+          max_per_action?: number | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          earn_type?: string
+          earn_value?: number
+          expire_days?: number | null
+          id?: string
+          is_active?: boolean
+          max_per_action?: number | null
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
