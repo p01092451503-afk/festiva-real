@@ -5064,6 +5064,41 @@ export type Database = {
         }
         Relationships: []
       }
+      micro_content_assignments: {
+        Row: {
+          assigned_by: string | null
+          content_id: string
+          created_at: string
+          due_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          content_id: string
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          content_id?: string
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "micro_content_assignments_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "micro_contents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       micro_content_views: {
         Row: {
           content_id: string
