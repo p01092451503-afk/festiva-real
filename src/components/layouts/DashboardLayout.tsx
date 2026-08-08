@@ -8,6 +8,7 @@ import {
   Info, ShieldCheck, Sparkles, Newspaper, Film, SlidersHorizontal, CalendarClock,
   Users2,
   Rss,
+  Receipt,
   KeyRound,
   TrendingUp,
   MessageSquareText,
