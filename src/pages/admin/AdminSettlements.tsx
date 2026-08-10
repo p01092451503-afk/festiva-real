@@ -230,6 +230,23 @@ const AdminSettlements = () => {
     [settlements, statusFilter],
   );
 
+  // 정렬 + 페이지 나눔
+  const { sort, toggleSort } = useTableSort({ defaultKey: "period_start", defaultDir: "desc" });
+  const sorted = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        instructor: (s: any) => instructorName(s.instructor_id) || "",
+        course: (s: any) => courseTitle(s.course_id) || "",
+        period_start: (s: any) => s.period_start || "",
+        settle_amount: (s: any) => Number(s.settle_amount || 0),
+        status: (s: any) => s.status || "",
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sorted, 20);
+
+
   /** 엑셀(.xlsx) 다운로드 */
   const exportExcel = () => {
     if (filtered.length === 0) return toast.error("내보낼 정산 내역이 없습니다.");
