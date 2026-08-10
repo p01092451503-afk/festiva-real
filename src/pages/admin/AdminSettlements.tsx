@@ -407,7 +407,7 @@ const AdminSettlements = () => {
             </SelectContent>
           </Select>
           <Label className="text-xs whitespace-nowrap ml-2">정렬</Label>
-          <Select value={sort.key ?? "period_start"} onValueChange={(v) => toggleSort(v, true)}>
+          <Select value={sort.key ?? "period_start"} onValueChange={(v) => setSort({ key: v, dir: sort.dir })}>
             <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="period_start">정산 기간</SelectItem>
