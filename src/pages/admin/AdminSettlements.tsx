@@ -406,6 +406,20 @@ const AdminSettlements = () => {
               {Object.entries(STATUS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
             </SelectContent>
           </Select>
+          <Label className="text-xs whitespace-nowrap ml-2">정렬</Label>
+          <Select value={sort.key ?? "period_start"} onValueChange={(v) => toggleSort(v, true)}>
+            <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="period_start">정산 기간</SelectItem>
+              <SelectItem value="instructor">강사명</SelectItem>
+              <SelectItem value="course">과정명</SelectItem>
+              <SelectItem value="settle_amount">정산액</SelectItem>
+              <SelectItem value="status">상태</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="sm" onClick={() => toggleSort(sort.key ?? "period_start")}>
+            {sort.dir === "asc" ? "오름차순" : "내림차순"}
+          </Button>
           <span className="text-xs text-muted-foreground">{filtered.length}건</span>
         </div>
 
@@ -413,7 +427,7 @@ const AdminSettlements = () => {
           {filtered.length === 0 && (
             <p className="p-6 text-center text-sm text-muted-foreground">정산 내역이 없습니다.</p>
           )}
-          {filtered.map((s) => (
+          {pageRows.map((s) => (
             <div key={s.id} className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 border-b-2 border-border/80 last:border-b-0">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
