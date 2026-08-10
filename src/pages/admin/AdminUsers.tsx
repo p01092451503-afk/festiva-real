@@ -1,6 +1,9 @@
 import { Users, Search, UserPlus, Trash2, Pencil, KeyRound, BarChart3, UserCheck, GraduationCap, FileSpreadsheet, Download, Send, ShieldCheck, UserCog } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -211,6 +214,23 @@ const AdminUsers = () => {
       roleFilter === "all" || (rolesByUser.get(profile.user_id) ?? []).includes(roleFilter as StaffRole);
     return matchesSearch && matchesGrade && matchesStatus && matchesRole;
   });
+
+  // 정렬(머리글 클릭, 주소에 상태 저장) + 페이지 나눔
+  const { sort, toggleSort } = useTableSort({ defaultKey: "created_at", defaultDir: "desc" });
+  const sorted = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        full_name: (p: any) => p.full_name || "",
+        phone_number: (p: any) => (p.phone_number || "").replace(/[^0-9]/g, ""),
+        grade: (p: any) => getGradeName(p.grade_id),
+        role: (p: any) => getPrimaryRole(p.user_id),
+        member_status: (p: any) => p.member_status || "active",
+        created_at: (p: any) => p.created_at,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort, grades, rolesByUser],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sorted, 20);
 
   const teacherCount = profiles.filter((profile: any) => getPrimaryRole(profile.user_id) === "teacher").length;
   const activeCount = profiles.filter((p: any) => (p.member_status || "active") === "active").length;
@@ -529,17 +549,17 @@ const AdminUsers = () => {
                     aria-label="전체 선택"
                   />
                 </th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.nameColumn")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">연락처</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">회원등급</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.roleColumn")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">상태</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">가입일</th>
+                <SortHeader sortKey="full_name" label={t("admin.nameColumn")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="phone_number" label="연락처" sort={sort} onToggle={toggleSort} className="hidden lg:table-cell" />
+                <SortHeader sortKey="grade" label="회원등급" sort={sort} onToggle={toggleSort} className="hidden sm:table-cell" />
+                <SortHeader sortKey="role" label={t("admin.roleColumn")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="member_status" label="상태" sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="created_at" label="가입일" sort={sort} onToggle={toggleSort} className="hidden md:table-cell" />
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((profile: any) => {
+              {pageRows.map((profile: any) => {
                 const currentRole = getPrimaryRole(profile.user_id);
                 const role = roleLabel[currentRole] || roleLabel.student;
                 const deleteDisabledReason = profile.user_id === user?.id
@@ -638,16 +658,25 @@ const AdminUsers = () => {
                   </tr>
                 );
               })}
-              {filtered.length === 0 && (
+              {sorted.length === 0 && (
                 <tr><td colSpan={8} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</td></tr>
               )}
             </tbody>
           </table>
+          <TablePagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            unit="명"
+          />
         </div>
 
         {/* User List - Mobile Cards */}
         <div className="md:hidden space-y-2">
-          {filtered.map((profile: any) => {
+          {pageRows.map((profile: any) => {
             const currentRole = getPrimaryRole(profile.user_id);
             const role = roleLabel[currentRole] || roleLabel.student;
             const deleteDisabledReason = profile.user_id === user?.id
@@ -744,9 +773,20 @@ const AdminUsers = () => {
               </div>
             );
           })}
-          {filtered.length === 0 && (
+          {sorted.length === 0 && (
             <div className="stat-card !p-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</div>
           )}
+          <div className="stat-card !p-0">
+            <TablePagination
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              pageSize={pageSize}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+              unit="명"
+            />
+          </div>
         </div>
       </div>
 

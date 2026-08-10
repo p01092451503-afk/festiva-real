@@ -1,7 +1,10 @@
 import { Plus, Search, MoreHorizontal, Eye, Edit, Users, BookOpen, Clock, LayoutGrid, List, AlertTriangle, CalendarClock, ArrowUpDown, ShoppingBag, Building2, Layers, CheckCircle2, FileEdit, ClipboardCheck } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -210,6 +213,25 @@ const AdminCourses = () => {
       }
     });
 
+  // 머리글 클릭 정렬(선택 상자 정렬보다 우선) + 페이지 나눔
+  const { sort, toggleSort } = useTableSort({ defaultKey: null, defaultDir: "asc" });
+  const sortedCourses = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        title: (c: any) => c.title || "",
+        category: (c: any) => categoryMap.get(c.category_id)?.name || "",
+        instructor: (c: any) => instructorMap.get(c.instructor_id) || "",
+        status: (c: any) => c.status || "",
+        price: (c: any) => c.sale_price ?? c.price ?? 0,
+        students: (c: any) => (enrollmentCounts as any)[c.id] || 0,
+        contents: (c: any) => (contentCounts as any)[c.id] || 0,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort, categoryMap, instructorMap, enrollmentCounts, contentCounts],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sortedCourses, 20);
+
+
   const stats = {
     total: courses.length,
     published: courses.filter((c: any) => c.status === "published").length,
@@ -417,20 +439,20 @@ const AdminCourses = () => {
             <table className="w-full min-w-[640px] sm:min-w-0">
               <thead>
               <tr className="border-b border-border bg-secondary/30">
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("course.course") || "강의"}</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("course.category") || "카테고리"}</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{t("course.instructor") || "강사"}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("teacher.status") || "상태"}</th>
+                  <SortHeader sortKey="title" label={t("course.course") || "강의"} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="category" label={t("course.category") || "카테고리"} sort={sort} onToggle={toggleSort} className="hidden md:table-cell" />
+                  <SortHeader sortKey="instructor" label={t("course.instructor") || "강사"} sort={sort} onToggle={toggleSort} className="hidden lg:table-cell" />
+                  <SortHeader sortKey="status" label={t("teacher.status") || "상태"} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
                   <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">공개 범위</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">가격</th>
+                  <SortHeader sortKey="price" label="가격" sort={sort} onToggle={toggleSort} align="center" className="hidden lg:table-cell" />
                   <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{t("common.required") || "필수"}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("admin.totalStudents") || "수강생"}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("course.content") || "차시"}</th>
+                  <SortHeader sortKey="students" label={t("admin.totalStudents") || "수강생"} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
+                  <SortHeader sortKey="contents" label={t("course.content") || "차시"} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
                   <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3 sticky right-0 bg-secondary/30 sm:static">{t("common.manage") || "관리"}</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((course: any) => {
+                {pageRows.map((course: any) => {
                   const cat = categoryMap.get(course.category_id);
                   const students = (enrollmentCounts as any)[course.id] || 0;
                   const contents = (contentCounts as any)[course.id] || 0;
@@ -586,10 +608,12 @@ const AdminCourses = () => {
                 })}
               </tbody>
             </table>
+            <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
           </div>
         ) : (
+          <div className="space-y-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((course: any) => {
+            {pageRows.map((course: any) => {
               const cat = categoryMap.get(course.category_id);
               const enrollment = (enrollmentCounts as any)[course.id] || 0;
               const ti = courseTrackInfo.get(course.id);
@@ -607,6 +631,8 @@ const AdminCourses = () => {
                 />
               );
             })}
+          </div>
+          <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
           </div>
         )}
       </div>

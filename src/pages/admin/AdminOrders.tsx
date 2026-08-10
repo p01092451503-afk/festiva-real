@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import {
@@ -253,10 +255,27 @@ const AdminOrders = () => {
 
   const formatDate = (d: string | null) => d ? new Date(d).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }) : "-";
 
+  // 정렬 (머리글 클릭, 주소에 상태 저장)
+  const { sort, toggleSort } = useTableSort({ defaultKey: "created_at", defaultDir: "desc" });
+  const sorted = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        order_number: (o: any) => o.order_number || "",
+        orderer: (o: any) => profileMap.get(o.user_id)?.full_name || profileMap.get(o.user_id)?.email || "",
+        course: (o: any) => (o.order_items || [])[0]?.courses?.title || "",
+        payment_method: (o: any) => o.payment_method || "",
+        final_amount: (o: any) => o.final_amount ?? 0,
+        created_at: (o: any) => o.created_at,
+        status: (o: any) => o.status || "",
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort, profileMap],
+  );
+
   // 페이지네이션
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const safePage = Math.min(page, totalPages);
-  const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+  const paginated = sorted.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   // CSV 내보내기 (필터 적용된 전체)
   const handleExportCsv = () => {
@@ -443,13 +462,13 @@ const AdminOrders = () => {
           <table className="w-full min-w-[800px]">
             <thead>
               <tr className="border-b border-border bg-secondary/30">
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colOrderNo")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colOrderer")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colCourse")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colMethod")}</th>
-                <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colAmount")}</th>
-                <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colDate")}</th>
-                <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colStatus")}</th>
+                <SortHeader sortKey="order_number" label={t("adminOrders.colOrderNo")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="orderer" label={t("adminOrders.colOrderer")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="course" label={t("adminOrders.colCourse")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="payment_method" label={t("adminOrders.colMethod")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="final_amount" label={t("adminOrders.colAmount")} sort={sort} onToggle={toggleSort} align="right" />
+                <SortHeader sortKey="created_at" label={t("adminOrders.colDate")} sort={sort} onToggle={toggleSort} align="center" />
+                <SortHeader sortKey="status" label={t("adminOrders.colStatus")} sort={sort} onToggle={toggleSort} align="center" />
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3">{t("adminOrders.colManage")}</th>
               </tr>
             </thead>

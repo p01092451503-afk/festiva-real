@@ -42,9 +42,10 @@ const StorefrontCatalog = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, status")
+        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, status, created_at")
         .eq("is_b2c", true)
-        .eq("status", "published");
+        .eq("status", "published")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -113,11 +114,14 @@ const StorefrontCatalog = () => {
     }
 
     switch (sortBy) {
-      case "popular": return filtered.sort((a, b) => b.enrolled_count - a.enrolled_count);
-      case "rating": return filtered.sort((a, b) => b.rating_avg - a.rating_avg);
-      case "newest": return filtered; // already ordered by default
-      case "price_low": return filtered.sort((a, b) => a.price - b.price);
-      case "price_high": return filtered.sort((a, b) => b.price - a.price);
+      case "popular": return filtered.sort((a, b) => (b.enrolled_count ?? 0) - (a.enrolled_count ?? 0));
+      case "rating": return filtered.sort((a, b) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0));
+      case "newest":
+        return filtered.sort(
+          (a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
+        );
+      case "price_low": return filtered.sort((a, b) => (a.sale_price ?? a.price ?? 0) - (b.sale_price ?? b.price ?? 0));
+      case "price_high": return filtered.sort((a, b) => (b.sale_price ?? b.price ?? 0) - (a.sale_price ?? a.price ?? 0));
       default: return filtered;
     }
   }, [rawCourses, categoryMap, instructorMap, selectedCategory, search, sortBy]);
