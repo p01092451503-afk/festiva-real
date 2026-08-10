@@ -632,6 +632,8 @@ const AdminCourses = () => {
               );
             })}
           </div>
+          <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
+          </div>
         )}
       </div>
       <Dialog open={!!assessmentCourse} onOpenChange={(o) => !o && setAssessmentCourse(null)}>
