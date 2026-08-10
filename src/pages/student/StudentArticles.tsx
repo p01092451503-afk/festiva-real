@@ -39,8 +39,8 @@ export default function StudentArticles() {
   const [debounced, setDebounced] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
-  // Debounce search
-  useMemo(() => {
+  // Debounce search (useEffect로 처리해야 타이머가 정상 해제됨)
+  useEffect(() => {
     const t = setTimeout(() => setDebounced(search.trim()), 300);
     return () => clearTimeout(t);
   }, [search]);
