@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import { Search, CheckCircle2, XCircle, Clock, Users, BookOpen, Filter, Hourglass } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
