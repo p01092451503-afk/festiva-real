@@ -608,10 +608,12 @@ const AdminCourses = () => {
                 })}
               </tbody>
             </table>
+            <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
           </div>
         ) : (
+          <div className="space-y-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((course: any) => {
+            {pageRows.map((course: any) => {
               const cat = categoryMap.get(course.category_id);
               const enrollment = (enrollmentCounts as any)[course.id] || 0;
               const ti = courseTrackInfo.get(course.id);
