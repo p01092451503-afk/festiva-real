@@ -773,9 +773,20 @@ const AdminUsers = () => {
               </div>
             );
           })}
-          {filtered.length === 0 && (
+          {sorted.length === 0 && (
             <div className="stat-card !p-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</div>
           )}
+          <div className="stat-card !p-0">
+            <TablePagination
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              pageSize={pageSize}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+              unit="명"
+            />
+          </div>
         </div>
       </div>
 
