@@ -233,7 +233,7 @@ const AdminSettlements = () => {
   );
 
   // 정렬 + 페이지 나눔
-  const { sort, toggleSort } = useTableSort({ defaultKey: "period_start", defaultDir: "desc" });
+  const { sort, toggleSort, setSort } = useTableSort({ defaultKey: "period_start", defaultDir: "desc" });
   const sorted = useMemo(
     () =>
       sortRows(filtered, sort, {
