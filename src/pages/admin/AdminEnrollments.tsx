@@ -110,6 +110,21 @@ const AdminEnrollments = () => {
     return matchSearch && matchStatus;
   });
 
+  // 정렬 + 페이지 나눔
+  const { sort, toggleSort } = useTableSort({ defaultKey: "enrolled_at", defaultDir: "desc" });
+  const sorted = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        student: (e: any) => profileMap.get(e.user_id)?.full_name || "",
+        course: (e: any) => e.courses?.title || "",
+        status: (e: any) => e.status || "",
+        enrolled_at: (e: any) => e.enrolled_at,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort, profileMap],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sorted, 20);
+
   const pendingCount = enrollments.filter((e: any) => e.status === "pending").length;
   const approvedCount = enrollments.filter((e: any) => e.status === "approved").length;
   const rejectedCount = enrollments.filter((e: any) => e.status === "rejected").length;
