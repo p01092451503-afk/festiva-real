@@ -658,16 +658,25 @@ const AdminUsers = () => {
                   </tr>
                 );
               })}
-              {filtered.length === 0 && (
+              {sorted.length === 0 && (
                 <tr><td colSpan={8} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("admin.noUsers")}</td></tr>
               )}
             </tbody>
           </table>
+          <TablePagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            unit="명"
+          />
         </div>
 
         {/* User List - Mobile Cards */}
         <div className="md:hidden space-y-2">
-          {filtered.map((profile: any) => {
+          {pageRows.map((profile: any) => {
             const currentRole = getPrimaryRole(profile.user_id);
             const role = roleLabel[currentRole] || roleLabel.student;
             const deleteDisabledReason = profile.user_id === user?.id
