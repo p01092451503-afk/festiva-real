@@ -313,6 +313,14 @@ const AdminEnrollments = () => {
                 })}
               </tbody>
             </table>
+            <TablePagination
+              page={page}
+              totalPages={totalPages}
+              total={total}
+              pageSize={pageSize}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
           </div>
         )}
       </div>
