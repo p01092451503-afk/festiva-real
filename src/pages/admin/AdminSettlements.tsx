@@ -472,6 +472,7 @@ const AdminSettlements = () => {
               </div>
             </div>
           ))}
+          <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
         </div>
       </div>
 
