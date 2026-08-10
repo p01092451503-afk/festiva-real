@@ -42,9 +42,10 @@ const StorefrontCatalog = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, status")
+        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, status, created_at")
         .eq("is_b2c", true)
-        .eq("status", "published");
+        .eq("status", "published")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
     },
