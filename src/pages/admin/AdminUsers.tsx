@@ -212,6 +212,23 @@ const AdminUsers = () => {
     return matchesSearch && matchesGrade && matchesStatus && matchesRole;
   });
 
+  // 정렬(머리글 클릭, 주소에 상태 저장) + 페이지 나눔
+  const { sort, toggleSort } = useTableSort({ defaultKey: "created_at", defaultDir: "desc" });
+  const sorted = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        full_name: (p: any) => p.full_name || "",
+        phone_number: (p: any) => (p.phone_number || "").replace(/[^0-9]/g, ""),
+        grade: (p: any) => getGradeName(p.grade_id),
+        role: (p: any) => getPrimaryRole(p.user_id),
+        member_status: (p: any) => p.member_status || "active",
+        created_at: (p: any) => p.created_at,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort, grades, rolesByUser],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sorted, 20);
+
   const teacherCount = profiles.filter((profile: any) => getPrimaryRole(profile.user_id) === "teacher").length;
   const activeCount = profiles.filter((p: any) => (p.member_status || "active") === "active").length;
 
