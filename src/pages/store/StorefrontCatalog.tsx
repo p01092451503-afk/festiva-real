@@ -114,11 +114,14 @@ const StorefrontCatalog = () => {
     }
 
     switch (sortBy) {
-      case "popular": return filtered.sort((a, b) => b.enrolled_count - a.enrolled_count);
-      case "rating": return filtered.sort((a, b) => b.rating_avg - a.rating_avg);
-      case "newest": return filtered; // already ordered by default
-      case "price_low": return filtered.sort((a, b) => a.price - b.price);
-      case "price_high": return filtered.sort((a, b) => b.price - a.price);
+      case "popular": return filtered.sort((a, b) => (b.enrolled_count ?? 0) - (a.enrolled_count ?? 0));
+      case "rating": return filtered.sort((a, b) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0));
+      case "newest":
+        return filtered.sort(
+          (a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
+        );
+      case "price_low": return filtered.sort((a, b) => (a.sale_price ?? a.price ?? 0) - (b.sale_price ?? b.price ?? 0));
+      case "price_high": return filtered.sort((a, b) => (b.sale_price ?? b.price ?? 0) - (a.sale_price ?? a.price ?? 0));
       default: return filtered;
     }
   }, [rawCourses, categoryMap, instructorMap, selectedCategory, search, sortBy]);
