@@ -242,15 +242,15 @@ const AdminEnrollments = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border bg-secondary/30">
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("enrollment.student")}</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("enrollment.course")}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3">{t("enrollment.status")}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("enrollment.requestDate")}</th>
+                  <SortHeader sortKey="student" label={t("enrollment.student")} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="course" label={t("enrollment.course")} sort={sort} onToggle={toggleSort} className="hidden md:table-cell" />
+                  <SortHeader sortKey="status" label={t("enrollment.status")} sort={sort} onToggle={toggleSort} align="center" />
+                  <SortHeader sortKey="enrolled_at" label={t("enrollment.requestDate")} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
                   <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3">{t("enrollment.actions")}</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((enrollment: any) => {
+                {pageRows.map((enrollment: any) => {
                   const profile = profileMap.get(enrollment.user_id);
                   const course = enrollment.courses;
 
