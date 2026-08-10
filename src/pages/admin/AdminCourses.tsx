@@ -439,20 +439,20 @@ const AdminCourses = () => {
             <table className="w-full min-w-[640px] sm:min-w-0">
               <thead>
               <tr className="border-b border-border bg-secondary/30">
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("course.course") || "강의"}</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">{t("course.category") || "카테고리"}</th>
-                  <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{t("course.instructor") || "강사"}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("teacher.status") || "상태"}</th>
+                  <SortHeader sortKey="title" label={t("course.course") || "강의"} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="category" label={t("course.category") || "카테고리"} sort={sort} onToggle={toggleSort} className="hidden md:table-cell" />
+                  <SortHeader sortKey="instructor" label={t("course.instructor") || "강사"} sort={sort} onToggle={toggleSort} className="hidden lg:table-cell" />
+                  <SortHeader sortKey="status" label={t("teacher.status") || "상태"} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
                   <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">공개 범위</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">가격</th>
+                  <SortHeader sortKey="price" label="가격" sort={sort} onToggle={toggleSort} align="center" className="hidden lg:table-cell" />
                   <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">{t("common.required") || "필수"}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("admin.totalStudents") || "수강생"}</th>
-                  <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">{t("course.content") || "차시"}</th>
+                  <SortHeader sortKey="students" label={t("admin.totalStudents") || "수강생"} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
+                  <SortHeader sortKey="contents" label={t("course.content") || "차시"} sort={sort} onToggle={toggleSort} align="center" className="hidden sm:table-cell" />
                   <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3 sticky right-0 bg-secondary/30 sm:static">{t("common.manage") || "관리"}</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((course: any) => {
+                {pageRows.map((course: any) => {
                   const cat = categoryMap.get(course.category_id);
                   const students = (enrollmentCounts as any)[course.id] || 0;
                   const contents = (contentCounts as any)[course.id] || 0;
