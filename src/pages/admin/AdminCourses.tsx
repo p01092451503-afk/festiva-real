@@ -210,6 +210,25 @@ const AdminCourses = () => {
       }
     });
 
+  // 머리글 클릭 정렬(선택 상자 정렬보다 우선) + 페이지 나눔
+  const { sort, toggleSort } = useTableSort({ defaultKey: null, defaultDir: "asc" });
+  const sortedCourses = useMemo(
+    () =>
+      sortRows(filtered, sort, {
+        title: (c: any) => c.title || "",
+        category: (c: any) => categoryMap.get(c.category_id)?.name || "",
+        instructor: (c: any) => instructorMap.get(c.instructor_id) || "",
+        status: (c: any) => c.status || "",
+        price: (c: any) => c.sale_price ?? c.price ?? 0,
+        students: (c: any) => (enrollmentCounts as any)[c.id] || 0,
+        contents: (c: any) => (contentCounts as any)[c.id] || 0,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filtered, sort, categoryMap, instructorMap, enrollmentCounts, contentCounts],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sortedCourses, 20);
+
+
   const stats = {
     total: courses.length,
     published: courses.filter((c: any) => c.status === "published").length,
