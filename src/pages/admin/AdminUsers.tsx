@@ -549,17 +549,17 @@ const AdminUsers = () => {
                     aria-label="전체 선택"
                   />
                 </th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.nameColumn")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">연락처</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden sm:table-cell">회원등급</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">{t("admin.roleColumn")}</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">상태</th>
-                <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">가입일</th>
+                <SortHeader sortKey="full_name" label={t("admin.nameColumn")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="phone_number" label="연락처" sort={sort} onToggle={toggleSort} className="hidden lg:table-cell" />
+                <SortHeader sortKey="grade" label="회원등급" sort={sort} onToggle={toggleSort} className="hidden sm:table-cell" />
+                <SortHeader sortKey="role" label={t("admin.roleColumn")} sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="member_status" label="상태" sort={sort} onToggle={toggleSort} />
+                <SortHeader sortKey="created_at" label="가입일" sort={sort} onToggle={toggleSort} className="hidden md:table-cell" />
                 <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((profile: any) => {
+              {pageRows.map((profile: any) => {
                 const currentRole = getPrimaryRole(profile.user_id);
                 const role = roleLabel[currentRole] || roleLabel.student;
                 const deleteDisabledReason = profile.user_id === user?.id
