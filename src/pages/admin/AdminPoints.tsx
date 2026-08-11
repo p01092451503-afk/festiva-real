@@ -239,10 +239,31 @@ const AdminPoints = () => {
       if (error) throw error;
     }, "발급 쿠폰을 회수했습니다.", ["user-coupons"]);
 
-  const filteredIssued = useMemo(
-    () => (ucFilter === "all" ? issued : issued.filter((c) => c.status === ucFilter)),
-    [issued, ucFilter],
+  const { sort: issuedSort, setSort: setIssuedSort } = useTableSort({ defaultKey: "issued", defaultDir: "desc", paramPrefix: "uc" });
+  const { sort: historySort, setSort: setHistorySort } = useTableSort({ defaultKey: "created", defaultDir: "desc", paramPrefix: "ph" });
+
+  const filteredIssued = useMemo(() => {
+    const base = ucFilter === "all" ? issued : issued.filter((c) => c.status === ucFilter);
+    return sortRows(base as any[], issuedSort, {
+      issued: (c: any) => (c.issued_at ? new Date(c.issued_at).getTime() : null),
+      expires: (c: any) => (c.expires_at ? new Date(c.expires_at).getTime() : null),
+      name: (c: any) => memberName(c.user_id) || "",
+      status: (c: any) => c.status || "",
+    });
+  }, [issued, ucFilter, issuedSort, memberName]);
+
+  const issuedPage = usePagination(filteredIssued, 20);
+
+  const sortedHistory = useMemo(
+    () =>
+      sortRows(history as any[], historySort, {
+        created: (h: any) => (h.created_at ? new Date(h.created_at).getTime() : null),
+        points: (h: any) => Number(h.points) || 0,
+      }),
+    [history, historySort],
   );
+  const historyPage = usePagination(sortedHistory, 20);
+
 
   return (
     <DashboardLayout role="admin">
