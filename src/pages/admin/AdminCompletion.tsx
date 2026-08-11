@@ -15,9 +15,12 @@ import CertificateTemplateDialog from "@/components/admin/CertificateTemplateDia
 import BulkCompletionSettingsDialog from "@/components/admin/BulkCompletionSettingsDialog";
 import { generateCertificateImage, downloadBlob } from "@/lib/certificateGenerator";
 import CompletionRosterPrint, { type RosterRow } from "@/components/admin/CompletionRosterPrint";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
 
 const AdminCompletion = () => {
   const { t } = useTranslation();
+  const { sort: rosterSort, toggleSort: toggleRosterSort } = useTableSort({ defaultKey: "name", defaultDir: "asc", paramPrefix: "roster" });
   const queryClient = useQueryClient();
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
   const [trackFilter, setTrackFilter] = useState<string>("all"); // 'all' | 'standalone' | <trackId>
@@ -581,7 +584,7 @@ const AdminCompletion = () => {
                         {(enrollmentsByCourse.get(course.id) || []).length === 0 ? (
                           <p className="text-xs text-muted-foreground text-center py-4">{t("admin.noStudentData")}</p>
                         ) : (
-                          (enrollmentsByCourse.get(course.id) || []).map((e: any) => {
+                          rosterRows(course.id).map((e: any) => {
                             const attKey = `${e.user_id}_${e.course_id}`;
                             const att = attendanceByUserCourse.get(attKey);
                             const attRate = att ? Math.round((att.present / att.total) * 100) : 0;
@@ -640,12 +643,12 @@ const AdminCompletion = () => {
                         <Table>
                           <TableHeader>
                             <TableRow>
-                              <TableHead>{t("admin.nameColumn")}</TableHead>
-                              <TableHead>{t("admin.progressColumn")}</TableHead>
-                              <TableHead>{t("admin.attendanceRate")}</TableHead>
-                              <TableHead>{t("admin.avgScore")}</TableHead>
-                              <TableHead>{t("admin.completionStatus")}</TableHead>
-                              <TableHead>{t("admin.certColumn")}</TableHead>
+                              <SortHeader sortKey="name" label={t("admin.nameColumn")} sort={rosterSort} onToggle={toggleRosterSort} />
+                              <SortHeader sortKey="progress" label={t("admin.progressColumn")} sort={rosterSort} onToggle={toggleRosterSort} />
+                              <SortHeader sortKey="attendance" label={t("admin.attendanceRate")} sort={rosterSort} onToggle={toggleRosterSort} />
+                              <SortHeader sortKey="score" label={t("admin.avgScore")} sort={rosterSort} onToggle={toggleRosterSort} />
+                              <SortHeader sortKey="status" label={t("admin.completionStatus")} sort={rosterSort} onToggle={toggleRosterSort} />
+                              <SortHeader sortKey="cert" label={t("admin.certColumn")} sort={rosterSort} onToggle={toggleRosterSort} />
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -654,7 +657,7 @@ const AdminCompletion = () => {
                                 <TableCell colSpan={6} className="text-center py-6 text-muted-foreground text-sm">{t("admin.noStudentData")}</TableCell>
                               </TableRow>
                             ) : (
-                              (enrollmentsByCourse.get(course.id) || []).map((e: any) => {
+                              rosterRows(course.id).map((e: any) => {
                                 const attKey = `${e.user_id}_${e.course_id}`;
                                 const att = attendanceByUserCourse.get(attKey);
                                 const attRate = att ? Math.round((att.present / att.total) * 100) : 0;
