@@ -388,19 +388,19 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">강의명</th>
-                    <th className="p-3 font-medium">판매건수</th>
-                    <th className="p-3 font-medium">매출액</th>
-                    <th className="p-3 font-medium">비중</th>
+                    <SortHeader sortKey="title" label="강의명" sort={itemSort.sort} onToggle={itemSort.toggleSort} />
+                    <SortHeader sortKey="count" label="판매건수" sort={itemSort.sort} onToggle={itemSort.toggleSort} />
+                    <SortHeader sortKey="amount" label="매출액" sort={itemSort.sort} onToggle={itemSort.toggleSort} />
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground text-left">비중</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {itemStats.length === 0 ? (
+                  {sortedItems.length === 0 ? (
                     <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">판매 내역이 없습니다.</td></tr>
                   ) : (
-                    itemStats.map((i) => (
+                    sortedItems.map((i) => (
                       <tr key={i.course_id} className="border-b-2 border-border/80 last:border-0">
                         <td className="p-3">{i.title}</td>
                         <td className="p-3">{i.count.toLocaleString()}건</td>
