@@ -424,6 +424,17 @@ const AdminSaleStatus = () => {
                 </div>
               ))
             )}
+            <div className="rounded-xl border">
+              <TablePagination
+                page={productPage.page}
+                totalPages={productPage.totalPages}
+                total={productPage.total}
+                pageSize={productPage.pageSize}
+                onPageChange={productPage.setPage}
+                onPageSizeChange={productPage.setPageSize}
+                unit="개"
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
