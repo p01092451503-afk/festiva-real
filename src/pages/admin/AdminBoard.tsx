@@ -288,6 +288,17 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
                 </CardContent>
               </Card>
             ))}
+            <div className="rounded-lg border">
+              <TablePagination
+                page={pagination.page}
+                totalPages={pagination.totalPages}
+                total={pagination.total}
+                pageSize={pagination.pageSize}
+                onPageChange={pagination.setPage}
+                onPageSizeChange={pagination.setPageSize}
+                unit="건"
+              />
+            </div>
           </div>
         )}
       </div>
