@@ -266,6 +266,26 @@ const AdminCompletion = () => {
   const hasCert = (userId: string, courseId: string) => certSet.has(`${userId}_${courseId}`);
   const canManageCertificate = (enrollment: any) => getCompletionStatus(enrollment);
 
+  /** 수강생 명단 정렬(모든 과정 공통 기준) */
+  const rosterRows = (courseId: string) => {
+    const rows = enrollmentsByCourse.get(courseId) || [];
+    return sortRows(rows, rosterSort, {
+      name: (e: any) => profileMap.get(e.user_id) || "",
+      progress: (e: any) => Math.round(Number(e.progress) || 0),
+      attendance: (e: any) => {
+        const att = attendanceByUserCourse.get(`${e.user_id}_${e.course_id}`);
+        return att ? Math.round((att.present / att.total) * 100) : 0;
+      },
+      score: (e: any) => {
+        const sc = scoreByStudent.get(e.user_id);
+        return sc ? Math.round(sc.total / sc.count) : 0;
+      },
+      status: (e: any) => (getCompletionStatus(e) ? 1 : 0),
+      cert: (e: any) => (hasCert(e.user_id, e.course_id) ? 1 : 0),
+    });
+  };
+
+
   const buildCertData = (enrollment: any, certNumber: string) => {
     const course = courses.find((c: any) => c.id === enrollment.course_id);
     const template = templateMap.get(enrollment.course_id) as any;
