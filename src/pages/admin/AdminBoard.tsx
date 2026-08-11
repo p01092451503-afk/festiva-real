@@ -187,6 +187,16 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
         ? visiblePosts.filter(p => !p.course_id)
         : visiblePosts.filter(p => p.course_id === filterCourse);
 
+  // 목록 정렬(고정글 우선) + 페이지 나눔
+  const { sort, setSort } = useTableSort({ defaultKey: "created_at", defaultDir: "desc" });
+  const sortedPosts = sortRows(filteredPosts, sort, {
+    title: (p: any) => p.title,
+    created_at: (p: any) => p.created_at,
+    view_count: (p: any) => p.view_count || 0,
+  }).slice().sort((a: any, b: any) => Number(b.is_pinned) - Number(a.is_pinned));
+  const pagination = usePagination(sortedPosts, 20);
+
+
   const getFileName = (url: string) => {
     try {
       const parts = url.split("/");
