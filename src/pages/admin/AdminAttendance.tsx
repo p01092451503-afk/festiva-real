@@ -311,7 +311,8 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
                 {isKo ? "해당 날짜에 기록이 없습니다." : "No records for this date."}
               </div>
             ) : (
-              filteredStats.map((s) => {
+              pageRows.map((s) => {
+
                 const p = profileMap.get(s.userId);
                 return (
                   <div key={s.userId} className="p-4 space-y-2">
