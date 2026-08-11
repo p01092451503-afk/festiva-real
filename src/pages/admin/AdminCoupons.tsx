@@ -114,7 +114,7 @@ const AdminCoupons = () => {
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-2">
-          {coupons.map((coupon: any) => (
+          {pageRows.map((coupon: any) => (
             <div key={coupon.id} className="stat-card !p-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
