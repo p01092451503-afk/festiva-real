@@ -136,7 +136,11 @@ const AdminCoupons = () => {
             </div>
           ))}
           {coupons.length === 0 && <div className="stat-card !p-8 text-center text-sm text-muted-foreground">등록된 쿠폰이 없습니다.</div>}
+          <div className="stat-card !p-0 overflow-hidden">
+            <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} unit="개" />
+          </div>
         </div>
+
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
