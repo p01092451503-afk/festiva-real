@@ -439,20 +439,20 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">기간</th>
-                    <th className="p-3 font-medium">결제건수</th>
-                    <th className="p-3 font-medium">할인액</th>
-                    <th className="p-3 font-medium">매출액</th>
-                    <th className="p-3 font-medium">추이</th>
+                    <SortHeader sortKey="period" label="기간" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <SortHeader sortKey="count" label="결제건수" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <SortHeader sortKey="discount" label="할인액" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <SortHeader sortKey="amount" label="매출액" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground text-left">추이</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {revenueSeries.length === 0 ? (
+                  {sortedRevenue.length === 0 ? (
                     <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">매출 내역이 없습니다.</td></tr>
                   ) : (
-                    revenueSeries.map((r) => (
+                    sortedRevenue.map((r) => (
                       <tr key={r.period} className="border-b-2 border-border/80 last:border-0">
                         <td className="whitespace-nowrap p-3">{r.period}</td>
                         <td className="p-3">{r.count.toLocaleString()}건</td>
