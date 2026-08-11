@@ -234,6 +234,26 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
               ))}
             </SelectContent>
           </Select>
+
+          <Select
+            value={`${sort.key ?? "created_at"}:${sort.dir}`}
+            onValueChange={(v) => {
+              const [key, dir] = v.split(":");
+              setSort({ key, dir: dir as "asc" | "desc" });
+            }}
+          >
+            <SelectTrigger className="w-[180px] h-9 text-sm" aria-label="정렬 기준">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created_at:desc">최신 등록순</SelectItem>
+              <SelectItem value="created_at:asc">오래된 등록순</SelectItem>
+              <SelectItem value="title:asc">제목 오름차순</SelectItem>
+              <SelectItem value="title:desc">제목 내림차순</SelectItem>
+              <SelectItem value="view_count:desc">조회수 많은순</SelectItem>
+              <SelectItem value="view_count:asc">조회수 적은순</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {isLoading ? (
@@ -242,7 +262,7 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
           <p className="text-muted-foreground text-sm">{t("common.noData")}</p>
         ) : (
           <div className="space-y-3">
-            {filteredPosts.map(post => (
+            {pagination.pageRows.map(post => (
               <Card key={post.id} className="hover:shadow-sm transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
