@@ -13,6 +13,8 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import {
   SALE_STATUS_ORDER, SALE_STATUS_META, saleStatusClass, saleStatusLabel, type SaleStatus,
 } from "@/lib/statusMeta";
