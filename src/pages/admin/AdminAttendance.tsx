@@ -426,6 +426,16 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
               </TableBody>
             </Table>
           </div>
+          <TablePagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            unit="명"
+          />
+
         </div>
       </div>
     </DashboardLayout>
