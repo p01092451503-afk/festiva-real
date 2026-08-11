@@ -374,7 +374,8 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredStats.map((s) => {
+                  pageRows.map((s) => {
+
                     const p = profileMap.get(s.userId);
                     const isOnline = !!s.loginAt && !s.logoutAt;
                     return (
