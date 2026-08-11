@@ -509,21 +509,21 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">신청일</th>
-                    <th className="p-3 font-medium">신청자</th>
-                    <th className="p-3 font-medium">강의</th>
-                    <th className="p-3 font-medium">결제금액</th>
-                    <th className="p-3 font-medium">환불액</th>
-                    <th className="p-3 font-medium">상태</th>
+                    <SortHeader sortKey="created_at" label="신청일" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="user" label="신청자" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="course" label="강의" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="paid_amount" label="결제금액" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="final_amount" label="환불액" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="status" label="상태" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
                   </tr>
                 </thead>
                 <tbody>
-                  {refunds.length === 0 ? (
+                  {sortedRefunds.length === 0 ? (
                     <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">환불 내역이 없습니다.</td></tr>
                   ) : (
-                    refunds.map((r) => (
+                    refundPage.pageRows.map((r) => (
                       <tr key={r.id} className="border-b-2 border-border/80 last:border-0">
                         <td className="whitespace-nowrap p-3">{fmtDT(r.created_at)}</td>
                         <td className="p-3">{userName(r.user_id)}</td>
@@ -536,6 +536,15 @@ const AdminSalesStats = () => {
                   )}
                 </tbody>
               </table>
+              <TablePagination
+                page={refundPage.page}
+                totalPages={refundPage.totalPages}
+                total={refundPage.total}
+                pageSize={refundPage.pageSize}
+                onPageChange={refundPage.setPage}
+                onPageSizeChange={refundPage.setPageSize}
+                unit="건"
+              />
             </div>
           </TabsContent>
 
