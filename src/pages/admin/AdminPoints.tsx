@@ -11,6 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
 const ACTIONS = [
   { value: "signup", label: "회원가입" },
@@ -239,10 +241,31 @@ const AdminPoints = () => {
       if (error) throw error;
     }, "발급 쿠폰을 회수했습니다.", ["user-coupons"]);
 
-  const filteredIssued = useMemo(
-    () => (ucFilter === "all" ? issued : issued.filter((c) => c.status === ucFilter)),
-    [issued, ucFilter],
+  const { sort: issuedSort, setSort: setIssuedSort } = useTableSort({ defaultKey: "issued", defaultDir: "desc", paramPrefix: "uc" });
+  const { sort: historySort, setSort: setHistorySort } = useTableSort({ defaultKey: "created", defaultDir: "desc", paramPrefix: "ph" });
+
+  const filteredIssued = useMemo(() => {
+    const base = ucFilter === "all" ? issued : issued.filter((c) => c.status === ucFilter);
+    return sortRows(base as any[], issuedSort, {
+      issued: (c: any) => (c.issued_at ? new Date(c.issued_at).getTime() : null),
+      expires: (c: any) => (c.expires_at ? new Date(c.expires_at).getTime() : null),
+      name: (c: any) => memberName(c.user_id) || "",
+      status: (c: any) => c.status || "",
+    });
+  }, [issued, ucFilter, issuedSort, memberName]);
+
+  const issuedPage = usePagination(filteredIssued, 20);
+
+  const sortedHistory = useMemo(
+    () =>
+      sortRows(history as any[], historySort, {
+        created: (h: any) => (h.created_at ? new Date(h.created_at).getTime() : null),
+        points: (h: any) => Number(h.points) || 0,
+      }),
+    [history, historySort],
   );
+  const historyPage = usePagination(sortedHistory, 20);
+
 
   return (
     <DashboardLayout role="admin">
@@ -474,6 +497,23 @@ const AdminPoints = () => {
                   {Object.entries(UC_STATUS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}
                 </SelectContent>
               </Select>
+              <Label className="text-xs whitespace-nowrap ml-2">정렬</Label>
+              <Select
+                value={`${issuedSort.key}_${issuedSort.dir}`}
+                onValueChange={(v) => {
+                  const idx = v.lastIndexOf("_");
+                  setIssuedSort({ key: v.slice(0, idx), dir: v.slice(idx + 1) as "asc" | "desc" });
+                }}
+              >
+                <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="issued_desc">발급일 최신순</SelectItem>
+                  <SelectItem value="issued_asc">발급일 오래된순</SelectItem>
+                  <SelectItem value="expires_asc">만료 임박순</SelectItem>
+                  <SelectItem value="name_asc">회원 이름순</SelectItem>
+                  <SelectItem value="status_asc">상태순</SelectItem>
+                </SelectContent>
+              </Select>
               <span className="text-xs text-muted-foreground">{filteredIssued.length}건</span>
             </div>
 
@@ -481,7 +521,7 @@ const AdminPoints = () => {
               {filteredIssued.length === 0 && (
                 <p className="p-6 text-center text-sm text-muted-foreground">발급된 쿠폰이 없습니다.</p>
               )}
-              {filteredIssued.map((c) => (
+              {issuedPage.pageRows.map((c: any) => (
                 <div key={c.id} className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 border-b-2 border-border/80 last:border-b-0">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -510,15 +550,43 @@ const AdminPoints = () => {
                   </div>
                 </div>
               ))}
+              <TablePagination
+                page={issuedPage.page}
+                totalPages={issuedPage.totalPages}
+                total={issuedPage.total}
+                pageSize={issuedPage.pageSize}
+                onPageChange={issuedPage.setPage}
+                onPageSizeChange={issuedPage.setPageSize}
+                unit="건"
+              />
             </div>
           </TabsContent>
 
-          <TabsContent value="history" className="pt-4">
+          <TabsContent value="history" className="space-y-3 pt-4">
+            <div className="flex items-center gap-2">
+              <Label className="text-xs whitespace-nowrap">정렬</Label>
+              <Select
+                value={`${historySort.key}_${historySort.dir}`}
+                onValueChange={(v) => {
+                  const idx = v.lastIndexOf("_");
+                  setHistorySort({ key: v.slice(0, idx), dir: v.slice(idx + 1) as "asc" | "desc" });
+                }}
+              >
+                <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_desc">최신순</SelectItem>
+                  <SelectItem value="created_asc">오래된순</SelectItem>
+                  <SelectItem value="points_desc">포인트 많은순</SelectItem>
+                  <SelectItem value="points_asc">포인트 적은순</SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="text-xs text-muted-foreground">{sortedHistory.length}건</span>
+            </div>
             <div className="border rounded-lg divide-y">
               {history.length === 0 && (
                 <p className="p-6 text-center text-sm text-muted-foreground">포인트 이용내역이 없습니다.</p>
               )}
-              {history.map((h) => (
+              {historyPage.pageRows.map((h: any) => (
                 <div key={h.id} className="p-3 flex items-center gap-3 border-b-2 border-border/80 last:border-b-0">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm truncate">{h.description || h.action_type}</p>
@@ -533,6 +601,15 @@ const AdminPoints = () => {
                   </span>
                 </div>
               ))}
+              <TablePagination
+                page={historyPage.page}
+                totalPages={historyPage.totalPages}
+                total={historyPage.total}
+                pageSize={historyPage.pageSize}
+                onPageChange={historyPage.setPage}
+                onPageSizeChange={historyPage.setPageSize}
+                unit="건"
+              />
             </div>
           </TabsContent>
         </Tabs>

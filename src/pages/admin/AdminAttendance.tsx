@@ -10,6 +10,9 @@ import RichStatCard from "@/components/admin/stats/RichStatCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useUser } from "@/contexts/UserContext";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
 interface AdminAttendanceProps {
   role?: "admin" | "teacher";
@@ -151,7 +154,7 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
   }, [sessions, dailyProgress, contentMap, isTeacher, teacherCourseIds]);
 
   // Filter by name search
-  const filteredStats = useMemo(() => {
+  const searchedStats = useMemo(() => {
     if (!searchName.trim()) return userStats;
     const q = searchName.toLowerCase();
     return userStats.filter((s) => {
@@ -159,6 +162,24 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
       return p?.full_name?.toLowerCase().includes(q);
     });
   }, [userStats, searchName, profileMap]);
+
+  const { sort, toggleSort } = useTableSort({ defaultKey: "login", defaultDir: "desc" });
+
+  const filteredStats = useMemo(
+    () =>
+      sortRows(searchedStats, sort, {
+        name: (s: any) => profileMap.get(s.userId)?.full_name || "",
+        department: (s: any) => profileMap.get(s.userId)?.department || "",
+        login: (s: any) => (s.loginAt ? new Date(s.loginAt).getTime() : null),
+        logout: (s: any) => (s.logoutAt ? new Date(s.logoutAt).getTime() : null),
+        minutes: (s: any) => s.learningMinutes,
+        completions: (s: any) => s.completions,
+      }),
+    [searchedStats, sort, profileMap],
+  );
+
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(filteredStats, 20);
+
 
   const formatTime = (d: string | null) => {
     if (!d) return "-";
@@ -290,7 +311,8 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
                 {isKo ? "해당 날짜에 기록이 없습니다." : "No records for this date."}
               </div>
             ) : (
-              filteredStats.map((s) => {
+              pageRows.map((s) => {
+
                 const p = profileMap.get(s.userId);
                 return (
                   <div key={s.userId} className="p-4 space-y-2">
@@ -334,13 +356,14 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
             <Table>
               <TableHeader>
                 <TableRow className="bg-secondary/30">
-                  <TableHead className="text-xs">{isKo ? "이름" : "Name"}</TableHead>
-                  <TableHead className="text-xs">{isKo ? "부서" : "Department"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "로그인" : "Login"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "로그아웃" : "Logout"}</TableHead>
+                  <SortHeader sortKey="name" label={isKo ? "이름" : "Name"} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="department" label={isKo ? "부서" : "Department"} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="login" label={isKo ? "로그인" : "Login"} sort={sort} onToggle={toggleSort} align="center" />
+                  <SortHeader sortKey="logout" label={isKo ? "로그아웃" : "Logout"} sort={sort} onToggle={toggleSort} align="center" />
                   <TableHead className="text-xs text-center">{isKo ? "상태" : "Status"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "학습시간" : "Learning Time"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "학습 완료 수" : "Completions"}</TableHead>
+                  <SortHeader sortKey="minutes" label={isKo ? "학습시간" : "Learning Time"} sort={sort} onToggle={toggleSort} align="center" />
+                  <SortHeader sortKey="completions" label={isKo ? "학습 완료 수" : "Completions"} sort={sort} onToggle={toggleSort} align="center" />
+
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -351,7 +374,8 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredStats.map((s) => {
+                  pageRows.map((s) => {
+
                     const p = profileMap.get(s.userId);
                     const isOnline = !!s.loginAt && !s.logoutAt;
                     return (
@@ -402,6 +426,16 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
               </TableBody>
             </Table>
           </div>
+          <TablePagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            unit="명"
+          />
+
         </div>
       </div>
     </DashboardLayout>

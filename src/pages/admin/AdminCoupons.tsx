@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tag, Plus, Edit, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,6 +52,22 @@ const AdminCoupons = () => {
 
   const openEdit = (c: any) => { setForm({ id: c.id, code: c.code, name: c.name, discount_type: c.discount_type, discount_value: c.discount_value, min_order_amount: c.min_order_amount, max_discount_amount: c.max_discount_amount, usage_limit: c.usage_limit, starts_at: c.starts_at || "", ends_at: c.ends_at || "", is_active: c.is_active }); setDialogOpen(true); };
 
+  const { sort, toggleSort } = useTableSort({ defaultKey: "created", defaultDir: "desc" });
+  const sortedCoupons = useMemo(
+    () =>
+      sortRows(coupons as any[], sort, {
+        code: (c: any) => c.code,
+        name: (c: any) => c.name,
+        discount: (c: any) => Number(c.discount_value) || 0,
+        used: (c: any) => Number(c.used_count) || 0,
+        active: (c: any) => (c.is_active ? 1 : 0),
+        created: (c: any) => (c.created_at ? new Date(c.created_at).getTime() : null),
+      }),
+    [coupons, sort],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sortedCoupons, 20);
+
+
   return (
     <DashboardLayout role="admin">
       <div className="space-y-6">
@@ -64,15 +83,16 @@ const AdminCoupons = () => {
         <div className="stat-card !p-0 overflow-hidden hidden md:block">
           <table className="w-full">
             <thead><tr className="border-b border-border bg-secondary/30">
-              <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">코드</th>
-              <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">이름</th>
-              <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">할인</th>
-              <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">사용/제한</th>
-              <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3">활성</th>
+              <SortHeader sortKey="code" label="코드" sort={sort} onToggle={toggleSort} />
+              <SortHeader sortKey="name" label="이름" sort={sort} onToggle={toggleSort} />
+              <SortHeader sortKey="discount" label="할인" sort={sort} onToggle={toggleSort} align="center" className="hidden md:table-cell" />
+              <SortHeader sortKey="used" label="사용/제한" sort={sort} onToggle={toggleSort} align="center" className="hidden lg:table-cell" />
+              <SortHeader sortKey="active" label="활성" sort={sort} onToggle={toggleSort} align="center" />
               <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3">관리</th>
             </tr></thead>
             <tbody>
-              {coupons.map((coupon: any) => (
+              {pageRows.map((coupon: any) => (
+
                 <tr key={coupon.id} className="border-b border-border last:border-0">
                   <td className="px-4 py-3"><code className="text-sm font-mono font-semibold text-foreground bg-secondary px-2 py-0.5 rounded">{coupon.code}</code></td>
                   <td className="px-4 py-3 text-sm text-foreground">{coupon.name}</td>
@@ -88,11 +108,13 @@ const AdminCoupons = () => {
               {coupons.length === 0 && <tr><td colSpan={6} className="text-center py-12 text-sm text-muted-foreground">등록된 쿠폰이 없습니다.</td></tr>}
             </tbody>
           </table>
+          <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} unit="개" />
         </div>
+
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-2">
-          {coupons.map((coupon: any) => (
+          {pageRows.map((coupon: any) => (
             <div key={coupon.id} className="stat-card !p-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
@@ -114,7 +136,13 @@ const AdminCoupons = () => {
             </div>
           ))}
           {coupons.length === 0 && <div className="stat-card !p-8 text-center text-sm text-muted-foreground">등록된 쿠폰이 없습니다.</div>}
+          {total > 0 && (
+          <div className="stat-card !p-0 overflow-hidden">
+            <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} unit="개" />
+          </div>
+          )}
         </div>
+
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
