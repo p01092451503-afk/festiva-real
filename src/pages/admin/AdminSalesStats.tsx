@@ -12,6 +12,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
 const won = (n: number) => `${Number(n || 0).toLocaleString()}원`;
 const fmtDT = (v?: string | null) => (v ? new Date(v).toLocaleString("ko-KR") : "-");
