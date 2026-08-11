@@ -108,7 +108,9 @@ const AdminCoupons = () => {
               {coupons.length === 0 && <tr><td colSpan={6} className="text-center py-12 text-sm text-muted-foreground">등록된 쿠폰이 없습니다.</td></tr>}
             </tbody>
           </table>
+          <TablePagination page={page} totalPages={totalPages} total={total} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} unit="개" />
         </div>
+
 
         {/* Mobile Cards */}
         <div className="md:hidden space-y-2">
