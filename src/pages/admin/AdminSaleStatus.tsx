@@ -303,14 +303,34 @@ const AdminSaleStatus = () => {
           ))}
         </div>
 
-        <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="강의 · 교보재 이름 검색"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 rounded-xl"
-          />
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative max-w-sm flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="강의 · 교보재 이름 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl"
+            />
+          </div>
+          <Select
+            value={`${sort.key ?? "created_at"}:${sort.dir}`}
+            onValueChange={(v) => {
+              const [key, dir] = v.split(":");
+              setSort({ key, dir: dir as "asc" | "desc" });
+            }}
+          >
+            <SelectTrigger className="h-10 w-[180px] rounded-xl text-sm" aria-label="정렬 기준">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created_at:desc">최신 등록순</SelectItem>
+              <SelectItem value="created_at:asc">오래된 등록순</SelectItem>
+              <SelectItem value="name:asc">이름 오름차순</SelectItem>
+              <SelectItem value="name:desc">이름 내림차순</SelectItem>
+              <SelectItem value="status:asc">판매 상태순</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <Tabs defaultValue="courses">
@@ -320,10 +340,10 @@ const AdminSaleStatus = () => {
           </TabsList>
 
           <TabsContent value="courses" className="mt-4 space-y-2">
-            {filteredCourses.length === 0 ? (
+            {sortedCourses.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-10">강의가 없습니다.</p>
             ) : (
-              filteredCourses.map((c: any) => (
+              coursePage.pageRows.map((c: any) => (
                 <div key={c.id} className="stat-card !p-4 flex flex-wrap items-center gap-3 border-b-2 border-border/80">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-foreground truncate">{c.title}</p>
