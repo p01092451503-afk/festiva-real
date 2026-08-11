@@ -83,15 +83,16 @@ const AdminCoupons = () => {
         <div className="stat-card !p-0 overflow-hidden hidden md:block">
           <table className="w-full">
             <thead><tr className="border-b border-border bg-secondary/30">
-              <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">코드</th>
-              <th className="text-left text-xs font-medium text-muted-foreground px-4 py-3">이름</th>
-              <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden md:table-cell">할인</th>
-              <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3 hidden lg:table-cell">사용/제한</th>
-              <th className="text-center text-xs font-medium text-muted-foreground px-4 py-3">활성</th>
+              <SortHeader sortKey="code" label="코드" sort={sort} onToggle={toggleSort} />
+              <SortHeader sortKey="name" label="이름" sort={sort} onToggle={toggleSort} />
+              <SortHeader sortKey="discount" label="할인" sort={sort} onToggle={toggleSort} align="center" className="hidden md:table-cell" />
+              <SortHeader sortKey="used" label="사용/제한" sort={sort} onToggle={toggleSort} align="center" className="hidden lg:table-cell" />
+              <SortHeader sortKey="active" label="활성" sort={sort} onToggle={toggleSort} align="center" />
               <th className="text-right text-xs font-medium text-muted-foreground px-4 py-3">관리</th>
             </tr></thead>
             <tbody>
-              {coupons.map((coupon: any) => (
+              {pageRows.map((coupon: any) => (
+
                 <tr key={coupon.id} className="border-b border-border last:border-0">
                   <td className="px-4 py-3"><code className="text-sm font-mono font-semibold text-foreground bg-secondary px-2 py-0.5 rounded">{coupon.code}</code></td>
                   <td className="px-4 py-3 text-sm text-foreground">{coupon.name}</td>
