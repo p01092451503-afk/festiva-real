@@ -368,6 +368,17 @@ const AdminSaleStatus = () => {
                 </div>
               ))
             )}
+            <div className="rounded-xl border">
+              <TablePagination
+                page={coursePage.page}
+                totalPages={coursePage.totalPages}
+                total={coursePage.total}
+                pageSize={coursePage.pageSize}
+                onPageChange={coursePage.setPage}
+                onPageSizeChange={coursePage.setPageSize}
+                unit="개"
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="products" className="mt-4 space-y-2">
@@ -376,10 +387,10 @@ const AdminSaleStatus = () => {
                 <Plus className="h-3.5 w-3.5" />교보재 등록
               </Button>
             </div>
-            {filteredProducts.length === 0 ? (
+            {sortedProducts.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-10">등록된 교보재가 없습니다.</p>
             ) : (
-              filteredProducts.map((p: any) => (
+              productPage.pageRows.map((p: any) => (
                 <div key={p.id} className="stat-card !p-4 flex flex-wrap items-center gap-3 border-b-2 border-border/80">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-foreground truncate">{p.name}</p>
