@@ -49,6 +49,22 @@ const AdminCoupons = () => {
 
   const openEdit = (c: any) => { setForm({ id: c.id, code: c.code, name: c.name, discount_type: c.discount_type, discount_value: c.discount_value, min_order_amount: c.min_order_amount, max_discount_amount: c.max_discount_amount, usage_limit: c.usage_limit, starts_at: c.starts_at || "", ends_at: c.ends_at || "", is_active: c.is_active }); setDialogOpen(true); };
 
+  const { sort, toggleSort } = useTableSort({ defaultKey: "created", defaultDir: "desc" });
+  const sortedCoupons = useMemo(
+    () =>
+      sortRows(coupons as any[], sort, {
+        code: (c: any) => c.code,
+        name: (c: any) => c.name,
+        discount: (c: any) => Number(c.discount_value) || 0,
+        used: (c: any) => Number(c.used_count) || 0,
+        active: (c: any) => (c.is_active ? 1 : 0),
+        created: (c: any) => (c.created_at ? new Date(c.created_at).getTime() : null),
+      }),
+    [coupons, sort],
+  );
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(sortedCoupons, 20);
+
+
   return (
     <DashboardLayout role="admin">
       <div className="space-y-6">
