@@ -13,6 +13,8 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 import {
   SALE_STATUS_ORDER, SALE_STATUS_META, saleStatusClass, saleStatusLabel, type SaleStatus,
 } from "@/lib/statusMeta";
@@ -188,6 +190,22 @@ const AdminSaleStatus = () => {
   const filteredCourses = courses.filter((c: any) => !q || c.title?.toLowerCase().includes(q));
   const filteredProducts = products.filter((p: any) => !q || p.name?.toLowerCase().includes(q));
 
+  // 정렬(이름·상태·등록일) + 페이지 나눔
+  const { sort, setSort } = useTableSort({ defaultKey: "created_at", defaultDir: "desc" });
+  const sortedCourses = sortRows(filteredCourses, sort, {
+    name: (c: any) => c.title,
+    status: (c: any) => saleStatusLabel(c.sale_status),
+    created_at: (c: any) => c.created_at,
+  });
+  const sortedProducts = sortRows(filteredProducts, sort, {
+    name: (p: any) => p.name,
+    status: (p: any) => saleStatusLabel(p.sale_status),
+    created_at: (p: any) => p.created_at,
+  });
+  const coursePage = usePagination(sortedCourses, 20);
+  const productPage = usePagination(sortedProducts, 20);
+
+
   const openCourseEdit = (c: any) => {
     setCourseEditId(c.id);
     setCourseForm({
@@ -285,14 +303,34 @@ const AdminSaleStatus = () => {
           ))}
         </div>
 
-        <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="강의 · 교보재 이름 검색"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-10 rounded-xl"
-          />
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative max-w-sm flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="강의 · 교보재 이름 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 h-10 rounded-xl"
+            />
+          </div>
+          <Select
+            value={`${sort.key ?? "created_at"}:${sort.dir}`}
+            onValueChange={(v) => {
+              const [key, dir] = v.split(":");
+              setSort({ key, dir: dir as "asc" | "desc" });
+            }}
+          >
+            <SelectTrigger className="h-10 w-[180px] rounded-xl text-sm" aria-label="정렬 기준">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created_at:desc">최신 등록순</SelectItem>
+              <SelectItem value="created_at:asc">오래된 등록순</SelectItem>
+              <SelectItem value="name:asc">이름 오름차순</SelectItem>
+              <SelectItem value="name:desc">이름 내림차순</SelectItem>
+              <SelectItem value="status:asc">판매 상태순</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <Tabs defaultValue="courses">
@@ -302,10 +340,10 @@ const AdminSaleStatus = () => {
           </TabsList>
 
           <TabsContent value="courses" className="mt-4 space-y-2">
-            {filteredCourses.length === 0 ? (
+            {sortedCourses.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-10">강의가 없습니다.</p>
             ) : (
-              filteredCourses.map((c: any) => (
+              coursePage.pageRows.map((c: any) => (
                 <div key={c.id} className="stat-card !p-4 flex flex-wrap items-center gap-3 border-b-2 border-border/80">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-foreground truncate">{c.title}</p>
@@ -330,6 +368,17 @@ const AdminSaleStatus = () => {
                 </div>
               ))
             )}
+            <div className="rounded-xl border">
+              <TablePagination
+                page={coursePage.page}
+                totalPages={coursePage.totalPages}
+                total={coursePage.total}
+                pageSize={coursePage.pageSize}
+                onPageChange={coursePage.setPage}
+                onPageSizeChange={coursePage.setPageSize}
+                unit="개"
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="products" className="mt-4 space-y-2">
@@ -338,10 +387,10 @@ const AdminSaleStatus = () => {
                 <Plus className="h-3.5 w-3.5" />교보재 등록
               </Button>
             </div>
-            {filteredProducts.length === 0 ? (
+            {sortedProducts.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-10">등록된 교보재가 없습니다.</p>
             ) : (
-              filteredProducts.map((p: any) => (
+              productPage.pageRows.map((p: any) => (
                 <div key={p.id} className="stat-card !p-4 flex flex-wrap items-center gap-3 border-b-2 border-border/80">
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-foreground truncate">{p.name}</p>
@@ -375,6 +424,17 @@ const AdminSaleStatus = () => {
                 </div>
               ))
             )}
+            <div className="rounded-xl border">
+              <TablePagination
+                page={productPage.page}
+                totalPages={productPage.totalPages}
+                total={productPage.total}
+                pageSize={productPage.pageSize}
+                onPageChange={productPage.setPage}
+                onPageSizeChange={productPage.setPageSize}
+                unit="개"
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

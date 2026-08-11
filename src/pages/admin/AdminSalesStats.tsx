@@ -12,6 +12,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
 const won = (n: number) => `${Number(n || 0).toLocaleString()}원`;
 const fmtDT = (v?: string | null) => (v ? new Date(v).toLocaleString("ko-KR") : "-");
@@ -163,6 +166,62 @@ const AdminSalesStats = () => {
 
   const userName = (id: string) => userMap.get(id)?.full_name || "(알 수 없음)";
 
+  // 표별 정렬 상태 (주소에 저장, 접두사로 표 구분)
+  const orderSort = useTableSort({ defaultKey: "created_at", defaultDir: "desc", paramPrefix: "o" });
+  const itemSort = useTableSort({ defaultKey: "amount", defaultDir: "desc", paramPrefix: "i" });
+  const revenueSort = useTableSort({ defaultKey: "period", defaultDir: "desc", paramPrefix: "r" });
+  const refundSort = useTableSort({ defaultKey: "created_at", defaultDir: "desc", paramPrefix: "f" });
+
+  const sortedOrders = useMemo(
+    () =>
+      sortRows(filteredOrders, orderSort.sort, {
+        order_number: (o) => o.order_number,
+        user: (o) => userName(o.user_id),
+        status: (o) => ORDER_STATUS[o.status] || o.status,
+        items: (o) => o.order_items?.length || 0,
+        final_amount: (o) => o.final_amount || 0,
+        payment_method: (o) => o.payment_method || "",
+        created_at: (o) => o.created_at,
+      }),
+    [filteredOrders, orderSort.sort, userMap],
+  );
+  const orderPage = usePagination(sortedOrders, 50);
+
+  const sortedItems = useMemo(
+    () =>
+      sortRows(itemStats, itemSort.sort, {
+        title: (i) => i.title,
+        count: (i) => i.count,
+        amount: (i) => i.amount,
+      }),
+    [itemStats, itemSort.sort],
+  );
+
+  const sortedRevenue = useMemo(
+    () =>
+      sortRows(revenueSeries, revenueSort.sort, {
+        period: (r) => r.period,
+        count: (r) => r.count,
+        discount: (r) => r.discount,
+        amount: (r) => r.amount,
+      }),
+    [revenueSeries, revenueSort.sort],
+  );
+
+  const sortedRefunds = useMemo(
+    () =>
+      sortRows(refunds, refundSort.sort, {
+        created_at: (r) => r.created_at,
+        user: (r) => userName(r.user_id),
+        course: (r) => courseMap.get(r.course_id) || "",
+        paid_amount: (r) => r.paid_amount || 0,
+        final_amount: (r) => r.final_amount || 0,
+        status: (r) => REFUND_STATUS[r.status] || r.status,
+      }),
+    [refunds, refundSort.sort, userMap, courseMap],
+  );
+  const refundPage = usePagination(sortedRefunds, 50);
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -270,22 +329,22 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">주문번호</th>
-                    <th className="p-3 font-medium">주문자</th>
-                    <th className="p-3 font-medium">상태</th>
-                    <th className="p-3 font-medium">상품수</th>
-                    <th className="p-3 font-medium">결제금액</th>
-                    <th className="p-3 font-medium">결제수단</th>
-                    <th className="p-3 font-medium">주문일시</th>
+                    <SortHeader sortKey="order_number" label="주문번호" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="user" label="주문자" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="status" label="상태" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="items" label="상품수" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="final_amount" label="결제금액" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="payment_method" label="결제수단" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="created_at" label="주문일시" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredOrders.length === 0 ? (
+                  {sortedOrders.length === 0 ? (
                     <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">주문 내역이 없습니다.</td></tr>
                   ) : (
-                    filteredOrders.slice(0, 300).map((o) => (
+                    orderPage.pageRows.map((o) => (
                       <tr key={o.id} className="border-b-2 border-border/80 last:border-0">
                         <td className="whitespace-nowrap p-3">{o.order_number}</td>
                         <td className="p-3">{userName(o.user_id)}</td>
@@ -299,6 +358,15 @@ const AdminSalesStats = () => {
                   )}
                 </tbody>
               </table>
+              <TablePagination
+                page={orderPage.page}
+                totalPages={orderPage.totalPages}
+                total={orderPage.total}
+                pageSize={orderPage.pageSize}
+                onPageChange={orderPage.setPage}
+                onPageSizeChange={orderPage.setPageSize}
+                unit="건"
+              />
             </div>
           </TabsContent>
 
@@ -320,19 +388,19 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">강의명</th>
-                    <th className="p-3 font-medium">판매건수</th>
-                    <th className="p-3 font-medium">매출액</th>
-                    <th className="p-3 font-medium">비중</th>
+                    <SortHeader sortKey="title" label="강의명" sort={itemSort.sort} onToggle={itemSort.toggleSort} />
+                    <SortHeader sortKey="count" label="판매건수" sort={itemSort.sort} onToggle={itemSort.toggleSort} />
+                    <SortHeader sortKey="amount" label="매출액" sort={itemSort.sort} onToggle={itemSort.toggleSort} />
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground text-left">비중</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {itemStats.length === 0 ? (
+                  {sortedItems.length === 0 ? (
                     <tr><td colSpan={4} className="p-8 text-center text-muted-foreground">판매 내역이 없습니다.</td></tr>
                   ) : (
-                    itemStats.map((i) => (
+                    sortedItems.map((i) => (
                       <tr key={i.course_id} className="border-b-2 border-border/80 last:border-0">
                         <td className="p-3">{i.title}</td>
                         <td className="p-3">{i.count.toLocaleString()}건</td>
@@ -371,20 +439,20 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">기간</th>
-                    <th className="p-3 font-medium">결제건수</th>
-                    <th className="p-3 font-medium">할인액</th>
-                    <th className="p-3 font-medium">매출액</th>
-                    <th className="p-3 font-medium">추이</th>
+                    <SortHeader sortKey="period" label="기간" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <SortHeader sortKey="count" label="결제건수" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <SortHeader sortKey="discount" label="할인액" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <SortHeader sortKey="amount" label="매출액" sort={revenueSort.sort} onToggle={revenueSort.toggleSort} />
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground text-left">추이</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {revenueSeries.length === 0 ? (
+                  {sortedRevenue.length === 0 ? (
                     <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">매출 내역이 없습니다.</td></tr>
                   ) : (
-                    revenueSeries.map((r) => (
+                    sortedRevenue.map((r) => (
                       <tr key={r.period} className="border-b-2 border-border/80 last:border-0">
                         <td className="whitespace-nowrap p-3">{r.period}</td>
                         <td className="p-3">{r.count.toLocaleString()}건</td>
@@ -441,21 +509,21 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">신청일</th>
-                    <th className="p-3 font-medium">신청자</th>
-                    <th className="p-3 font-medium">강의</th>
-                    <th className="p-3 font-medium">결제금액</th>
-                    <th className="p-3 font-medium">환불액</th>
-                    <th className="p-3 font-medium">상태</th>
+                    <SortHeader sortKey="created_at" label="신청일" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="user" label="신청자" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="course" label="강의" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="paid_amount" label="결제금액" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="final_amount" label="환불액" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
+                    <SortHeader sortKey="status" label="상태" sort={refundSort.sort} onToggle={refundSort.toggleSort} />
                   </tr>
                 </thead>
                 <tbody>
-                  {refunds.length === 0 ? (
+                  {sortedRefunds.length === 0 ? (
                     <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">환불 내역이 없습니다.</td></tr>
                   ) : (
-                    refunds.map((r) => (
+                    refundPage.pageRows.map((r) => (
                       <tr key={r.id} className="border-b-2 border-border/80 last:border-0">
                         <td className="whitespace-nowrap p-3">{fmtDT(r.created_at)}</td>
                         <td className="p-3">{userName(r.user_id)}</td>
@@ -468,6 +536,15 @@ const AdminSalesStats = () => {
                   )}
                 </tbody>
               </table>
+              <TablePagination
+                page={refundPage.page}
+                totalPages={refundPage.totalPages}
+                total={refundPage.total}
+                pageSize={refundPage.pageSize}
+                onPageChange={refundPage.setPage}
+                onPageSizeChange={refundPage.setPageSize}
+                unit="건"
+              />
             </div>
           </TabsContent>
 
