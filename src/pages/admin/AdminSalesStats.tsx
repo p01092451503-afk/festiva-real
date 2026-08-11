@@ -329,22 +329,22 @@ const AdminSalesStats = () => {
             </div>
             <div className="overflow-x-auto rounded-lg border">
               <table className="w-full text-sm">
-                <thead className="bg-muted/50 text-left">
+                <thead className="bg-muted/50">
                   <tr>
-                    <th className="p-3 font-medium">주문번호</th>
-                    <th className="p-3 font-medium">주문자</th>
-                    <th className="p-3 font-medium">상태</th>
-                    <th className="p-3 font-medium">상품수</th>
-                    <th className="p-3 font-medium">결제금액</th>
-                    <th className="p-3 font-medium">결제수단</th>
-                    <th className="p-3 font-medium">주문일시</th>
+                    <SortHeader sortKey="order_number" label="주문번호" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="user" label="주문자" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="status" label="상태" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="items" label="상품수" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="final_amount" label="결제금액" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="payment_method" label="결제수단" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
+                    <SortHeader sortKey="created_at" label="주문일시" sort={orderSort.sort} onToggle={orderSort.toggleSort} />
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredOrders.length === 0 ? (
+                  {sortedOrders.length === 0 ? (
                     <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">주문 내역이 없습니다.</td></tr>
                   ) : (
-                    filteredOrders.slice(0, 300).map((o) => (
+                    orderPage.pageRows.map((o) => (
                       <tr key={o.id} className="border-b-2 border-border/80 last:border-0">
                         <td className="whitespace-nowrap p-3">{o.order_number}</td>
                         <td className="p-3">{userName(o.user_id)}</td>
@@ -358,6 +358,15 @@ const AdminSalesStats = () => {
                   )}
                 </tbody>
               </table>
+              <TablePagination
+                page={orderPage.page}
+                totalPages={orderPage.totalPages}
+                total={orderPage.total}
+                pageSize={orderPage.pageSize}
+                onPageChange={orderPage.setPage}
+                onPageSizeChange={orderPage.setPageSize}
+                unit="건"
+              />
             </div>
           </TabsContent>
 
