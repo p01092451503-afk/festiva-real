@@ -151,7 +151,7 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
   }, [sessions, dailyProgress, contentMap, isTeacher, teacherCourseIds]);
 
   // Filter by name search
-  const filteredStats = useMemo(() => {
+  const searchedStats = useMemo(() => {
     if (!searchName.trim()) return userStats;
     const q = searchName.toLowerCase();
     return userStats.filter((s) => {
@@ -159,6 +159,24 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
       return p?.full_name?.toLowerCase().includes(q);
     });
   }, [userStats, searchName, profileMap]);
+
+  const { sort, toggleSort } = useTableSort({ defaultKey: "login", defaultDir: "desc" });
+
+  const filteredStats = useMemo(
+    () =>
+      sortRows(searchedStats, sort, {
+        name: (s: any) => profileMap.get(s.userId)?.full_name || "",
+        department: (s: any) => profileMap.get(s.userId)?.department || "",
+        login: (s: any) => (s.loginAt ? new Date(s.loginAt).getTime() : null),
+        logout: (s: any) => (s.logoutAt ? new Date(s.logoutAt).getTime() : null),
+        minutes: (s: any) => s.learningMinutes,
+        completions: (s: any) => s.completions,
+      }),
+    [searchedStats, sort, profileMap],
+  );
+
+  const { page, setPage, pageSize, setPageSize, total, totalPages, pageRows } = usePagination(filteredStats, 20);
+
 
   const formatTime = (d: string | null) => {
     if (!d) return "-";
