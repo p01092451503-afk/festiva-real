@@ -16,6 +16,8 @@ import { Plus, Edit, Trash2, Pin, Upload, X, FileText, Eye, ClipboardList } from
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
 import { autoTranslateInBackground } from "@/lib/translate";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
 const EMPTY_FORM = {
   is_pinned: false,
