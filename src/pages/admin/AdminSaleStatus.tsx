@@ -188,6 +188,22 @@ const AdminSaleStatus = () => {
   const filteredCourses = courses.filter((c: any) => !q || c.title?.toLowerCase().includes(q));
   const filteredProducts = products.filter((p: any) => !q || p.name?.toLowerCase().includes(q));
 
+  // 정렬(이름·상태·등록일) + 페이지 나눔
+  const { sort, setSort } = useTableSort({ defaultKey: "created_at", defaultDir: "desc" });
+  const sortedCourses = sortRows(filteredCourses, sort, {
+    name: (c: any) => c.title,
+    status: (c: any) => saleStatusLabel(c.sale_status),
+    created_at: (c: any) => c.created_at,
+  });
+  const sortedProducts = sortRows(filteredProducts, sort, {
+    name: (p: any) => p.name,
+    status: (p: any) => saleStatusLabel(p.sale_status),
+    created_at: (p: any) => p.created_at,
+  });
+  const coursePage = usePagination(sortedCourses, 20);
+  const productPage = usePagination(sortedProducts, 20);
+
+
   const openCourseEdit = (c: any) => {
     setCourseEditId(c.id);
     setCourseForm({
