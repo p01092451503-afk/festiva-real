@@ -355,13 +355,14 @@ const AdminAttendance = ({ role = "admin" }: AdminAttendanceProps) => {
             <Table>
               <TableHeader>
                 <TableRow className="bg-secondary/30">
-                  <TableHead className="text-xs">{isKo ? "이름" : "Name"}</TableHead>
-                  <TableHead className="text-xs">{isKo ? "부서" : "Department"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "로그인" : "Login"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "로그아웃" : "Logout"}</TableHead>
+                  <SortHeader sortKey="name" label={isKo ? "이름" : "Name"} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="department" label={isKo ? "부서" : "Department"} sort={sort} onToggle={toggleSort} />
+                  <SortHeader sortKey="login" label={isKo ? "로그인" : "Login"} sort={sort} onToggle={toggleSort} align="center" />
+                  <SortHeader sortKey="logout" label={isKo ? "로그아웃" : "Logout"} sort={sort} onToggle={toggleSort} align="center" />
                   <TableHead className="text-xs text-center">{isKo ? "상태" : "Status"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "학습시간" : "Learning Time"}</TableHead>
-                  <TableHead className="text-xs text-center">{isKo ? "학습 완료 수" : "Completions"}</TableHead>
+                  <SortHeader sortKey="minutes" label={isKo ? "학습시간" : "Learning Time"} sort={sort} onToggle={toggleSort} align="center" />
+                  <SortHeader sortKey="completions" label={isKo ? "학습 완료 수" : "Completions"} sort={sort} onToggle={toggleSort} align="center" />
+
                 </TableRow>
               </TableHeader>
               <TableBody>
