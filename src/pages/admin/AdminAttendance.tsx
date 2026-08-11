@@ -10,6 +10,9 @@ import RichStatCard from "@/components/admin/stats/RichStatCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useUser } from "@/contexts/UserContext";
+import { useTableSort, sortRows } from "@/hooks/useTableSort";
+import SortHeader from "@/components/table/SortHeader";
+import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
 interface AdminAttendanceProps {
   role?: "admin" | "teacher";
