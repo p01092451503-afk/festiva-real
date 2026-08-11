@@ -166,6 +166,62 @@ const AdminSalesStats = () => {
 
   const userName = (id: string) => userMap.get(id)?.full_name || "(알 수 없음)";
 
+  // 표별 정렬 상태 (주소에 저장, 접두사로 표 구분)
+  const orderSort = useTableSort({ defaultKey: "created_at", defaultDir: "desc", paramPrefix: "o" });
+  const itemSort = useTableSort({ defaultKey: "amount", defaultDir: "desc", paramPrefix: "i" });
+  const revenueSort = useTableSort({ defaultKey: "period", defaultDir: "desc", paramPrefix: "r" });
+  const refundSort = useTableSort({ defaultKey: "created_at", defaultDir: "desc", paramPrefix: "f" });
+
+  const sortedOrders = useMemo(
+    () =>
+      sortRows(filteredOrders, orderSort.sort, {
+        order_number: (o) => o.order_number,
+        user: (o) => userName(o.user_id),
+        status: (o) => ORDER_STATUS[o.status] || o.status,
+        items: (o) => o.order_items?.length || 0,
+        final_amount: (o) => o.final_amount || 0,
+        payment_method: (o) => o.payment_method || "",
+        created_at: (o) => o.created_at,
+      }),
+    [filteredOrders, orderSort.sort, userMap],
+  );
+  const orderPage = usePagination(sortedOrders, 50);
+
+  const sortedItems = useMemo(
+    () =>
+      sortRows(itemStats, itemSort.sort, {
+        title: (i) => i.title,
+        count: (i) => i.count,
+        amount: (i) => i.amount,
+      }),
+    [itemStats, itemSort.sort],
+  );
+
+  const sortedRevenue = useMemo(
+    () =>
+      sortRows(revenueSeries, revenueSort.sort, {
+        period: (r) => r.period,
+        count: (r) => r.count,
+        discount: (r) => r.discount,
+        amount: (r) => r.amount,
+      }),
+    [revenueSeries, revenueSort.sort],
+  );
+
+  const sortedRefunds = useMemo(
+    () =>
+      sortRows(refunds, refundSort.sort, {
+        created_at: (r) => r.created_at,
+        user: (r) => userName(r.user_id),
+        course: (r) => courseMap.get(r.course_id) || "",
+        paid_amount: (r) => r.paid_amount || 0,
+        final_amount: (r) => r.final_amount || 0,
+        status: (r) => REFUND_STATUS[r.status] || r.status,
+      }),
+    [refunds, refundSort.sort, userMap, courseMap],
+  );
+  const refundPage = usePagination(sortedRefunds, 50);
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
