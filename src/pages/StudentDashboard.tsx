@@ -667,6 +667,8 @@ const StudentDashboard = () => {
           </section>
         )}
 
+        <SelfLearningCard />
+
         <div className="stat-card !p-6 space-y-5">
           <div>
             <h2 className="text-lg font-bold text-foreground">{t("dashboard.ongoingCourses")}</h2>
