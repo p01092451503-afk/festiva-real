@@ -334,7 +334,7 @@ const SelfLearning = () => {
         <div>
           <h1 className="text-xl sm:text-2xl font-semibold text-foreground flex items-center gap-2">
             <Brain className="h-5 w-5 sm:h-6 sm:w-6 text-primary" aria-hidden="true" />
-            {t("nav.selfLearning", "AI 자기주도학습")}
+            {t("nav.selfLearning", "자기주도학습")}
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             학습 계획을 세우고, AI 코치의 진단을 받고, 복습으로 마무리하세요.
