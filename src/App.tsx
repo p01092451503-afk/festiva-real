@@ -44,6 +44,7 @@ const CommunityRanking = lazy(() => import("./pages/community/Ranking"));
 const StudentTracks = lazy(() => import("./pages/student/StudentTracks"));
 const StudentNotes = lazy(() => import("./pages/student/StudentNotes"));
 const StudentMicroLearning = lazy(() => import("./pages/student/StudentMicroLearning"));
+const SelfLearning = lazy(() => import("./pages/student/SelfLearning"));
 const StudentQualifications = lazy(() => import("./pages/student/StudentQualifications"));
 const StudentArticles = lazy(() => import("./pages/student/StudentArticles"));
 const StudentArticleDetail = lazy(() => import("./pages/student/StudentArticleDetail"));
