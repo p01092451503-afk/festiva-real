@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_coach_reports: {
+        Row: {
+          actions: Json
+          created_at: string
+          id: string
+          metrics: Json
+          strengths: Json
+          summary: string
+          user_id: string
+          weaknesses: Json
+        }
+        Insert: {
+          actions?: Json
+          created_at?: string
+          id?: string
+          metrics?: Json
+          strengths?: Json
+          summary: string
+          user_id: string
+          weaknesses?: Json
+        }
+        Update: {
+          actions?: Json
+          created_at?: string
+          id?: string
+          metrics?: Json
+          strengths?: Json
+          summary?: string
+          user_id?: string
+          weaknesses?: Json
+        }
+        Relationships: []
+      }
       announcement_i18n: {
         Row: {
           announcement_id: string
@@ -7002,6 +7035,126 @@ export type Database = {
           },
         ]
       }
+      review_quizzes: {
+        Row: {
+          completed_at: string | null
+          content_id: string | null
+          course_id: string | null
+          created_at: string
+          id: string
+          questions: Json
+          score: number | null
+          title: string
+          total: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          content_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          questions?: Json
+          score?: number | null
+          title: string
+          total?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          content_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          questions?: Json
+          score?: number | null
+          title?: string
+          total?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_quizzes_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_quizzes_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      review_wrong_notes: {
+        Row: {
+          content_id: string | null
+          correct_answer: string
+          created_at: string
+          explanation: string | null
+          id: string
+          next_review_at: string
+          options: Json
+          question: string
+          quiz_id: string | null
+          resolved: boolean
+          review_stage: number
+          updated_at: string
+          user_answer: string | null
+          user_id: string
+        }
+        Insert: {
+          content_id?: string | null
+          correct_answer: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          next_review_at?: string
+          options?: Json
+          question: string
+          quiz_id?: string | null
+          resolved?: boolean
+          review_stage?: number
+          updated_at?: string
+          user_answer?: string | null
+          user_id: string
+        }
+        Update: {
+          content_id?: string | null
+          correct_answer?: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          next_review_at?: string
+          options?: Json
+          question?: string
+          quiz_id?: string | null
+          resolved?: boolean
+          review_stage?: number
+          updated_at?: string
+          user_answer?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_wrong_notes_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_wrong_notes_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "review_quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           content: string | null
@@ -7462,6 +7615,107 @@ export type Database = {
           {
             foreignKeyName: "store_products_linked_course_id_fkey"
             columns: ["linked_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_plan_items: {
+        Row: {
+          content_id: string | null
+          created_at: string
+          done: boolean
+          estimated_minutes: number
+          id: string
+          order_index: number
+          plan_id: string
+          scheduled_date: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content_id?: string | null
+          created_at?: string
+          done?: boolean
+          estimated_minutes?: number
+          id?: string
+          order_index?: number
+          plan_id: string
+          scheduled_date: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string | null
+          created_at?: string
+          done?: boolean
+          estimated_minutes?: number
+          id?: string
+          order_index?: number
+          plan_id?: string
+          scheduled_date?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_plan_items_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "study_plan_items_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "study_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_plans: {
+        Row: {
+          ai_advice: string | null
+          course_id: string
+          created_at: string
+          daily_minutes: number
+          goal_date: string
+          id: string
+          status: string
+          study_days: number[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_advice?: string | null
+          course_id: string
+          created_at?: string
+          daily_minutes?: number
+          goal_date: string
+          id?: string
+          status?: string
+          study_days?: number[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_advice?: string | null
+          course_id?: string
+          created_at?: string
+          daily_minutes?: number
+          goal_date?: string
+          id?: string
+          status?: string
+          study_days?: number[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_plans_course_id_fkey"
+            columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]

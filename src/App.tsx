@@ -44,6 +44,7 @@ const CommunityRanking = lazy(() => import("./pages/community/Ranking"));
 const StudentTracks = lazy(() => import("./pages/student/StudentTracks"));
 const StudentNotes = lazy(() => import("./pages/student/StudentNotes"));
 const StudentMicroLearning = lazy(() => import("./pages/student/StudentMicroLearning"));
+const SelfLearning = lazy(() => import("./pages/student/SelfLearning"));
 const StudentQualifications = lazy(() => import("./pages/student/StudentQualifications"));
 const StudentArticles = lazy(() => import("./pages/student/StudentArticles"));
 const StudentArticleDetail = lazy(() => import("./pages/student/StudentArticleDetail"));
@@ -257,6 +258,7 @@ const App = () => (
               <Route path="/student/tracks" element={<Navigate to="/dashboard/courses?tab=tracks" replace />} />
               <Route path="/student/notes" element={<ProtectedRoute><StudentNotes /></ProtectedRoute>} />
               <Route path="/student/micro-learning" element={<ProtectedRoute><StudentMicroLearning /></ProtectedRoute>} />
+              <Route path="/student/self-learning" element={<ProtectedRoute><SelfLearning /></ProtectedRoute>} />
               <Route path="/student/qualifications" element={<ProtectedRoute><StudentQualifications /></ProtectedRoute>} />
               <Route path="/articles" element={<ProtectedRoute><StudentArticles /></ProtectedRoute>} />
               <Route path="/articles/:id" element={<ProtectedRoute><StudentArticleDetail /></ProtectedRoute>} />

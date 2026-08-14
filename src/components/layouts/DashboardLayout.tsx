@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   LayoutDashboard, BookOpen, ClipboardList, Trophy, Users, Settings, Compass, UserCircle, ClipboardCheck, Library,
   LogOut, Menu, X, ChevronRight, GraduationCap, CalendarCheck, Activity, Building2, Bell, Megaphone, FileText, BarChart3, Video,
-  CreditCard, ImageIcon, Palette, Layers, Globe2, PanelLeftClose, PanelLeftOpen, NotebookPen, ChevronDown, Languages, BookText,
+  CreditCard, ImageIcon, Palette, Layers, Globe2, PanelLeftClose, PanelLeftOpen, NotebookPen, ChevronDown, Languages, BookText, Brain,
   Info, ShieldCheck, Sparkles, Newspaper, Film, SlidersHorizontal, CalendarClock,
   Users2,
   MessageSquare,
@@ -174,6 +174,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "student.catalog", label: t("nav.courseCatalog"), href: "/catalog", icon: Compass, tourId: "nav-catalog" },
     { navKey: "student.myCourses", label: t("nav.myCourses"), href: "/dashboard/courses", icon: BookOpen, tourId: "nav-courses" },
     { navKey: "student.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/student/video-sessions", icon: Video },
+    { navKey: "student.selfLearning", label: t("nav.selfLearning", "AI 자기주도학습"), href: "/student/self-learning", icon: Brain },
     { navKey: "student.notes", label: t("nav.myNotes", "내 학습 메모"), href: "/student/notes", icon: NotebookPen },
     { navKey: "student.microLearning", label: t("nav.microLearning", "마이크로러닝"), href: "/student/micro-learning", icon: Zap },
     { navKey: "student.qualifications", label: t("nav.qualifications", "자격검정"), href: "/student/qualifications", icon: Award },
