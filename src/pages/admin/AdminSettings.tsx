@@ -396,7 +396,7 @@ const AdminSettings = () => {
             { key: "student.catalog", label: t("nav.courseCatalog", "강의 카탈로그") },
             { key: "student.myCourses", label: t("nav.myCourses", "내 강의") },
             { key: "student.videoSessions", label: t("nav.videoSessions", "화상 세션") },
-            { key: "student.selfLearning", label: t("nav.selfLearning", "AI 자기주도학습") },
+            { key: "student.selfLearning", label: t("nav.selfLearning", "자기주도학습") },
             { key: "student.notes", label: t("nav.myNotes", "내 학습 메모") },
             { key: "student.microLearning", label: t("nav.microLearning", "마이크로러닝") },
             { key: "student.qualifications", label: t("nav.qualifications", "자격검정") },

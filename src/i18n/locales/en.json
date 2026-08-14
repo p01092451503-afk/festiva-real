@@ -185,7 +185,8 @@
     "branchAdminStats": "Branch Stats",
     "videoSessions": "Video Sessions",
     "questionBank": "Question Bank",
-    "corrections": "Essay Writing"
+    "corrections": "Essay Writing",
+    "selfLearning": "Self-Learning"
   },
   "roles": {
     "student": "Student",
