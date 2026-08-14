@@ -258,6 +258,7 @@ const App = () => (
               <Route path="/student/tracks" element={<Navigate to="/dashboard/courses?tab=tracks" replace />} />
               <Route path="/student/notes" element={<ProtectedRoute><StudentNotes /></ProtectedRoute>} />
               <Route path="/student/micro-learning" element={<ProtectedRoute><StudentMicroLearning /></ProtectedRoute>} />
+              <Route path="/student/self-learning" element={<ProtectedRoute><SelfLearning /></ProtectedRoute>} />
               <Route path="/student/qualifications" element={<ProtectedRoute><StudentQualifications /></ProtectedRoute>} />
               <Route path="/articles" element={<ProtectedRoute><StudentArticles /></ProtectedRoute>} />
               <Route path="/articles/:id" element={<ProtectedRoute><StudentArticleDetail /></ProtectedRoute>} />
