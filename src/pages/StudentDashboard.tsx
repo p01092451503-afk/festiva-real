@@ -13,6 +13,7 @@ import { useUser } from "@/contexts/UserContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useCourseTrackMap } from "@/components/student/TracksPanel";
+import SelfLearningCard from "@/components/student/SelfLearningCard";
 import { lazy, Suspense } from "react";
 import { format as fmtDate, subDays } from "date-fns";
 import { useCourseI18n, useContentI18n } from "@/hooks/useI18nMaps";
