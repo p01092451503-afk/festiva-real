@@ -388,7 +388,15 @@ const AdminMarket = () => {
               )}
               {products.map((p: any) => (
                 <div key={p.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex items-center gap-3">
+                    <div className="h-12 w-12 shrink-0 rounded-md border bg-muted/30 overflow-hidden flex items-center justify-center">
+                      {p.image_url ? (
+                        <img src={p.image_url} alt={`${p.name} 썸네일`} className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-medium truncate">{p.name}</span>
                       <Badge variant="secondary" className="whitespace-nowrap">
