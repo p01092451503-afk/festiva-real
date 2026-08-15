@@ -492,6 +492,50 @@ const AdminDesignManager = () => {
                 </div>
               </div>
             </div>
+            {popupForm.image_url && (
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>이미지 배치</Label>
+                    <Select value={popupForm.image_fit} onValueChange={(v) => setPopupForm({ ...popupForm, image_fit: v })}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>{Object.entries(IMAGE_FITS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>기준 위치(잘리는 방향)</Label>
+                    <Select
+                      value={popupForm.image_position}
+                      onValueChange={(v) => setPopupForm({ ...popupForm, image_position: v })}
+                      disabled={popupForm.image_fit === "fill"}
+                    >
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>{Object.entries(IMAGE_POSITIONS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div>
+                  <Label>팝업 미리보기</Label>
+                  <div className="mt-1 flex justify-center rounded-md border bg-muted/20 p-3">
+                    <div
+                      className="overflow-hidden rounded-md border bg-card"
+                      style={{
+                        width: Math.min(Number(popupForm.width) || 420, 320),
+                        aspectRatio: `${Number(popupForm.width) || 420} / ${Number(popupForm.height) || 480}`,
+                      }}
+                    >
+                      <img
+                        src={popupForm.image_url}
+                        alt="팝업 미리보기"
+                        className="h-full w-full"
+                        style={{ objectFit: popupForm.image_fit as any, objectPosition: popupForm.image_position }}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">실제 팝업 크기({popupForm.width}×{popupForm.height}px) 비율로 표시됩니다.</p>
+                </div>
+              </div>
+            )}
             <div><Label>클릭 시 이동 URL</Label><Input value={popupForm.link_url} onChange={(e) => setPopupForm({ ...popupForm, link_url: e.target.value })} /></div>
             <div className="grid grid-cols-3 gap-3">
               <div>
