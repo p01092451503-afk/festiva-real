@@ -412,6 +412,7 @@ const AdminMarket = () => {
                       {p.author ? ` · ${p.author}` : ""}
                       {p.publisher ? ` / ${p.publisher}` : ""}
                     </p>
+                    </div>
                   </div>
                   <div className="flex flex-wrap items-end gap-2 shrink-0">
                     <div>
