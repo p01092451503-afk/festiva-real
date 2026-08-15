@@ -32,11 +32,27 @@ const BLOCK_TYPES: Record<string, string> = {
   custom: "자유 HTML",
 };
 
+const IMAGE_FITS: Record<string, string> = {
+  cover: "맞춤(잘라서 채움)",
+  contain: "가운데(전체 보이기)",
+  fill: "늘림(비율 무시)",
+};
+
+const IMAGE_POSITIONS: Record<string, string> = {
+  center: "가운데",
+  top: "위쪽",
+  bottom: "아래쪽",
+  left: "왼쪽",
+  right: "오른쪽",
+};
+
 const emptyPopup = {
   id: "",
   title: "",
   content: "",
   image_url: "",
+  image_fit: "cover",
+  image_position: "center",
   link_url: "",
   position: "center",
   width: 420,
