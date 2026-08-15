@@ -30,6 +30,7 @@ const emptyProduct = {
   id: "",
   name: "",
   description: "",
+  image_url: "",
   product_type: "book",
   category_id: "__none__",
   price: 0,
