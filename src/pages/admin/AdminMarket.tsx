@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Package, Plus, Minus, Save, Pencil, Trash2, Truck, FileSpreadsheet, BookOpen, PackageCheck, CheckCircle2 } from "lucide-react";
+import { Package, Plus, Minus, Save, Pencil, Trash2, Truck, FileSpreadsheet, BookOpen, PackageCheck, CheckCircle2, ImageIcon, Upload, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -30,6 +30,7 @@ const emptyProduct = {
   id: "",
   name: "",
   description: "",
+  image_url: "",
   product_type: "book",
   category_id: "__none__",
   price: 0,
@@ -63,6 +64,7 @@ const AdminMarket = () => {
   const [bulkCarrier, setBulkCarrier] = useState(CARRIERS[0]);
   const [inline, setInline] = useState<Record<string, { price: string; sale_price: string; stock: string }>>({});
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
 
   const { data: categories = [] } = useQuery({
@@ -134,11 +136,32 @@ const AdminMarket = () => {
     [shipments, shipStatusFilter],
   );
 
+  /** 상품 썸네일 업로드 (site-assets 버킷의 products/ 경로) */
+  const uploadThumbnail = async (file: File) => {
+    if (!file.type.startsWith("image/")) return toast.error("이미지 파일만 업로드할 수 있습니다");
+    if (file.size > 5 * 1024 * 1024) return toast.error("5MB 이하 이미지를 사용하세요");
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `products/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("site-assets").upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("site-assets").getPublicUrl(path);
+      setForm((f) => ({ ...f, image_url: data.publicUrl }));
+      toast.success("썸네일이 업로드되었습니다");
+    } catch (e: any) {
+      toast.error(e.message || "업로드에 실패했습니다");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const saveProduct = async () => {
     if (!form.name.trim()) return toast.error("상품명을 입력하세요");
     const payload: any = {
       name: form.name.trim(),
       description: form.description || null,
+      image_url: form.image_url || null,
       product_type: form.product_type,
       category_id: form.category_id === "__none__" ? null : form.category_id,
       price: Number(form.price) || 0,
@@ -365,7 +388,15 @@ const AdminMarket = () => {
               )}
               {products.map((p: any) => (
                 <div key={p.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex items-center gap-3">
+                    <div className="h-12 w-12 shrink-0 rounded-md border bg-muted/30 overflow-hidden flex items-center justify-center">
+                      {p.image_url ? (
+                        <img src={p.image_url} alt={`${p.name} 썸네일`} className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-medium truncate">{p.name}</span>
                       <Badge variant="secondary" className="whitespace-nowrap">
@@ -381,6 +412,7 @@ const AdminMarket = () => {
                       {p.author ? ` · ${p.author}` : ""}
                       {p.publisher ? ` / ${p.publisher}` : ""}
                     </p>
+                    </div>
                   </div>
                   <div className="flex flex-wrap items-end gap-2 shrink-0">
                     <div>
@@ -438,6 +470,7 @@ const AdminMarket = () => {
                           id: p.id,
                           name: p.name,
                           description: p.description || "",
+                          image_url: p.image_url || "",
                           product_type: p.product_type || "goods",
                           category_id: p.category_id || "__none__",
                           price: p.price,
@@ -650,6 +683,49 @@ const AdminMarket = () => {
             <div>
               <Label>설명</Label>
               <Textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1" />
+            </div>
+            <div>
+              <Label>상품 썸네일</Label>
+              <div className="mt-1 flex items-start gap-3">
+                <div className="h-24 w-24 shrink-0 rounded-lg border bg-muted/30 overflow-hidden flex items-center justify-center">
+                  {form.image_url ? (
+                    <img src={form.image_url} alt="상품 썸네일 미리보기" className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" size="sm" disabled={uploadingImage}>
+                      <label className="cursor-pointer gap-1.5">
+                        {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {uploadingImage ? "업로드 중" : "이미지 업로드"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadThumbnail(file);
+                            e.target.value = "";
+                          }}
+                        />
+                      </label>
+                    </Button>
+                    {form.image_url && (
+                      <Button variant="ghost" size="sm" className="gap-1.5" onClick={() => setForm({ ...form, image_url: "" })}>
+                        <X className="h-4 w-4" /> 제거
+                      </Button>
+                    )}
+                  </div>
+                  <Input
+                    value={form.image_url}
+                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                    placeholder="또는 이미지 주소(https://...) 직접 입력"
+                  />
+                  <p className="text-xs text-muted-foreground">권장 정사각형 이미지, 5MB 이하 (JPG/PNG/WebP)</p>
+                </div>
+              </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
