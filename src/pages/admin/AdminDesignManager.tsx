@@ -246,7 +246,15 @@ const AdminDesignManager = () => {
               {popups.length === 0 && <p className="p-6 text-sm text-muted-foreground text-center">등록된 팝업이 없습니다.</p>}
               {popups.map((p) => (
                 <div key={p.id} className="p-4 flex flex-wrap items-center justify-between gap-3 min-w-0">
-                  <div className="min-w-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="h-12 w-16 shrink-0 rounded-md border bg-muted/40 overflow-hidden flex items-center justify-center">
+                      {p.image_url ? (
+                        <img src={p.image_url} alt={`${p.title} 팝업 이미지`} className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-medium truncate">{p.title}</span>
                       <Badge variant={p.is_active ? "default" : "secondary"} className="whitespace-nowrap">
