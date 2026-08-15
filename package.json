@@ -10,7 +10,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test e2e/smoke-26-screens.spec.ts",
+    "predeploy": "npm run test:e2e:smoke"
   },
   "dependencies": {
     "@daily-co/daily-js": "^0.89.1",
