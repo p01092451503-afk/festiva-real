@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarDays, MapPin, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import PageLoading from "@/components/PageLoading";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -109,7 +109,7 @@ const StorefrontClasses = () => {
         </header>
 
         {isLoading ? (
-          <div className="space-y-3">{[...Array(3)].map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)}</div>
+          <PageLoading size="lg" />
         ) : classes.length === 0 ? (
           <div className="py-24 text-center text-sm text-muted-foreground">예정된 클래스가 없습니다.</div>
         ) : (
