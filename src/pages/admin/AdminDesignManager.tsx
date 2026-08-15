@@ -153,6 +153,8 @@ const AdminDesignManager = () => {
       title: popupForm.title.trim(),
       content: popupForm.content || null,
       image_url: popupForm.image_url || null,
+      image_fit: popupForm.image_fit || "cover",
+      image_position: popupForm.image_position || "center",
       link_url: popupForm.link_url || null,
       position: popupForm.position,
       width: Number(popupForm.width) || 420,
