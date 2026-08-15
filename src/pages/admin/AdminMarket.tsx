@@ -64,6 +64,7 @@ const AdminMarket = () => {
   const [bulkCarrier, setBulkCarrier] = useState(CARRIERS[0]);
   const [inline, setInline] = useState<Record<string, { price: string; sale_price: string; stock: string }>>({});
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
 
   const { data: categories = [] } = useQuery({
