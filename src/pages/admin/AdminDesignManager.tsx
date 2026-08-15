@@ -529,7 +529,7 @@ const AdminDesignManager = () => {
                         type="button"
                         variant="ghost"
                         size="sm"
-                        onClick={() => setPopupForm({ ...popupForm, image_url: "" })}
+                        onClick={() => setPopupImageUrl("")}
                       >
                         <X className="h-4 w-4 mr-2" aria-hidden />
                         이미지 제거
@@ -537,11 +537,18 @@ const AdminDesignManager = () => {
                     )}
                   </div>
                   <Input
-                    placeholder="또는 이미지 URL 직접 입력"
+                    placeholder="또는 이미지 URL 직접 입력 (https://...)"
                     value={popupForm.image_url}
-                    onChange={(e) => setPopupForm({ ...popupForm, image_url: e.target.value })}
+                    onChange={(e) => setPopupImageUrl(e.target.value)}
+                    aria-invalid={!isValidImageUrl(popupForm.image_url) || popupImageError}
                   />
-                  <p className="text-xs text-muted-foreground">JPG·PNG·WebP, 5MB 이하 권장</p>
+                  {!isValidImageUrl(popupForm.image_url) ? (
+                    <p className="text-xs text-destructive">http(s):// 로 시작하는 이미지 주소를 입력하세요.</p>
+                  ) : popupForm.image_url && popupImageError ? (
+                    <p className="text-xs text-destructive">이미지를 불러올 수 없습니다. 주소를 확인하세요.</p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">JPG·PNG·WebP, 5MB 이하 권장</p>
+                  )}
                 </div>
               </div>
             </div>
