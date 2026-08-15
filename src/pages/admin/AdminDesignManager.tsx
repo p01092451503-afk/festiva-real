@@ -267,7 +267,13 @@ const AdminDesignManager = () => {
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="h-12 w-16 shrink-0 rounded-md border bg-muted/40 overflow-hidden flex items-center justify-center">
                       {p.image_url ? (
-                        <img src={p.image_url} alt={`${p.title} 팝업 이미지`} className="h-full w-full object-cover" loading="lazy" />
+                        <img
+                          src={p.image_url}
+                          alt={`${p.title} 팝업 이미지`}
+                          className="h-full w-full"
+                          style={{ objectFit: (p.image_fit || "cover") as any, objectPosition: p.image_position || "center" }}
+                          loading="lazy"
+                        />
                       ) : (
                         <ImageIcon className="h-4 w-4 text-muted-foreground" />
                       )}
