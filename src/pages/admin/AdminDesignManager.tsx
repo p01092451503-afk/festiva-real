@@ -135,7 +135,7 @@ const AdminDesignManager = () => {
       const { error } = await supabase.storage.from("site-assets").upload(path, file, { upsert: true });
       if (error) throw error;
       const { data } = supabase.storage.from("site-assets").getPublicUrl(path);
-      setPopupForm((f) => ({ ...f, image_url: data.publicUrl }));
+      setPopupImageUrl(data.publicUrl);
       toast.success("팝업 이미지가 업로드되었습니다");
     } catch (e: any) {
       toast.error(e.message || "업로드에 실패했습니다");
