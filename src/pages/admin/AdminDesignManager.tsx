@@ -115,6 +115,14 @@ const AdminDesignManager = () => {
   const [blockForm, setBlockForm] = useState(emptyBlock);
   const [popupOpen, setPopupOpen] = useState(false);
   const [uploadingPopupImage, setUploadingPopupImage] = useState(false);
+  const [popupImageError, setPopupImageError] = useState(false);
+
+  /** 이미지 주소 변경 (업로드/직접 입력 공통) */
+  const setPopupImageUrl = (url: string) => {
+    setPopupImageError(false);
+    setPopupForm((f) => ({ ...f, image_url: url }));
+  };
+
 
   /** 팝업 이미지 업로드 (site-assets 버킷의 popups/ 경로) */
   const uploadPopupImage = async (file: File) => {
