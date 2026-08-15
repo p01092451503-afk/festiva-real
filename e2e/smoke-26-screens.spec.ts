@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "../playwright-fixture";
+import { test, expect, type Page } from "@playwright/test";
 
 /**
  * 배포 전 E2E 스모크 테스트 — 주요 26개 화면 자동 순회

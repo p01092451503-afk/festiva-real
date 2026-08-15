@@ -11,8 +11,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:e2e:smoke": "playwright test e2e/smoke-26-screens.spec.ts",
+    "test:e2e": "playwright test -c playwright.smoke.config.ts",
+    "test:e2e:smoke": "playwright test -c playwright.smoke.config.ts",
     "predeploy": "npm run test:e2e:smoke"
   },
   "dependencies": {
