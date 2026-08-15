@@ -296,6 +296,7 @@ const AdminDesignManager = () => {
                     <Button variant="ghost" size="icon" onClick={() => {
                       setPopupForm({
                         id: p.id, title: p.title, content: p.content || "", image_url: p.image_url || "",
+                        image_fit: p.image_fit || "cover", image_position: p.image_position || "center",
                         link_url: p.link_url || "", position: p.position, width: p.width, height: p.height,
                         start_at: toLocalInput(p.start_at), end_at: toLocalInput(p.end_at),
                         is_active: p.is_active, display_order: p.display_order,
