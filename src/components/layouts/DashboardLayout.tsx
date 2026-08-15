@@ -872,7 +872,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                       src={profile.avatar_url}
                       alt={profile?.full_name || t("common.user")}
                       className="h-full w-full object-cover"
-                      fetchPriority="high"
+                      {...({ fetchpriority: "high" } as any)}
                       decoding="async"
                     />
                   ) : (

@@ -84,7 +84,7 @@ const AdminMicroLearning = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, full_name, email")
+        .select("user_id, full_name, email")
         .order("full_name");
       if (error) throw error;
       return data as any[];
@@ -150,7 +150,7 @@ const AdminMicroLearning = () => {
   };
 
   const contentMap = useMemo(() => new Map(contents.map((c: any) => [c.id, c])), [contents]);
-  const memberMap = useMemo(() => new Map(members.map((m: any) => [m.id, m])), [members]);
+  const memberMap = useMemo(() => new Map(members.map((m: any) => [m.user_id, m])), [members]);
   const viewMap = useMemo(() => {
     const m = new Map<string, any>();
     views.forEach((v: any) => m.set(`${v.content_id}:${v.user_id}`, v));
@@ -456,11 +456,11 @@ const AdminMicroLearning = () => {
                   <p className="p-4 text-sm text-muted-foreground text-center">검색 결과가 없습니다.</p>
                 )}
                 {filteredMembers.map((m: any) => (
-                  <label key={m.id} className="flex items-center gap-3 p-2.5 cursor-pointer min-w-0">
+                  <label key={m.user_id} className="flex items-center gap-3 p-2.5 cursor-pointer min-w-0">
                     <Checkbox
-                      checked={assignUserIds.includes(m.id)}
+                      checked={assignUserIds.includes(m.user_id)}
                       onCheckedChange={(v) =>
-                        setAssignUserIds((prev) => (v ? [...prev, m.id] : prev.filter((x) => x !== m.id)))
+                        setAssignUserIds((prev) => (v ? [...prev, m.user_id] : prev.filter((x) => x !== m.user_id)))
                       }
                     />
                     <span className="text-sm truncate">

@@ -98,7 +98,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("traffic_logs")
-        .select("id, path, created_at")
+        .select("id, page_path, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -114,7 +114,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("reviews")
-        .select("id, course_id, rating, comment, created_at")
+        .select("id, course_id, rating, content, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -130,7 +130,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, total_amount, coupon_code, discount_amount, created_at")
+        .select("id, order_number, status, total_amount, discount_amount, created_at, coupons(code)")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -771,7 +771,7 @@ const AdminUserDetail = () => {
               <ul className="space-y-2">
                 {accessLogs.map((l: any) => (
                   <li key={l.id} className="flex items-center justify-between gap-2 border-b-2 border-border/80 pb-2 last:border-0">
-                    <span className="text-xs text-foreground truncate">{l.path}</span>
+                    <span className="text-xs text-foreground truncate">{l.page_path}</span>
                     <span className="text-[11px] text-muted-foreground shrink-0">
                       {fmtDate(new Date(l.created_at), "MM.dd HH:mm")}
                     </span>
@@ -798,7 +798,7 @@ const AdminUserDetail = () => {
                       </span>
                       <span className="text-[11px] text-muted-foreground shrink-0">★ {r.rating}</span>
                     </div>
-                    {r.comment && <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{r.comment}</p>}
+                    {r.content && <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">{r.content}</p>}
                   </li>
                 ))}
               </ul>
@@ -822,7 +822,7 @@ const AdminUserDetail = () => {
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
                       {Number(o.total_amount || 0).toLocaleString()}원
-                      {o.coupon_code ? ` · ${o.coupon_code} (-${Number(o.discount_amount || 0).toLocaleString()}원)` : ""}
+                      {o.coupons?.code ? ` · ${o.coupons.code} (-${Number(o.discount_amount || 0).toLocaleString()}원)` : ""}
                       {" · "}{fmtDate(new Date(o.created_at), "yyyy.MM.dd")}
                     </p>
                   </li>
