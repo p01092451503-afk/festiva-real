@@ -7244,6 +7244,8 @@ export type Database = {
           end_at: string | null
           height: number
           id: string
+          image_fit: string
+          image_position: string
           image_url: string | null
           is_active: boolean
           link_url: string | null
@@ -7260,6 +7262,8 @@ export type Database = {
           end_at?: string | null
           height?: number
           id?: string
+          image_fit?: string
+          image_position?: string
           image_url?: string | null
           is_active?: boolean
           link_url?: string | null
@@ -7276,6 +7280,8 @@ export type Database = {
           end_at?: string | null
           height?: number
           id?: string
+          image_fit?: string
+          image_position?: string
           image_url?: string | null
           is_active?: boolean
           link_url?: string | null
