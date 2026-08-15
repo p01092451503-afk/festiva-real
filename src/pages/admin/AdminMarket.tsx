@@ -675,6 +675,49 @@ const AdminMarket = () => {
               <Label>설명</Label>
               <Textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1" />
             </div>
+            <div>
+              <Label>상품 썸네일</Label>
+              <div className="mt-1 flex items-start gap-3">
+                <div className="h-24 w-24 shrink-0 rounded-lg border bg-muted/30 overflow-hidden flex items-center justify-center">
+                  {form.image_url ? (
+                    <img src={form.image_url} alt="상품 썸네일 미리보기" className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" size="sm" disabled={uploadingImage}>
+                      <label className="cursor-pointer gap-1.5">
+                        {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {uploadingImage ? "업로드 중" : "이미지 업로드"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadThumbnail(file);
+                            e.target.value = "";
+                          }}
+                        />
+                      </label>
+                    </Button>
+                    {form.image_url && (
+                      <Button variant="ghost" size="sm" className="gap-1.5" onClick={() => setForm({ ...form, image_url: "" })}>
+                        <X className="h-4 w-4" /> 제거
+                      </Button>
+                    )}
+                  </div>
+                  <Input
+                    value={form.image_url}
+                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                    placeholder="또는 이미지 주소(https://...) 직접 입력"
+                  />
+                  <p className="text-xs text-muted-foreground">권장 정사각형 이미지, 5MB 이하 (JPG/PNG/WebP)</p>
+                </div>
+              </div>
+            </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <Label>정가</Label>
