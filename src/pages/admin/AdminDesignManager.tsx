@@ -346,6 +346,7 @@ const AdminDesignManager = () => {
                       }}
                     />
                     <Button variant="ghost" size="icon" onClick={() => {
+                      setPopupImageError(false);
                       setPopupForm({
                         id: p.id, title: p.title, content: p.content || "", image_url: p.image_url || "",
                         image_fit: p.image_fit || "cover", image_position: p.image_position || "center",
@@ -357,7 +358,7 @@ const AdminDesignManager = () => {
                     }}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => remove("site_popups", p.id, "site-popups")}>
+                    <Button variant="ghost" size="icon" aria-label="팝업 삭제" onClick={() => removePopup(p)}>
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
