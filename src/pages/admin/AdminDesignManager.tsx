@@ -177,10 +177,13 @@ const AdminDesignManager = () => {
 
   const savePopup = async () => {
     if (!popupForm.title.trim()) return toast.error("팝업 제목을 입력하세요");
+    const imageUrl = popupForm.image_url.trim();
+    if (!isValidImageUrl(imageUrl)) return toast.error("이미지 주소는 http(s):// 로 시작해야 합니다");
+    if (imageUrl && popupImageError) return toast.error("이미지를 불러올 수 없는 주소입니다. 주소를 확인하세요");
     const payload = {
       title: popupForm.title.trim(),
       content: popupForm.content || null,
-      image_url: popupForm.image_url || null,
+      image_url: imageUrl || null,
       image_fit: popupForm.image_fit || "cover",
       image_position: popupForm.image_position || "center",
       link_url: popupForm.link_url || null,
@@ -199,8 +202,21 @@ const AdminDesignManager = () => {
     toast.success("저장되었습니다");
     setPopupOpen(false);
     setPopupForm(emptyPopup);
+    setPopupImageError(false);
     invalidate("site-popups");
   };
+
+  /** 팝업 삭제 — 업로드된 이미지가 있으면 스토리지 파일도 함께 정리 */
+  const removePopup = async (p: any) => {
+    if (!window.confirm(`'${p.title}' 팝업을 삭제할까요?`)) return;
+    const { error } = await supabase.from("site_popups").delete().eq("id", p.id);
+    if (error) return toast.error(error.message);
+    const path = p.image_url ? storagePathFromUrl(p.image_url) : null;
+    if (path) await supabase.storage.from("site-assets").remove([path]);
+    toast.success("삭제되었습니다");
+    invalidate("site-popups");
+  };
+
 
   const savePage = async () => {
     if (!pageForm.title.trim() || !pageForm.slug.trim()) return toast.error("제목과 주소(slug)를 입력하세요");
