@@ -267,6 +267,7 @@ const AdminDesignManager = () => {
                       {p.start_at && ` · ${new Date(p.start_at).toLocaleDateString("ko-KR")} ~ `}
                       {p.end_at && new Date(p.end_at).toLocaleDateString("ko-KR")}
                     </p>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <Switch
