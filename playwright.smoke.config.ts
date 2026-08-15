@@ -22,7 +22,18 @@ export default defineConfig({
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // 샌드박스/CI 이미지에 설치된 Chromium 경로를 직접 지정할 수 있다.
+        launchOptions: process.env.E2E_CHROMIUM_PATH
+          ? { executablePath: process.env.E2E_CHROMIUM_PATH }
+          : {},
+      },
+    },
+  ],
   webServer: process.env.E2E_BASE_URL
     ? undefined
     : {
