@@ -294,6 +294,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "admin.siteSettings", label: t("nav.siteSettings", "사이트 설정"), href: "/admin/site-settings", icon: Palette },
     { navKey: "admin.settings", label: t("nav.settings", "시스템 설정"), href: "/admin/settings", icon: Settings, tourId: "nav-settings" },
     { navKey: "admin.systemInfo", label: t("nav.systemInfo", "시스템 정보"), href: "/admin/system-info", icon: Info },
+    { navKey: "admin.deployCheck", label: t("nav.deployCheck", "배포 전 체크리스트"), href: "/admin/deploy-check", icon: Rocket },
     { navKey: "admin.manual", label: t("nav.manual", "사용자 매뉴얼"), href: "/admin/manual", icon: BookOpen },
   ].filter((i) => !isHidden(i.navKey));
 
@@ -422,6 +423,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
         { navKey: "admin.moduleSettings", label: "기능 모듈", href: "/admin/settings/modules", icon: ToggleRight },
         { navKey: "admin.apiClients", label: t("nav.apiClients", "API 클라이언트"), href: "/admin/api-clients", icon: KeyRound },
         { navKey: "admin.systemInfo", label: t("nav.systemInfo", "시스템 정보"), href: "/admin/system-info", icon: Info },
+        { navKey: "admin.deployCheck", label: t("nav.deployCheck", "배포 전 체크리스트"), href: "/admin/deploy-check", icon: Rocket },
         { navKey: "admin.manual", label: t("nav.manual", "사용자 매뉴얼"), href: "/admin/manual", icon: BookMarked },
       ],
     },
