@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LayoutTemplate, Plus, Pencil, Trash2, ArrowUp, ArrowDown } from "lucide-react";
+import { LayoutTemplate, Plus, Pencil, Trash2, ArrowUp, ArrowDown, Upload, X, ImageIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -78,6 +78,27 @@ const AdminDesignManager = () => {
   const [pageForm, setPageForm] = useState(emptyPage);
   const [blockForm, setBlockForm] = useState(emptyBlock);
   const [popupOpen, setPopupOpen] = useState(false);
+  const [uploadingPopupImage, setUploadingPopupImage] = useState(false);
+
+  /** 팝업 이미지 업로드 (site-assets 버킷의 popups/ 경로) */
+  const uploadPopupImage = async (file: File) => {
+    if (!file.type.startsWith("image/")) return toast.error("이미지 파일만 업로드할 수 있습니다");
+    if (file.size > 5 * 1024 * 1024) return toast.error("5MB 이하 이미지를 사용하세요");
+    setUploadingPopupImage(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `popups/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("site-assets").upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("site-assets").getPublicUrl(path);
+      setPopupForm((f) => ({ ...f, image_url: data.publicUrl }));
+      toast.success("팝업 이미지가 업로드되었습니다");
+    } catch (e: any) {
+      toast.error(e.message || "업로드에 실패했습니다");
+    } finally {
+      setUploadingPopupImage(false);
+    }
+  };
   const [pageOpen, setPageOpen] = useState(false);
   const [blockOpen, setBlockOpen] = useState(false);
 
@@ -379,10 +400,65 @@ const AdminDesignManager = () => {
           <div className="space-y-3">
             <div><Label>제목</Label><Input value={popupForm.title} onChange={(e) => setPopupForm({ ...popupForm, title: e.target.value })} /></div>
             <div><Label>내용</Label><Textarea rows={3} value={popupForm.content} onChange={(e) => setPopupForm({ ...popupForm, content: e.target.value })} /></div>
-            <div className="grid grid-cols-2 gap-3">
-              <div><Label>이미지 URL</Label><Input value={popupForm.image_url} onChange={(e) => setPopupForm({ ...popupForm, image_url: e.target.value })} /></div>
-              <div><Label>클릭 시 이동 URL</Label><Input value={popupForm.link_url} onChange={(e) => setPopupForm({ ...popupForm, link_url: e.target.value })} /></div>
+            <div className="space-y-2">
+              <Label>팝업 이미지</Label>
+              <div className="flex items-start gap-3 min-w-0">
+                <div className="h-24 w-24 shrink-0 rounded-md border bg-muted/30 overflow-hidden flex items-center justify-center">
+                  {popupForm.image_url ? (
+                    <img src={popupForm.image_url} alt="팝업 이미지 미리보기" className="h-full w-full object-cover" loading="lazy" />
+                  ) : (
+                    <ImageIcon className="h-6 w-6 text-muted-foreground" aria-hidden />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    <input
+                      id="popup-image-input"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) void uploadPopupImage(file);
+                        e.target.value = "";
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={uploadingPopupImage}
+                      onClick={() => document.getElementById("popup-image-input")?.click()}
+                    >
+                      {uploadingPopupImage ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" aria-hidden />
+                      ) : (
+                        <Upload className="h-4 w-4 mr-2" aria-hidden />
+                      )}
+                      {uploadingPopupImage ? "업로드 중…" : "이미지 업로드"}
+                    </Button>
+                    {popupForm.image_url && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setPopupForm({ ...popupForm, image_url: "" })}
+                      >
+                        <X className="h-4 w-4 mr-2" aria-hidden />
+                        이미지 제거
+                      </Button>
+                    )}
+                  </div>
+                  <Input
+                    placeholder="또는 이미지 URL 직접 입력"
+                    value={popupForm.image_url}
+                    onChange={(e) => setPopupForm({ ...popupForm, image_url: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground">JPG·PNG·WebP, 5MB 이하 권장</p>
+                </div>
+              </div>
             </div>
+            <div><Label>클릭 시 이동 URL</Label><Input value={popupForm.link_url} onChange={(e) => setPopupForm({ ...popupForm, link_url: e.target.value })} /></div>
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <Label>노출 위치</Label>
