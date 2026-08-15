@@ -456,11 +456,11 @@ const AdminMicroLearning = () => {
                   <p className="p-4 text-sm text-muted-foreground text-center">검색 결과가 없습니다.</p>
                 )}
                 {filteredMembers.map((m: any) => (
-                  <label key={m.id} className="flex items-center gap-3 p-2.5 cursor-pointer min-w-0">
+                  <label key={m.user_id} className="flex items-center gap-3 p-2.5 cursor-pointer min-w-0">
                     <Checkbox
-                      checked={assignUserIds.includes(m.id)}
+                      checked={assignUserIds.includes(m.user_id)}
                       onCheckedChange={(v) =>
-                        setAssignUserIds((prev) => (v ? [...prev, m.id] : prev.filter((x) => x !== m.id)))
+                        setAssignUserIds((prev) => (v ? [...prev, m.user_id] : prev.filter((x) => x !== m.user_id)))
                       }
                     />
                     <span className="text-sm truncate">
