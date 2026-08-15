@@ -274,7 +274,7 @@ export default function AdminDeployCheck() {
       let status: CheckStatus = "fail";
       let detail = "응답 없음";
       try {
-        const res = await fetch(`${baseUrl}/functions/v1/${fn}`, { method: "OPTIONS" });
+        const res = await fetch(`${baseUrl}/functions/v1/${fn}`, { method: "GET" });
         detail = `HTTP ${res.status} · 함수가 배포되어 있습니다.`;
         status = res.status < 500 ? "pass" : "fail";
         if (res.status === 404) {
