@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test -c playwright.smoke.config.ts",
     "test:e2e:smoke": "playwright test -c playwright.smoke.config.ts",
-    "predeploy": "npm run test:e2e:smoke"
+    "predeploy": "npm run test:e2e:smoke",
+    "audit:report": "bun run scripts/pre-delivery-audit.mjs"
   },
   "dependencies": {
     "@daily-co/daily-js": "^0.89.1",
