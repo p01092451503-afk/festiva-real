@@ -439,6 +439,7 @@ const AdminMarket = () => {
                           id: p.id,
                           name: p.name,
                           description: p.description || "",
+                          image_url: p.image_url || "",
                           product_type: p.product_type || "goods",
                           category_id: p.category_id || "__none__",
                           price: p.price,
