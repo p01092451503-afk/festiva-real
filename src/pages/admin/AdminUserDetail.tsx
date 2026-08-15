@@ -98,7 +98,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("traffic_logs")
-        .select("id, path, created_at")
+        .select("id, page_path, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -114,7 +114,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("reviews")
-        .select("id, course_id, rating, comment, created_at")
+        .select("id, course_id, rating, content, created_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -130,7 +130,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, total_amount, coupon_code, discount_amount, created_at")
+        .select("id, order_number, status, total_amount, discount_amount, created_at, coupons(code)")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
