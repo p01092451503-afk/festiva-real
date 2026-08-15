@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
+import PageLoading from "@/components/PageLoading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,
@@ -186,9 +186,7 @@ const StorefrontBooks = () => {
         </div>
 
         {isLoading ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-64 rounded-xl" />)}
-          </div>
+          <PageLoading size="lg" />
         ) : filtered.length === 0 ? (
           <div className="py-24 text-center text-muted-foreground text-sm">등록된 상품이 없습니다.</div>
         ) : (

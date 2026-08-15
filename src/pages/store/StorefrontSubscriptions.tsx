@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, CreditCard, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import PageLoading from "@/components/PageLoading";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -118,9 +118,7 @@ const StorefrontSubscriptions = () => {
         )}
 
         {isLoading ? (
-          <div className="grid gap-5 sm:grid-cols-3">
-            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-80 rounded-xl" />)}
-          </div>
+          <PageLoading size="lg" />
         ) : plans.length === 0 ? (
           <div className="py-24 text-center text-sm text-muted-foreground">준비 중인 요금제가 없습니다.</div>
         ) : (

@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import PageLoading from "@/components/PageLoading";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import StorefrontHeader from "@/components/StorefrontHeader";
@@ -253,16 +253,7 @@ const StorefrontCourseDetail = () => {
       <div className="min-h-screen bg-background">
         <StorefrontHeader />
         <main className="max-w-6xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-            <div className="lg:col-span-3 space-y-4">
-              <Skeleton className="h-8 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="aspect-video w-full rounded-2xl" />
-            </div>
-            <div className="lg:col-span-2">
-              <Skeleton className="h-80 rounded-2xl" />
-            </div>
-          </div>
+          <PageLoading size="lg" />
         </main>
       </div>
     );
