@@ -66,6 +66,9 @@ const IGNORED_CONSOLE = [
   "Warning:",
   "validateDOMNesting",
   "React Router Future Flag",
+  // 로컬 origin 에서만 발생하는 분석/로깅 CORS 노이즈
+  "blocked by CORS policy",
+  "traffic_logs",
 ];
 
 function attachConsoleCollector(page: Page): string[] {
