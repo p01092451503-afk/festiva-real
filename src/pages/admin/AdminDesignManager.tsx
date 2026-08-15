@@ -32,11 +32,27 @@ const BLOCK_TYPES: Record<string, string> = {
   custom: "자유 HTML",
 };
 
+const IMAGE_FITS: Record<string, string> = {
+  cover: "맞춤(잘라서 채움)",
+  contain: "가운데(전체 보이기)",
+  fill: "늘림(비율 무시)",
+};
+
+const IMAGE_POSITIONS: Record<string, string> = {
+  center: "가운데",
+  top: "위쪽",
+  bottom: "아래쪽",
+  left: "왼쪽",
+  right: "오른쪽",
+};
+
 const emptyPopup = {
   id: "",
   title: "",
   content: "",
   image_url: "",
+  image_fit: "cover",
+  image_position: "center",
   link_url: "",
   position: "center",
   width: 420,
@@ -137,6 +153,8 @@ const AdminDesignManager = () => {
       title: popupForm.title.trim(),
       content: popupForm.content || null,
       image_url: popupForm.image_url || null,
+      image_fit: popupForm.image_fit || "cover",
+      image_position: popupForm.image_position || "center",
       link_url: popupForm.link_url || null,
       position: popupForm.position,
       width: Number(popupForm.width) || 420,
@@ -249,7 +267,13 @@ const AdminDesignManager = () => {
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="h-12 w-16 shrink-0 rounded-md border bg-muted/40 overflow-hidden flex items-center justify-center">
                       {p.image_url ? (
-                        <img src={p.image_url} alt={`${p.title} 팝업 이미지`} className="h-full w-full object-cover" loading="lazy" />
+                        <img
+                          src={p.image_url}
+                          alt={`${p.title} 팝업 이미지`}
+                          className="h-full w-full"
+                          style={{ objectFit: (p.image_fit || "cover") as any, objectPosition: p.image_position || "center" }}
+                          loading="lazy"
+                        />
                       ) : (
                         <ImageIcon className="h-4 w-4 text-muted-foreground" />
                       )}
@@ -280,6 +304,7 @@ const AdminDesignManager = () => {
                     <Button variant="ghost" size="icon" onClick={() => {
                       setPopupForm({
                         id: p.id, title: p.title, content: p.content || "", image_url: p.image_url || "",
+                        image_fit: p.image_fit || "cover", image_position: p.image_position || "center",
                         link_url: p.link_url || "", position: p.position, width: p.width, height: p.height,
                         start_at: toLocalInput(p.start_at), end_at: toLocalInput(p.end_at),
                         is_active: p.is_active, display_order: p.display_order,
@@ -467,6 +492,50 @@ const AdminDesignManager = () => {
                 </div>
               </div>
             </div>
+            {popupForm.image_url && (
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>이미지 배치</Label>
+                    <Select value={popupForm.image_fit} onValueChange={(v) => setPopupForm({ ...popupForm, image_fit: v })}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>{Object.entries(IMAGE_FITS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>기준 위치(잘리는 방향)</Label>
+                    <Select
+                      value={popupForm.image_position}
+                      onValueChange={(v) => setPopupForm({ ...popupForm, image_position: v })}
+                      disabled={popupForm.image_fit === "fill"}
+                    >
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>{Object.entries(IMAGE_POSITIONS).map(([k, v]) => <SelectItem key={k} value={k}>{v}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div>
+                  <Label>팝업 미리보기</Label>
+                  <div className="mt-1 flex justify-center rounded-md border bg-muted/20 p-3">
+                    <div
+                      className="overflow-hidden rounded-md border bg-card"
+                      style={{
+                        width: Math.min(Number(popupForm.width) || 420, 320),
+                        aspectRatio: `${Number(popupForm.width) || 420} / ${Number(popupForm.height) || 480}`,
+                      }}
+                    >
+                      <img
+                        src={popupForm.image_url}
+                        alt="팝업 미리보기"
+                        className="h-full w-full"
+                        style={{ objectFit: popupForm.image_fit as any, objectPosition: popupForm.image_position }}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">실제 팝업 크기({popupForm.width}×{popupForm.height}px) 비율로 표시됩니다.</p>
+                </div>
+              </div>
+            )}
             <div><Label>클릭 시 이동 URL</Label><Input value={popupForm.link_url} onChange={(e) => setPopupForm({ ...popupForm, link_url: e.target.value })} /></div>
             <div className="grid grid-cols-3 gap-3">
               <div>

@@ -16,6 +16,8 @@ type Popup = {
   start_at: string | null;
   end_at: string | null;
   display_order: number | null;
+  image_fit: string | null;
+  image_position: string | null;
 };
 
 const posClass = (p: string | null) => {
@@ -30,6 +32,12 @@ const posClass = (p: string | null) => {
       return "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2";
   }
 };
+
+const imgStyle = (p: Popup): React.CSSProperties => ({
+  objectFit: (p.image_fit || "cover") as React.CSSProperties["objectFit"],
+  objectPosition: p.image_position || "center",
+  height: p.height ? Math.round(p.height * 0.7) : undefined,
+});
 
 const hiddenKey = (id: string) => `popup_hidden_${id}`;
 
@@ -49,7 +57,7 @@ const SitePopups = () => {
       const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from("site_popups")
-        .select("id,title,content,image_url,link_url,position,width,height,start_at,end_at,display_order")
+        .select("id,title,content,image_url,link_url,position,width,height,start_at,end_at,display_order,image_fit,image_position")
         .eq("is_active", true)
         .or(`start_at.is.null,start_at.lte.${nowIso}`)
         .or(`end_at.is.null,end_at.gte.${nowIso}`)
@@ -96,10 +104,10 @@ const SitePopups = () => {
               {p.image_url &&
                 (p.link_url ? (
                   <a href={p.link_url} target="_blank" rel="noopener noreferrer">
-                    <img src={p.image_url} alt={p.title} className="w-full object-cover" loading="lazy" />
+                    <img src={p.image_url} alt={p.title} className="w-full" style={imgStyle(p)} loading="lazy" />
                   </a>
                 ) : (
-                  <img src={p.image_url} alt={p.title} className="w-full object-cover" loading="lazy" />
+                  <img src={p.image_url} alt={p.title} className="w-full" style={imgStyle(p)} loading="lazy" />
                 ))}
               {p.content && (
                 <div className="px-4 py-4 text-sm text-muted-foreground whitespace-pre-wrap">{p.content}</div>
