@@ -473,7 +473,7 @@ const AdminDesignManager = () => {
       </div>
 
       {/* 팝업 다이얼로그 */}
-      <Dialog open={popupOpen} onOpenChange={setPopupOpen}>
+      <Dialog open={popupOpen} onOpenChange={(o) => { setPopupOpen(o); if (!o) { setPopupForm(emptyPopup); setPopupImageError(false); } }}>
         <DialogContent className="max-w-lg">
           <DialogHeader><DialogTitle>{popupForm.id ? "팝업 수정" : "팝업 등록"}</DialogTitle></DialogHeader>
           <div className="space-y-3">
@@ -483,8 +483,16 @@ const AdminDesignManager = () => {
               <Label>팝업 이미지</Label>
               <div className="flex items-start gap-3 min-w-0">
                 <div className="h-24 w-24 shrink-0 rounded-md border bg-muted/30 overflow-hidden flex items-center justify-center">
-                  {popupForm.image_url ? (
-                    <img src={popupForm.image_url} alt="팝업 이미지 미리보기" className="h-full w-full object-cover" loading="lazy" />
+                  {popupForm.image_url && !popupImageError ? (
+                    <img
+                      key={popupForm.image_url}
+                      src={popupForm.image_url}
+                      alt="팝업 이미지 미리보기"
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      onError={() => setPopupImageError(true)}
+                      onLoad={() => setPopupImageError(false)}
+                    />
                   ) : (
                     <ImageIcon className="h-6 w-6 text-muted-foreground" aria-hidden />
                   )}
