@@ -62,6 +62,10 @@ const IGNORED_CONSOLE = [
   "Failed to load resource",
   "third-party cookie",
   "chrome-extension",
+  // React 개발 모드 경고 (프로덕션 번들에는 존재하지 않음)
+  "Warning:",
+  "validateDOMNesting",
+  "React Router Future Flag",
 ];
 
 function attachConsoleCollector(page: Page): string[] {
@@ -95,14 +99,21 @@ async function login(page: Page) {
 async function assertScreenHealthy(page: Page, screen: Screen, errors: string[]) {
   await page.goto(screen.path);
   await page.waitForLoadState("domcontentloaded");
-  // 데이터 페칭이 끝날 시간을 준다 (networkidle 은 realtime 연결 때문에 불안정).
-  await page.waitForTimeout(1_200);
-
   const root = page.locator("#root");
-  await expect(root, `${screen.name}: #root 렌더 실패`).toBeVisible();
+  await expect(root, `${screen.name}: #root 렌더 실패`).toBeAttached();
+
+  // 앱 셸이 실제 콘텐츠를 그릴 때까지 폴링 (networkidle 은 realtime 연결 때문에 불안정).
+  await expect
+    .poll(async () => (await page.locator("#root").innerText()).trim().length, {
+      timeout: 30_000,
+      message: `${screen.name}: 화면이 비어 있음`,
+    })
+    .toBeGreaterThan(0);
+
+  // 데이터 페칭/렌더 안정화 대기
+  await page.waitForTimeout(800);
 
   const bodyText = (await page.locator("body").innerText()).trim();
-  expect(bodyText.length, `${screen.name}: 화면이 비어 있음`).toBeGreaterThan(0);
 
   // 에러 바운더리 / 404 감지
   const crashed = /Something went wrong|Application error|Unexpected Application Error/i.test(
