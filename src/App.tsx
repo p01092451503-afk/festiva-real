@@ -91,6 +91,7 @@ const ApiClients = lazy(() => import("./pages/admin/ApiClients"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const OAuthAuthorize = lazy(() => import("./pages/OAuthAuthorize"));
 const AdminSystemInfo = lazy(() => import("./pages/admin/AdminSystemInfo"));
+const AdminDeployCheck = lazy(() => import("./pages/admin/AdminDeployCheck"));
 const AdminManual = lazy(() => import("./pages/admin/AdminManual"));
 const AdminLearning = lazy(() => import("./pages/admin/AdminLearning"));
 const AdminAttendance = lazy(() => import("./pages/admin/AdminAttendance"));
@@ -324,6 +325,7 @@ const App = () => (
               <Route path="/admin/api-docs" element={<AdminRoute><ApiDocs /></AdminRoute>} />
               <Route path="/oauth/authorize" element={<OAuthAuthorize />} />
               <Route path="/admin/system-info" element={<AdminRoute><AdminSystemInfo /></AdminRoute>} />
+              <Route path="/admin/deploy-check" element={<AdminRoute><AdminDeployCheck /></AdminRoute>} />
               <Route path="/admin/manual" element={<AdminRoute><AdminManual /></AdminRoute>} />
               <Route path="/admin/enrollments" element={<AdminRoute><AdminEnrollments /></AdminRoute>} />
               <Route path="/admin/learning" element={<AdminRoute><AdminLearning /></AdminRoute>} />
