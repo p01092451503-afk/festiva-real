@@ -66,7 +66,7 @@ const StorefrontHeader = () => {
               width={120}
               height={32}
               loading="eager"
-              fetchPriority="high"
+              {...({ fetchpriority: "high" } as any)}
               decoding="sync"
             />
           ) : (

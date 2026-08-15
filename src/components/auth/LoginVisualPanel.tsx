@@ -34,7 +34,7 @@ const LoginVisualPanel = memo(({
           src={effectiveBgImage}
           alt={effectiveBrandName}
           className="absolute inset-0 w-full h-full object-cover"
-          fetchPriority="high"
+          {...({ fetchpriority: "high" } as any)}
           loading="eager"
           decoding="async"
         />

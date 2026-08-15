@@ -104,7 +104,7 @@ const HeroBanner = () => {
                     alt={banner.title}
                     className="absolute inset-0 w-full h-full object-cover"
                     loading={idx === 0 ? "eager" : "lazy"}
-                    fetchPriority={idx === 0 ? "high" : "auto"}
+                    {...({ fetchpriority: idx === 0 ? "high" : "auto" } as any)}
                     decoding={idx === 0 ? "sync" : "async"}
                     width={1920}
                     height={600}
