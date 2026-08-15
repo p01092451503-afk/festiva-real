@@ -87,6 +87,26 @@ const emptyBlock = {
 
 const toLocalInput = (v: string | null) => (v ? new Date(v).toISOString().slice(0, 16) : "");
 
+/** http(s)/데이터 URL 형태의 이미지 주소인지 검사 */
+const isValidImageUrl = (url: string) => {
+  const v = url.trim();
+  if (!v) return true;
+  if (v.startsWith("data:image/")) return true;
+  try {
+    const u = new URL(v);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
+/** site-assets 버킷에 업로드된 파일이면 스토리지 경로를 돌려준다 */
+const storagePathFromUrl = (url: string) => {
+  const marker = "/storage/v1/object/public/site-assets/";
+  const i = url.indexOf(marker);
+  return i === -1 ? null : decodeURIComponent(url.slice(i + marker.length));
+};
+
 /** 디자인 관리 — 팝업 · 정적 페이지 · 메인화면 블록 배치 */
 const AdminDesignManager = () => {
   const qc = useQueryClient();
