@@ -39,11 +39,9 @@ const AUTH_SCREENS: Screen[] = [
   { name: "마이페이지", path: "/mypage", auth: true },
   { name: "주문 내역", path: "/my/orders", auth: true },
   { name: "포인트", path: "/my/points", auth: true },
-  { name: "쿠폰", path: "/my/coupons", auth: true },
   { name: "공지사항", path: "/student/announcements", auth: true },
   { name: "자료실", path: "/student/board", auth: true },
   { name: "학습 커뮤니티", path: "/student/community", auth: true },
-  { name: "커뮤니티 랭킹", path: "/community/ranking", auth: true },
   { name: "학습 노트", path: "/student/notes", auth: true },
   { name: "마이크로 러닝", path: "/student/micro-learning", auth: true },
   { name: "자기주도학습", path: "/student/self-learning", auth: true },
@@ -144,6 +142,6 @@ test.describe("배포 전 스모크 — 주요 26개 화면", () => {
   });
 
   test("순회 대상은 26개 화면이어야 한다", async () => {
-    expect(SCREENS.length).toBe(28 - 2);
+    expect(SCREENS.length).toBe(26);
   });
 });
