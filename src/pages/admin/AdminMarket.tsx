@@ -135,11 +135,32 @@ const AdminMarket = () => {
     [shipments, shipStatusFilter],
   );
 
+  /** 상품 썸네일 업로드 (site-assets 버킷의 products/ 경로) */
+  const uploadThumbnail = async (file: File) => {
+    if (!file.type.startsWith("image/")) return toast.error("이미지 파일만 업로드할 수 있습니다");
+    if (file.size > 5 * 1024 * 1024) return toast.error("5MB 이하 이미지를 사용하세요");
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `products/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from("site-assets").upload(path, file, { upsert: true });
+      if (error) throw error;
+      const { data } = supabase.storage.from("site-assets").getPublicUrl(path);
+      setForm((f) => ({ ...f, image_url: data.publicUrl }));
+      toast.success("썸네일이 업로드되었습니다");
+    } catch (e: any) {
+      toast.error(e.message || "업로드에 실패했습니다");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const saveProduct = async () => {
     if (!form.name.trim()) return toast.error("상품명을 입력하세요");
     const payload: any = {
       name: form.name.trim(),
       description: form.description || null,
+      image_url: form.image_url || null,
       product_type: form.product_type,
       category_id: form.category_id === "__none__" ? null : form.category_id,
       price: Number(form.price) || 0,
