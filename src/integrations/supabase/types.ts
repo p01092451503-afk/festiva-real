@@ -2793,6 +2793,13 @@ export type Database = {
             referencedRelation: "enrollments"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "course_extensions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       course_i18n: {
@@ -2906,7 +2913,15 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "course_invitations_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       course_lectures: {
         Row: {
@@ -3099,6 +3114,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "enrollments"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_suspensions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -4972,6 +4994,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "member_groups"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_group_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -7033,6 +7062,13 @@ export type Database = {
             referencedRelation: "orders"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "refund_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       review_quizzes: {
@@ -7190,6 +7226,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -7941,6 +7984,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "surveys"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "survey_responses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
