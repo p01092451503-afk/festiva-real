@@ -387,7 +387,7 @@ const AdminUserDetail = () => {
 
   const deptLabel = department ? (isEn && department.name_en ? department.name_en : department.name) : "-";
 
-  if (!profile) {
+  if (profileLoading) {
     return (
       <DashboardLayout>
         <div className="p-8 text-center text-muted-foreground">
@@ -396,6 +396,29 @@ const AdminUserDetail = () => {
       </DashboardLayout>
     );
   }
+
+  if (!profile) {
+    return (
+      <DashboardLayout>
+        <div className="p-8 flex flex-col items-center gap-4 text-center">
+          <User className="h-10 w-10 text-muted-foreground" />
+          <div>
+            <p className="font-semibold">{isEn ? "Member not found" : "회원 정보를 찾을 수 없습니다"}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {isEn
+                ? "This account may have been deleted, or the record is sample data without a linked member."
+                : "삭제된 계정이거나, 회원 정보가 연결되지 않은 데이터입니다."}
+            </p>
+          </div>
+          <Button variant="outline" className="rounded-xl gap-2" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-4 w-4" />
+            {isEn ? "Go back" : "뒤로 가기"}
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
 
   return (
     <DashboardLayout>
