@@ -100,6 +100,9 @@ export default function AdminSystemInfo() {
                 <StackRow name="Realtime (WebSocket)" desc="PostgreSQL Replication 기반 실시간 데이터 동기화. 알림·게시판 즉시 반영." />
                 <StackRow name="Object Storage" desc="S3 호환 파일 저장소. 과제 첨부파일·아바타·자료실 파일 안전 보관 및 CDN 자동 연동." />
                 <StackRow name="Database Migrations" desc="버전 관리되는 SQL 마이그레이션. 스키마 변경 이력 추적 및 롤백 가능." />
+                <StackRow name="Security Definer RPC" desc="정답 채점·오픈알림 신청자 집계 등 민감 연산을 서버 함수로 격리. 원본 데이터 비노출." />
+                <StackRow name="OAuth 2.0 서버" desc="외부 시스템 연동용 인증 서버 및 Open API(회원·주문·강의·진도) 제공." />
+
               </CardContent>
             </Card>
 
