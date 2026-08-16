@@ -93,6 +93,7 @@ const OAuthAuthorize = lazy(() => import("./pages/OAuthAuthorize"));
 const AdminSystemInfo = lazy(() => import("./pages/admin/AdminSystemInfo"));
 const AdminDeployCheck = lazy(() => import("./pages/admin/AdminDeployCheck"));
 const AdminManual = lazy(() => import("./pages/admin/AdminManual"));
+const AdminRoleManual = lazy(() => import("./pages/admin/AdminRoleManual"));
 const AdminLearning = lazy(() => import("./pages/admin/AdminLearning"));
 const AdminAttendance = lazy(() => import("./pages/admin/AdminAttendance"));
 const AdminCompletion = lazy(() => import("./pages/admin/AdminCompletion"));
@@ -327,6 +328,7 @@ const App = () => (
               <Route path="/admin/system-info" element={<AdminRoute><AdminSystemInfo /></AdminRoute>} />
               <Route path="/admin/deploy-check" element={<AdminRoute><AdminDeployCheck /></AdminRoute>} />
               <Route path="/admin/manual" element={<AdminRoute><AdminManual /></AdminRoute>} />
+              <Route path="/admin/role-manual" element={<AdminRoute><AdminRoleManual /></AdminRoute>} />
               <Route path="/admin/enrollments" element={<AdminRoute><AdminEnrollments /></AdminRoute>} />
               <Route path="/admin/learning" element={<AdminRoute><AdminLearning /></AdminRoute>} />
               <Route path="/admin/attendance" element={<AdminRoute><AdminAttendance role="admin" /></AdminRoute>} />
