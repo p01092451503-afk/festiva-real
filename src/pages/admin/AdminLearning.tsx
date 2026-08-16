@@ -605,7 +605,80 @@ const AdminLearning = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        <Dialog open={!!detailUserId} onOpenChange={(o) => !o && setDetailUserId(null)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Users className="h-4 w-4" aria-hidden="true" />
+                {detailUserId ? displayName(detailUserId) : ""}
+                {!detailProfile && <Badge variant="outline" className="text-[10px]">{isEn ? "Sample" : "샘플"}</Badge>}
+              </DialogTitle>
+              <DialogDescription>
+                {detailProfile?.email || (isEn ? "Demo learner record" : "데모 수강생 학습 기록")}
+                {detailProfile?.department ? ` · ${detailProfile.department}` : ""}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: isEn ? "Courses" : "수강 강의", value: `${detailRows.length}` },
+                {
+                  label: isEn ? "Completed" : "완료",
+                  value: `${detailRows.filter((r: any) => r.completed_at).length}`,
+                },
+                {
+                  label: t("admin.progressLabel"),
+                  value: `${detailRows.length ? Math.round(detailRows.reduce((s: number, r: any) => s + (Number(r.progress) || 0), 0) / detailRows.length) : 0}%`,
+                },
+              ].map((s) => (
+                <div key={s.label} className="rounded-xl border border-border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                  <p className="text-lg font-semibold text-foreground mt-1">{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="max-h-[45vh] overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("admin.courseLabel")}</TableHead>
+                    <TableHead>{t("admin.progressLabel")}</TableHead>
+                    <TableHead>{t("admin.bestScore", "최고 점수")}</TableHead>
+                    <TableHead>{t("admin.statusLabel")}</TableHead>
+                    <TableHead>{t("admin.startDate")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {detailRows.map((r: any) => {
+                    const c = courseMap.get(r.course_id) as any;
+                    const best = bestScoreByUserCourse.get(`${r.user_id}__${r.course_id}`);
+                    return (
+                      <TableRow key={r.id}>
+                        <TableCell className="text-sm whitespace-normal break-words">{c?.title || "-"}</TableCell>
+                        <TableCell className="text-xs">{Math.round(Number(r.progress) || 0)}%</TableCell>
+                        <TableCell className="text-xs">{best ? `${best.score}점` : "-"}</TableCell>
+                        <TableCell>{getStatusBadge(r)}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{formatDate(r.enrolled_at)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+
+            {detailProfile && (
+              <div className="flex justify-end">
+                <Button variant="outline" className="rounded-xl" onClick={() => navigate(`/admin/users/${detailUserId}`)}>
+                  {isEn ? "Open member page" : "회원 상세 페이지"}
+                </Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
+
     </DashboardLayout>
   );
 };
