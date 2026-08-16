@@ -174,7 +174,7 @@ const AdminLearning = () => {
 
     if (term) {
       const course = courseMap.get(e.course_id) as any;
-      const haystack = [profile?.full_name, profile?.email, course?.title]
+      const haystack = [displayName(e.user_id), profile?.email, course?.title]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
