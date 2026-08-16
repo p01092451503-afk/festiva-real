@@ -100,12 +100,9 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     if (window.innerWidth >= 1024 && collapsed) return;
     const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
     if (!active) return;
-    const navRect = nav.getBoundingClientRect();
-    const activeRect = active.getBoundingClientRect();
-    if (activeRect.height === 0) return;
-    const target =
-      nav.scrollTop + (activeRect.top - navRect.top) - nav.clientHeight / 2 + activeRect.height / 2;
-    nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+    if (active.offsetHeight === 0) return;
+    // 부드럽게 활성 메뉴를 스크롤 영역 중앙으로 이동
+    active.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
   }, [collapsed]);
 
   const { profile, signOut } = useUser();
