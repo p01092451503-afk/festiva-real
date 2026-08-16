@@ -366,17 +366,19 @@ const AdminLearning = () => {
                     return (
                       <article
                         key={e.id}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => navigate(`/admin/users/${e.user_id}`)}
+                        role={p ? "button" : undefined}
+                        tabIndex={p ? 0 : undefined}
+                        onClick={p ? () => navigate(`/admin/users/${e.user_id}`) : undefined}
                         onKeyDown={(ev) => {
+                          if (!p) return;
                           if (ev.key === "Enter" || ev.key === " ") {
                             ev.preventDefault();
                             navigate(`/admin/users/${e.user_id}`);
                           }
                         }}
-                        className="rounded-xl border border-border bg-background p-4 cursor-pointer hover:bg-accent/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className={`rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${p ? "cursor-pointer hover:bg-accent/30" : ""}`}
                       >
+
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <h4 className="text-sm font-semibold text-foreground break-words inline-flex items-center gap-1">
