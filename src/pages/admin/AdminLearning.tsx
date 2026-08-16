@@ -119,6 +119,17 @@ const AdminLearning = () => {
   const isEn = i18n.language?.startsWith("en");
   const deptLabel = (d: any) => (isEn && d?.name_en ? d.name_en : d?.name) || "";
 
+  // 프로필이 없는 샘플 데이터에도 이름을 부여
+  const displayName = (userId: string) => {
+    const p = profileMap.get(userId) as any;
+    return p?.full_name || sampleNameFor(userId);
+  };
+
+  const [detailUserId, setDetailUserId] = useState<string | null>(null);
+  const detailProfile = detailUserId ? ((profileMap.get(detailUserId) as any) ?? null) : null;
+  const detailRows = detailUserId ? enrollments.filter((e: any) => e.user_id === detailUserId) : [];
+
+
   // Region (country) options derived from departments
   const countryOptions = useMemo(() => {
     const seen = new Map<string, string>();
