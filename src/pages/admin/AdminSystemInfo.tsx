@@ -260,8 +260,17 @@ export default function AdminSystemInfo() {
                 />
                 <SecurityRow
                   label="동영상 무단접근 방지"
-                  desc="Kollus 연동 JWT 서명 토큰 기반 임베드. 직접 URL 접근 차단, 시청 권한 검증 후에만 재생. 토큰은 짧은 만료 시간을 가지며 Edge Function에서만 발급."
+                  desc="Kollus · Bunny Stream 연동 JWT 서명 토큰 기반 임베드. 직접 URL 접근 차단, 시청 권한 검증 후에만 재생. 토큰은 짧은 만료 시간을 가지며 Edge Function에서만 발급."
                 />
+                <SecurityRow
+                  label="첨삭 · 과제 파일 보호"
+                  desc="에세이 이미지·첨삭 결과·과제 첨부는 비공개 버킷에 저장하고, 제출자와 담당 강사·관리자만 접근 가능한 서명 URL로만 제공."
+                />
+                <SecurityRow
+                  label="개인정보 취급 점검"
+                  desc="개인정보 보관 항목과 접근 경로를 관리자 화면에서 점검하고, 회원 탈퇴 시 학습 데이터 연쇄 삭제 · 운영 데이터 비식별 처리."
+                />
+
                 <details className="rounded border border-border/60 bg-muted/30 p-3">
                   <summary className="cursor-pointer text-xs font-medium text-muted-foreground">RLS 정책 예시 보기</summary>
                   <pre className="bg-muted/50 p-4 rounded text-xs overflow-x-auto mt-2">
