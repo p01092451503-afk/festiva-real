@@ -238,7 +238,7 @@ const AdminCourseOptions = () => {
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="open_alert">오픈알림</SelectItem>
-                          <SelectItem value="pre_order">사전신청</SelectItem>
+                          <SelectItem value="presale">사전신청</SelectItem>
                           <SelectItem value="on_sale">신청하기</SelectItem>
                           <SelectItem value="closed">신청마감</SelectItem>
                           <SelectItem value="sold_out">품절</SelectItem>
