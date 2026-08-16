@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -93,21 +93,20 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
 
   // 현재 경로의 메뉴 항목이 사이드바 중앙에 보이도록 자동 스크롤
   const navRef = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    const scrollToActive = () => {
-      const nav = navRef.current;
-      if (!nav) return;
-      const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
-      if (!active) return;
-      const navRect = nav.getBoundingClientRect();
-      const activeRect = active.getBoundingClientRect();
-      const target =
-        nav.scrollTop + (activeRect.top - navRect.top) - nav.clientHeight / 2 + activeRect.height / 2;
-      nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
-    };
-    const raf = requestAnimationFrame(() => setTimeout(scrollToActive, 60));
-    return () => cancelAnimationFrame(raf);
-  }, [location.pathname, collapsed]);
+  const scrollToActiveItem = useCallback(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    // 접힌 데스크톱 사이드바에서는 아이콘만 노출되므로 스크롤 불필요
+    if (window.innerWidth >= 1024 && collapsed) return;
+    const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!active) return;
+    if (active.offsetHeight === 0) return;
+    // 메뉴가 스크롤 가능한 nav 내부의 어느 위치에 있든 정확히 중앙으로 이동
+    const activeTop = active.offsetTop - nav.offsetTop;
+    const target = activeTop - nav.clientHeight / 2 + active.offsetHeight / 2;
+    nav.scrollTo({ top: Math.max(0, Math.min(target, nav.scrollHeight - nav.clientHeight)), behavior: "smooth" });
+  }, [collapsed]);
+
   const { profile, signOut } = useUser();
   const { primaryRole, isAdmin, isTeacher } = useUserRole();
   const { isBranchAdmin: hasBranchAssignment } = useBranchAdmin();
@@ -522,6 +521,16 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       localStorage.setItem("nf-sidebar-groups", JSON.stringify(openGroups));
     }
   }, [openGroups]);
+
+  // 현재 경로의 메뉴 항목이 사이드바 중앙에 보이도록 자동 스크롤
+  useEffect(() => {
+    // 그룹 펼침과 DOM 레이아웃이 완료된 후 중앙 정렬 스크롤 실행
+    const timer = setTimeout(() => {
+      requestAnimationFrame(scrollToActiveItem);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [location.pathname, collapsed, openGroups, sidebarOpen, scrollToActiveItem]);
+
   const toggleGroup = (id: string) =>
     setOpenGroups((s) => ({ ...s, [id]: !s[id] }));
 
