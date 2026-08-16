@@ -133,12 +133,34 @@ export default function AdminSystemInfo() {
                 <StackRow name="Error Tracking" desc="프론트엔드/엣지 함수 오류 자동 수집 및 스택 트레이스 분석." />
                 <StackRow name="감사 로그(Audit Log)" desc="로그인·권한 변경·민감 데이터 접근 이력 기록. 컴플라이언스 대응." />
                 <StackRow name="자동 백업" desc="PostgreSQL Point-in-Time Recovery (PITR) 7일 보관. 데이터 손실 방지." />
+                <StackRow name="배포 전 체크리스트" desc="환경변수·마이그레이션 적용·롤백 가능성·주요 API 응답을 관리자 화면(배포 점검)에서 실시간 검사." />
+                <StackRow name="E2E 스모크 테스트" desc="Playwright로 주요 26개 화면을 자동 순회. 배포 전 실패 시 배포 차단." />
+                <StackRow name="납품 전 전수 점검 리포트" desc="화면 목록·API 4xx/5xx·런타임 오류를 자동 요약해 문서(Markdown/Excel)로 생성." />
+                <StackRow name="접근 제어 자동 테스트" desc="역할별 라우트 접근 권한을 단위 테스트로 검증해 권한 회귀를 방지." />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>최근 반영된 주요 기능</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <StackRow name="영어 첨삭 시스템" desc="학습자 에세이 제출 → 강사 캔버스 첨삭(펜·텍스트·도형, 이동 가능한 툴바) → 결과 회신. 제출자 정보·제출 시각 표시." />
+                <StackRow name="자기주도학습" desc="AI 학습 플래너, 학습 리포트, 복습 퀴즈 자동 생성으로 학습자 스스로 계획·점검." />
+                <StackRow name="문제은행 · 랜덤 출제" desc="난이도×수준×카테고리 기반 문제 풀 관리. 평가별 고정 출제 또는 조건별 랜덤 N문항 자동 추출." />
+                <StackRow name="상품 판매 상태 5단계" desc="오픈알림 · 사전판매 · 신청하기 · 신청마감 · 품절. 상태별 고객 화면 CTA와 오픈알림 신청 집계 제공." />
+                <StackRow name="목록 정렬·검색 표준화" desc="관리자 전 목록 화면에 정렬 헤더·페이지네이션·엑셀 다운로드 일괄 적용." />
+                <StackRow name="회원 통합 이력 조회" desc="회원 상세에서 수강·결제·포인트·커뮤니티 글·전자책 다운로드 이력을 한 화면에서 확인." />
+                <StackRow name="사이트 디자인 관리" desc="메인 블록·배너·팝업 관리(이미지 업로드/URL 등록, 크롭·배치 옵션, 미리보기)." />
+                <StackRow name="역할별 기능 매뉴얼" desc="관리자·강사·학습자 기능을 검색 가능한 매뉴얼로 제공. 버전 이력 관리." />
+                <StackRow name="UX 개선" desc="스켈레톤 제거 후 통일된 로딩 애니메이션, 사이드바 검색 고정, 선택 메뉴 자동 중앙 스크롤." />
               </CardContent>
             </Card>
 
             <p className="text-sm text-muted-foreground">
               ※ 모든 구성 요소는 글로벌 표준 오픈소스 또는 검증된 상용 서비스로, 특정 벤더에 종속되지 않습니다.
             </p>
+
           </TabsContent>
 
           {/* 보안 백서 */}
