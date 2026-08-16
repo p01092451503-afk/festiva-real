@@ -308,6 +308,15 @@ USING (has_role(auth.uid(), 'admin')
                   label="콘텐츠 보호 레이어"
                   desc="강의 페이지에서 우클릭 · 드래그 · 개발자도구 단축키 · 인쇄 차단. PrintScreen 키 감지 시 경고."
                 />
+                <SecurityRow
+                  label="발송 이력 보관"
+                  desc="알림톡 · 이메일 · 푸시 등 모든 발송 건을 message_logs에 기록해 수신자 · 시각 · 결과를 추적."
+                />
+                <SecurityRow
+                  label="배포 안전성 점검"
+                  desc="배포 전 체크리스트 화면에서 환경변수 · 스키마 반영 · 주요 API 응답을 검사하고, E2E 스모크 테스트 실패 시 배포를 차단."
+                />
+
               </CardContent>
             </Card>
           </TabsContent>
