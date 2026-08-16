@@ -641,7 +641,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
         </div>
 
         <TooltipProvider delayDuration={150}>
-          <nav className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
+          <nav ref={navRef} className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
             {!collapsed && (
               <div className="relative px-1 pb-3">
                 <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
