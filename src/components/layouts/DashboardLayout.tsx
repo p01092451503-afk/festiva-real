@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -90,6 +90,24 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       localStorage.setItem("nf-sidebar-collapsed", collapsed ? "1" : "0");
     }
   }, [collapsed]);
+
+  // 현재 경로의 메뉴 항목이 사이드바 중앙에 보이도록 자동 스크롤
+  const navRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const scrollToActive = () => {
+      const nav = navRef.current;
+      if (!nav) return;
+      const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
+      if (!active) return;
+      const navRect = nav.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      const target =
+        nav.scrollTop + (activeRect.top - navRect.top) - nav.clientHeight / 2 + activeRect.height / 2;
+      nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+    };
+    const raf = requestAnimationFrame(() => setTimeout(scrollToActive, 60));
+    return () => cancelAnimationFrame(raf);
+  }, [location.pathname, collapsed]);
   const { profile, signOut } = useUser();
   const { primaryRole, isAdmin, isTeacher } = useUserRole();
   const { isBranchAdmin: hasBranchAssignment } = useBranchAdmin();
@@ -623,7 +641,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
         </div>
 
         <TooltipProvider delayDuration={150}>
-          <nav className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
+          <nav ref={navRef} className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
             {!collapsed && (
               <div className="relative px-1 pb-3">
                 <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
