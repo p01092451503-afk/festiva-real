@@ -838,14 +838,15 @@ const StorefrontCourseDetail = () => {
           >
             <Heart className={cn("h-5 w-5", isInWishlist ? "fill-destructive text-destructive" : "text-muted-foreground")} />
           </button>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <p className="text-lg font-bold text-foreground">{isFree ? "무료" : formatPrice(displayPrice)}</p>
+            <SaleStatusBadge status={course?.sale_status} />
           </div>
           {isEnrolled ? (
             <Button size="lg" className="rounded-xl" onClick={() => navigate(`/student/courses/${id}`)}>
               <Play className="h-4 w-4 mr-1" /> 학습하기
             </Button>
-          ) : (
+          ) : isPurchasable(course?.sale_status) ? (
             <>
               {!isFree && (
                 <Button variant="outline" size="lg" className="rounded-xl" onClick={handleAddToCart} disabled={isInCart}>
@@ -853,9 +854,18 @@ const StorefrontCourseDetail = () => {
                 </Button>
               )}
               <Button size="lg" className="rounded-xl" onClick={handleBuyNow}>
-                {isFree ? "무료 시작" : "바로 구매"}
+                {saleCtaLabel(course?.sale_status, isFree)}
               </Button>
             </>
+          ) : (
+            <Button
+              size="lg"
+              className="rounded-xl"
+              disabled={course?.sale_status !== "open_alert"}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
+              {saleCtaLabel(course?.sale_status, isFree)}
+            </Button>
           )}
         </div>
       )}
