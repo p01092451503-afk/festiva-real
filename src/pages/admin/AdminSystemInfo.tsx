@@ -117,7 +117,10 @@ export default function AdminSystemInfo() {
                 <StackRow name="Google Gemini API" desc="다국어 자동 번역 엔진. 강의·차시·평가 콘텐츠 한↔영 실시간 변환." />
                 <StackRow name="Web Push (FCM/APNs)" desc="표준 웹 푸시 프로토콜. 학습 알림·과제 마감·공지 실시간 전달." />
                 <StackRow name="SMTP 이메일" desc="비밀번호 재설정·계정 인증 메일. 커스텀 도메인 및 SPF/DKIM 인증 지원." />
-                <StackRow name="Toss Payments" desc="국내 PG 표준 결제 연동. PCI-DSS 인증 환경." />
+                <StackRow name="Toss Payments" desc="국내 PG 표준 결제 연동. PCI-DSS 인증 환경. 결제 완료 시 알림톡 발송 이력 자동 기록." />
+                <StackRow name="Bunny Stream (직접 업로드)" desc="관리자 화면에서 동영상을 CDN으로 바로 업로드. 서명 토큰 재생, 업로드 진행률·이어올리기 지원." />
+                <StackRow name="Daily (화상 강의)" desc="실시간 화상 수업 룸 생성 및 참가 토큰 발급. 세션 채팅 패널 연동." />
+
               </CardContent>
             </Card>
 
