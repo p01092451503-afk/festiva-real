@@ -146,7 +146,7 @@ const AdminUserDetail = () => {
       if (!userId) return [];
       const { data, error } = await supabase
         .from("community_posts")
-        .select("id, title, created_at, like_count, comment_count")
+        .select("id, title, created_at, view_count")
         .eq("author_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
