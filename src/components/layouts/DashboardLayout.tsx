@@ -108,13 +108,6 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
   }, [collapsed]);
 
-  useEffect(() => {
-    // 그룹 펼침과 DOM 레이아웃이 완료된 후 중앙 정렬 스크롤 실행
-    const timer = setTimeout(() => {
-      requestAnimationFrame(scrollToActiveItem);
-    }, 150);
-    return () => clearTimeout(timer);
-  }, [location.pathname, collapsed, openGroups, sidebarOpen, scrollToActiveItem]);
   const { profile, signOut } = useUser();
   const { primaryRole, isAdmin, isTeacher } = useUserRole();
   const { isBranchAdmin: hasBranchAssignment } = useBranchAdmin();
