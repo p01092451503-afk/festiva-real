@@ -32,7 +32,7 @@ const AdminUserDetail = () => {
   const isEn = i18n.language?.startsWith("en");
   const locale = isEn ? enUS : ko;
 
-  const { data: profile } = useQuery({
+  const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ["admin-user-detail-profile", userId],
     queryFn: async () => {
       if (!userId) return null;
