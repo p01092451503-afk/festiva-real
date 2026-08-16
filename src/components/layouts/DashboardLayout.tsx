@@ -522,6 +522,16 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       localStorage.setItem("nf-sidebar-groups", JSON.stringify(openGroups));
     }
   }, [openGroups]);
+
+  // 현재 경로의 메뉴 항목이 사이드바 중앙에 보이도록 자동 스크롤
+  useEffect(() => {
+    // 그룹 펼침과 DOM 레이아웃이 완료된 후 중앙 정렬 스크롤 실행
+    const timer = setTimeout(() => {
+      requestAnimationFrame(scrollToActiveItem);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [location.pathname, collapsed, openGroups, sidebarOpen, scrollToActiveItem]);
+
   const toggleGroup = (id: string) =>
     setOpenGroups((s) => ({ ...s, [id]: !s[id] }));
 
