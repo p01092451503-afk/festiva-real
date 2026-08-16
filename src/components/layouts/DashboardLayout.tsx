@@ -101,8 +101,10 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
     if (!active) return;
     if (active.offsetHeight === 0) return;
-    // 부드럽게 활성 메뉴를 스크롤 영역 중앙으로 이동
-    active.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    // 메뉴가 스크롤 가능한 nav 내부의 어느 위치에 있든 정확히 중앙으로 이동
+    const activeTop = active.offsetTop - nav.offsetTop;
+    const target = activeTop - nav.clientHeight / 2 + active.offsetHeight / 2;
+    nav.scrollTo({ top: Math.max(0, Math.min(target, nav.scrollHeight - nav.clientHeight)), behavior: "smooth" });
   }, [collapsed]);
 
   const { profile, signOut } = useUser();
