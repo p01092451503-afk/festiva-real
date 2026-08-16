@@ -651,20 +651,24 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
           )}
         </div>
 
+        {!collapsed && (
+          <div className="px-6 pb-2">
+            <div className="relative px-1">
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+              <Input
+                value={menuSearch}
+                onChange={(event) => setMenuSearch(event.target.value)}
+                placeholder={t("nav.menuSearchPlaceholder", "메뉴 검색")}
+                aria-label={t("nav.menuSearch", "메뉴 검색")}
+                className="h-9 rounded-md bg-background/70 pl-9 pr-3 text-sm"
+              />
+            </div>
+          </div>
+        )}
+
         <TooltipProvider delayDuration={150}>
           <nav ref={navRef} className={`flex-1 overflow-y-auto py-4 space-y-1 ${collapsed ? "lg:px-2 px-3" : "px-3"}`} data-tour="sidebar-nav" aria-label={t("nav.sideNavigation", "사이드 메뉴")}>
-            {!collapsed && (
-              <div className="relative px-1 pb-3">
-                <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  value={menuSearch}
-                  onChange={(event) => setMenuSearch(event.target.value)}
-                  placeholder={t("nav.menuSearchPlaceholder", "메뉴 검색")}
-                  aria-label={t("nav.menuSearch", "메뉴 검색")}
-                  className="h-9 rounded-md bg-background/70 pl-9 pr-3 text-sm"
-                />
-              </div>
-            )}
+
             {effectiveRole === "admin" && !collapsed ? (
               filteredAdminGroups.map((group) => {
                 const isGroupOpen = Boolean(normalizedMenuSearch || openGroups[group.id]);
