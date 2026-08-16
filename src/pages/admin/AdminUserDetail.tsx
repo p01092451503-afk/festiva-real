@@ -5,7 +5,7 @@ import {
   ArrowLeft, User, Mail, Building2, BookOpen, GraduationCap, Award,
   ClipboardCheck, Layers, Activity, CheckCircle2, XCircle, Clock,
   Pencil, Phone, Cake, Star, ShoppingBag, MousePointerClick,
-  Calendar,
+  Calendar, MessageSquare, Download,
 } from "lucide-react";
 import { formatDistanceToNow, format as fmtDate } from "date-fns";
 import { ko, enUS } from "date-fns/locale";
@@ -131,6 +131,38 @@ const AdminUserDetail = () => {
       const { data, error } = await supabase
         .from("orders")
         .select("id, order_number, status, total_amount, discount_amount, created_at, coupons(code)")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: userPosts = [] } = useQuery({
+    queryKey: ["admin-user-detail-posts", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("community_posts")
+        .select("id, title, created_at, view_count")
+        .eq("author_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: downloadLogs = [] } = useQuery({
+    queryKey: ["admin-user-detail-downloads", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("ebook_download_logs")
+        .select("id, created_at, entitlement_id")
         .eq("user_id", userId)
         .order("created_at", { ascending: false })
         .limit(20);
@@ -854,7 +886,55 @@ const AdminUserDetail = () => {
             )}
           </div>
         </div>
+
+        {/* Community posts / downloads */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Community posts" : "커뮤니티 게시글"} ({userPosts.length})
+            </h2>
+            {userPosts.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No posts." : "작성한 게시글이 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {userPosts.map((p: any) => (
+                  <li key={p.id} className="flex items-center justify-between gap-2 border-b-2 border-border/80 pb-2 last:border-0">
+                    <Link to={`/community/post/${p.id}`} className="text-xs text-foreground truncate hover:underline">
+                      {p.title}
+                    </Link>
+                    <span className="text-[11px] text-muted-foreground shrink-0">
+                      {isEn ? "views" : "조회"} {p.view_count ?? 0} · {fmtDate(new Date(p.created_at), "yy.MM.dd")}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="stat-card !p-5">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2 mb-3">
+              <Download className="h-4 w-4 text-muted-foreground" />
+              {isEn ? "Download history" : "다운로드 기록"} ({downloadLogs.length})
+            </h2>
+            {downloadLogs.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4">{isEn ? "No downloads." : "다운로드 기록이 없습니다."}</p>
+            ) : (
+              <ul className="space-y-2">
+                {downloadLogs.map((d: any) => (
+                  <li key={d.id} className="flex items-center justify-between gap-2 border-b-2 border-border/80 pb-2 last:border-0">
+                    <span className="text-xs text-foreground truncate">{isEn ? "E-book download" : "전자책 다운로드"}</span>
+                    <span className="text-[11px] text-muted-foreground shrink-0">
+                      {fmtDate(new Date(d.created_at), "yyyy.MM.dd HH:mm")}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
+
 
       {/* Edit member info */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
