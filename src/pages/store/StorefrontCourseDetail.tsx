@@ -17,6 +17,7 @@ import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { formatPrice, formatDurationMinutes, cn } from "@/lib/utils";
+import SaleStatusCta, { isPurchasable, saleCtaLabel, SaleStatusBadge } from "@/components/storefront/SaleStatusCta";
 
 const StorefrontCourseDetail = () => {
   const { courseId: id } = useParams<{ courseId: string }>();
