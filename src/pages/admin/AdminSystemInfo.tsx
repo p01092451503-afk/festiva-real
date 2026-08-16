@@ -80,9 +80,13 @@ export default function AdminSystemInfo() {
                 <StackRow name="React Query (TanStack)" desc="서버 상태 관리 라이브러리. 5분 캐싱/15분 메모리 보존으로 9천명 동시접속 부하 분산." />
                 <StackRow name="React Router v6" desc="선언적 클라이언트 라우팅. 코드 스플리팅 기반 페이지 단위 lazy loading 지원." />
                 <StackRow name="i18next" desc="국제 표준 다국어(i18n) 라이브러리. 한국어/영어 동시 운영." />
+                <StackRow name="tldraw 캔버스" desc="영어 첨삭(Correction) 전용 드로잉 엔진. 커스텀 편집 툴바(위치 이동 가능)·다중 페이지 첨삭 지원." />
+                <StackRow name="Rich Text Editor" desc="커뮤니티·게시판 글쓰기용 서식 편집기. 이미지 삽입 및 안전한 HTML 렌더링." />
+                <StackRow name="tus 리줌 업로드" desc="동영상 CDN 직접 업로드(tus-js-client). 대용량 파일 중단 후 이어올리기 지원." />
                 <StackRow name="PWA (Progressive Web App)" desc="Service Worker 기반 오프라인 지원. 모바일 홈화면 설치 및 네이티브 앱 수준 UX 제공." />
               </CardContent>
             </Card>
+
 
             <Card>
               <CardHeader>
@@ -96,6 +100,9 @@ export default function AdminSystemInfo() {
                 <StackRow name="Realtime (WebSocket)" desc="PostgreSQL Replication 기반 실시간 데이터 동기화. 알림·게시판 즉시 반영." />
                 <StackRow name="Object Storage" desc="S3 호환 파일 저장소. 과제 첨부파일·아바타·자료실 파일 안전 보관 및 CDN 자동 연동." />
                 <StackRow name="Database Migrations" desc="버전 관리되는 SQL 마이그레이션. 스키마 변경 이력 추적 및 롤백 가능." />
+                <StackRow name="Security Definer RPC" desc="정답 채점·오픈알림 신청자 집계 등 민감 연산을 서버 함수로 격리. 원본 데이터 비노출." />
+                <StackRow name="OAuth 2.0 서버" desc="외부 시스템 연동용 인증 서버 및 Open API(회원·주문·강의·진도) 제공." />
+
               </CardContent>
             </Card>
 
@@ -110,7 +117,10 @@ export default function AdminSystemInfo() {
                 <StackRow name="Google Gemini API" desc="다국어 자동 번역 엔진. 강의·차시·평가 콘텐츠 한↔영 실시간 변환." />
                 <StackRow name="Web Push (FCM/APNs)" desc="표준 웹 푸시 프로토콜. 학습 알림·과제 마감·공지 실시간 전달." />
                 <StackRow name="SMTP 이메일" desc="비밀번호 재설정·계정 인증 메일. 커스텀 도메인 및 SPF/DKIM 인증 지원." />
-                <StackRow name="Toss Payments" desc="국내 PG 표준 결제 연동. PCI-DSS 인증 환경." />
+                <StackRow name="Toss Payments" desc="국내 PG 표준 결제 연동. PCI-DSS 인증 환경. 결제 완료 시 알림톡 발송 이력 자동 기록." />
+                <StackRow name="Bunny Stream (직접 업로드)" desc="관리자 화면에서 동영상을 CDN으로 바로 업로드. 서명 토큰 재생, 업로드 진행률·이어올리기 지원." />
+                <StackRow name="Daily (화상 강의)" desc="실시간 화상 수업 룸 생성 및 참가 토큰 발급. 세션 채팅 패널 연동." />
+
               </CardContent>
             </Card>
 
@@ -123,12 +133,34 @@ export default function AdminSystemInfo() {
                 <StackRow name="Error Tracking" desc="프론트엔드/엣지 함수 오류 자동 수집 및 스택 트레이스 분석." />
                 <StackRow name="감사 로그(Audit Log)" desc="로그인·권한 변경·민감 데이터 접근 이력 기록. 컴플라이언스 대응." />
                 <StackRow name="자동 백업" desc="PostgreSQL Point-in-Time Recovery (PITR) 7일 보관. 데이터 손실 방지." />
+                <StackRow name="배포 전 체크리스트" desc="환경변수·마이그레이션 적용·롤백 가능성·주요 API 응답을 관리자 화면(배포 점검)에서 실시간 검사." />
+                <StackRow name="E2E 스모크 테스트" desc="Playwright로 주요 26개 화면을 자동 순회. 배포 전 실패 시 배포 차단." />
+                <StackRow name="납품 전 전수 점검 리포트" desc="화면 목록·API 4xx/5xx·런타임 오류를 자동 요약해 문서(Markdown/Excel)로 생성." />
+                <StackRow name="접근 제어 자동 테스트" desc="역할별 라우트 접근 권한을 단위 테스트로 검증해 권한 회귀를 방지." />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>최근 반영된 주요 기능</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <StackRow name="영어 첨삭 시스템" desc="학습자 에세이 제출 → 강사 캔버스 첨삭(펜·텍스트·도형, 이동 가능한 툴바) → 결과 회신. 제출자 정보·제출 시각 표시." />
+                <StackRow name="자기주도학습" desc="AI 학습 플래너, 학습 리포트, 복습 퀴즈 자동 생성으로 학습자 스스로 계획·점검." />
+                <StackRow name="문제은행 · 랜덤 출제" desc="난이도×수준×카테고리 기반 문제 풀 관리. 평가별 고정 출제 또는 조건별 랜덤 N문항 자동 추출." />
+                <StackRow name="상품 판매 상태 5단계" desc="오픈알림 · 사전판매 · 신청하기 · 신청마감 · 품절. 상태별 고객 화면 CTA와 오픈알림 신청 집계 제공." />
+                <StackRow name="목록 정렬·검색 표준화" desc="관리자 전 목록 화면에 정렬 헤더·페이지네이션·엑셀 다운로드 일괄 적용." />
+                <StackRow name="회원 통합 이력 조회" desc="회원 상세에서 수강·결제·포인트·커뮤니티 글·전자책 다운로드 이력을 한 화면에서 확인." />
+                <StackRow name="사이트 디자인 관리" desc="메인 블록·배너·팝업 관리(이미지 업로드/URL 등록, 크롭·배치 옵션, 미리보기)." />
+                <StackRow name="역할별 기능 매뉴얼" desc="관리자·강사·학습자 기능을 검색 가능한 매뉴얼로 제공. 버전 이력 관리." />
+                <StackRow name="UX 개선" desc="스켈레톤 제거 후 통일된 로딩 애니메이션, 사이드바 검색 고정, 선택 메뉴 자동 중앙 스크롤." />
               </CardContent>
             </Card>
 
             <p className="text-sm text-muted-foreground">
               ※ 모든 구성 요소는 글로벌 표준 오픈소스 또는 검증된 상용 서비스로, 특정 벤더에 종속되지 않습니다.
             </p>
+
           </TabsContent>
 
           {/* 보안 백서 */}
@@ -144,7 +176,7 @@ export default function AdminSystemInfo() {
                 <ol className="list-decimal pl-5 space-y-1">
                   <li><strong>전송 계층:</strong> 모든 통신 HTTPS/TLS 1.3 암호화</li>
                   <li><strong>인증 계층:</strong> JWT 토큰 기반 사용자 인증, 세션 만료 관리</li>
-                  <li><strong>권한 계층:</strong> 5단계 역할 기반 접근 제어(RBAC) — Super Admin / Admin / Dept Admin / Teacher / Student</li>
+                  <li><strong>권한 계층:</strong> 5단계 역할 기반 접근 제어(RBAC) — Super Admin / Admin / 지점 중간관리자(Branch Admin) / 강사(Teacher) / 학습자(Student). 역할 전환(Role Switcher) 시에도 활성 역할 기준으로 화면 접근을 재검증</li>
                   <li><strong>데이터 계층:</strong> PostgreSQL Row Level Security (RLS) — DB 레벨에서 행 단위 접근 차단</li>
                 </ol>
               </CardContent>
@@ -159,8 +191,13 @@ export default function AdminSystemInfo() {
               <CardContent className="text-sm leading-relaxed space-y-4">
                 <SecurityRow
                   label="다중 역할 권한 모델"
-                  desc="Super Admin · Admin · 강사 · 학습자 4단계 역할 분리. 별도 user_roles 테이블에 저장하여 권한 상승 공격(Privilege Escalation) 차단."
+                  desc="Super Admin · Admin · 지점 중간관리자 · 강사 · 학습자 5단계 역할 분리. 별도 user_roles 테이블에 저장하여 권한 상승 공격(Privilege Escalation) 차단. 지점 관리자는 소속 지점 데이터만 접근."
                 />
+                <SecurityRow
+                  label="메뉴 노출 제어"
+                  desc="시스템 설정의 사이드바 숨김 설정과 기능 모듈 토글로 역할별 메뉴 노출을 제어. 숨김 메뉴는 직접 URL 접근 시에도 권한 검사로 차단."
+                />
+
                 <SecurityRow
                   label="JWT 토큰 인증"
                   desc="RFC 7519 표준. Access Token 1시간 / Refresh Token 7일, 자동 회전(rotation)으로 탈취 위험 최소화."
@@ -223,8 +260,17 @@ export default function AdminSystemInfo() {
                 />
                 <SecurityRow
                   label="동영상 무단접근 방지"
-                  desc="Kollus 연동 JWT 서명 토큰 기반 임베드. 직접 URL 접근 차단, 시청 권한 검증 후에만 재생. 토큰은 짧은 만료 시간을 가지며 Edge Function에서만 발급."
+                  desc="Kollus · Bunny Stream 연동 JWT 서명 토큰 기반 임베드. 직접 URL 접근 차단, 시청 권한 검증 후에만 재생. 토큰은 짧은 만료 시간을 가지며 Edge Function에서만 발급."
                 />
+                <SecurityRow
+                  label="첨삭 · 과제 파일 보호"
+                  desc="에세이 이미지·첨삭 결과·과제 첨부는 비공개 버킷에 저장하고, 제출자와 담당 강사·관리자만 접근 가능한 서명 URL로만 제공."
+                />
+                <SecurityRow
+                  label="개인정보 취급 점검"
+                  desc="개인정보 보관 항목과 접근 경로를 관리자 화면에서 점검하고, 회원 탈퇴 시 학습 데이터 연쇄 삭제 · 운영 데이터 비식별 처리."
+                />
+
                 <details className="rounded border border-border/60 bg-muted/30 p-3">
                   <summary className="cursor-pointer text-xs font-medium text-muted-foreground">RLS 정책 예시 보기</summary>
                   <pre className="bg-muted/50 p-4 rounded text-xs overflow-x-auto mt-2">
@@ -262,6 +308,15 @@ USING (has_role(auth.uid(), 'admin')
                   label="콘텐츠 보호 레이어"
                   desc="강의 페이지에서 우클릭 · 드래그 · 개발자도구 단축키 · 인쇄 차단. PrintScreen 키 감지 시 경고."
                 />
+                <SecurityRow
+                  label="발송 이력 보관"
+                  desc="알림톡 · 이메일 · 푸시 등 모든 발송 건을 message_logs에 기록해 수신자 · 시각 · 결과를 추적."
+                />
+                <SecurityRow
+                  label="배포 안전성 점검"
+                  desc="배포 전 체크리스트 화면에서 환경변수 · 스키마 반영 · 주요 API 응답을 검사하고, E2E 스모크 테스트 실패 시 배포를 차단."
+                />
+
               </CardContent>
             </Card>
           </TabsContent>
