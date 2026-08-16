@@ -9,10 +9,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
+
+// 샘플(데모) 수강생 이름 — 프로필이 없는 수강 데이터에 일관된 이름을 부여
+const SAMPLE_NAMES = [
+  "김민준", "이서연", "박지훈", "최수아", "정우진", "강예린", "조현우", "윤하늘",
+  "임도윤", "한지민", "오세훈", "신유나", "권태영", "황서준", "배소율", "문재하",
+  "안다인", "송민서", "류정후", "고은채", "남기훈", "서지안", "홍채원", "전시우",
+];
+const sampleNameFor = (userId: string) => {
+  let h = 0;
+  for (let i = 0; i < userId.length; i++) h = (h * 31 + userId.charCodeAt(i)) >>> 0;
+  return SAMPLE_NAMES[h % SAMPLE_NAMES.length];
+};
+
 
 const AdminLearning = () => {
   const { t, i18n } = useTranslation();
@@ -105,6 +119,17 @@ const AdminLearning = () => {
   const isEn = i18n.language?.startsWith("en");
   const deptLabel = (d: any) => (isEn && d?.name_en ? d.name_en : d?.name) || "";
 
+  // 프로필이 없는 샘플 데이터에도 이름을 부여
+  const displayName = (userId: string) => {
+    const p = profileMap.get(userId) as any;
+    return p?.full_name || sampleNameFor(userId);
+  };
+
+  const [detailUserId, setDetailUserId] = useState<string | null>(null);
+  const detailProfile = detailUserId ? ((profileMap.get(detailUserId) as any) ?? null) : null;
+  const detailRows = detailUserId ? enrollments.filter((e: any) => e.user_id === detailUserId) : [];
+
+
   // Region (country) options derived from departments
   const countryOptions = useMemo(() => {
     const seen = new Map<string, string>();
@@ -149,7 +174,7 @@ const AdminLearning = () => {
 
     if (term) {
       const course = courseMap.get(e.course_id) as any;
-      const haystack = [profile?.full_name, profile?.email, course?.title]
+      const haystack = [displayName(e.user_id), profile?.email, course?.title]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -192,10 +217,9 @@ const AdminLearning = () => {
   const exportCSV = () => {
     const header = [t("admin.nameColumn"), t("admin.courseLabel"), t("admin.progressLabel"), t("admin.statusLabel"), t("admin.startDate"), t("admin.completionDate")];
     const rows = filtered.map((e: any) => {
-      const p = profileMap.get(e.user_id);
       const c = courseMap.get(e.course_id);
       const status = e.completed_at ? t("common.complete") : (Number(e.progress) || 0) > 0 ? t("dashboard.inProgress") : t("admin.notStarted");
-      return [p?.full_name || "-", c?.title || "-", `${Math.round(Number(e.progress) || 0)}%`, status, formatDate(e.enrolled_at), formatDate(e.completed_at)];
+      return [displayName(e.user_id), c?.title || "-", `${Math.round(Number(e.progress) || 0)}%`, status, formatDate(e.enrolled_at), formatDate(e.completed_at)];
     });
     const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
@@ -366,25 +390,25 @@ const AdminLearning = () => {
                     return (
                       <article
                         key={e.id}
-                        role={p ? "button" : undefined}
-                        tabIndex={p ? 0 : undefined}
-                        onClick={p ? () => navigate(`/admin/users/${e.user_id}`) : undefined}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setDetailUserId(e.user_id)}
                         onKeyDown={(ev) => {
-                          if (!p) return;
                           if (ev.key === "Enter" || ev.key === " ") {
                             ev.preventDefault();
-                            navigate(`/admin/users/${e.user_id}`);
+                            setDetailUserId(e.user_id);
                           }
                         }}
-                        className={`rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${p ? "cursor-pointer hover:bg-accent/30" : ""}`}
+                        className="rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer hover:bg-accent/30"
                       >
 
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <h4 className="text-sm font-semibold text-foreground break-words inline-flex items-center gap-1">
-                              {p?.full_name || (isEn ? "Unknown member" : "회원 정보 없음")}
-                              {p && <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />}
+                              {displayName(e.user_id)}
+                              <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
                             </h4>
+
                             <p className="text-xs text-muted-foreground mt-1 break-words">{c?.title || "-"}</p>
                           </div>
                           <div className="shrink-0">{getStatusBadge(e)}</div>
@@ -453,15 +477,16 @@ const AdminLearning = () => {
                           return (
                             <TableRow
                               key={e.id}
-                              className={p ? "cursor-pointer hover:bg-accent/30 transition-colors" : ""}
-                              onClick={p ? () => navigate(`/admin/users/${e.user_id}`) : undefined}
+                              className="cursor-pointer hover:bg-accent/30 transition-colors"
+                              onClick={() => setDetailUserId(e.user_id)}
                             >
                               <TableCell className="font-medium text-sm">
                                 <span className="text-foreground hover:text-primary inline-flex items-center gap-1">
-                                  {p?.full_name || (isEn ? "Unknown member" : "회원 정보 없음")}
-                                  {p && <ChevronRight className="h-3 w-3 opacity-40" />}
+                                  {displayName(e.user_id)}
+                                  <ChevronRight className="h-3 w-3 opacity-40" />
                                 </span>
                               </TableCell>
+
                               <TableCell className="max-w-[260px] text-sm whitespace-normal break-words">{c?.title || "-"}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
@@ -509,22 +534,22 @@ const AdminLearning = () => {
                     return (
                       <article
                         key={e.id}
-                        role={p ? "button" : undefined}
-                        tabIndex={p ? 0 : undefined}
-                        onClick={p ? () => navigate(`/admin/users/${e.user_id}`) : undefined}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setDetailUserId(e.user_id)}
                         onKeyDown={(ev) => {
-                          if (!p) return;
                           if (ev.key === "Enter" || ev.key === " ") {
                             ev.preventDefault();
-                            navigate(`/admin/users/${e.user_id}`);
+                            setDetailUserId(e.user_id);
                           }
                         }}
-                        className={`rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${p ? "cursor-pointer hover:bg-accent/30" : ""}`}
+                        className="rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer hover:bg-accent/30"
                       >
                         <h4 className="text-sm font-semibold text-foreground break-words inline-flex items-center gap-1">
-                          {p?.full_name || (isEn ? "Unknown member" : "회원 정보 없음")}
-                          {p && <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />}
+                          {displayName(e.user_id)}
+                          <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
                         </h4>
+
                         <p className="text-xs text-muted-foreground mt-1 break-words">{c?.title || "-"}</p>
                         <dl className="mt-4 text-xs">
                           <dt className="text-muted-foreground">{t("admin.completionDate")}</dt>
@@ -553,14 +578,23 @@ const AdminLearning = () => {
                         </TableRow>
                       ) : (
                         visibleCompleterRows.map((e: any) => {
-                          const p = profileMap.get(e.user_id);
                           const c = courseMap.get(e.course_id);
                           return (
-                            <TableRow key={e.id}>
-                              <TableCell className="font-medium text-sm">{p?.full_name || "-"}</TableCell>
+                            <TableRow
+                              key={e.id}
+                              className="cursor-pointer hover:bg-accent/30 transition-colors"
+                              onClick={() => setDetailUserId(e.user_id)}
+                            >
+                              <TableCell className="font-medium text-sm">
+                                <span className="inline-flex items-center gap-1">
+                                  {displayName(e.user_id)}
+                                  <ChevronRight className="h-3 w-3 opacity-40" />
+                                </span>
+                              </TableCell>
                               <TableCell className="max-w-[280px] text-sm whitespace-normal break-words">{c?.title || "-"}</TableCell>
                               <TableCell className="text-xs text-muted-foreground">{formatDate(e.completed_at)}</TableCell>
                             </TableRow>
+
                           );
                         })
                       )}
@@ -571,7 +605,80 @@ const AdminLearning = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        <Dialog open={!!detailUserId} onOpenChange={(o) => !o && setDetailUserId(null)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Users className="h-4 w-4" aria-hidden="true" />
+                {detailUserId ? displayName(detailUserId) : ""}
+                {!detailProfile && <Badge variant="outline" className="text-[10px]">{isEn ? "Sample" : "샘플"}</Badge>}
+              </DialogTitle>
+              <DialogDescription>
+                {detailProfile?.email || (isEn ? "Demo learner record" : "데모 수강생 학습 기록")}
+                {detailProfile?.department ? ` · ${detailProfile.department}` : ""}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: isEn ? "Courses" : "수강 강의", value: `${detailRows.length}` },
+                {
+                  label: isEn ? "Completed" : "완료",
+                  value: `${detailRows.filter((r: any) => r.completed_at).length}`,
+                },
+                {
+                  label: t("admin.progressLabel"),
+                  value: `${detailRows.length ? Math.round(detailRows.reduce((s: number, r: any) => s + (Number(r.progress) || 0), 0) / detailRows.length) : 0}%`,
+                },
+              ].map((s) => (
+                <div key={s.label} className="rounded-xl border border-border bg-background p-3">
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                  <p className="text-lg font-semibold text-foreground mt-1">{s.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="max-h-[45vh] overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("admin.courseLabel")}</TableHead>
+                    <TableHead>{t("admin.progressLabel")}</TableHead>
+                    <TableHead>{t("admin.bestScore", "최고 점수")}</TableHead>
+                    <TableHead>{t("admin.statusLabel")}</TableHead>
+                    <TableHead>{t("admin.startDate")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {detailRows.map((r: any) => {
+                    const c = courseMap.get(r.course_id) as any;
+                    const best = bestScoreByUserCourse.get(`${r.user_id}__${r.course_id}`);
+                    return (
+                      <TableRow key={r.id}>
+                        <TableCell className="text-sm whitespace-normal break-words">{c?.title || "-"}</TableCell>
+                        <TableCell className="text-xs">{Math.round(Number(r.progress) || 0)}%</TableCell>
+                        <TableCell className="text-xs">{best ? `${best.score}점` : "-"}</TableCell>
+                        <TableCell>{getStatusBadge(r)}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{formatDate(r.enrolled_at)}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+
+            {detailProfile && (
+              <div className="flex justify-end">
+                <Button variant="outline" className="rounded-xl" onClick={() => navigate(`/admin/users/${detailUserId}`)}>
+                  {isEn ? "Open member page" : "회원 상세 페이지"}
+                </Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
+
     </DashboardLayout>
   );
 };
