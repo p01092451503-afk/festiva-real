@@ -390,25 +390,25 @@ const AdminLearning = () => {
                     return (
                       <article
                         key={e.id}
-                        role={p ? "button" : undefined}
-                        tabIndex={p ? 0 : undefined}
-                        onClick={p ? () => navigate(`/admin/users/${e.user_id}`) : undefined}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setDetailUserId(e.user_id)}
                         onKeyDown={(ev) => {
-                          if (!p) return;
                           if (ev.key === "Enter" || ev.key === " ") {
                             ev.preventDefault();
-                            navigate(`/admin/users/${e.user_id}`);
+                            setDetailUserId(e.user_id);
                           }
                         }}
-                        className={`rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${p ? "cursor-pointer hover:bg-accent/30" : ""}`}
+                        className="rounded-xl border border-border bg-background p-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer hover:bg-accent/30"
                       >
 
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <h4 className="text-sm font-semibold text-foreground break-words inline-flex items-center gap-1">
-                              {p?.full_name || (isEn ? "Unknown member" : "회원 정보 없음")}
-                              {p && <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />}
+                              {displayName(e.user_id)}
+                              <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
                             </h4>
+
                             <p className="text-xs text-muted-foreground mt-1 break-words">{c?.title || "-"}</p>
                           </div>
                           <div className="shrink-0">{getStatusBadge(e)}</div>
