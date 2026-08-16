@@ -84,8 +84,9 @@ export default function AdminSystemInfo() {
                 <StackRow name="Rich Text Editor" desc="커뮤니티·게시판 글쓰기용 서식 편집기. 이미지 삽입 및 안전한 HTML 렌더링." />
                 <StackRow name="tus 리줌 업로드" desc="동영상 CDN 직접 업로드(tus-js-client). 대용량 파일 중단 후 이어올리기 지원." />
                 <StackRow name="PWA (Progressive Web App)" desc="Service Worker 기반 오프라인 지원. 모바일 홈화면 설치 및 네이티브 앱 수준 UX 제공." />
-
+              </CardContent>
             </Card>
+
 
             <Card>
               <CardHeader>
