@@ -382,8 +382,8 @@ const AdminLearning = () => {
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
                             <h4 className="text-sm font-semibold text-foreground break-words inline-flex items-center gap-1">
-                              {p?.full_name || "-"}
-                              <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
+                              {p?.full_name || (isEn ? "Unknown member" : "회원 정보 없음")}
+                              {p && <ChevronRight className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />}
                             </h4>
                             <p className="text-xs text-muted-foreground mt-1 break-words">{c?.title || "-"}</p>
                           </div>
