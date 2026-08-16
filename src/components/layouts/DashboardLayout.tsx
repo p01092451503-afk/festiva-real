@@ -90,6 +90,24 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       localStorage.setItem("nf-sidebar-collapsed", collapsed ? "1" : "0");
     }
   }, [collapsed]);
+
+  // 현재 경로의 메뉴 항목이 사이드바 중앙에 보이도록 자동 스크롤
+  const navRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const scrollToActive = () => {
+      const nav = navRef.current;
+      if (!nav) return;
+      const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
+      if (!active) return;
+      const navRect = nav.getBoundingClientRect();
+      const activeRect = active.getBoundingClientRect();
+      const target =
+        nav.scrollTop + (activeRect.top - navRect.top) - nav.clientHeight / 2 + activeRect.height / 2;
+      nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+    };
+    const raf = requestAnimationFrame(() => setTimeout(scrollToActive, 60));
+    return () => cancelAnimationFrame(raf);
+  }, [location.pathname, collapsed]);
   const { profile, signOut } = useUser();
   const { primaryRole, isAdmin, isTeacher } = useUserRole();
   const { isBranchAdmin: hasBranchAssignment } = useBranchAdmin();
