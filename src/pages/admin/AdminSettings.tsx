@@ -339,6 +339,7 @@ const AdminSettings = () => {
             { key: "admin.systemInfo", label: t("nav.systemInfo", "시스템 정보") },
             { key: "admin.deployCheck", label: t("nav.deployCheck", "배포 전 체크리스트") },
             { key: "admin.manual", label: t("nav.manual", "사용자 매뉴얼") },
+            { key: "admin.roleManual", label: t("nav.roleManual", "역할별 기능 매뉴얼") },
           ],
         },
       ],
