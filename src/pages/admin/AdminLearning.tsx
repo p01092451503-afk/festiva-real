@@ -578,14 +578,23 @@ const AdminLearning = () => {
                         </TableRow>
                       ) : (
                         visibleCompleterRows.map((e: any) => {
-                          const p = profileMap.get(e.user_id);
                           const c = courseMap.get(e.course_id);
                           return (
-                            <TableRow key={e.id}>
-                              <TableCell className="font-medium text-sm">{p?.full_name || "-"}</TableCell>
+                            <TableRow
+                              key={e.id}
+                              className="cursor-pointer hover:bg-accent/30 transition-colors"
+                              onClick={() => setDetailUserId(e.user_id)}
+                            >
+                              <TableCell className="font-medium text-sm">
+                                <span className="inline-flex items-center gap-1">
+                                  {displayName(e.user_id)}
+                                  <ChevronRight className="h-3 w-3 opacity-40" />
+                                </span>
+                              </TableCell>
                               <TableCell className="max-w-[280px] text-sm whitespace-normal break-words">{c?.title || "-"}</TableCell>
                               <TableCell className="text-xs text-muted-foreground">{formatDate(e.completed_at)}</TableCell>
                             </TableRow>
+
                           );
                         })
                       )}
