@@ -80,8 +80,11 @@ export default function AdminSystemInfo() {
                 <StackRow name="React Query (TanStack)" desc="서버 상태 관리 라이브러리. 5분 캐싱/15분 메모리 보존으로 9천명 동시접속 부하 분산." />
                 <StackRow name="React Router v6" desc="선언적 클라이언트 라우팅. 코드 스플리팅 기반 페이지 단위 lazy loading 지원." />
                 <StackRow name="i18next" desc="국제 표준 다국어(i18n) 라이브러리. 한국어/영어 동시 운영." />
+                <StackRow name="tldraw 캔버스" desc="영어 첨삭(Correction) 전용 드로잉 엔진. 커스텀 편집 툴바(위치 이동 가능)·다중 페이지 첨삭 지원." />
+                <StackRow name="Rich Text Editor" desc="커뮤니티·게시판 글쓰기용 서식 편집기. 이미지 삽입 및 안전한 HTML 렌더링." />
+                <StackRow name="tus 리줌 업로드" desc="동영상 CDN 직접 업로드(tus-js-client). 대용량 파일 중단 후 이어올리기 지원." />
                 <StackRow name="PWA (Progressive Web App)" desc="Service Worker 기반 오프라인 지원. 모바일 홈화면 설치 및 네이티브 앱 수준 UX 제공." />
-              </CardContent>
+
             </Card>
 
             <Card>
