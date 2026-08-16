@@ -6,6 +6,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { SaleStatusBadge, normalizeSaleStatus } from "@/components/storefront/SaleStatusCta";
 
 const categoryBgColors: Record<string, string> = {
   // 기존 분류
@@ -43,6 +44,7 @@ interface StorefrontCourseCardProps {
     enrolled_count: number;
     category_name?: string | null;
     instructor_name?: string | null;
+    sale_status?: string | null;
   };
   rank?: number;
   isInWishlist?: boolean;
@@ -127,6 +129,13 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
             )}
           />
         </button>
+
+        {/* 판매 상태 배지 */}
+        {normalizeSaleStatus(course.sale_status) !== "on_sale" && (
+          <div className="absolute bottom-3 left-3 z-10">
+            <SaleStatusBadge status={course.sale_status} className="bg-white/90 backdrop-blur-sm" />
+          </div>
+        )}
 
         {/* Category badge */}
         {course.category_name && (
