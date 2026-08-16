@@ -93,6 +93,7 @@ const OAuthAuthorize = lazy(() => import("./pages/OAuthAuthorize"));
 const AdminSystemInfo = lazy(() => import("./pages/admin/AdminSystemInfo"));
 const AdminDeployCheck = lazy(() => import("./pages/admin/AdminDeployCheck"));
 const AdminManual = lazy(() => import("./pages/admin/AdminManual"));
+const AdminRoleManual = lazy(() => import("./pages/admin/AdminRoleManual"));
 const AdminLearning = lazy(() => import("./pages/admin/AdminLearning"));
 const AdminAttendance = lazy(() => import("./pages/admin/AdminAttendance"));
 const AdminCompletion = lazy(() => import("./pages/admin/AdminCompletion"));
