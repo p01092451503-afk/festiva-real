@@ -504,10 +504,16 @@ const StorefrontCourseDetail = () => {
                   )}
                 </div>
 
-                {/* Action row — icon buttons + primary CTA (reference style) */}
-                <div className="flex items-stretch gap-2 pt-1">
-                  {!isEnrolled && (
-                    <>
+                {/* Action row — 판매 상태(오픈알림·사전신청·신청하기·신청마감·품절) 반영 */}
+                {isEnrolled ? (
+                  <div className="flex items-stretch gap-2 pt-1">
+                    <Button className="flex-1 h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
+                      <Play className="h-4 w-4 mr-2" /> 학습하기
+                    </Button>
+                  </div>
+                ) : (
+                  <SaleStatusCta courseId={id} info={course as any} className="pt-1">
+                    <div className="flex items-stretch gap-2">
                       <button
                         onClick={() => {
                           if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
@@ -528,18 +534,12 @@ const StorefrontCourseDetail = () => {
                           <ShoppingBag className={cn("h-5 w-5", isInCart ? "text-foreground" : "text-muted-foreground")} />
                         </button>
                       )}
-                    </>
-                  )}
-                  {isEnrolled ? (
-                    <Button className="flex-1 h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
-                      <Play className="h-4 w-4 mr-2" /> 학습하기
-                    </Button>
-                  ) : (
-                    <Button className="flex-1 h-12 text-base rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
-                      {isFree ? "무료로 시작하기" : "바로구매"}
-                    </Button>
-                  )}
-                </div>
+                      <Button className="flex-1 h-12 text-base rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
+                        {saleCtaLabel(course?.sale_status, isFree)}
+                      </Button>
+                    </div>
+                  </SaleStatusCta>
+                )}
 
               </div>
             </div>
