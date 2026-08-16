@@ -93,21 +93,28 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
 
   // 현재 경로의 메뉴 항목이 사이드바 중앙에 보이도록 자동 스크롤
   const navRef = useRef<HTMLElement | null>(null);
+  const scrollToActiveItem = useCallback(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    // 접힌 데스크톱 사이드바에서는 아이콘만 노출되므로 스크롤 불필요
+    if (window.innerWidth >= 1024 && collapsed) return;
+    const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!active) return;
+    const navRect = nav.getBoundingClientRect();
+    const activeRect = active.getBoundingClientRect();
+    if (activeRect.height === 0) return;
+    const target =
+      nav.scrollTop + (activeRect.top - navRect.top) - nav.clientHeight / 2 + activeRect.height / 2;
+    nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
+  }, [collapsed]);
+
   useEffect(() => {
-    const scrollToActive = () => {
-      const nav = navRef.current;
-      if (!nav) return;
-      const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
-      if (!active) return;
-      const navRect = nav.getBoundingClientRect();
-      const activeRect = active.getBoundingClientRect();
-      const target =
-        nav.scrollTop + (activeRect.top - navRect.top) - nav.clientHeight / 2 + activeRect.height / 2;
-      nav.scrollTo({ top: Math.max(0, target), behavior: "smooth" });
-    };
-    const raf = requestAnimationFrame(() => setTimeout(scrollToActive, 60));
-    return () => cancelAnimationFrame(raf);
-  }, [location.pathname, collapsed]);
+    // 그룹 펼침과 DOM 레이아웃이 완료된 후 중앙 정렬 스크롤 실행
+    const timer = setTimeout(() => {
+      requestAnimationFrame(scrollToActiveItem);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [location.pathname, collapsed, openGroups, sidebarOpen, scrollToActiveItem]);
   const { profile, signOut } = useUser();
   const { primaryRole, isAdmin, isTeacher } = useUserRole();
   const { isBranchAdmin: hasBranchAssignment } = useBranchAdmin();
