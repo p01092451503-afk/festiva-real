@@ -191,8 +191,13 @@ export default function AdminSystemInfo() {
               <CardContent className="text-sm leading-relaxed space-y-4">
                 <SecurityRow
                   label="다중 역할 권한 모델"
-                  desc="Super Admin · Admin · 강사 · 학습자 4단계 역할 분리. 별도 user_roles 테이블에 저장하여 권한 상승 공격(Privilege Escalation) 차단."
+                  desc="Super Admin · Admin · 지점 중간관리자 · 강사 · 학습자 5단계 역할 분리. 별도 user_roles 테이블에 저장하여 권한 상승 공격(Privilege Escalation) 차단. 지점 관리자는 소속 지점 데이터만 접근."
                 />
+                <SecurityRow
+                  label="메뉴 노출 제어"
+                  desc="시스템 설정의 사이드바 숨김 설정과 기능 모듈 토글로 역할별 메뉴 노출을 제어. 숨김 메뉴는 직접 URL 접근 시에도 권한 검사로 차단."
+                />
+
                 <SecurityRow
                   label="JWT 토큰 인증"
                   desc="RFC 7519 표준. Access Token 1시간 / Refresh Token 7일, 자동 회전(rotation)으로 탈취 위험 최소화."
