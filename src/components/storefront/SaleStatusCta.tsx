@@ -88,13 +88,17 @@ const SaleStatusCta = ({ courseId, productId, info, children, className }: SaleS
     queryKey: key,
     enabled: status === "open_alert" && !!(courseId || productId),
     queryFn: async () => {
-      const base = supabase.from("product_open_alerts").select("id, user_id", { count: "exact" });
-      const scoped = courseId ? base.eq("course_id", courseId) : base.eq("product_id", productId!);
-      const { data, count } = await scoped;
-      return {
-        total: count ?? data?.length ?? 0,
-        mine: !!(user && (data || []).some((r: any) => r.user_id === user.id)),
-      };
+      const { data: total } = await supabase.rpc("open_alert_count", {
+        _course_id: courseId ?? null,
+        _product_id: productId ?? null,
+      });
+      let mine = false;
+      if (user) {
+        const q = supabase.from("product_open_alerts").select("id").eq("user_id", user.id).limit(1);
+        const { data } = courseId ? await q.eq("course_id", courseId) : await q.eq("product_id", productId!);
+        mine = (data?.length ?? 0) > 0;
+      }
+      return { total: (total as number | null) ?? 0, mine };
     },
   });
 
