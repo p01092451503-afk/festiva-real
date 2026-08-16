@@ -314,7 +314,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
     { navKey: "admin.systemInfo", label: t("nav.systemInfo", "시스템 정보"), href: "/admin/system-info", icon: Info },
     { navKey: "admin.deployCheck", label: t("nav.deployCheck", "배포 전 체크리스트"), href: "/admin/deploy-check", icon: Rocket },
     { navKey: "admin.manual", label: t("nav.manual", "사용자 매뉴얼"), href: "/admin/manual", icon: BookOpen },
-    { navKey: "admin.roleManual", label: t("nav.roleManual", "역할별 기능 매뉴얼"), href: "/admin/role-manual", icon: BookOpen },
+    { navKey: "admin.roleManual", label: t("nav.roleManual", "매뉴얼"), href: "/admin/role-manual", icon: BookOpen },
   ].filter((i) => !isHidden(i.navKey));
 
   const adminGroupsRaw: NavGroup[] = [
@@ -444,7 +444,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
         { navKey: "admin.systemInfo", label: t("nav.systemInfo", "시스템 정보"), href: "/admin/system-info", icon: Info },
         { navKey: "admin.deployCheck", label: t("nav.deployCheck", "배포 전 체크리스트"), href: "/admin/deploy-check", icon: Rocket },
         { navKey: "admin.manual", label: t("nav.manual", "사용자 매뉴얼"), href: "/admin/manual", icon: BookMarked },
-        { navKey: "admin.roleManual", label: t("nav.roleManual", "역할별 기능 매뉴얼"), href: "/admin/role-manual", icon: BookMarked },
+        { navKey: "admin.roleManual", label: t("nav.roleManual", "매뉴얼"), href: "/admin/role-manual", icon: BookMarked },
       ],
     },
   ];

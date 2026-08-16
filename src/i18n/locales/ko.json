@@ -186,7 +186,8 @@
     "branchAdminStats": "지점 학습 통계",
     "videoSessions": "화상 세션",
     "corrections": "에세이(첨삭) 작성",
-    "selfLearning": "자기주도학습"
+    "selfLearning": "자기주도학습",
+    "roleManual": "매뉴얼"
   },
   "roles": {
     "student": "Student",
