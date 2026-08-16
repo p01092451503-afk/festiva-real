@@ -140,22 +140,6 @@ export default function AdminSystemInfo() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>최근 반영된 주요 기능</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <StackRow name="영어 첨삭 시스템" desc="학습자 에세이 제출 → 강사 캔버스 첨삭(펜·텍스트·도형, 이동 가능한 툴바) → 결과 회신. 제출자 정보·제출 시각 표시." />
-                <StackRow name="자기주도학습" desc="AI 학습 플래너, 학습 리포트, 복습 퀴즈 자동 생성으로 학습자 스스로 계획·점검." />
-                <StackRow name="문제은행 · 랜덤 출제" desc="난이도×수준×카테고리 기반 문제 풀 관리. 평가별 고정 출제 또는 조건별 랜덤 N문항 자동 추출." />
-                <StackRow name="상품 판매 상태 5단계" desc="오픈알림 · 사전판매 · 신청하기 · 신청마감 · 품절. 상태별 고객 화면 CTA와 오픈알림 신청 집계 제공." />
-                <StackRow name="목록 정렬·검색 표준화" desc="관리자 전 목록 화면에 정렬 헤더·페이지네이션·엑셀 다운로드 일괄 적용." />
-                <StackRow name="회원 통합 이력 조회" desc="회원 상세에서 수강·결제·포인트·커뮤니티 글·전자책 다운로드 이력을 한 화면에서 확인." />
-                <StackRow name="사이트 디자인 관리" desc="메인 블록·배너·팝업 관리(이미지 업로드/URL 등록, 크롭·배치 옵션, 미리보기)." />
-                <StackRow name="역할별 기능 매뉴얼" desc="관리자·강사·학습자 기능을 검색 가능한 매뉴얼로 제공. 버전 이력 관리." />
-                <StackRow name="UX 개선" desc="스켈레톤 제거 후 통일된 로딩 애니메이션, 사이드바 검색 고정, 선택 메뉴 자동 중앙 스크롤." />
-              </CardContent>
-            </Card>
 
             <p className="text-sm text-muted-foreground">
               ※ 모든 구성 요소는 글로벌 표준 오픈소스 또는 검증된 상용 서비스로, 특정 벤더에 종속되지 않습니다.
