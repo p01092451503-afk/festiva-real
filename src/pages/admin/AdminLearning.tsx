@@ -9,10 +9,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import RichStatCard from "@/components/admin/stats/RichStatCard";
+
+// 샘플(데모) 수강생 이름 — 프로필이 없는 수강 데이터에 일관된 이름을 부여
+const SAMPLE_NAMES = [
+  "김민준", "이서연", "박지훈", "최수아", "정우진", "강예린", "조현우", "윤하늘",
+  "임도윤", "한지민", "오세훈", "신유나", "권태영", "황서준", "배소율", "문재하",
+  "안다인", "송민서", "류정후", "고은채", "남기훈", "서지안", "홍채원", "전시우",
+];
+const sampleNameFor = (userId: string) => {
+  let h = 0;
+  for (let i = 0; i < userId.length; i++) h = (h * 31 + userId.charCodeAt(i)) >>> 0;
+  return SAMPLE_NAMES[h % SAMPLE_NAMES.length];
+};
+
 
 const AdminLearning = () => {
   const { t, i18n } = useTranslation();
