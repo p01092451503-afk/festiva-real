@@ -9020,6 +9020,10 @@ export type Database = {
         Args: { _rule_id: string; _user_id: string }
         Returns: string
       }
+      open_alert_count: {
+        Args: { _course_id?: string; _product_id?: string }
+        Returns: number
+      }
       publish_scheduled_articles: { Args: never; Returns: number }
       recommend_articles: {
         Args: { p_article_id: string; p_limit?: number }

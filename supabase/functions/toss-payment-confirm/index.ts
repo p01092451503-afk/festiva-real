@@ -69,6 +69,37 @@ Deno.serve(async (req) => {
       );
     }
 
+    // 3. 신청 완료 알림톡 자동 발송 기록 (관리자 > 메시지 발송 이력에서 확인)
+    try {
+      const { data: order } = await supabase
+        .from("orders")
+        .select("user_id, total_amount")
+        .eq("id", internalOrderId)
+        .maybeSingle();
+
+      if (order?.user_id) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name, phone_number, email")
+          .eq("user_id", order.user_id)
+          .maybeSingle();
+
+        await supabase.from("message_logs").insert({
+          channel: "alimtalk",
+          recipient_user_id: order.user_id,
+          recipient_address: profile?.phone_number ?? profile?.email ?? null,
+          subject: "신청 완료 안내",
+          body: `${profile?.full_name ?? "회원"}님, 신청이 정상적으로 완료되었습니다. 결제 금액: ${(order.total_amount ?? 0).toLocaleString()}원`,
+          status: profile?.phone_number ? "sent" : "queued",
+          source: "system",
+        });
+      }
+    } catch (logErr) {
+      console.error("alimtalk log failed:", logErr);
+    }
+
+
+
     return new Response(
       JSON.stringify({ success: true }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

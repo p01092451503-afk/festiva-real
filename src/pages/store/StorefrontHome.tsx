@@ -69,7 +69,7 @@ const StorefrontHome = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id")
+        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, sale_status")
         .eq("is_b2c", true)
         .eq("status", "published")
         .order("enrolled_count", { ascending: false })
@@ -84,7 +84,7 @@ const StorefrontHome = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id")
+        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, sale_status")
         .eq("is_b2c", true)
         .eq("status", "published")
         .order("created_at", { ascending: false })

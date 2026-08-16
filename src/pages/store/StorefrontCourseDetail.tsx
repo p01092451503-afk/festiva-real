@@ -17,6 +17,7 @@ import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { formatPrice, formatDurationMinutes, cn } from "@/lib/utils";
+import SaleStatusCta, { isPurchasable, saleCtaLabel, SaleStatusBadge } from "@/components/storefront/SaleStatusCta";
 
 const StorefrontCourseDetail = () => {
   const { courseId: id } = useParams<{ courseId: string }>();
@@ -503,10 +504,16 @@ const StorefrontCourseDetail = () => {
                   )}
                 </div>
 
-                {/* Action row — icon buttons + primary CTA (reference style) */}
-                <div className="flex items-stretch gap-2 pt-1">
-                  {!isEnrolled && (
-                    <>
+                {/* Action row — 판매 상태(오픈알림·사전신청·신청하기·신청마감·품절) 반영 */}
+                {isEnrolled ? (
+                  <div className="flex items-stretch gap-2 pt-1">
+                    <Button className="flex-1 h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
+                      <Play className="h-4 w-4 mr-2" /> 학습하기
+                    </Button>
+                  </div>
+                ) : (
+                  <SaleStatusCta courseId={id} info={course as any} className="pt-1">
+                    <div className="flex items-stretch gap-2">
                       <button
                         onClick={() => {
                           if (!user) { toast.error("로그인이 필요합니다"); navigate("/auth"); return; }
@@ -527,18 +534,12 @@ const StorefrontCourseDetail = () => {
                           <ShoppingBag className={cn("h-5 w-5", isInCart ? "text-foreground" : "text-muted-foreground")} />
                         </button>
                       )}
-                    </>
-                  )}
-                  {isEnrolled ? (
-                    <Button className="flex-1 h-12 text-base rounded-xl font-semibold" onClick={() => navigate(`/student/courses/${id}`)}>
-                      <Play className="h-4 w-4 mr-2" /> 학습하기
-                    </Button>
-                  ) : (
-                    <Button className="flex-1 h-12 text-base rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
-                      {isFree ? "무료로 시작하기" : "바로구매"}
-                    </Button>
-                  )}
-                </div>
+                      <Button className="flex-1 h-12 text-base rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
+                        {saleCtaLabel(course?.sale_status, isFree)}
+                      </Button>
+                    </div>
+                  </SaleStatusCta>
+                )}
 
               </div>
             </div>
@@ -837,14 +838,15 @@ const StorefrontCourseDetail = () => {
           >
             <Heart className={cn("h-5 w-5", isInWishlist ? "fill-destructive text-destructive" : "text-muted-foreground")} />
           </button>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <p className="text-lg font-bold text-foreground">{isFree ? "무료" : formatPrice(displayPrice)}</p>
+            <SaleStatusBadge status={course?.sale_status} />
           </div>
           {isEnrolled ? (
             <Button size="lg" className="rounded-xl" onClick={() => navigate(`/student/courses/${id}`)}>
               <Play className="h-4 w-4 mr-1" /> 학습하기
             </Button>
-          ) : (
+          ) : isPurchasable(course?.sale_status) ? (
             <>
               {!isFree && (
                 <Button variant="outline" size="lg" className="rounded-xl" onClick={handleAddToCart} disabled={isInCart}>
@@ -852,9 +854,18 @@ const StorefrontCourseDetail = () => {
                 </Button>
               )}
               <Button size="lg" className="rounded-xl" onClick={handleBuyNow}>
-                {isFree ? "무료 시작" : "바로 구매"}
+                {saleCtaLabel(course?.sale_status, isFree)}
               </Button>
             </>
+          ) : (
+            <Button
+              size="lg"
+              className="rounded-xl"
+              disabled={course?.sale_status !== "open_alert"}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
+              {saleCtaLabel(course?.sale_status, isFree)}
+            </Button>
           )}
         </div>
       )}
