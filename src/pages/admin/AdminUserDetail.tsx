@@ -140,6 +140,38 @@ const AdminUserDetail = () => {
     enabled: !!userId,
   });
 
+  const { data: userPosts = [] } = useQuery({
+    queryKey: ["admin-user-detail-posts", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("community_posts")
+        .select("id, title, created_at, like_count, comment_count")
+        .eq("author_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
+  const { data: downloadLogs = [] } = useQuery({
+    queryKey: ["admin-user-detail-downloads", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("ebook_download_logs")
+        .select("id, created_at, entitlement_id")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+
 
   const { data: roles = [] } = useQuery({
     queryKey: ["admin-user-detail-roles", userId],
