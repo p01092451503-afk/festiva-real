@@ -176,7 +176,7 @@ export default function AdminSystemInfo() {
                 <ol className="list-decimal pl-5 space-y-1">
                   <li><strong>전송 계층:</strong> 모든 통신 HTTPS/TLS 1.3 암호화</li>
                   <li><strong>인증 계층:</strong> JWT 토큰 기반 사용자 인증, 세션 만료 관리</li>
-                  <li><strong>권한 계층:</strong> 5단계 역할 기반 접근 제어(RBAC) — Super Admin / Admin / Dept Admin / Teacher / Student</li>
+                  <li><strong>권한 계층:</strong> 5단계 역할 기반 접근 제어(RBAC) — Super Admin / Admin / 지점 중간관리자(Branch Admin) / 강사(Teacher) / 학습자(Student). 역할 전환(Role Switcher) 시에도 활성 역할 기준으로 화면 접근을 재검증</li>
                   <li><strong>데이터 계층:</strong> PostgreSQL Row Level Security (RLS) — DB 레벨에서 행 단위 접근 차단</li>
                 </ol>
               </CardContent>
