@@ -15,7 +15,6 @@ import { FullScreenSkeleton } from "@/components/PageSkeletons";
 import StorefrontGate from "@/components/StorefrontGate";
 import AppUpdateBanner from "@/components/AppUpdateBanner";
 import RouteReporter from "@/components/RouteReporter";
-import AdminAssistantFAB from "@/components/admin/AdminAssistantFAB";
 import FeatureGate from "@/components/ops/FeatureGate";
 
 // Skeleton loading fallback (no spinner)
@@ -206,7 +205,6 @@ const App = () => (
           <TrafficLogger />
           <RouteReporter />
           <AppUpdateBanner />
-          <AdminAssistantFAB />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public Store */}
