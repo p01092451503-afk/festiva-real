@@ -24,6 +24,7 @@ const StorefrontCourseDetail = () => {
   const { courseId: id } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { user } = useUser();
+  const { isAdmin, isTeacher } = useUserRole();
   const { getCourseTitle, getCourseThumbnail } = useDemoPreset();
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
