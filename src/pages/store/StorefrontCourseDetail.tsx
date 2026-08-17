@@ -292,6 +292,24 @@ const StorefrontCourseDetail = () => {
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
+      {/* Admin/Teacher preview return bar */}
+      {(isAdmin || isTeacher) && id && (
+        <div className="bg-foreground text-background border-b border-border/60">
+          <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+            <span className="text-xs font-medium opacity-90">관리자 미리보기 화면입니다</span>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-8 rounded-lg gap-1.5 text-xs font-semibold"
+              onClick={() => navigate(isAdmin ? `/admin/courses/${id}` : `/teacher/courses/${id}`)}
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              강의 편집 화면으로 돌아가기
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <div className="border-b border-border/60 bg-muted/20">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs text-muted-foreground">
