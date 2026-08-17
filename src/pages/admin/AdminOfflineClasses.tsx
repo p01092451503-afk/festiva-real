@@ -221,7 +221,7 @@ const AdminOfflineClasses = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setSelectedClassId(c.id)}
+                      onClick={() => { setSelectedClassId(c.id); setTab("enrollments"); }}
                     >
                       신청자 보기
                     </Button>
