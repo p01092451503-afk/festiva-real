@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
+import { useUserRole } from "@/hooks/useUserRole";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
