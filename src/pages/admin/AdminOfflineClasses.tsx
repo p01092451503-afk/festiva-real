@@ -54,6 +54,7 @@ const AdminOfflineClasses = () => {
   const [form, setForm] = useState(emptyForm);
   const [open, setOpen] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState<string>("");
+  const [tab, setTab] = useState<string>("classes");
 
   const { data: classes = [] } = useQuery({
     queryKey: ["offline-classes"],
