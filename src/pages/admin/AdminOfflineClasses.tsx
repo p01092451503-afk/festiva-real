@@ -178,7 +178,7 @@ const AdminOfflineClasses = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="classes">
+        <Tabs value={tab} onValueChange={setTab}>
           <TabsList>
             <TabsTrigger value="classes">강의 개설</TabsTrigger>
             <TabsTrigger value="enrollments">신청·출석·학점</TabsTrigger>
