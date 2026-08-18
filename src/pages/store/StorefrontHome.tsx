@@ -214,12 +214,7 @@ const StorefrontHome = () => {
       case "categories":
         return <div key={b.id}>{renderCategories()}</div>;
       case "courses":
-        return (
-          <div key={b.id}>
-            {renderFeaturedCourses()}
-            {renderFestivals()}
-          </div>
-        );
+        return <div key={b.id}>{renderFeaturedCourses()}</div>;
       case "reviews":
         return (
           <Suspense key={b.id} fallback={<div className="min-h-[200px]" />}>
