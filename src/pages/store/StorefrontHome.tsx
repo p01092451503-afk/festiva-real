@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Sparkles, TrendingUp, Clock, GraduationCap, Flame, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import HeroBanner from "@/components/storefront/HeroBanner";
