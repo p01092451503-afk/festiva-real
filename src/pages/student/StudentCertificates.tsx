@@ -1,15 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate } from "react-router-dom";
-import { Award, Download, ShieldCheck } from "lucide-react";
+import { Navigate, useSearchParams, Link } from "react-router-dom";
+import { Award, Download, ShieldCheck, Truck } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/contexts/UserContext";
 import { useFeatureModules } from "@/hooks/useFeatureModules";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadCertificatePDF } from "@/lib/certificateGenerator";
+
 
 type Cert = {
   id: string;
