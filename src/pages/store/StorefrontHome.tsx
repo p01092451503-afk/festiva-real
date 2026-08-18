@@ -74,10 +74,6 @@ const StorefrontHome = () => {
     { icon: Clock, bg: "hsl(170 25% 55%)", iconColor: "#fff" },
   ];
 
-  if (categoriesLoading) {
-    return <StorefrontHomeSkeleton />;
-  }
-
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
     queryKey: ["store-home-courses"],
     queryFn: async () => {
@@ -109,6 +105,10 @@ const StorefrontHome = () => {
     acc[c.id] = c.name;
     return acc;
   }, {});
+
+  if (categoriesLoading || coursesLoading) {
+    return <StorefrontHomeSkeleton />;
+  }
 
   const renderHero = () => <HeroBanner key="hero" />;
 
