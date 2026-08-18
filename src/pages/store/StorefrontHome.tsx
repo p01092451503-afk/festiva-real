@@ -19,6 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import hwacheonImg from "@/assets/festival-hwacheon.png.asset.json";
+import boryeongImg from "@/assets/festival-boryeong.png.asset.json";
+import jinhaeImg from "@/assets/festival-jinhae.png.asset.json";
 
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
@@ -33,9 +36,7 @@ const FESTIVALS = [
     name: "화천 산천어축제",
     location: "강원도 화천군",
     month: "1월",
-    icon: "🎣",
-    bg: "bg-brand-blue-light",
-    iconColor: "text-brand-blue",
+    imageUrl: hwacheonImg.url,
     period: "매년 1월 초 ~ 1월 하순 (약 23일간)",
     summary:
       "얼음으로 덮인 화천천 위에서 열리는 국내 대표 겨울 축제입니다. 얼음낚시를 중심으로 눈·얼음 조형물, 선등거리 등 겨울 콘텐츠를 한곳에 모아 매년 100만 명 이상이 찾습니다.",
@@ -51,9 +52,7 @@ const FESTIVALS = [
     name: "보령 머드축제",
     location: "충남 보령시",
     month: "7월",
-    icon: "🌊",
-    bg: "bg-brand-orange/10",
-    iconColor: "text-brand-orange",
+    imageUrl: boryeongImg.url,
     period: "매년 7월 중순 ~ 하순 (약 10일간)",
     summary:
       "대천해수욕장의 갯벌 진흙을 활용한 체험형 여름 축제로, 외국인 방문객 비중이 가장 높은 축제 중 하나입니다. 머드 체험존과 해변 공연이 결합된 구조입니다.",
@@ -69,9 +68,7 @@ const FESTIVALS = [
     name: "진해 군항제",
     location: "경남 창원시",
     month: "4월",
-    icon: "🌸",
-    bg: "bg-brand-pink-light",
-    iconColor: "text-primary",
+    imageUrl: jinhaeImg.url,
     period: "매년 3월 말 ~ 4월 초 (약 10일간)",
     summary:
       "36만여 그루의 벚나무가 만개하는 국내 최대 봄 축제입니다. 여좌천 로망스교, 경화역 등 도심 전역이 축제 공간으로 확장되는 개방형 구조가 특징입니다.",
