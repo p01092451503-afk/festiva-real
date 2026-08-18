@@ -29,6 +29,15 @@ export default function StudentCertificates() {
   const { user } = useUser();
   const { toast } = useToast();
   const { isEnabled, isLoading: modulesLoading } = useFeatureModules();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") === "shipping" ? "shipping" : "issued";
+  const setTab = (next: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (next === "issued") params.delete("tab");
+    else params.set("tab", next);
+    setSearchParams(params, { replace: true });
+  };
+
 
   const { data: certs = [], isLoading } = useQuery({
     queryKey: ["my_certificates", user?.id],
