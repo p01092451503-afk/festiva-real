@@ -55,7 +55,7 @@ interface StorefrontCourseCardProps {
   featured?: boolean;
 }
 
-const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, size = "default", isInWishlist = false, isEnrolled = false, onWishlistToggle }, _ref) => {
+const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, size = "default", isInWishlist = false, isEnrolled = false, onWishlistToggle, featured = false }, _ref) => {
   const navigate = useNavigate();
   const { user } = useUser();
   const { toast } = useToast();
@@ -70,8 +70,10 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
   const discountPct = isSaleActive ? Math.round((1 - course.sale_price! / course.price) * 100) : 0;
 
   const isLg = size === "lg";
+  const isFeatured = featured || rank != null;
 
   const placeholderBg = course.category_name ? categoryBgColors[course.category_name] || "#e5e0da" : "#e5e0da";
+  const levelLabel = course.level || (course.category_name?.includes("2급") ? "Level 2" : course.category_name?.includes("1급") ? "Level 1" : course.category_name);
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
