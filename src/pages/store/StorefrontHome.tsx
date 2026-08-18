@@ -275,6 +275,7 @@ const StorefrontHome = () => {
           <>
             {renderHero()}
             {renderCategories()}
+            {renderFeaturedCourses()}
             {renderFestivals()}
           </>
         )}
