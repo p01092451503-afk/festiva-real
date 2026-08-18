@@ -81,6 +81,28 @@ const StorefrontCatalog = () => {
     return m;
   }, [categories]);
 
+  /** `?level=1|2` → "1급/2급" 카테고리를 자동 선택. 매칭 카테고리가 없으면 전체를 보여준다. */
+  useEffect(() => {
+    if (level === "all") {
+      setSelectedCategory("all");
+      return;
+    }
+    const match = categories.find(c => {
+      const hay = `${c.name ?? ""} ${c.slug ?? ""}`.toLowerCase();
+      return hay.includes(`${level}급`) || hay.includes(`level-${level}`) || hay.includes(`level${level}`);
+    });
+    setSelectedCategory(match ? match.id : "all");
+  }, [level, categories]);
+
+  const setLevel = (next: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (next === "all") params.delete("level");
+    else params.set("level", next);
+    setSearchParams(params, { replace: true });
+  };
+
+
+
   const { data: wishlistSet = new Set<string>() } = useQuery({
     queryKey: ["store-wishlist-ids", user?.id],
     queryFn: async () => {
