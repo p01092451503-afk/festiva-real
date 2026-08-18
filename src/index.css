@@ -87,17 +87,18 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   }
 
   h1, h2, h3 {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
     @apply font-semibold tracking-tight;
   }
 
   .font-display {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   }
+
 }
 
 @layer components {
