@@ -369,6 +369,83 @@ const About = () => {
                 </Card>
               ))}
             </div>
+
+            {/* 1급 수강 전 필수 확인 */}
+            <Card className="border-brand-orange/60 bg-brand-orange/5">
+              <CardContent className="p-6 space-y-2">
+                <h3 className="font-semibold text-brand-orange">1급 수강 전 필수 확인</h3>
+                <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
+                  <li>수강 자격: 관련 분야 현장 경력 3년 이상</li>
+                  <li>1급 지원 시 <strong className="text-foreground">경력증명서</strong>를 반드시 제출해야 합니다.</li>
+                  <li>자격 미달 시 1급 자격증이 취소됩니다.</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* 커리큘럼 */}
+            {CURRICULUM.map((c) => (
+              <section key={c.level} className="space-y-4">
+                <h3 className="font-semibold">축제운영전문가 {c.level} 커리큘럼</h3>
+                <div className="space-y-4">
+                  {c.subjects.map((s) => (
+                    <Card key={s.title}>
+                      <CardContent className="p-6 space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                          <p className="font-semibold text-navy min-w-0">{s.title}</p>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">{s.meta}</span>
+                        </div>
+                        <div className="border-t-2 border-border/80">
+                          {s.lessons.map((l) => (
+                            <div key={l.no} className="grid grid-cols-1 sm:grid-cols-[60px_1fr] gap-1 sm:gap-4 py-3 border-b-2 border-border/80">
+                              <span className="text-sm font-semibold text-brand-orange">{l.no}</span>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium">{l.title}</p>
+                                <p className="text-sm text-muted-foreground leading-relaxed mt-1">{l.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                <Card>
+                  <CardContent className="p-6 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                      <p className="font-semibold min-w-0">{c.book.title}</p>
+                      <span className="font-semibold text-navy whitespace-nowrap">{c.book.price}</span>
+                    </div>
+                    <p className="text-sm font-medium text-brand-orange">{c.book.tagline}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{c.book.desc}</p>
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold">목차 구성</p>
+                      <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
+                        {c.book.toc.map((t) => <li key={t}>{t}</li>)}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+            ))}
+
+            {/* 강사 소개 */}
+            <section className="space-y-4">
+              <h3 className="font-semibold">강사 소개</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {INSTRUCTORS.map((i) => (
+                  <Card key={i.name}>
+                    <CardContent className="p-6 space-y-2">
+                      <p className="font-semibold text-navy">{i.name}</p>
+                      <Badge variant="secondary" className="whitespace-nowrap">{i.field}</Badge>
+                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1 pt-1">
+                        {i.lines.map((l) => <p key={l}>{l}</p>)}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
           </TabsContent>
 
 
@@ -380,6 +457,41 @@ const About = () => {
                 수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
               </p>
             </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">수료 조건 안내</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {COMPLETION_CONDITIONS.map((c) => (
+                  <Card key={c.label}>
+                    <CardContent className="p-6 space-y-1">
+                      <p className="text-sm text-muted-foreground">{c.label}</p>
+                      <p className="font-semibold text-navy">{c.value}</p>
+                      <Badge variant="secondary" className="whitespace-nowrap">{c.note}</Badge>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">발급 방법 — PDF + 실물 동시 발급</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {ISSUE_METHODS.map((m) => (
+                  <Card key={m.title}>
+                    <CardContent className="p-6 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-semibold text-navy min-w-0">{m.title}</p>
+                        <Badge variant="secondary" className="whitespace-nowrap">{m.fee}</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1">
+                        {m.lines.map((l) => <p key={l}>{l}</p>)}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
 
             <ol className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {STEPS.map((s) => (
