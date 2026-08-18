@@ -286,7 +286,46 @@ const StorefrontHome = () => {
         <SiteFooter />
       </Suspense>
 
+      <Dialog open={!!selectedFestival} onOpenChange={(o) => !o && setSelectedFestival(null)}>
+        <DialogContent className="max-w-xl">
+          {selectedFestival && (
+            <>
+              <div
+                className={`-mx-6 -mt-6 mb-2 h-28 ${selectedFestival.bg} flex items-center justify-center rounded-t-lg`}
+              >
+                <span className={`text-5xl ${selectedFestival.iconColor}`}>{selectedFestival.icon}</span>
+              </div>
+              <DialogHeader>
+                <DialogTitle className="text-xl">{selectedFestival.name}</DialogTitle>
+                <DialogDescription className="text-base">
+                  {selectedFestival.location} · {selectedFestival.period}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-5 text-base">
+                <p className="leading-relaxed text-foreground/90">{selectedFestival.summary}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-navy">주요 특징</h4>
+                  <ul className="space-y-2">
+                    {selectedFestival.highlights.map((h) => (
+                      <li key={h} className="flex gap-2 text-muted-foreground leading-relaxed">
+                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-brand-orange shrink-0" aria-hidden="true" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/40 p-4">
+                  <h4 className="font-semibold text-navy mb-1">운영 실무 포인트</h4>
+                  <p className="text-muted-foreground leading-relaxed">{selectedFestival.opsPoint}</p>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <SitePopups />
+
     </div>
   );
 };
