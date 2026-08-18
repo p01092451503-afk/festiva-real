@@ -30,6 +30,11 @@ const HomeReviewsSection = lazy(() => import("@/components/storefront/HomeReview
 const HomeInstructorsSection = lazy(() => import("@/components/storefront/HomeInstructorsSection"));
 const HomeNoticeSection = lazy(() => import("@/components/storefront/HomeNoticeSection"));
 const HomeCtaSection = lazy(() => import("@/components/storefront/HomeCtaSection"));
+const HomeCourseFeatureSection = lazy(() => import("@/components/storefront/HomeCourseFeatureSection"));
+const HomeWhySection = lazy(() => import("@/components/storefront/HomeWhySection"));
+const HomeVoicesSection = lazy(() => import("@/components/storefront/HomeVoicesSection"));
+const HomeSupportSection = lazy(() => import("@/components/storefront/HomeSupportSection"));
+
 
 const FESTIVALS = [
   {
@@ -140,41 +145,16 @@ const StorefrontHome = () => {
 
   const renderHero = () => <HeroBanner key="hero" />;
 
+  /** 강의 썸네일 카드 대신 급수별 과정 특징을 노출한다. */
   const renderFeaturedCourses = () => {
     if (coursesLoading) return <div className="min-h-[300px]" />;
-    if (!courses.length) return null;
-    const featured = courses.slice(0, 2);
     return (
-      <section key="featured-courses" className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-14">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">지금 가장 주목받는 강의</h2>
-              <p className="text-base sm:text-lg text-muted-foreground mt-2">실시간 인기 과정을 확인하세요</p>
-            </div>
-            <Link to="/store/courses" className="hidden sm:flex items-center gap-1 text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
-              전체 보기 <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {featured.map((course: any, idx: number) => (
-              <StorefrontCourseCard
-                key={course.id}
-                course={{
-                  ...course,
-                  category_name: categoryMap[course.category_id],
-                  instructor_name: instructorMap[course.instructor_id],
-                }}
-                rank={idx + 1}
-                size="lg"
-                featured
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <Suspense key="course-feature" fallback={<div className="min-h-[400px]" />}>
+        <HomeCourseFeatureSection courses={courses as any} />
+      </Suspense>
     );
   };
+
 
   const renderFestivals = () => (
     <section key="festivals" className="bg-muted/20 border-t border-border">
@@ -280,8 +260,20 @@ const StorefrontHome = () => {
           </>
         )}
         {!blocks.some((b: MainPageBlock) => b.block_type === "courses") && renderFeaturedCourses()}
+        <Suspense fallback={<div className="min-h-[300px]" />}>
+          <HomeWhySection />
+        </Suspense>
+        <Suspense fallback={<div className="min-h-[300px]" />}>
+          <HomeVoicesSection />
+        </Suspense>
+        <Suspense fallback={<div className="min-h-[240px]" />}>
+          <HomeSupportSection />
+        </Suspense>
         {renderFestivals()}
       </main>
+
+
+
 
       {/* Footer */}
       <Suspense fallback={<div className="min-h-[200px]" />}>
