@@ -170,7 +170,7 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
         {/* Title row with optional rank */}
         <div className="flex items-start gap-2.5">
           {rank != null && (
-            <span className={cn(isLg ? "text-4xl" : "text-2xl", "font-extrabold text-primary leading-none mt-0.5 shrink-0 tabular-nums")}>
+            <span className={cn(isLg ? "text-4xl" : "text-2xl", "font-extrabold leading-none mt-0.5 shrink-0 tabular-nums", isFeatured ? "text-navy" : "text-primary")}>
               {rank}
             </span>
           )}
