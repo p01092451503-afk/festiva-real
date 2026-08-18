@@ -901,6 +901,12 @@ const StorefrontCourseDetail = () => {
         </div>
       )}
     </div>
+
+      <Level1QualificationDialog
+        open={showLevel1Dialog}
+        onOpenChange={setShowLevel1Dialog}
+        onConfirm={proceedBuyNow}
+      />
   );
 };
 
