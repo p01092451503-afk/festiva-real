@@ -18,12 +18,8 @@ import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
-/** 급수(2급/1급) 서브메뉴 — `?level=1|2`로 카테고리를 자동 선택한다. */
-const LEVEL_TABS = [
-  { value: "all", label: "전체 과정" },
-  { value: "2", label: "2급 과정" },
-  { value: "1", label: "1급 과정" },
-] as const;
+
+
 
 const StorefrontCatalog = () => {
   const { user } = useUser();
