@@ -16,13 +16,13 @@ export const PAGE_BACKGROUNDS = {
     glowToken: "brand-blue",
   },
   support: {
-    gradient: "bg-gradient-to-r from-background via-brand-blue-light to-background",
-    pattern: "dots",
-    patternOpacity: 0.35,
-    patternSize: 18,
+    // 교육원 소개와 동일한 웨이브 컨셉 (방향만 반대로 하여 페이지 구분)
+    gradient: "bg-gradient-to-bl from-brand-blue-light via-background to-background",
+    pattern: "wave",
     glow: "top-right",
-    glowToken: "brand-orange",
+    glowToken: "brand-blue",
   },
+
   courses: {
     gradient: "bg-gradient-to-b from-brand-blue-light/50 to-background",
     pattern: "dots",
