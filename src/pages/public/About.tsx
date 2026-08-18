@@ -246,132 +246,160 @@ const About = () => {
       <StorefrontHeader />
 
       {/* Hero */}
-      <section className="bg-navy text-primary-foreground">
-        <div className="max-w-6xl mx-auto px-4 py-12 sm:py-16 space-y-3">
-          <p className="text-sm font-semibold text-brand-orange">ABOUT festcert</p>
-          <h1 className="text-2xl sm:text-3xl font-bold">축제운영전문가 자격증 교육원</h1>
-          <p className="text-primary-foreground/80 max-w-2xl leading-relaxed">
+      <section className="bg-navy text-primary-foreground relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-30 pointer-events-none"
+          style={{ background: "radial-gradient(60% 90% at 85% 20%, hsl(var(--brand-blue)) 0%, transparent 70%)" }}
+          aria-hidden="true"
+        />
+        <div className="relative max-w-6xl mx-auto px-4 py-16 sm:py-20 space-y-4">
+          <p className="text-base font-semibold tracking-wide text-brand-orange">ABOUT festcert</p>
+          <h1 className="text-3xl sm:text-5xl font-bold leading-tight">축제운영전문가 자격증 교육원</h1>
+          <p className="text-lg sm:text-xl text-primary-foreground/85 max-w-3xl leading-relaxed">
             축제·이벤트 현장에서 바로 통하는 기획·운영·안전관리 역량을 단계별로 학습하고, 자격 검정을 통해 전문성을 증명합니다.
           </p>
         </div>
       </section>
 
       {/* Tabs */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 min-w-0">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-10 min-w-0">
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
-          <TabsList className="flex-wrap h-auto">
+          <TabsList className="flex-wrap h-auto p-1.5 gap-1">
             {TABS.map((t) => (
-              <TabsTrigger key={t.value} value={t.value} className="gap-2">
-                <t.icon className="w-4 h-4" aria-hidden="true" />
+              <TabsTrigger key={t.value} value={t.value} className="gap-2 text-base px-5 py-2.5">
+                <t.icon className="w-5 h-5" aria-hidden="true" />
                 {t.label}
               </TabsTrigger>
             ))}
           </TabsList>
 
           {/* 교육원 소개 */}
-          <TabsContent value="intro" className="mt-8 space-y-8">
-            <section className="space-y-3">
-              <h2 className="text-xl font-semibold">크리에이티브쉐이크 부설 평생교육원</h2>
-              <p className="text-muted-foreground leading-relaxed max-w-3xl">
+          <TabsContent value="intro" className="mt-10 space-y-14">
+            <section className="space-y-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy">크리에이티브쉐이크 부설 평생교육원</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
                 언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영
               </p>
             </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {HIGHLIGHTS.map((h) => (
-                <Card key={h.title}>
-                  <CardContent className="p-6 space-y-2">
-                    <h3 className="font-semibold text-navy">{h.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{h.text}</p>
+                <Card key={h.title} className="border-border/70 hover:shadow-md transition-shadow">
+                  <CardContent className="p-7 space-y-4">
+                    <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-blue-light text-navy">
+                      <h.icon className="w-6 h-6" aria-hidden="true" />
+                    </span>
+                    <h3 className="text-xl font-bold text-navy">{h.title}</h3>
+                    <p className="text-base text-muted-foreground leading-relaxed">{h.text}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
-            <section className="space-y-4">
-              <h3 className="font-semibold">이런 분들께 추천합니다</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold flex items-center gap-2">
+                <Users2 className="w-6 h-6 text-brand-orange" aria-hidden="true" /> 이런 분들께 추천합니다
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {RECOMMENDED.map((r) => (
-                  <div key={r} className="bg-brand-blue-light rounded-md px-4 py-3 text-sm min-w-0">✓ {r}</div>
-                ))}
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h3 className="font-semibold">학회 연혁</h3>
-              <p className="text-sm text-muted-foreground">사단법인 마이스교육학회 설립 및 운영 이력</p>
-              <div className="border-t-2 border-border/80">
-                {HISTORY.map((h) => (
-                  <div key={`${h.year}-${h.text}`} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-6 py-4 border-b-2 border-border/80">
-                    <div className="font-semibold text-navy">{h.year}</div>
-                    <p className="text-muted-foreground leading-relaxed min-w-0">{h.text}</p>
+                  <div key={r} className="flex items-start gap-3 bg-brand-blue-light rounded-xl px-5 py-4 text-base min-w-0">
+                    <Check className="w-5 h-5 mt-0.5 text-brand-orange shrink-0" aria-hidden="true" />
+                    <span className="min-w-0">{r}</span>
                   </div>
                 ))}
               </div>
             </section>
 
-            <section className="space-y-4">
-              <h3 className="font-semibold">운영 기관</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold">학회 연혁</h3>
+              <p className="text-base text-muted-foreground">사단법인 마이스교육학회 설립 및 운영 이력</p>
+              <ol className="relative pl-6 sm:pl-8 border-l-2 border-brand-blue-light space-y-7">
+                {HISTORY.map((h) => (
+                  <li key={`${h.year}-${h.text}`} className="relative min-w-0">
+                    <span className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-brand-orange ring-4 ring-background" aria-hidden="true" />
+                    <div className="text-lg font-bold text-navy">{h.year}</div>
+                    <p className="text-base text-muted-foreground leading-relaxed mt-1">{h.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold">운영 기관</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {ORGS.map((o) => (
-                  <Card key={o.name}>
-                    <CardContent className="p-6 space-y-2">
-                      <p className="font-semibold text-navy">{o.name}</p>
-                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1">
-                        {o.lines.map((l) => <p key={l}>{l}</p>)}
+                  <Card key={o.name} className="border-border/70">
+                    <CardContent className="p-7 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-navy/5 text-navy">
+                          <Building2 className="w-5 h-5" aria-hidden="true" />
+                        </span>
+                        <p className="text-xl font-bold text-navy min-w-0">{o.name}</p>
                       </div>
+                      <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                        {o.lines.map((l) => (
+                          <li key={l} className="flex items-start gap-2">
+                            <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                            <span className="min-w-0">{l}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </section>
 
-            <Card className="bg-brand-blue-light border-border">
-              <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <Card className="bg-brand-blue-light border-navy/10">
+              <CardContent className="p-7 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
                 <div className="min-w-0">
-                  <p className="font-semibold">어떤 과정부터 시작해야 할지 모르겠다면?</p>
-                  <p className="text-sm text-muted-foreground mt-1">급수별 과정 구성과 수강 대상을 확인해 보세요.</p>
+                  <p className="text-xl font-bold text-navy">어떤 과정부터 시작해야 할지 모르겠다면?</p>
+                  <p className="text-base text-muted-foreground mt-2">급수별 과정 구성과 수강 대상을 확인해 보세요.</p>
                 </div>
-                <Button asChild className="whitespace-nowrap">
-                  <Link to="/store/courses">강의 안내 보기 <ArrowRight className="w-4 h-4 ml-1" /></Link>
+                <Button asChild size="lg" className="whitespace-nowrap text-base">
+                  <Link to="/store/courses">강의 안내 보기 <ArrowRight className="w-5 h-5 ml-1" /></Link>
                 </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* 자격 제도 */}
-          <TabsContent value="system" className="mt-8 space-y-6">
-            <section className="space-y-3">
-              <h2 className="text-xl font-semibold">자격 제도</h2>
-              <p className="text-muted-foreground leading-relaxed max-w-3xl">
+          <TabsContent value="system" className="mt-10 space-y-14">
+            <section className="space-y-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자격 제도</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
                 개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성됩니다.
                 자격은 2급(기초)과 1급(심화)으로 나뉩니다.
               </p>
             </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {LEVELS.map((l) => (
-                <Card key={l.level}>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-navy">축제운영전문가 {l.level}</h3>
-                      <Badge variant="secondary" className="whitespace-nowrap">{l.badge}</Badge>
+                <Card key={l.level} className="border-border/70 overflow-hidden">
+                  <div className="h-1.5 bg-navy" aria-hidden="true" />
+                  <CardContent className="p-7 space-y-5">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-blue-light text-navy">
+                        <GraduationCap className="w-6 h-6" aria-hidden="true" />
+                      </span>
+                      <h3 className="text-2xl font-bold text-navy">축제운영전문가 {l.level}</h3>
+                      <Badge variant="secondary" className="whitespace-nowrap text-sm">{l.badge}</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{l.summary}</p>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold">수강 대상</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{l.target}</p>
+                    <p className="text-base text-muted-foreground leading-relaxed">{l.summary}</p>
+                    <div className="rounded-xl bg-muted/50 p-5 space-y-2">
+                      <p className="text-base font-semibold">수강 대상</p>
+                      <p className="text-base text-muted-foreground leading-relaxed">{l.target}</p>
                     </div>
-                    <div className="border-t-2 border-border/80">
+                    <dl className="divide-y divide-border/80 border-y border-border/80">
                       {l.facts.map((f) => (
-                        <div key={f.label} className="flex items-start justify-between gap-4 py-2 border-b-2 border-border/80 text-sm">
-                          <span className="text-muted-foreground whitespace-nowrap">{f.label}</span>
-                          <span className="font-medium text-right min-w-0">{f.value}</span>
+                        <div key={f.label} className="flex items-start justify-between gap-4 py-3 text-base">
+                          <dt className="text-muted-foreground whitespace-nowrap">{f.label}</dt>
+                          <dd className="font-semibold text-right min-w-0">{f.value}</dd>
                         </div>
                       ))}
-                    </div>
-                    <p className="font-semibold text-navy">{l.price}</p>
-                    <Button asChild variant="outline" className="w-full">
+                    </dl>
+                    <p className="text-xl font-bold text-navy">{l.price}</p>
+                    <Button asChild size="lg" variant="outline" className="w-full text-base">
                       <Link to={l.href}>{l.level} 과정 보기</Link>
                     </Button>
                   </CardContent>
@@ -380,36 +408,44 @@ const About = () => {
             </div>
 
             {/* 1급 수강 전 필수 확인 */}
-            <Card className="border-brand-orange/60 bg-brand-orange/5">
-              <CardContent className="p-6 space-y-2">
-                <h3 className="font-semibold text-brand-orange">1급 수강 전 필수 확인</h3>
-                <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
-                  <li>수강 자격: 관련 분야 현장 경력 3년 이상</li>
-                  <li>1급 지원 시 <strong className="text-foreground">경력증명서</strong>를 반드시 제출해야 합니다.</li>
-                  <li>자격 미달 시 1급 자격증이 취소됩니다.</li>
-                </ul>
+            <Card className="border-brand-orange/50 bg-brand-orange/5">
+              <CardContent className="p-7 flex flex-col sm:flex-row gap-5">
+                <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-orange/15 text-brand-orange shrink-0">
+                  <AlertTriangle className="w-6 h-6" aria-hidden="true" />
+                </span>
+                <div className="space-y-3 min-w-0">
+                  <h3 className="text-xl font-bold text-brand-orange">1급 수강 전 필수 확인</h3>
+                  <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                    <li className="flex gap-2"><Check className="w-4 h-4 mt-1.5 text-brand-orange shrink-0" aria-hidden="true" /><span>수강 자격: 관련 분야 현장 경력 3년 이상</span></li>
+                    <li className="flex gap-2"><Check className="w-4 h-4 mt-1.5 text-brand-orange shrink-0" aria-hidden="true" /><span>1급 지원 시 <strong className="text-foreground">경력증명서</strong>를 반드시 제출해야 합니다.</span></li>
+                    <li className="flex gap-2"><Check className="w-4 h-4 mt-1.5 text-brand-orange shrink-0" aria-hidden="true" /><span>자격 미달 시 1급 자격증이 취소됩니다.</span></li>
+                  </ul>
+                </div>
               </CardContent>
             </Card>
 
             {/* 커리큘럼 */}
             {CURRICULUM.map((c) => (
-              <section key={c.level} className="space-y-4">
-                <h3 className="font-semibold">축제운영전문가 {c.level} 커리큘럼</h3>
-                <div className="space-y-4">
+              <section key={c.level} className="space-y-6">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
+                  <ListChecks className="w-6 h-6 text-brand-orange" aria-hidden="true" />
+                  축제운영전문가 {c.level} 커리큘럼
+                </h3>
+                <div className="space-y-5">
                   {c.subjects.map((s) => (
-                    <Card key={s.title}>
-                      <CardContent className="p-6 space-y-3">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                          <p className="font-semibold text-navy min-w-0">{s.title}</p>
-                          <span className="text-xs text-muted-foreground whitespace-nowrap">{s.meta}</span>
+                    <Card key={s.title} className="border-border/70">
+                      <CardContent className="p-7 space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                          <p className="text-xl font-bold text-navy min-w-0">{s.title}</p>
+                          <span className="text-sm text-muted-foreground bg-brand-blue-light rounded-full px-4 py-1.5 whitespace-nowrap">{s.meta}</span>
                         </div>
-                        <div className="border-t-2 border-border/80">
+                        <div className="divide-y divide-border/80 border-t border-border/80">
                           {s.lessons.map((l) => (
-                            <div key={l.no} className="grid grid-cols-1 sm:grid-cols-[60px_1fr] gap-1 sm:gap-4 py-3 border-b-2 border-border/80">
-                              <span className="text-sm font-semibold text-brand-orange">{l.no}</span>
+                            <div key={l.no} className="grid grid-cols-1 sm:grid-cols-[72px_1fr] gap-1 sm:gap-5 py-4">
+                              <span className="inline-flex items-center justify-center h-8 w-14 rounded-lg bg-brand-orange/10 text-base font-bold text-brand-orange">{l.no}</span>
                               <div className="min-w-0">
-                                <p className="text-sm font-medium">{l.title}</p>
-                                <p className="text-sm text-muted-foreground leading-relaxed mt-1">{l.desc}</p>
+                                <p className="text-lg font-semibold">{l.title}</p>
+                                <p className="text-base text-muted-foreground leading-relaxed mt-1.5">{l.desc}</p>
                               </div>
                             </div>
                           ))}
@@ -419,18 +455,29 @@ const About = () => {
                   ))}
                 </div>
 
-                <Card>
-                  <CardContent className="p-6 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                      <p className="font-semibold min-w-0">{c.book.title}</p>
-                      <span className="font-semibold text-navy whitespace-nowrap">{c.book.price}</span>
+                <Card className="border-border/70 bg-muted/30">
+                  <CardContent className="p-7 space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <p className="text-xl font-bold flex items-center gap-2 min-w-0">
+                        <BookOpen className="w-6 h-6 text-navy shrink-0" aria-hidden="true" />
+                        <span className="min-w-0">{c.book.title}</span>
+                      </p>
+                      <span className="text-xl font-bold text-navy whitespace-nowrap">{c.book.price}</span>
                     </div>
-                    <p className="text-sm font-medium text-brand-orange">{c.book.tagline}</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{c.book.desc}</p>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold">목차 구성</p>
-                      <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
-                        {c.book.toc.map((t) => <li key={t}>{t}</li>)}
+                    <p className="text-lg font-semibold text-brand-orange flex gap-2">
+                      <Quote className="w-5 h-5 mt-1 shrink-0" aria-hidden="true" />
+                      <span className="min-w-0">{c.book.tagline}</span>
+                    </p>
+                    <p className="text-base text-muted-foreground leading-relaxed">{c.book.desc}</p>
+                    <div className="space-y-3 rounded-xl bg-background p-5">
+                      <p className="text-base font-semibold">목차 구성</p>
+                      <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                        {c.book.toc.map((t) => (
+                          <li key={t} className="flex gap-2">
+                            <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                            <span className="min-w-0">{t}</span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </CardContent>
@@ -439,17 +486,25 @@ const About = () => {
             ))}
 
             {/* 강사 소개 */}
-            <section className="space-y-4">
-              <h3 className="font-semibold">강사 소개</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold">강사 소개</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {INSTRUCTORS.map((i) => (
-                  <Card key={i.name}>
-                    <CardContent className="p-6 space-y-2">
-                      <p className="font-semibold text-navy">{i.name}</p>
-                      <Badge variant="secondary" className="whitespace-nowrap">{i.field}</Badge>
-                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1 pt-1">
-                        {i.lines.map((l) => <p key={l}>{l}</p>)}
-                      </div>
+                  <Card key={i.name} className="border-border/70 hover:shadow-md transition-shadow">
+                    <CardContent className="p-7 space-y-3">
+                      <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-blue-light text-navy">
+                        <UserRound className="w-7 h-7" aria-hidden="true" />
+                      </span>
+                      <p className="text-xl font-bold text-navy">{i.name}</p>
+                      <Badge variant="secondary" className="whitespace-nowrap text-sm">{i.field}</Badge>
+                      <ul className="text-base text-muted-foreground leading-relaxed space-y-2 pt-1">
+                        {i.lines.map((l) => (
+                          <li key={l} className="flex gap-2">
+                            <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                            <span className="min-w-0">{l}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </CardContent>
                   </Card>
                 ))}
@@ -457,108 +512,140 @@ const About = () => {
             </section>
           </TabsContent>
 
-
           {/* 발급 안내 */}
-          <TabsContent value="certificate" className="mt-8 space-y-6">
-            <section className="space-y-3">
-              <h2 className="text-xl font-semibold">자격증 발급 안내</h2>
-              <p className="text-muted-foreground leading-relaxed max-w-3xl">
+          <TabsContent value="certificate" className="mt-10 space-y-14">
+            <section className="space-y-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자격증 발급 안내</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
                 수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
               </p>
             </section>
 
-            <section className="space-y-4">
-              <h3 className="font-semibold">수료 조건 안내</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold">수료 조건 안내</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {COMPLETION_CONDITIONS.map((c) => (
-                  <Card key={c.label}>
-                    <CardContent className="p-6 space-y-1">
-                      <p className="text-sm text-muted-foreground">{c.label}</p>
-                      <p className="font-semibold text-navy">{c.value}</p>
-                      <Badge variant="secondary" className="whitespace-nowrap">{c.note}</Badge>
+                  <Card key={c.label} className="border-border/70 text-center">
+                    <CardContent className="p-7 space-y-3">
+                      <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-blue-light text-navy mx-auto">
+                        <c.icon className="w-6 h-6" aria-hidden="true" />
+                      </span>
+                      <p className="text-base text-muted-foreground">{c.label}</p>
+                      <p className="text-xl font-bold text-navy">{c.value}</p>
+                      <Badge variant="secondary" className="whitespace-nowrap text-sm">{c.note}</Badge>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </section>
 
-            <section className="space-y-4">
-              <h3 className="font-semibold">발급 방법 — PDF + 실물 동시 발급</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold">발급 방법 — PDF + 실물 동시 발급</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {ISSUE_METHODS.map((m) => (
-                  <Card key={m.title}>
-                    <CardContent className="p-6 space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="font-semibold text-navy min-w-0">{m.title}</p>
-                        <Badge variant="secondary" className="whitespace-nowrap">{m.fee}</Badge>
+                  <Card key={m.title} className="border-border/70">
+                    <CardContent className="p-7 space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-blue-light text-navy shrink-0">
+                            <m.icon className="w-6 h-6" aria-hidden="true" />
+                          </span>
+                          <p className="text-xl font-bold text-navy min-w-0">{m.title}</p>
+                        </div>
+                        <Badge variant="secondary" className="whitespace-nowrap text-sm">{m.fee}</Badge>
                       </div>
-                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1">
-                        {m.lines.map((l) => <p key={l}>{l}</p>)}
-                      </div>
+                      <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                        {m.lines.map((l) => (
+                          <li key={l} className="flex gap-2">
+                            <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                            <span className="min-w-0">{l}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             </section>
 
+            <section className="space-y-5">
+              <h3 className="text-2xl font-bold">수강부터 발급까지</h3>
+              <ol className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {STEPS.map((s) => (
+                  <li key={s.step}>
+                    <Card className="h-full border-border/70 overflow-hidden">
+                      <div className="h-1.5 bg-brand-orange" aria-hidden="true" />
+                      <CardContent className="p-7 space-y-3">
+                        <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-brand-orange/10 text-lg font-bold text-brand-orange">{s.step}</span>
+                        <h4 className="text-xl font-bold text-navy">{s.title}</h4>
+                        <p className="text-base text-muted-foreground leading-relaxed">{s.text}</p>
+                      </CardContent>
+                    </Card>
+                  </li>
+                ))}
+              </ol>
+            </section>
 
-            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {STEPS.map((s) => (
-                <li key={s.step}>
-                  <Card className="h-full">
-                    <CardContent className="p-6 space-y-2">
-                      <span className="text-sm font-bold text-brand-orange">{s.step}</span>
-                      <h3 className="font-semibold">{s.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{s.text}</p>
-                    </CardContent>
-                  </Card>
-                </li>
-              ))}
-            </ol>
-
-            <Card>
-              <CardContent className="p-6 space-y-2">
-                <h3 className="font-semibold">발급 전 확인 사항</h3>
-                <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
-                  {ISSUE_NOTES.map((n) => <li key={n}>{n}</li>)}
-                </ul>
+            <Card className="border-border/70 bg-muted/30">
+              <CardContent className="p-7 flex flex-col sm:flex-row gap-5">
+                <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-navy/5 text-navy shrink-0">
+                  <FileCheck2 className="w-6 h-6" aria-hidden="true" />
+                </span>
+                <div className="space-y-3 min-w-0">
+                  <h3 className="text-xl font-bold">발급 전 확인 사항</h3>
+                  <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                    {ISSUE_NOTES.map((n) => (
+                      <li key={n} className="flex gap-2">
+                        <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                        <span className="min-w-0">{n}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </CardContent>
             </Card>
 
-
-
-            <Card className="bg-brand-blue-light border-border">
-              <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <Card className="bg-brand-blue-light border-navy/10">
+              <CardContent className="p-7 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
                 <div className="min-w-0">
-                  <p className="font-semibold">이미 수료하셨나요?</p>
-                  <p className="text-sm text-muted-foreground mt-1">로그인 후 발급 내역에서 자격증을 다운로드할 수 있습니다.</p>
+                  <p className="text-xl font-bold text-navy">이미 수료하셨나요?</p>
+                  <p className="text-base text-muted-foreground mt-2">로그인 후 발급 내역에서 자격증을 다운로드할 수 있습니다.</p>
                 </div>
-                <Button asChild className="whitespace-nowrap">
-                  <Link to="/student/certificates">자격증 신청 및 발급 <ArrowRight className="w-4 h-4 ml-1" /></Link>
+                <Button asChild size="lg" className="whitespace-nowrap text-base">
+                  <Link to="/student/certificates">자격증 신청 및 발급 <ArrowRight className="w-5 h-5 ml-1" /></Link>
                 </Button>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* FAQ */}
-          <TabsContent value="faq" className="mt-8 space-y-6">
-            <section className="space-y-3">
-              <h2 className="text-xl font-semibold">자주 묻는 질문</h2>
-              <p className="text-muted-foreground leading-relaxed max-w-3xl">
+          <TabsContent value="faq" className="mt-10 space-y-8">
+            <section className="space-y-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자주 묻는 질문</h2>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
                 찾는 답이 없다면 학습운영·문의의 1:1 문의 게시판으로 남겨 주세요.
               </p>
             </section>
 
-            <Accordion type="single" collapsible className="border-t-2 border-border/80">
+            <Accordion type="single" collapsible className="space-y-4">
               {FAQS.map((f, i) => (
-                <AccordionItem key={f.q} value={`faq-${i}`} className="border-b-2 border-border/80">
-                  <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed">{f.a}</AccordionContent>
+                <AccordionItem
+                  key={f.q}
+                  value={`faq-${i}`}
+                  className="border border-border/70 rounded-xl px-6 bg-card data-[state=open]:bg-brand-blue-light/40"
+                >
+                  <AccordionTrigger className="text-left text-lg font-semibold hover:no-underline py-5">
+                    <span className="flex items-start gap-3 min-w-0">
+                      <HelpCircle className="w-5 h-5 mt-1 text-brand-orange shrink-0" aria-hidden="true" />
+                      <span className="min-w-0">{f.q}</span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base text-muted-foreground leading-relaxed pl-8 pb-5">{f.a}</AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
 
-            <Button asChild variant="outline">
+            <Button asChild size="lg" variant="outline" className="text-base">
               <Link to="/student/board">1:1 문의 게시판으로 이동</Link>
             </Button>
           </TabsContent>
@@ -571,3 +658,4 @@ const About = () => {
 };
 
 export default About;
+
