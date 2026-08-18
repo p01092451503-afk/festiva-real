@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -12,6 +12,14 @@ import { useUser } from "@/contexts/UserContext";
 import { useMainPageBlocks, type MainPageBlock } from "@/hooks/useMainPageBlocks";
 import SitePopups from "@/components/storefront/SitePopups";
 import DOMPurify from "dompurify";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
 const SiteFooter = lazy(() => import("@/components/SiteFooter"));
@@ -79,7 +87,9 @@ const FESTIVALS = [
 
 
 const StorefrontHome = () => {
+  const [selectedFestival, setSelectedFestival] = useState<(typeof FESTIVALS)[number] | null>(null);
   const { data: blocks = [] } = useMainPageBlocks();
+
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ["store-categories"],
@@ -177,9 +187,12 @@ const StorefrontHome = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {FESTIVALS.map((festival) => (
-            <div
+            <button
               key={festival.name}
-              className="bg-card rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+              type="button"
+              onClick={() => setSelectedFestival(festival)}
+              aria-label={`${festival.name} 자세히 보기`}
+              className="text-left bg-card rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <div className={`h-32 ${festival.bg} flex items-center justify-center`}>
                 <span className={`text-5xl ${festival.iconColor}`}>{festival.icon}</span>
@@ -189,9 +202,14 @@ const StorefrontHome = () => {
                 <p className="text-base text-muted-foreground mt-1">
                   {festival.location} · {festival.month}
                 </p>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-navy">
+                  자세히 보기
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </span>
               </div>
-            </div>
+            </button>
           ))}
+
         </div>
       </div>
     </section>
