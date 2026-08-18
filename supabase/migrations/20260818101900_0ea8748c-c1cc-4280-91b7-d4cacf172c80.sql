@@ -1,0 +1,1 @@
+update public.nav_items set url = '/support' where position = 'header' and label = '학습운영·문의';

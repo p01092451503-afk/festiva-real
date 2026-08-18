@@ -18,6 +18,7 @@ import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { formatPrice, formatDurationMinutes, cn } from "@/lib/utils";
+import Level1QualificationDialog from "@/components/storefront/Level1QualificationDialog";
 import SaleStatusCta, { isPurchasable, saleCtaLabel, SaleStatusBadge } from "@/components/storefront/SaleStatusCta";
 
 const StorefrontCourseDetail = () => {
@@ -29,6 +30,7 @@ const StorefrontCourseDetail = () => {
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const [curriculumExpanded, setCurriculumExpanded] = useState(true);
+  const [showLevel1Dialog, setShowLevel1Dialog] = useState(false);
   const [activeTab, setActiveTab] = useState<"intro" | "instructor" | "curriculum" | "reviews" | "textbook" | "refund">("intro");
 
   // Course
@@ -213,7 +215,17 @@ const StorefrontCourseDetail = () => {
     addToCartMutation.mutate();
   };
 
-  const handleBuyNow = async () => {
+  // 1급 과정은 팝업-1(자격 확인)을 통과해야 결제로 진행
+  const isLevel1 = /1\s*급/.test(course?.title ?? "");
+
+  const handleBuyNow = () => {
+    if (!user) { navigate("/auth"); return; }
+    if (isEnrolled) { navigate(`/student/courses/${id}`); return; }
+    if (isLevel1) { setShowLevel1Dialog(true); return; }
+    proceedBuyNow();
+  };
+
+  const proceedBuyNow = async () => {
     if (!user) { navigate("/auth"); return; }
     if (isEnrolled) { navigate(`/student/courses/${id}`); return; }
 
@@ -288,6 +300,7 @@ const StorefrontCourseDetail = () => {
 
 
   return (
+    <>
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
@@ -889,6 +902,13 @@ const StorefrontCourseDetail = () => {
         </div>
       )}
     </div>
+
+      <Level1QualificationDialog
+        open={showLevel1Dialog}
+        onOpenChange={setShowLevel1Dialog}
+        onConfirm={proceedBuyNow}
+      />
+    </>
   );
 };
 

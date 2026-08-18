@@ -151,6 +151,7 @@ const StudentEvidence = lazy(() => import("./pages/student/StudentEvidence"));
 const StudentSurveys = lazy(() => import("./pages/student/StudentSurveys"));
 const VerifyCertificate = lazy(() => import("./pages/public/VerifyCertificate"));
 const About = lazy(() => import("./pages/public/About"));
+const Support = lazy(() => import("./pages/public/Support"));
 
 
 // Video Sessions
@@ -212,6 +213,7 @@ const App = () => (
               {/* Public Store */}
               <Route path="/" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/about" element={<About />} />
+              <Route path="/support" element={<Support />} />
 
               <Route path="/store" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/store/courses" element={<StorefrontGate><StorefrontCatalog /></StorefrontGate>} />
