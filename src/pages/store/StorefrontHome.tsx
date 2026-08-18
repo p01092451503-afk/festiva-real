@@ -230,7 +230,6 @@ const StorefrontHome = () => {
         ) : (
           <>
             {renderHero()}
-            {renderCategories()}
           </>
         )}
         {!blocks.some((b: MainPageBlock) => b.block_type === "courses") && renderFeaturedCourses()}
