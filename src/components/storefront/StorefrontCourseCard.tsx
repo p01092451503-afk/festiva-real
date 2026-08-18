@@ -103,7 +103,7 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
       aria-label={displayTitle}
     >
       {/* Thumbnail */}
-      <div className="relative aspect-[16/10] bg-accent overflow-hidden">
+      <div className={cn("relative overflow-hidden", isLg ? "aspect-[16/10]" : "aspect-[16/10]")}>
         {displayThumbnail ? (
           <img
             src={displayThumbnail}
@@ -114,6 +114,10 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
             width={400}
             height={250}
           />
+        ) : isFeatured ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-[#e8e4df] via-[#d9d5d0] to-[#9a9590]">
+            <BookOpen className={cn(isLg ? "h-20 w-20" : "h-12 w-12", "text-white/60")} strokeWidth={1.2} />
+          </div>
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center"
@@ -123,35 +127,39 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
           </div>
         )}
 
-        {/* Dark gradient overlay at bottom for readability */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
+        {/* Dark gradient overlay at bottom for readability (only non-featured) */}
+        {!isFeatured && <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />}
 
         {/* Wishlist heart */}
         <button
           onClick={handleWishlistClick}
-          className="absolute top-3 right-3 h-8 w-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center hover:bg-black/50 transition-colors z-10"
+          className={cn(
+            "absolute top-3 right-3 flex items-center justify-center z-10 transition-colors",
+            isFeatured ? "h-6 w-6" : "h-8 w-8 rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50"
+          )}
           aria-label={isInWishlist ? "찜 해제" : "찜하기"}
         >
           <Heart
             className={cn(
-              "h-4 w-4 transition-colors",
-              isInWishlist ? "fill-white text-white" : "text-white/80"
+              "transition-colors",
+              isFeatured ? (isLg ? "h-6 w-6" : "h-4 w-4") : (isLg ? "h-5 w-5" : "h-4 w-4"),
+              isInWishlist ? "fill-white text-white" : isFeatured ? "text-white/80" : "text-white/80"
             )}
           />
         </button>
 
         {/* 판매 상태 배지 */}
-        {normalizeSaleStatus(course.sale_status) !== "on_sale" && (
+        {!isFeatured && normalizeSaleStatus(course.sale_status) !== "on_sale" && (
           <div className="absolute bottom-3 left-3 z-10">
             <SaleStatusBadge status={course.sale_status} className="bg-white/90 backdrop-blur-sm" />
           </div>
         )}
 
-        {/* Category badge */}
-        {course.category_name && (
+        {/* Category / Level badge */}
+        {levelLabel && (
           <div className="absolute top-3 left-3 z-10">
             <Badge className={cn(isLg ? "text-sm" : "text-[10px]", "bg-white/90 text-foreground hover:bg-white/90 border-0 backdrop-blur-sm font-medium")}>
-              {course.category_name}
+              {levelLabel}
             </Badge>
           </div>
         )}
