@@ -11,7 +11,7 @@ interface LoginVisualPanelProps {
 
 const LoginVisualPanel = memo(({
   backgroundImage,
-  brandName = "WEBHEADS",
+  brandName = "festcert",
   tagline,
 }: LoginVisualPanelProps) => {
   const { t } = useTranslation();
@@ -21,11 +21,11 @@ const LoginVisualPanel = memo(({
   const effectiveBgImage = activePreset?.login_bg_image_url || backgroundImage;
   const displayTagline = activePreset?.brand_tagline || tagline || t("auth.heroTitle");
   const topText = activePreset?.login_top_text || effectiveBrandName;
-  const subtitle = activePreset?.login_subtitle ?? "Learning Management System";
+  const subtitle = activePreset?.login_subtitle ?? "축제운영전문가 자격증 교육원";
   // Allow per-client accent. Falls back to brand violet.
-  const accent = activePreset?.accent_hsl?.trim() || "262 70% 45%";
-  const accentDeep = activePreset?.accent_hsl?.trim() || "262 70% 40%";
-  const accentSoft = activePreset?.accent_hsl?.trim() || "262 50% 92%";
+  const accent = activePreset?.accent_hsl?.trim() || "223 69% 33%";
+  const accentDeep = activePreset?.accent_hsl?.trim() || "224 72% 25%";
+  const accentSoft = activePreset?.accent_hsl?.trim() || "223 70% 96%";
 
   return (
     <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden" style={{ backgroundColor: `hsl(${accentSoft})` }}>
