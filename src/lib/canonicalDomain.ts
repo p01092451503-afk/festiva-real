@@ -39,6 +39,7 @@ export const getAuthRedirectOrigin = (): string => {
 export const enforceCanonicalDomain = (): void => {
   if (typeof window === "undefined") return;
   const host = window.location.hostname;
+  if (!PRODUCTION_ORIGIN) return;
   if (!REDIRECTABLE_HOSTS.has(host)) return;
   const target = `${PRODUCTION_ORIGIN}${window.location.pathname}${window.location.search}${window.location.hash}`;
   window.location.replace(target);
