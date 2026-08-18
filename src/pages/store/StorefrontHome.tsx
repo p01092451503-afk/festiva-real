@@ -19,6 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import hwacheonImg from "@/assets/festival-hwacheon.png.asset.json";
+import boryeongImg from "@/assets/festival-boryeong.png.asset.json";
+import jinhaeImg from "@/assets/festival-jinhae.png.asset.json";
 
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
@@ -33,9 +36,7 @@ const FESTIVALS = [
     name: "화천 산천어축제",
     location: "강원도 화천군",
     month: "1월",
-    icon: "🎣",
-    bg: "bg-brand-blue-light",
-    iconColor: "text-brand-blue",
+    imageUrl: hwacheonImg.url,
     period: "매년 1월 초 ~ 1월 하순 (약 23일간)",
     summary:
       "얼음으로 덮인 화천천 위에서 열리는 국내 대표 겨울 축제입니다. 얼음낚시를 중심으로 눈·얼음 조형물, 선등거리 등 겨울 콘텐츠를 한곳에 모아 매년 100만 명 이상이 찾습니다.",
@@ -51,9 +52,7 @@ const FESTIVALS = [
     name: "보령 머드축제",
     location: "충남 보령시",
     month: "7월",
-    icon: "🌊",
-    bg: "bg-brand-orange/10",
-    iconColor: "text-brand-orange",
+    imageUrl: boryeongImg.url,
     period: "매년 7월 중순 ~ 하순 (약 10일간)",
     summary:
       "대천해수욕장의 갯벌 진흙을 활용한 체험형 여름 축제로, 외국인 방문객 비중이 가장 높은 축제 중 하나입니다. 머드 체험존과 해변 공연이 결합된 구조입니다.",
@@ -69,9 +68,7 @@ const FESTIVALS = [
     name: "진해 군항제",
     location: "경남 창원시",
     month: "4월",
-    icon: "🌸",
-    bg: "bg-brand-pink-light",
-    iconColor: "text-primary",
+    imageUrl: jinhaeImg.url,
     period: "매년 3월 말 ~ 4월 초 (약 10일간)",
     summary:
       "36만여 그루의 벚나무가 만개하는 국내 최대 봄 축제입니다. 여좌천 로망스교, 경화역 등 도심 전역이 축제 공간으로 확장되는 개방형 구조가 특징입니다.",
@@ -180,31 +177,36 @@ const StorefrontHome = () => {
   };
 
   const renderFestivals = () => (
-    <section key="festivals" className="bg-accent/30">
-      <div className="max-w-6xl mx-auto px-4 py-14">
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight mb-8">
+    <section key="festivals" className="bg-muted/20 border-t border-border">
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight mb-5">
           꼭 가봐야 할 전국 축제
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {FESTIVALS.map((festival) => (
             <button
               key={festival.name}
               type="button"
               onClick={() => setSelectedFestival(festival)}
               aria-label={`${festival.name} 자세히 보기`}
-              className="text-left bg-card rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="text-left bg-background rounded-xl border border-border/80 overflow-hidden transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className={`h-32 ${festival.bg} flex items-center justify-center`}>
-                <span className={`text-5xl ${festival.iconColor}`}>{festival.icon}</span>
+              <div className="h-24 overflow-hidden bg-muted">
+                <img
+                  src={festival.imageUrl}
+                  alt={festival.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-foreground">{festival.name}</h3>
-                <p className="text-base text-muted-foreground mt-1">
+              <div className="p-4">
+                <h3 className="text-base font-semibold text-foreground">{festival.name}</h3>
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {festival.location} · {festival.month}
                 </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-navy">
+                <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                   자세히 보기
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </span>
               </div>
             </button>
@@ -290,21 +292,23 @@ const StorefrontHome = () => {
         <DialogContent className="max-w-xl">
           {selectedFestival && (
             <>
-              <div
-                className={`-mx-6 -mt-6 mb-2 h-28 ${selectedFestival.bg} flex items-center justify-center rounded-t-lg`}
-              >
-                <span className={`text-5xl ${selectedFestival.iconColor}`}>{selectedFestival.icon}</span>
+              <div className="-mx-6 -mt-6 mb-2 h-28 overflow-hidden rounded-t-lg bg-muted">
+                <img
+                  src={selectedFestival.imageUrl}
+                  alt={selectedFestival.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <DialogHeader>
-                <DialogTitle className="text-xl">{selectedFestival.name}</DialogTitle>
-                <DialogDescription className="text-base">
+                <DialogTitle className="text-lg">{selectedFestival.name}</DialogTitle>
+                <DialogDescription className="text-sm">
                   {selectedFestival.location} · {selectedFestival.period}
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-5 text-base">
+              <div className="space-y-4 text-sm">
                 <p className="leading-relaxed text-foreground/90">{selectedFestival.summary}</p>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-navy">주요 특징</h4>
+                  <h4 className="font-semibold text-navy text-sm">주요 특징</h4>
                   <ul className="space-y-2">
                     {selectedFestival.highlights.map((h) => (
                       <li key={h} className="flex gap-2 text-muted-foreground leading-relaxed">
@@ -315,7 +319,7 @@ const StorefrontHome = () => {
                   </ul>
                 </div>
                 <div className="rounded-xl border border-border bg-muted/40 p-4">
-                  <h4 className="font-semibold text-navy mb-1">운영 실무 포인트</h4>
+                  <h4 className="font-semibold text-navy mb-1 text-sm">운영 실무 포인트</h4>
                   <p className="text-muted-foreground leading-relaxed">{selectedFestival.opsPoint}</p>
                 </div>
               </div>
