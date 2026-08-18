@@ -292,21 +292,23 @@ const StorefrontHome = () => {
         <DialogContent className="max-w-xl">
           {selectedFestival && (
             <>
-              <div
-                className={`-mx-6 -mt-6 mb-2 h-28 ${selectedFestival.bg} flex items-center justify-center rounded-t-lg`}
-              >
-                <span className={`text-5xl ${selectedFestival.iconColor}`}>{selectedFestival.icon}</span>
+              <div className="-mx-6 -mt-6 mb-2 h-28 overflow-hidden rounded-t-lg bg-muted">
+                <img
+                  src={selectedFestival.imageUrl}
+                  alt={selectedFestival.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <DialogHeader>
-                <DialogTitle className="text-xl">{selectedFestival.name}</DialogTitle>
-                <DialogDescription className="text-base">
+                <DialogTitle className="text-lg">{selectedFestival.name}</DialogTitle>
+                <DialogDescription className="text-sm">
                   {selectedFestival.location} · {selectedFestival.period}
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-5 text-base">
+              <div className="space-y-4 text-sm">
                 <p className="leading-relaxed text-foreground/90">{selectedFestival.summary}</p>
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-navy">주요 특징</h4>
+                  <h4 className="font-semibold text-navy text-sm">주요 특징</h4>
                   <ul className="space-y-2">
                     {selectedFestival.highlights.map((h) => (
                       <li key={h} className="flex gap-2 text-muted-foreground leading-relaxed">
@@ -317,7 +319,7 @@ const StorefrontHome = () => {
                   </ul>
                 </div>
                 <div className="rounded-xl border border-border bg-muted/40 p-4">
-                  <h4 className="font-semibold text-navy mb-1">운영 실무 포인트</h4>
+                  <h4 className="font-semibold text-navy mb-1 text-sm">운영 실무 포인트</h4>
                   <p className="text-muted-foreground leading-relaxed">{selectedFestival.opsPoint}</p>
                 </div>
               </div>
