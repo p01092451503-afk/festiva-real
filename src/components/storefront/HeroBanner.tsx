@@ -130,10 +130,15 @@ const HeroBanner = () => {
                     <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
 
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-24">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-semibold text-navy shadow-sm">
-                        <span className="h-2 w-2 rounded-full bg-brand-orange" />
-                        축제운영전문가 자격증 교육원
+                      <span className="inline-flex items-stretch overflow-hidden rounded-sm border border-navy/15 bg-card/70 text-sm">
+                        <span className="bg-navy px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white">
+                          fest<span className="text-brand-orange">cert</span>
+                        </span>
+                        <span className="px-4 py-1.5 font-semibold tracking-tight text-navy">
+                          축제운영전문가 자격증 교육원
+                        </span>
                       </span>
+
                       <h2 className="mt-6 text-4xl font-bold leading-[1.3] tracking-tight text-foreground sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
@@ -159,35 +164,22 @@ const HeroBanner = () => {
                         </Link>
                       </div>
                       <div className="mt-10 sm:mt-12">
-                        <div className="mx-auto inline-flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-border bg-card/80 px-6 py-4 shadow-sm backdrop-blur-sm sm:gap-6 sm:px-8 sm:py-5">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-blue-light text-navy">
-                              <Layers className="h-5 w-5" />
+                        <div className="mx-auto inline-flex flex-wrap items-center justify-center divide-y divide-border border-y border-navy/15 sm:divide-x sm:divide-y-0">
+                          {[
+                            { Icon: Layers, strong: "2급·1급", label: "단계별 과정" },
+                            { Icon: PlayCircle, strong: "9차시", label: "온라인 강의" },
+                            { Icon: BookOpen, strong: "교재 포함", label: "195,000원" },
+                          ].map(({ Icon, strong, label }) => (
+                            <div key={strong} className="flex items-center gap-3 px-6 py-4 sm:px-8">
+                              <Icon className="h-5 w-5 shrink-0 text-navy/70" strokeWidth={1.5} />
+                              <span className="text-base text-muted-foreground sm:text-lg">
+                                <strong className="font-bold text-navy">{strong}</strong> {label}
+                              </span>
                             </div>
-                            <span className="text-base font-medium text-muted-foreground sm:text-lg">
-                              <strong className="font-bold text-navy">2급·1급</strong> 단계별 과정
-                            </span>
-                          </div>
-                          <div className="hidden h-6 w-px bg-border sm:block" />
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange/10 text-brand-orange">
-                              <PlayCircle className="h-5 w-5" />
-                            </div>
-                            <span className="text-base font-medium text-muted-foreground sm:text-lg">
-                              <strong className="font-bold text-navy">9차시</strong> 온라인 강의
-                            </span>
-                          </div>
-                          <div className="hidden h-6 w-px bg-border sm:block" />
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-blue-light text-navy">
-                              <BookOpen className="h-5 w-5" />
-                            </div>
-                            <span className="text-base font-medium text-muted-foreground sm:text-lg">
-                              <strong className="font-bold text-navy">교재 포함</strong> 195,000원
-                            </span>
-                          </div>
+                          ))}
                         </div>
                       </div>
+
                     </div>
                   </div>
                 ) : (
