@@ -16,9 +16,9 @@ export const PAGE_BACKGROUNDS = {
     glowToken: "brand-blue",
   },
   support: {
-    // 교육원 소개와 동일한 웨이브 컨셉 (방향만 반대로 하여 페이지 구분)
+    // 교육원 소개와 유사한 톤이지만, 형이상학적인 궤도(orbit) 패턴으로 차별화
     gradient: "bg-gradient-to-bl from-brand-blue-light via-background to-background",
-    pattern: "wave",
+    pattern: "orbit",
     glow: "top-right",
     glowToken: "brand-blue",
   },

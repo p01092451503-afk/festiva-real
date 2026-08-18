@@ -14,7 +14,7 @@ import type { CSSProperties, ReactNode } from "react";
  */
 
 /** 패턴 종류 (톤은 --brand-blue / --brand-orange 토큰 기반) */
-export type PatternKind = "dots" | "grid" | "diagonal" | "wave" | "plain";
+export type PatternKind = "dots" | "grid" | "diagonal" | "wave" | "orbit" | "plain";
 
 export type PatternConfig = {
   /** 섹션 배경 그라디언트 (tailwind 클래스) */
@@ -64,6 +64,32 @@ export function PagePattern({ config, className }: { config: PatternConfig; clas
     <div className={cn("absolute inset-0 pointer-events-none overflow-hidden", className)} aria-hidden="true">
       {style && (
         <div className="absolute inset-0" style={{ ...style, opacity: config.patternOpacity ?? 0.5 }} />
+      )}
+
+      {config.pattern === "orbit" && (
+        <svg
+          className="absolute inset-0 w-full h-full text-brand-blue/25"
+          viewBox="0 0 1440 260"
+          preserveAspectRatio="none"
+        >
+          <g fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.55">
+            <ellipse cx="1180" cy="120" rx="300" ry="150" />
+            <ellipse cx="1180" cy="120" rx="220" ry="110" />
+            <ellipse cx="1180" cy="120" rx="140" ry="70" />
+            <ellipse cx="1180" cy="120" rx="64" ry="32" />
+          </g>
+          <g fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.4">
+            <path d="M-40 210 C260 120 520 250 820 160 C1060 90 1240 190 1500 120" />
+            <path d="M-40 238 C260 150 520 278 820 190 C1060 120 1240 218 1500 150" />
+          </g>
+          <g fill="currentColor" opacity="0.5">
+            <circle cx="1180" cy="120" r="4" />
+            <circle cx="1400" cy="120" r="3" />
+            <circle cx="1040" cy="70" r="2.5" />
+            <circle cx="300" cy="60" r="2.5" />
+            <circle cx="520" cy="96" r="2" />
+          </g>
+        </svg>
       )}
 
       {config.pattern === "wave" && (
