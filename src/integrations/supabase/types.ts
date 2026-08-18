@@ -7924,6 +7924,108 @@ export type Database = {
         }
         Relationships: []
       }
+      support_faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          is_published: boolean
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          question?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      support_inquiries: {
+        Row: {
+          answer: string | null
+          answered_at: string | null
+          content: string
+          created_at: string
+          id: string
+          inquiry_type: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answer?: string | null
+          answered_at?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          inquiry_type?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answer?: string | null
+          answered_at?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          inquiry_type?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      support_reviews: {
+        Row: {
+          author_label: string
+          content: string
+          course_label: string
+          created_at: string
+          id: string
+          is_published: boolean
+          published_at: string
+          rating: number
+        }
+        Insert: {
+          author_label: string
+          content: string
+          course_label: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          published_at?: string
+          rating?: number
+        }
+        Update: {
+          author_label?: string
+          content?: string
+          course_label?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          published_at?: string
+          rating?: number
+        }
+        Relationships: []
+      }
       survey_answers: {
         Row: {
           answer_text: string | null
