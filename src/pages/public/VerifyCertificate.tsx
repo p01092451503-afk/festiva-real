@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, ShieldX, Award, Loader2 } from "lucide-react";
+import { PagePattern } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 
 type Verified = {
   recipient_name: string;
