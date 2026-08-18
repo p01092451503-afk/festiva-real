@@ -16,6 +16,8 @@ import {
   Calculator,
   Rss,
   Receipt,
+  Truck,
+  HelpCircle,
   KeyRound,
   TrendingUp,
   MessageSquareText,
