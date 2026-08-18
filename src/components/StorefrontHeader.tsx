@@ -55,7 +55,7 @@ const StorefrontHeader = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-navy-dark bg-navy text-primary-foreground">
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-slate-50 text-foreground">
       <div className="max-w-7xl mx-auto flex h-24 items-center justify-between px-4">
         {/* Left: Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
