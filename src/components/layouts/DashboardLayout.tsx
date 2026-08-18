@@ -185,46 +185,68 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
 
   const { isEnabled } = useFeatureModules();
 
+  // festcert IA: 강의 안내 / 학습운영·문의 / 자격증 신청 및 발급 기준으로 재배치
   const studentNav: NavItem[] = [
-    { navKey: "student.dashboard", label: t("nav.dashboard"), href: "/student", icon: LayoutDashboard, tourId: "nav-dashboard" },
-    { navKey: "student.catalog", label: t("nav.courseCatalog"), href: "/catalog", icon: Compass, tourId: "nav-catalog" },
-    { navKey: "student.myCourses", label: t("nav.myCourses"), href: "/dashboard/courses", icon: BookOpen, tourId: "nav-courses" },
-    { navKey: "student.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/student/video-sessions", icon: Video },
-    { navKey: "student.selfLearning", label: t("nav.selfLearning", "자기주도학습"), href: "/student/self-learning", icon: Brain },
-    { navKey: "student.notes", label: t("nav.myNotes", "내 학습 메모"), href: "/student/notes", icon: NotebookPen },
-    { navKey: "student.microLearning", label: t("nav.microLearning", "마이크로러닝"), href: "/student/micro-learning", icon: Zap },
-    { navKey: "student.qualifications", label: t("nav.qualifications", "자격검정"), href: "/student/qualifications", icon: Award },
-    { navKey: "student.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
-    { navKey: "student.articles", label: t("nav.articles", "아티클"), href: "/articles", icon: Newspaper },
-    { navKey: "student.assignments", label: t("nav.assignments"), href: "/dashboard/assignments", icon: ClipboardList, tourId: "nav-assignments" },
-    { navKey: "student.corrections", label: t("nav.corrections", "에세이(첨삭) 작성"), href: "/student/corrections", icon: PenLine },
-    { navKey: "student.achievements", label: t("nav.achievements"), href: "/dashboard/achievements", icon: Trophy, tourId: "nav-achievements" },
+    { navKey: "student.dashboard", label: t("nav.dashboard", "수강 현황"), href: "/student", icon: LayoutDashboard, tourId: "nav-dashboard" },
+    { navKey: "student.catalog", label: t("nav.courseGuide", "강의 안내"), href: "/store/courses", icon: Compass, tourId: "nav-catalog" },
+    { navKey: "student.myCourses", label: t("nav.myClassroom", "나의 강의실"), href: "/dashboard/courses", icon: BookOpen, tourId: "nav-courses" },
+    {
+      navKey: "student.learningTools",
+      label: t("nav.learningTools", "학습 도구"),
+      href: "#group-student-learning-tools",
+      icon: Brain,
+      children: [
+        { navKey: "student.assignments", label: t("nav.assignments"), href: "/dashboard/assignments", icon: ClipboardList, tourId: "nav-assignments" },
+        { navKey: "student.videoSessions", label: t("nav.videoSessions", "화상 세션"), href: "/student/video-sessions", icon: Video },
+        { navKey: "student.selfLearning", label: t("nav.selfLearning", "자기주도학습"), href: "/student/self-learning", icon: Brain },
+        { navKey: "student.notes", label: t("nav.myNotes", "내 학습 메모"), href: "/student/notes", icon: NotebookPen },
+        { navKey: "student.microLearning", label: t("nav.microLearning", "마이크로러닝"), href: "/student/micro-learning", icon: Zap },
+        { navKey: "student.qualifications", label: t("nav.qualifications", "자격검정"), href: "/student/qualifications", icon: Award },
+        { navKey: "student.corrections", label: t("nav.corrections", "에세이(첨삭) 작성"), href: "/student/corrections", icon: PenLine },
+        { navKey: "student.englishCorrection", label: t("nav.englishCorrection", "AI 영어 교정"), href: "/tools/english-correction", icon: Sparkles },
+        { navKey: "student.articles", label: t("nav.articles", "아티클"), href: "/articles", icon: Newspaper },
+        { navKey: "student.achievements", label: t("nav.achievements"), href: "/dashboard/achievements", icon: Trophy, tourId: "nav-achievements" },
+      ].filter((i) => !isHidden(i.navKey)),
+    },
+    ...(isEnabled("certificates_ops")
+      ? [{
+          navKey: "student.certificates",
+          label: t("nav.certificateIssuance", "자격증 신청 및 발급"),
+          href: "#group-student-certificates",
+          icon: Award,
+          children: [
+            { navKey: "student.certIssued", label: t("nav.certIssued", "발급 신청·내역"), href: "/student/certificates", icon: Award },
+            { navKey: "student.certShipping", label: t("nav.certShipping", "배송 현황"), href: "/student/certificates?tab=shipping", icon: Truck },
+            { navKey: "student.certGuide", label: t("nav.certGuide", "발급 절차 안내"), href: "/about?tab=certificate", icon: FileText },
+          ].filter((i) => !isHidden(i.navKey)),
+        } as NavItem]
+      : []),
     ...(isEnabled("programs")
       ? [{ navKey: "student.programs", label: t("nav.programs", "프로그램 신청"), href: "/student/programs", icon: CalendarRange } as NavItem]
       : []),
     ...(isEnabled("evidence")
       ? [{ navKey: "student.evidence", label: t("nav.evidence", "증빙자료 제출"), href: "/student/evidence", icon: FolderCheck } as NavItem]
       : []),
-    ...(isEnabled("certificates_ops")
-      ? [{ navKey: "student.certificates", label: t("nav.certificates", "내 수료증"), href: "/student/certificates", icon: Award } as NavItem]
-      : []),
     ...(isEnabled("surveys_ops")
       ? [{ navKey: "student.surveys", label: t("nav.surveys", "만족도 조사"), href: "/student/surveys", icon: ClipboardList } as NavItem]
       : []),
     {
       navKey: "student.communication",
-      label: t("nav.groupCommunication", "소통"),
+      label: t("nav.learningSupport", "학습운영·문의"),
       href: "#group-student-communication",
       icon: Megaphone,
       showNew: hasNewAnnouncement || hasNewBoardPost,
       children: [
         { navKey: "student.announcements", label: t("nav.announcements", "공지사항"), href: "/student/announcements", icon: Megaphone, showNew: hasNewAnnouncement },
-        { navKey: "student.board", label: t("nav.board", "게시판"), href: "/student/board", icon: FileText, showNew: hasNewBoardPost },
+        { navKey: "student.board", label: t("nav.inquiryBoard", "1:1 문의·리뷰 게시판"), href: "/student/board", icon: FileText, showNew: hasNewBoardPost },
         { navKey: "student.community", label: t("nav.community", "커뮤니티"), href: "/student/community", icon: Users2 },
-      ],
+        { navKey: "student.faq", label: t("nav.faq", "FAQ"), href: "/about?tab=faq", icon: HelpCircle },
+      ].filter((i) => !isHidden(i.navKey)),
     },
-    { navKey: "student.mypage", label: t("nav.myPage"), href: "/mypage", icon: UserCircle },
+    { navKey: "student.orders", label: t("nav.myOrders", "결제 내역"), href: "/my/orders", icon: Receipt },
+    { navKey: "student.mypage", label: t("nav.memberInfo", "회원 정보"), href: "/mypage", icon: UserCircle },
   ].filter((i) => !isHidden(i.navKey));
+
 
   const teacherNav: NavItem[] = [
     { navKey: "teacher.dashboard", label: t("nav.dashboard"), href: "/teacher", icon: LayoutDashboard, tourId: "nav-dashboard" },
