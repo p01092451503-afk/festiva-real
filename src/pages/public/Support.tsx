@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Megaphone, MessageSquare, HelpCircle, Star, Pin } from "lucide-react";
 import { toast } from "sonner";
 import StorefrontHeader from "@/components/StorefrontHeader";
+import { PageBanner } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 import SiteFooter from "@/components/SiteFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -140,28 +142,13 @@ export default function Support() {
     <div className="min-h-screen bg-background flex flex-col">
       <StorefrontHeader />
 
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-r from-background via-brand-blue-light to-background">
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.35]"
-          style={{
-            backgroundImage: "radial-gradient(hsl(var(--brand-blue) / 0.35) 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-          }}
-          aria-hidden="true"
-        />
-        <div
-          className="absolute -right-24 -top-24 w-72 h-72 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(var(--brand-orange) / 0.12) 0%, transparent 70%)" }}
-          aria-hidden="true"
-        />
-        <div className="relative max-w-6xl mx-auto px-4 py-14 sm:py-16 space-y-3">
-          <p className="text-sm font-semibold tracking-[0.18em] uppercase text-brand-orange">SUPPORT</p>
-          <h1 className="text-2xl sm:text-4xl font-bold text-navy">학습운영·문의</h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            공지사항과 자주 묻는 질문을 확인하고, 궁금한 점은 1:1 문의로 남겨주세요. 평일 09:00~18:00 · 24시간 내 답변
-          </p>
-        </div>
-      </section>
+      <PageBanner
+        config={pageBg("support")}
+        eyebrow="SUPPORT"
+        title="학습운영·문의"
+        description="공지사항과 자주 묻는 질문을 확인하고, 궁금한 점은 1:1 문의로 남겨주세요. 평일 09:00~18:00 · 24시간 내 답변"
+      />
+
 
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 min-w-0">

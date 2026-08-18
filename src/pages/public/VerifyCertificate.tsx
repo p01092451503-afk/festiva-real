@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, ShieldX, Award, Loader2 } from "lucide-react";
+import { PagePattern } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 
 type Verified = {
   recipient_name: string;
@@ -31,16 +33,9 @@ export default function VerifyCertificate() {
   }, [code]);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-brand-blue-light via-background to-background flex flex-col items-center justify-center p-6 overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.5]"
-        style={{
-          backgroundImage:
-            "linear-gradient(hsl(var(--brand-blue) / 0.07) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--brand-blue) / 0.07) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-        aria-hidden="true"
-      />
+    <div className={`relative min-h-screen ${pageBg("verify").gradient} flex flex-col items-center justify-center p-6 overflow-hidden`}>
+      <PagePattern config={pageBg("verify")} />
+
       <div className="relative w-full max-w-md space-y-6">
 
         <Link to="/" className="block text-center text-sm text-muted-foreground hover:text-foreground">

@@ -9,6 +9,8 @@ import PageLoading from "@/components/PageLoading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import StorefrontHeader from "@/components/StorefrontHeader";
+import { PageBanner } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -191,25 +193,15 @@ const StorefrontCatalog = () => {
       <StorefrontHeader />
 
       {/* Page banner */}
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-brand-blue-light/50 to-background">
-        <div
-          className="absolute inset-0 pointer-events-none opacity-60"
-          style={{
-            backgroundImage:
-              "radial-gradient(hsl(var(--brand-blue) / 0.14) 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-          }}
-          aria-hidden="true"
-        />
+      <PageBanner
+        config={pageBg("courses")}
+        as="h2"
+        eyebrow="COURSES"
+        title="자격증 취득 과정"
+        description="2급·1급 단계별 온라인 과정으로 축제 기획·운영·안전관리 실무 문서를 직접 완성합니다."
+        containerClassName="max-w-7xl"
+      />
 
-        <div className="relative max-w-7xl mx-auto px-4 py-12 sm:py-14 space-y-3">
-          <p className="text-sm font-semibold tracking-[0.18em] uppercase text-brand-orange">COURSES</p>
-          <h2 className="text-2xl sm:text-4xl font-bold text-navy">자격증 취득 과정</h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            2급·1급 단계별 온라인 과정으로 축제 기획·운영·안전관리 실무 문서를 직접 완성합니다.
-          </p>
-        </div>
-      </section>
 
       {/* 강의 안내 서브메뉴 (전체 / 2급 / 1급) */}
       <nav aria-label="강의 안내 서브메뉴" className="border-b border-border bg-brand-blue-light/60">
