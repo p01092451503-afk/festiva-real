@@ -47,12 +47,13 @@ interface StorefrontCourseCardProps {
     sale_status?: string | null;
   };
   rank?: number;
+  size?: "default" | "lg";
   isInWishlist?: boolean;
   isEnrolled?: boolean;
   onWishlistToggle?: (courseId: string) => void;
 }
 
-const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, isInWishlist = false, isEnrolled = false, onWishlistToggle }, _ref) => {
+const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, size = "default", isInWishlist = false, isEnrolled = false, onWishlistToggle }, _ref) => {
   const navigate = useNavigate();
   const { user } = useUser();
   const { toast } = useToast();
@@ -65,6 +66,8 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
   const displayPrice = isSaleActive ? course.sale_price! : course.price;
   const isFree = displayPrice === 0;
   const discountPct = isSaleActive ? Math.round((1 - course.sale_price! / course.price) * 100) : 0;
+
+  const isLg = size === "lg";
 
   const placeholderBg = course.category_name ? categoryBgColors[course.category_name] || "#e5e0da" : "#e5e0da";
 
@@ -89,7 +92,10 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
     <Link
       to={`/store/courses/${course.id}`}
       onClick={handleCardClick}
-      className="group block rounded-2xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className={cn(
+        "group block rounded-2xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        isLg && "border-2 border-border shadow-sm"
+      )}
       aria-label={displayTitle}
     >
       {/* Thumbnail */}
@@ -109,7 +115,7 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
             className="absolute inset-0 flex items-center justify-center"
             style={{ backgroundColor: placeholderBg }}
           >
-            <BookOpen className="h-12 w-12 text-foreground/15" strokeWidth={1.2} />
+            <BookOpen className={cn(isLg ? "h-20 w-20" : "h-12 w-12", "text-foreground/15")} strokeWidth={1.2} />
           </div>
         )}
 
@@ -140,7 +146,7 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
         {/* Category badge */}
         {course.category_name && (
           <div className="absolute top-3 left-3 z-10">
-            <Badge className="text-[10px] bg-white/90 text-foreground hover:bg-white/90 border-0 backdrop-blur-sm font-medium">
+            <Badge className={cn(isLg ? "text-sm" : "text-[10px]", "bg-white/90 text-foreground hover:bg-white/90 border-0 backdrop-blur-sm font-medium")}>
               {course.category_name}
             </Badge>
           </div>
@@ -148,28 +154,28 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-2.5">
+      <div className={cn(isLg ? "p-7 space-y-4" : "p-4 space-y-2.5")}>
         {/* Title row with optional rank */}
         <div className="flex items-start gap-2.5">
           {rank != null && (
-            <span className="text-2xl font-extrabold text-primary leading-none mt-0.5 shrink-0 tabular-nums">
+            <span className={cn(isLg ? "text-4xl" : "text-2xl", "font-extrabold text-primary leading-none mt-0.5 shrink-0 tabular-nums")}>
               {rank}
             </span>
           )}
           <div className="min-w-0 flex-1">
-            <h3 className="text-sm font-semibold text-foreground leading-snug line-clamp-2 min-h-[2.5rem]">
+            <h3 className={cn(isLg ? "text-2xl sm:text-[1.7rem] min-h-0" : "text-sm min-h-[2.5rem]", "font-semibold text-foreground leading-snug line-clamp-2")}>
               {displayTitle}
             </h3>
             {course.instructor_name && (
-              <p className="text-xs text-muted-foreground mt-1 truncate">{course.instructor_name}</p>
+              <p className={cn(isLg ? "text-base mt-2" : "text-xs mt-1", "text-muted-foreground truncate")}>{course.instructor_name}</p>
             )}
           </div>
         </div>
 
         {/* Rating & students */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <div className={cn("flex items-center gap-2 text-muted-foreground", isLg ? "text-base" : "text-xs")}>
           <div className="flex items-center gap-0.5">
-            <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+            <Star className={cn(isLg ? "h-5 w-5" : "h-3.5 w-3.5", "text-amber-500 fill-amber-500")} />
             <span className="font-semibold text-foreground">{course.rating_avg.toFixed(1)}</span>
             <span>({course.rating_count.toLocaleString()})</span>
           </div>
@@ -196,7 +202,7 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
                   {course.price.toLocaleString()}원
                 </span>
               )}
-              <span className="text-base font-bold text-foreground">
+              <span className={cn(isLg ? "text-3xl" : "text-base", "font-bold text-foreground")}>
                 {displayPrice.toLocaleString()}원
               </span>
             </>

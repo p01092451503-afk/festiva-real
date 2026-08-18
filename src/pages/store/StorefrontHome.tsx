@@ -185,12 +185,12 @@ const StorefrontHome = () => {
                   className="flex flex-col items-center gap-3 group shrink-0"
                 >
                   <div
-                    className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-105"
+                    className="w-16 h-16 sm:w-[68px] sm:h-[68px] rounded-2xl flex items-center justify-center transition-all group-hover:scale-105"
                     style={{ background: style.bg }}
                   >
-                    <Icon className="h-5 w-5 sm:h-[22px] sm:w-[22px]" style={{ color: style.iconColor }} strokeWidth={1.6} />
+                    <Icon className="h-7 w-7 sm:h-8 sm:w-8" style={{ color: style.iconColor }} strokeWidth={1.6} />
                   </div>
-                  <span className="text-xs sm:text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
+                  <span className="text-base sm:text-lg font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
                     {cat.name}
                   </span>
                 </Link>
@@ -207,10 +207,10 @@ const StorefrontHome = () => {
         <section className="max-w-6xl mx-auto px-4 pt-14 pb-10">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
                 {title || "지금 가장 주목받는 강의"}
               </h2>
-              <p className="text-sm text-muted-foreground mt-1">{subtitle || "실시간 인기 과정을 확인하세요"}</p>
+              <p className="text-base text-muted-foreground mt-1.5">{subtitle || "실시간 인기 과정을 확인하세요"}</p>
             </div>
             <Button variant="ghost" size="sm" asChild className="gap-1 text-muted-foreground hover:text-foreground">
               <Link to="/store/courses">
@@ -218,11 +218,12 @@ const StorefrontHome = () => {
               </Link>
             </Button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className={featuredCourses.length <= 2 ? "grid grid-cols-1 md:grid-cols-2 gap-8" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"}>
             {featuredCourses.map((c, idx) => (
               <StorefrontCourseCard
                 key={c.id}
                 course={mapCourse(c)}
+                size={featuredCourses.length <= 2 ? "lg" : "default"}
                 rank={idx + 1}
                 isInWishlist={wishlistSet.has(c.id)}
                 isEnrolled={enrolledIds.has(c.id)}
@@ -238,8 +239,8 @@ const StorefrontHome = () => {
           <div className="max-w-6xl mx-auto px-4 py-14">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">새로 오픈한 강의</h2>
-                <p className="text-sm text-muted-foreground mt-1">최신 과정을 놓치지 마세요</p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">새로 오픈한 강의</h2>
+                <p className="text-base text-muted-foreground mt-1.5">최신 과정을 놓치지 마세요</p>
               </div>
               <Button variant="ghost" size="sm" asChild className="gap-1 text-muted-foreground hover:text-foreground">
                 <Link to="/store/courses">
@@ -247,11 +248,12 @@ const StorefrontHome = () => {
                 </Link>
               </Button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className={newCourses.length <= 2 ? "grid grid-cols-1 md:grid-cols-2 gap-8" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"}>
               {newCourses.map((c) => (
                 <StorefrontCourseCard
                   key={c.id}
                   course={mapCourse(c)}
+                  size={newCourses.length <= 2 ? "lg" : "default"}
                   isInWishlist={wishlistSet.has(c.id)}
                   isEnrolled={enrolledIds.has(c.id)}
                   onWishlistToggle={(id) => toggleWishlist.mutate(id)}
