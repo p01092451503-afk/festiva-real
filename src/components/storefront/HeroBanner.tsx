@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -24,21 +24,13 @@ const staticFallback = [
     id: "fallback-1",
     bg_color: "#1a3a8c",
     image_url: "",
-    title: "이 영역은 메인 비주얼 배너입니다\n고객사 브랜드에 맞게 교체됩니다",
-    subtitle: "관리자 대시보드에서 배너 이미지, 타이틀, 설명문구를\n자유롭게 등록하고 순서를 변경할 수 있습니다.",
-    cta_text: null,
-    cta_url: null,
-  },
-  {
-    id: "fallback-2",
-    bg_color: "#122a6e",
-    image_url: "",
-    title: "학습의 시작, 성장의 기록\n맞춤형 이러닝 플랫폼",
-    subtitle: "강의 등록부터 수강 관리, 평가와 이수증 발급까지\n하나의 시스템에서 효율적으로 운영하세요.",
+    title: "",
+    subtitle: "",
     cta_text: null,
     cta_url: null,
   },
 ] as unknown as HeroBannerRow[];
+
 
 const HeroBanner = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -113,13 +105,46 @@ const HeroBanner = () => {
                 {hasImage && (banner.title || banner.subtitle) && (
                   <div className="absolute inset-0 bg-black/30" />
                 )}
-                <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 md:py-24 min-h-[320px] sm:min-h-[380px]">
-                  {isFallback && (
-                    <div className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90 bg-white/15 backdrop-blur-sm px-4 py-1.5 rounded-full border border-white/20 mb-6">
-                      <Sparkles className="h-3 w-3" />
-                      ✨ 비주얼 배너 영역
+                {isFallback ? (
+                  <div className="relative overflow-hidden">
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: "linear-gradient(115deg, hsl(var(--navy-dark)) 0%, hsl(var(--navy)) 55%, hsl(var(--brand-blue)) 130%)" }}
+                    />
+                    <div className="pointer-events-none absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full bg-white/[0.06]" />
+                    <div className="pointer-events-none absolute right-24 bottom-[-160px] h-[280px] w-[280px] rounded-full bg-white/[0.04]" />
+                    <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 sm:py-20 md:py-24">
+                      <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-white/60 uppercase mb-4 sm:mb-5">
+                        Festival Expert Certification
+                      </p>
+                      <h2 className="text-white font-bold tracking-tight text-2xl sm:text-4xl md:text-[2.9rem] leading-[1.28]">
+                        축제 기획부터 평가까지
+                        <br />
+                        <span className="text-brand-orange">실무 문서</span>를 만드는 자격증
+                      </h2>
+                      <div className="mt-6 sm:mt-8 space-y-1.5 text-white/75 text-sm sm:text-base leading-relaxed">
+                        <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
+                        <p className="text-white/60">대한민국 유일의 온라인 축제전문가 자격증 과정</p>
+                      </div>
+                      <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3">
+                        <Link
+                          to="/store/courses"
+                          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-2.5 text-sm font-semibold text-brand-orange-foreground transition hover:opacity-90"
+                        >
+                          강의 안내 보기
+                          <ChevronRight className="h-4 w-4" />
+                        </Link>
+                        <Link
+                          to="/about"
+                          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
+                        >
+                          자격 제도 안내
+                        </Link>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                ) : (
+                <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 md:py-24 min-h-[320px] sm:min-h-[380px]">
                   {banner.title && (
                     <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-white leading-snug tracking-tight mb-4 whitespace-pre-line drop-shadow">
                       {banner.title}
@@ -136,6 +161,8 @@ const HeroBanner = () => {
                     </span>
                   )}
                 </div>
+                )}
+
               </Wrapper>
             );
           })}
