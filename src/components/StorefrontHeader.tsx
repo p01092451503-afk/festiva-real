@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ShoppingBag, Bell, LogOut, BookOpen, Receipt, Heart, Settings, ChevronDown, Menu, X, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +25,7 @@ const StorefrontHeader = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: navItems = [] } = useNavItems("header");
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const isAdmin = roles.includes("admin") || roles.includes("super_admin");
