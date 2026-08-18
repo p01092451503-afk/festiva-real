@@ -260,8 +260,17 @@ const StorefrontHome = () => {
           </>
         )}
         {!blocks.some((b: MainPageBlock) => b.block_type === "courses") && renderFeaturedCourses()}
+        <Suspense fallback={<div className="min-h-[300px]" />}>
+          <HomeWhySection />
+        </Suspense>
+        <Suspense fallback={<div className="min-h-[300px]" />}>
+          <HomeVoicesSection />
+        </Suspense>
+        <Suspense fallback={<div className="min-h-[240px]" />}>
+          <HomeSupportSection />
+        </Suspense>
         {renderFestivals()}
-      </main>
+
 
       {/* Footer */}
       <Suspense fallback={<div className="min-h-[200px]" />}>
