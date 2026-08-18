@@ -270,10 +270,10 @@ const StorefrontHome = () => {
           <>
             {renderHero()}
             {renderCategories()}
-            {renderFeaturedCourses()}
-            {renderFestivals()}
           </>
         )}
+        {!blocks.some((b: MainPageBlock) => b.block_type === "courses") && renderFeaturedCourses()}
+        {renderFestivals()}
       </main>
 
       {/* Footer */}
