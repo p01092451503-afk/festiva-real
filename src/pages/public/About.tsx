@@ -259,7 +259,7 @@ const About = () => {
             <section className="space-y-3">
               <h2 className="text-xl font-semibold">자격증 발급 안내</h2>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                수강 신청부터 자격증 발급까지의 절차입니다. 발급된 자격증은 검증 코드로 진위를 확인할 수 있습니다.
+                수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
               </p>
             </section>
 
@@ -276,6 +276,17 @@ const About = () => {
                 </li>
               ))}
             </ol>
+
+            <Card>
+              <CardContent className="p-6 space-y-2">
+                <h3 className="font-semibold">발급 전 확인 사항</h3>
+                <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
+                  {ISSUE_NOTES.map((n) => <li key={n}>{n}</li>)}
+                </ul>
+              </CardContent>
+            </Card>
+
+
 
             <Card className="bg-brand-blue-light border-border">
               <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
