@@ -88,7 +88,7 @@ const HeroBanner = () => {
                 key={banner.id}
                 {...wrapperProps}
                 className="relative flex-[0_0_100%] min-w-0 block"
-                style={{ backgroundColor: banner.bg_color || "#1a1a2e" }}
+                style={{ backgroundColor: isFallback ? "transparent" : banner.bg_color || "#1a1a2e" }}
               >
                 {hasImage && (
                   <img
