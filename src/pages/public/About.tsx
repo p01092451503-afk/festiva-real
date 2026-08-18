@@ -246,20 +246,29 @@ const About = () => {
       <StorefrontHeader />
 
       {/* Hero */}
-      <section className="bg-navy text-primary-foreground relative overflow-hidden">
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-brand-blue-light via-background to-background">
         <div
-          className="absolute inset-0 opacity-30 pointer-events-none"
-          style={{ background: "radial-gradient(60% 90% at 85% 20%, hsl(var(--brand-blue)) 0%, transparent 70%)" }}
+          className="absolute inset-0 pointer-events-none opacity-70"
+          style={{ background: "radial-gradient(70% 80% at 88% 10%, hsl(var(--brand-blue) / 0.18) 0%, transparent 70%)" }}
           aria-hidden="true"
         />
+        <svg
+          className="absolute bottom-0 left-0 w-full h-24 text-brand-blue/15"
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d="M0 60 C240 120 480 0 720 40 C960 80 1200 20 1440 60 L1440 120 L0 120 Z" fill="currentColor" />
+        </svg>
         <div className="relative max-w-6xl mx-auto px-4 py-16 sm:py-20 space-y-4">
-          <p className="text-base font-semibold tracking-wide text-brand-orange">ABOUT festcert</p>
-          <h1 className="text-3xl sm:text-5xl font-bold leading-tight">축제운영전문가 자격증 교육원</h1>
-          <p className="text-lg sm:text-xl text-primary-foreground/85 max-w-3xl leading-relaxed">
+          <p className="text-base font-semibold tracking-[0.18em] uppercase text-brand-orange">ABOUT festcert</p>
+          <h1 className="text-3xl sm:text-5xl font-bold leading-tight text-navy">축제운영전문가 자격증 교육원</h1>
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl leading-relaxed">
             축제·이벤트 현장에서 바로 통하는 기획·운영·안전관리 역량을 단계별로 학습하고, 자격 검정을 통해 전문성을 증명합니다.
           </p>
         </div>
       </section>
+
 
       {/* Tabs */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-10 min-w-0">
