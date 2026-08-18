@@ -78,6 +78,38 @@ const StorefrontHome = () => {
     return <StorefrontHomeSkeleton />;
   }
 
+  const { data: courses = [], isLoading: coursesLoading } = useQuery({
+    queryKey: ["store-home-courses"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, sale_status, status")
+        .eq("is_b2c", true)
+        .eq("status", "published")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const { data: instructorMap = {} } = useQuery({
+    queryKey: ["store-home-instructors", courses.map((c: any) => c.instructor_id).filter(Boolean)],
+    queryFn: async () => {
+      const ids = [...new Set(courses.map((c: any) => c.instructor_id).filter(Boolean))] as string[];
+      if (!ids.length) return {};
+      const { data } = await supabase.from("profiles").select("user_id, full_name").in("user_id", ids);
+      const map: Record<string, string> = {};
+      data?.forEach((p: any) => { map[p.user_id] = p.full_name || ""; });
+      return map;
+    },
+    enabled: courses.length > 0,
+  });
+
+  const categoryMap = categories.reduce((acc: Record<string, string>, c: any) => {
+    acc[c.id] = c.name;
+    return acc;
+  }, {});
+
   const renderHero = () => <HeroBanner key="hero" />;
 
   const renderCategories = () =>
@@ -110,6 +142,42 @@ const StorefrontHome = () => {
         </div>
       </section>
     ) : null;
+
+  const renderFeaturedCourses = () => {
+    if (coursesLoading) return <div className="min-h-[300px]" />;
+    if (!courses.length) return null;
+    const featured = courses.slice(0, 2);
+    return (
+      <section key="featured-courses" className="border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 py-14">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">지금 가장 주목받는 강의</h2>
+              <p className="text-base sm:text-lg text-muted-foreground mt-2">실시간 인기 과정을 확인하세요</p>
+            </div>
+            <Link to="/store/courses" className="hidden sm:flex items-center gap-1 text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
+              전체 보기 <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {featured.map((course: any, idx: number) => (
+              <StorefrontCourseCard
+                key={course.id}
+                course={{
+                  ...course,
+                  category_name: categoryMap[course.category_id],
+                  instructor_name: instructorMap[course.instructor_id],
+                }}
+                rank={idx + 1}
+                size="lg"
+                featured
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
 
   const renderFestivals = () => (
     <section key="festivals" className="bg-accent/30">
