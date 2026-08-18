@@ -213,7 +213,17 @@ const StorefrontCourseDetail = () => {
     addToCartMutation.mutate();
   };
 
-  const handleBuyNow = async () => {
+  // 1급 과정은 팝업-1(자격 확인)을 통과해야 결제로 진행
+  const isLevel1 = /1\s*급/.test(course?.title ?? "");
+
+  const handleBuyNow = () => {
+    if (!user) { navigate("/auth"); return; }
+    if (isEnrolled) { navigate(`/student/courses/${id}`); return; }
+    if (isLevel1) { setShowLevel1Dialog(true); return; }
+    proceedBuyNow();
+  };
+
+  const proceedBuyNow = async () => {
     if (!user) { navigate("/auth"); return; }
     if (isEnrolled) { navigate(`/student/courses/${id}`); return; }
 
