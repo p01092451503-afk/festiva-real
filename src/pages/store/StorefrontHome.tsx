@@ -65,14 +65,6 @@ const StorefrontHome = () => {
   const localizeCatName = useInlineEnName();
   const localizedCategories = categories.map((c: any) => ({ ...c, name: localizeCatName(c) }));
 
-  // Category icon config: colorful rounded-square style like app icons
-  const categoryStyles: { icon: typeof GraduationCap; bg: string; iconColor: string }[] = [
-    { icon: GraduationCap, bg: "hsl(260 30% 62%)", iconColor: "#fff" },
-    { icon: TrendingUp, bg: "hsl(210 30% 58%)", iconColor: "#fff" },
-    { icon: Flame, bg: "hsl(15 30% 60%)", iconColor: "#fff" },
-    { icon: Sparkles, bg: "hsl(330 28% 60%)", iconColor: "#fff" },
-    { icon: Clock, bg: "hsl(170 25% 55%)", iconColor: "#fff" },
-  ];
 
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
     queryKey: ["store-home-courses"],
