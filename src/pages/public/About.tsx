@@ -90,12 +90,130 @@ const ISSUE_NOTES = [
   "허위 정보 기재 시 자격증이 취소될 수 있습니다.",
 ];
 
+const COMPLETION_CONDITIONS = [
+  { label: "강의 이수", value: "6주 이상 이수", note: "필수" },
+  { label: "시험", value: "60점 이상", note: "합격" },
+  { label: "수강 기간", value: "9주", note: "기간 내" },
+  { label: "수료 후", value: "PDF + 실물 수료증", note: "발급" },
+];
+
+const ISSUE_METHODS = [
+  {
+    title: "PDF 온라인 발급",
+    fee: "무료",
+    lines: ["수신 이메일로 발송", "3~5영업일 이내", "재발급 무료 (횟수 제한 없음)"],
+  },
+  {
+    title: "실물 우편 수령",
+    fee: "유료",
+    lines: ["배송비 3,000원", "3~5영업일 배송", "자격증 + 봉투 구성"],
+  },
+];
+
+const CURRICULUM = [
+  {
+    level: "2급",
+    subjects: [
+      {
+        title: "과목 1 — 축제 콘셉트 기획",
+        meta: "3강 · 산출물: 기본 기획서",
+        lessons: [
+          { no: "1강", title: "지역자원·타깃 분석 기반 콘셉트 도출", desc: "로컬 리소스 발굴, 빅데이터 기반 타깃 세그멘테이션, 킬러 콘텐츠 설계" },
+          { no: "2강", title: "프로그램·예산·공간 기초 설계", desc: "적정 예산 산정, 공간 배치 기초, 일정 로드맵 수립" },
+          { no: "3강", title: "기본 기획서 작성 실습", desc: "표준 문서 체계, 축제 정체성 확립과 네이밍 전략, 기획서 구조화" },
+        ],
+      },
+      {
+        title: "과목 2 — 축제 홍보 및 마케팅",
+        meta: "3강 · 산출물: 홍보 실행계획서",
+        lessons: [
+          { no: "4강", title: "홍보 목표·KPI 설정 및 채널 전략", desc: "축제 브랜딩, 홍보 KPI 정의, SNS 플랫폼별 콘텐츠 전략" },
+          { no: "5강", title: "콘텐츠 캘린더 수립", desc: "사전·현장·사후 홍보 일정표, 게시물 유형 및 제작 일정 관리" },
+          { no: "6강", title: "홍보 실행계획서 작성 실습", desc: "실제 제출 가능한 홍보 실행계획서 완성, 예산 배분 및 일정 매핑" },
+        ],
+      },
+      {
+        title: "과목 3 — 축제 운영 및 관리",
+        meta: "3강 · 산출물: 운영계획서+체크리스트",
+        lessons: [
+          { no: "7강", title: "운영조직·역할분장 및 현장 체크리스트", desc: "파트별 역할 정의, 현장 운영 표준 체크리스트 작성" },
+          { no: "8강", title: "안전관리 기초 및 동선·혼잡 관리", desc: "안전 매뉴얼 기초, 관람객 동선 설계, 혼잡 시나리오 대응" },
+          { no: "9강", title: "운영계획서 작성 실습", desc: "종합 운영계획서 완성, 현장 배치도 작성, 비상 대응 매뉴얼" },
+        ],
+      },
+    ],
+    book: {
+      title: "[교재] 축제 기획·운영 실무 전문가 (2급)",
+      price: "45,000원",
+      tagline: "\"기획부터 현장 운영까지, 축제의 기본기를 마스터하다!\"",
+      desc: "지자체·공공기관 축제 담당자, 문화재단 실무자, 그리고 축제 기획자를 꿈꾸는 입문자를 위한 축제 실무 지침서. 현업에 즉시 적용 가능한 표준 문서 체계와 실전 노하우를 한 권에 압축했습니다.",
+      toc: [
+        "PART 1 — 과목 1: 축제 콘셉트 기획 (제1장 지역자원 및 타깃 분석 / 제2장 차별화된 콘셉트 도출 / 제3장 기본 기획서 작성)",
+        "PART 2 — 과목 2: 축제 홍보 및 마케팅",
+        "PART 3 — 과목 3: 축제 운영 및 관리",
+        "단원 평가 — 적중 예상문제 (OX 및 객관식 20문항)",
+      ],
+    },
+  },
+  {
+    level: "1급",
+    subjects: [
+      {
+        title: "과목 1 — 축제 실전 기획",
+        meta: "3강 · 산출물: 종합 기획서",
+        lessons: [
+          { no: "1강", title: "환경분석·타깃 전략 수립", desc: "SWOT·PEST 분석, 경쟁 축제 벤치마킹, 전략적 타깃 세분화" },
+          { no: "2강", title: "차별화 콘셉트·예산·일정·안전 시나리오 통합", desc: "브랜드 포지셔닝, 통합 예산 배분, 리스크 시나리오 설계" },
+          { no: "3강", title: "종합 기획서 작성 실습", desc: "관계기관 제출용 종합 기획서 완성, 발표 자료 구성" },
+        ],
+      },
+      {
+        title: "과목 2 — 통합 마케팅 및 홍보",
+        meta: "3강 · 산출물: 통합 마케팅 플랜",
+        lessons: [
+          { no: "4강", title: "브랜드 포지셔닝 및 고객여정 기반 채널 전략", desc: "축제 브랜드 아이덴티티 설계, 터치포인트별 채널 믹스 전략" },
+          { no: "5강", title: "KPI·예산 배분 및 성과 측정 체계", desc: "마케팅 ROI 산정, 채널별 예산 배분, 실시간 성과 모니터링" },
+          { no: "6강", title: "통합 마케팅 플랜 작성 실습", desc: "KPI 포함 통합 마케팅 플랜 완성, 예산표·일정표 통합 작성" },
+        ],
+      },
+      {
+        title: "과목 3 — 축제 관리 및 평가",
+        meta: "3강 · 산출물: 운영·평가 보고서",
+        lessons: [
+          { no: "7강", title: "운영조직 표준화 및 안전·보험·인허가", desc: "조직 표준 매뉴얼 작성, 행사 보험·인허가 실무, 안전관리 계획 수립" },
+          { no: "8강", title: "정산·증빙 관리 및 성과지표 설계", desc: "예산 정산 체계, 증빙 관리 프로세스, KPI 기반 성과 측정 체계 구축" },
+          { no: "9강", title: "운영·평가 보고서 작성 실습", desc: "관계기관 제출용 사후 보고서 완성, 개선안 도출 및 차기 기획 연계" },
+        ],
+      },
+    ],
+    book: {
+      title: "[교재] 축제 운영·평가·관리 전문가 (1급)",
+      price: "45,000원",
+      tagline: "\"메가 트렌드를 리드하는 축제 운영의 모든 것을 한 권에!\"",
+      desc: "축제 운영·평가·관리 전문가(1급) 과정 공식 채택 교재. 환경 분석, 통합 마케팅, 안전 관리, 성과 측정까지 메가 트렌드를 리드하는 실무 전략을 총망라했습니다.",
+      toc: [
+        "PART 1 — 과목 1: 축제 실전 기획 (SWOT·PEST 분석 / 통합 예산·일정·안전 시나리오 / 종합 기획서 작성)",
+        "PART 2 — 과목 2: 통합 마케팅 및 홍보",
+        "PART 3 — 과목 3: 축제 관리 및 평가",
+        "단원 평가 — 적중 예상문제 (OX 및 객관식 20문항)",
+      ],
+    },
+  },
+];
+
+const INSTRUCTORS = [
+  { name: "이병관 교수", field: "광고·PR 전문", lines: ["한국외대 미디어커뮤니케이션학부", "광고 및 PR 분야 다수 자문", "공공기관 홍보 전략 기획"] },
+  { name: "유정숙 교수", field: "축제 기획·운영 실무", lines: ["축제 기획·운영 실무 전문가", "지역 문화콘텐츠 전략 자문", "지자체 축제 컨설팅 다수"] },
+  { name: "조용석 교수", field: "MICE·마케팅", lines: ["MICE·축제 마케팅 전문가", "공공기관 자문위원 경력", "관광재단 기획 자문"] },
+];
+
 const FAQS = [
   { q: "영상을 빠르게 돌려봐도 출석으로 인정되나요?", a: "네, 인정됩니다. 배속 재생(0.5배~2.0배)과 구간 반복 모두 허용되며, 영상 종료 지점까지 재생 완료 시 자동으로 출석 처리됩니다." },
   { q: "테스트에 몇 번이나 응시할 수 있나요?", a: "횟수 제한이 없습니다. 60점 이상 합격할 때까지 즉시 재응시가 가능합니다." },
   { q: "수강 기간 안에 완료하지 못하면 어떻게 되나요?", a: "수강 기간은 9주입니다. 9주 이내에 강의·시험 6주치 이상을 완료해야 수료 처리됩니다." },
   { q: "환불은 어떻게 신청하나요?", a: "결제 후 7일 이내, 진도율 0%이면 전액 환불됩니다. 진도율 50% 미만이면 50% 환불됩니다." },
 ];
+
 
 
 const About = () => {
@@ -251,6 +369,83 @@ const About = () => {
                 </Card>
               ))}
             </div>
+
+            {/* 1급 수강 전 필수 확인 */}
+            <Card className="border-brand-orange/60 bg-brand-orange/5">
+              <CardContent className="p-6 space-y-2">
+                <h3 className="font-semibold text-brand-orange">1급 수강 전 필수 확인</h3>
+                <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
+                  <li>수강 자격: 관련 분야 현장 경력 3년 이상</li>
+                  <li>1급 지원 시 <strong className="text-foreground">경력증명서</strong>를 반드시 제출해야 합니다.</li>
+                  <li>자격 미달 시 1급 자격증이 취소됩니다.</li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* 커리큘럼 */}
+            {CURRICULUM.map((c) => (
+              <section key={c.level} className="space-y-4">
+                <h3 className="font-semibold">축제운영전문가 {c.level} 커리큘럼</h3>
+                <div className="space-y-4">
+                  {c.subjects.map((s) => (
+                    <Card key={s.title}>
+                      <CardContent className="p-6 space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                          <p className="font-semibold text-navy min-w-0">{s.title}</p>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">{s.meta}</span>
+                        </div>
+                        <div className="border-t-2 border-border/80">
+                          {s.lessons.map((l) => (
+                            <div key={l.no} className="grid grid-cols-1 sm:grid-cols-[60px_1fr] gap-1 sm:gap-4 py-3 border-b-2 border-border/80">
+                              <span className="text-sm font-semibold text-brand-orange">{l.no}</span>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium">{l.title}</p>
+                                <p className="text-sm text-muted-foreground leading-relaxed mt-1">{l.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                <Card>
+                  <CardContent className="p-6 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                      <p className="font-semibold min-w-0">{c.book.title}</p>
+                      <span className="font-semibold text-navy whitespace-nowrap">{c.book.price}</span>
+                    </div>
+                    <p className="text-sm font-medium text-brand-orange">{c.book.tagline}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{c.book.desc}</p>
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold">목차 구성</p>
+                      <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
+                        {c.book.toc.map((t) => <li key={t}>{t}</li>)}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </section>
+            ))}
+
+            {/* 강사 소개 */}
+            <section className="space-y-4">
+              <h3 className="font-semibold">강사 소개</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {INSTRUCTORS.map((i) => (
+                  <Card key={i.name}>
+                    <CardContent className="p-6 space-y-2">
+                      <p className="font-semibold text-navy">{i.name}</p>
+                      <Badge variant="secondary" className="whitespace-nowrap">{i.field}</Badge>
+                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1 pt-1">
+                        {i.lines.map((l) => <p key={l}>{l}</p>)}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
           </TabsContent>
 
 
@@ -262,6 +457,41 @@ const About = () => {
                 수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
               </p>
             </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">수료 조건 안내</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {COMPLETION_CONDITIONS.map((c) => (
+                  <Card key={c.label}>
+                    <CardContent className="p-6 space-y-1">
+                      <p className="text-sm text-muted-foreground">{c.label}</p>
+                      <p className="font-semibold text-navy">{c.value}</p>
+                      <Badge variant="secondary" className="whitespace-nowrap">{c.note}</Badge>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">발급 방법 — PDF + 실물 동시 발급</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {ISSUE_METHODS.map((m) => (
+                  <Card key={m.title}>
+                    <CardContent className="p-6 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-semibold text-navy min-w-0">{m.title}</p>
+                        <Badge variant="secondary" className="whitespace-nowrap">{m.fee}</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1">
+                        {m.lines.map((l) => <p key={l}>{l}</p>)}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
 
             <ol className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {STEPS.map((s) => (
