@@ -45,12 +45,14 @@ interface StorefrontCourseCardProps {
     category_name?: string | null;
     instructor_name?: string | null;
     sale_status?: string | null;
+    level?: string | null;
   };
   rank?: number;
   size?: "default" | "lg";
   isInWishlist?: boolean;
   isEnrolled?: boolean;
   onWishlistToggle?: (courseId: string) => void;
+  featured?: boolean;
 }
 
 const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardProps>(({ course, rank, size = "default", isInWishlist = false, isEnrolled = false, onWishlistToggle }, _ref) => {
