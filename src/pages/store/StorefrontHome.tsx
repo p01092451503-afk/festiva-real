@@ -1,17 +1,12 @@
 import { lazy, Suspense } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Sparkles, TrendingUp, Clock, GraduationCap, Flame } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import HeroBanner from "@/components/storefront/HeroBanner";
 import { StorefrontHomeSkeleton } from "@/components/PageSkeletons";
 import { supabase } from "@/integrations/supabase/client";
-import { useUser } from "@/contexts/UserContext";
-import { useToast } from "@/hooks/use-toast";
 import { useInlineEnName } from "@/hooks/useI18nMaps";
-import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 import { useMainPageBlocks, type MainPageBlock } from "@/hooks/useMainPageBlocks";
 import SitePopups from "@/components/storefront/SitePopups";
 import DOMPurify from "dompurify";
