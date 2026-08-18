@@ -78,51 +78,78 @@ export default function StudentCertificates() {
         <header className="space-y-1">
           <div className="flex items-center gap-2">
             <Award className="w-6 h-6 text-muted-foreground" />
-            <h1 className="text-xl sm:text-2xl font-semibold">내 수료증</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold">자격증 신청 및 발급</h1>
           </div>
           <p className="text-muted-foreground mt-1">
-            발급된 수료증과 참가확인서를 다운로드하고 검증 링크를 공유할 수 있습니다.
+            발급된 자격증·수료증을 다운로드하고 검증 링크를 공유할 수 있습니다. 발급 절차와 수료 조건은{" "}
+            <Link to="/about?tab=certificate" className="underline underline-offset-2">
+              교육원 소개 &gt; 발급 안내
+            </Link>
+            에서 확인하세요.
           </p>
         </header>
 
-        {isLoading ? (
-          <p className="text-sm text-muted-foreground">불러오는 중…</p>
-        ) : certs.length === 0 ? (
-          <Card><CardContent className="py-12 text-center text-muted-foreground">발급된 인증서가 없습니다.</CardContent></Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {certs.map((c) => (
-              <Card key={c.id}>
-                <CardContent className="p-4 space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <div className="font-semibold truncate">{c.source_title}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {c.source_type === "program" ? "프로그램" : c.source_type === "project" ? "산학프로젝트" : "수동 발급"} ·
-                        {" "}{new Date(c.issued_at).toLocaleDateString("ko-KR")}
+        <Tabs value={tab} onValueChange={setTab} className="min-w-0">
+          <TabsList>
+            <TabsTrigger value="issued">발급 내역</TabsTrigger>
+            <TabsTrigger value="shipping">배송 현황</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="issued" className="mt-6">
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground">불러오는 중…</p>
+            ) : certs.length === 0 ? (
+              <Card><CardContent className="py-12 text-center text-muted-foreground">발급된 인증서가 없습니다.</CardContent></Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {certs.map((c) => (
+                  <Card key={c.id}>
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="font-semibold truncate">{c.source_title}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {c.source_type === "program" ? "프로그램" : c.source_type === "project" ? "산학프로젝트" : "수동 발급"} ·
+                            {" "}{new Date(c.issued_at).toLocaleDateString("ko-KR")}
+                          </div>
+                        </div>
+                        {c.revoked_at
+                          ? <Badge variant="destructive">폐기</Badge>
+                          : <Badge variant="default"><ShieldCheck className="w-3 h-3 mr-1" />유효</Badge>}
                       </div>
-                    </div>
-                    {c.revoked_at
-                      ? <Badge variant="destructive">폐기</Badge>
-                      : <Badge variant="default"><ShieldCheck className="w-3 h-3 mr-1" />유효</Badge>}
-                  </div>
-                  <div className="text-xs font-mono text-muted-foreground">CODE: {c.verification_code}</div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" disabled={!!c.revoked_at} onClick={() => download(c)}>
-                      <Download className="w-3 h-3 mr-1" /> PDF 다운로드
-                    </Button>
-                    <Button size="sm" variant="ghost" asChild>
-                      <a href={`/verify/cert/${c.verification_code}`} target="_blank" rel="noreferrer">
-                        검증 페이지
-                      </a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                      <div className="text-xs font-mono text-muted-foreground">CODE: {c.verification_code}</div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" disabled={!!c.revoked_at} onClick={() => download(c)}>
+                          <Download className="w-3 h-3 mr-1" /> PDF 다운로드
+                        </Button>
+                        <Button size="sm" variant="ghost" asChild>
+                          <a href={`/verify/cert/${c.verification_code}`} target="_blank" rel="noreferrer">
+                            검증 페이지
+                          </a>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* 실물 자격증 배송 추적 — UI 스텁(추후 배송 데이터 연동) */}
+          <TabsContent value="shipping" className="mt-6">
+            <Card>
+              <CardContent className="py-12 text-center space-y-2">
+                <Truck className="w-6 h-6 mx-auto text-muted-foreground" aria-hidden="true" />
+                <p className="font-medium">배송 현황 준비 중입니다</p>
+                <p className="text-sm text-muted-foreground">
+                  실물 자격증 배송 조회 기능은 준비 중입니다. 배송 관련 문의는 학습운영·문의 &gt; 1:1 문의를 이용해 주세요.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
+
     </DashboardLayout>
   );
 }
