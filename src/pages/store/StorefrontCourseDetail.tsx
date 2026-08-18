@@ -18,6 +18,7 @@ import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { formatPrice, formatDurationMinutes, cn } from "@/lib/utils";
+import Level1QualificationDialog from "@/components/storefront/Level1QualificationDialog";
 import SaleStatusCta, { isPurchasable, saleCtaLabel, SaleStatusBadge } from "@/components/storefront/SaleStatusCta";
 
 const StorefrontCourseDetail = () => {
