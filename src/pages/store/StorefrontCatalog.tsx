@@ -9,6 +9,8 @@ import PageLoading from "@/components/PageLoading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import StorefrontHeader from "@/components/StorefrontHeader";
+import { PageBanner } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
