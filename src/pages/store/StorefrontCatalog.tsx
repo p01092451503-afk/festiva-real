@@ -96,12 +96,8 @@ const StorefrontCatalog = () => {
     setSelectedCategory(match ? match.id : "all");
   }, [level, categories]);
 
-  const setLevel = (next: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (next === "all") params.delete("level");
-    else params.set("level", next);
-    setSearchParams(params, { replace: true });
-  };
+
+
 
 
 
