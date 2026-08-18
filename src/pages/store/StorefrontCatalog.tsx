@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -15,14 +16,24 @@ import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
+/** 급수(2급/1급) 서브메뉴 — `?level=1|2`로 카테고리를 자동 선택한다. */
+const LEVEL_TABS = [
+  { value: "all", label: "전체 과정" },
+  { value: "2", label: "2급 과정" },
+  { value: "1", label: "1급 과정" },
+] as const;
+
 const StorefrontCatalog = () => {
   const { user } = useUser();
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const level = searchParams.get("level") ?? "all";
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filterOpen, setFilterOpen] = useState(false);
+
 
   const { data: categories = [] } = useQuery({
     queryKey: ["store-categories"],
@@ -69,6 +80,28 @@ const StorefrontCatalog = () => {
     categories.forEach(c => { m[c.id] = c.name; });
     return m;
   }, [categories]);
+
+  /** `?level=1|2` → "1급/2급" 카테고리를 자동 선택. 매칭 카테고리가 없으면 전체를 보여준다. */
+  useEffect(() => {
+    if (level === "all") {
+      setSelectedCategory("all");
+      return;
+    }
+    const match = categories.find(c => {
+      const hay = `${c.name ?? ""} ${c.slug ?? ""}`.toLowerCase();
+      return hay.includes(`${level}급`) || hay.includes(`level-${level}`) || hay.includes(`level${level}`);
+    });
+    setSelectedCategory(match ? match.id : "all");
+  }, [level, categories]);
+
+  const setLevel = (next: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (next === "all") params.delete("level");
+    else params.set("level", next);
+    setSearchParams(params, { replace: true });
+  };
+
+
 
   const { data: wishlistSet = new Set<string>() } = useQuery({
     queryKey: ["store-wishlist-ids", user?.id],
@@ -157,10 +190,32 @@ const StorefrontCatalog = () => {
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
+      {/* 강의 안내 서브메뉴 (전체 / 2급 / 1급) */}
+      <nav aria-label="강의 안내 서브메뉴" className="border-b border-border bg-brand-blue-light/60">
+        <div className="max-w-7xl mx-auto flex items-center gap-1 px-4 overflow-x-auto">
+          {LEVEL_TABS.map(tab => (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => setLevel(tab.value)}
+              aria-current={level === tab.value ? "page" : undefined}
+              className={`whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-[3px] transition-colors ${
+                level === tab.value
+                  ? "border-brand-orange text-navy"
+                  : "border-transparent text-muted-foreground hover:text-navy"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-foreground">과정 탐색</h1>
+          <h1 className="text-2xl font-bold text-foreground">강의 안내</h1>
+
           <div className="flex items-center gap-3">
             <div className="relative flex-1 sm:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
