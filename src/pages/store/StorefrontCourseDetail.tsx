@@ -300,6 +300,7 @@ const StorefrontCourseDetail = () => {
 
 
   return (
+    <>
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
