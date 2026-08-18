@@ -270,6 +270,9 @@ const StorefrontHome = () => {
           <HomeSupportSection />
         </Suspense>
         {renderFestivals()}
+      </main>
+
+
 
 
       {/* Footer */}
