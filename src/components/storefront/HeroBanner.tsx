@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Layers, PlayCircle, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
