@@ -21,45 +21,82 @@ const TABS = [
   { value: "faq", label: "FAQ", icon: HelpCircle },
 ] as const;
 
+const HIGHLIGHTS = [
+  { title: "공인 교육기관", text: "평생교육법 제37조에 따라 교육청에 신고된 언론기관부설 평생교육시설입니다." },
+  { title: "축제 전문 과정", text: "지자체·공공기관 실무자, 기획자, 취업 희망자를 위한 실무 중심 자격증 과정을 제공합니다." },
+  { title: "2급·1급 자격증", text: "기초(2급)부터 심화(1급)까지 체계적인 2단계 온라인 자격증 과정을 운영합니다." },
+];
+
+const RECOMMENDED = [
+  "지자체·공공기관 축제 담당 실무자",
+  "문화재단·관광재단 실무자",
+  "축제·행사 기획사 종사자",
+  "축제 분야 취업·창업 희망자",
+];
+
 const HISTORY = [
-  { year: "설립", text: "축제·이벤트 산업 현장 전문가 양성을 목표로 축제운영전문가 자격증 교육원을 설립했습니다." },
-  { year: "교육 과정", text: "축제 기획·운영·안전관리·현장 실무를 아우르는 2급/1급 단계별 커리큘럼을 운영합니다." },
-  { year: "자격 검정", text: "온라인 이론 학습과 평가, 실무 과제 심사를 통해 자격을 검정하고 자격증을 발급합니다." },
+  { year: "2026", text: "축제운영전문가 2급·1급 온라인 자격증 과정 개설 및 동시 오픈" },
+  { year: "2026", text: "크리에이티브쉐이크 부설 평생교육원 온라인 원격과정 변경신고 승인" },
+  { year: "2025", text: "사단법인 마이스교육학회 설립" },
+  { year: "2024", text: "크리에이티브쉐이크㈜ 부설 평생교육원 설치 신고" },
+];
+
+const ORGS = [
+  { name: "크리에이티브쉐이크㈜", lines: ["언론기관부설 평생교육시설 설치·운영", "LMS 플랫폼 개발·운영", "서울특별시 종로구 소재"] },
+  { name: "사단법인 마이스교육학회", lines: ["교육과정 개발 및 콘텐츠 저작권 보유", "자격증 심사·발급 권한", "위탁운영 계약 체결"] },
 ];
 
 const LEVELS = [
   {
     level: "2급",
-    badge: "입문·기본 과정",
-    target: "축제·이벤트 분야 입문자, 관련 학과 재학생, 지역 축제 참여 실무자",
-    subjects: ["축제의 이해와 유형", "축제 기획 기초", "현장 운영 실무", "안전·위기관리 기본"],
-    exam: "온라인 이론 평가(객관식) + 수료 기준 진도 충족",
+    badge: "기초",
+    summary: "아이디어를 현실로 만드는 축제 실무의 모든 것 — 축제 기획·운영 실무 전문가",
+    target: "지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자",
+    facts: [
+      { label: "총 시수", value: "27시간 (9강)" },
+      { label: "수강 기간", value: "9주 과정" },
+      { label: "수료 조건", value: "6주 이상 이수 + 시험 60점" },
+      { label: "자격증", value: "PDF + 실물 수료증" },
+    ],
+    price: "195,000원 (강의 150,000 + 교재 45,000)",
     href: "/store/courses?level=2",
   },
   {
     level: "1급",
-    badge: "심화·전문 과정",
-    target: "2급 취득자 및 축제 기획·운영 실무 경력자",
-    subjects: ["축제 기획 심화", "예산·계약·행정 실무", "홍보·마케팅 전략", "안전관리 계획 수립"],
-    exam: "온라인 이론 평가 + 기획서 과제 심사",
+    badge: "심화",
+    summary: "메가 트렌드를 리드하는 축제 운영의 모든 것 — 축제 운영·평가·관리 전문가",
+    target: "관련 분야 현장 경력 3년 이상 (2급 수료 또는 경력 1년↑ 권장), 경력증명서 제출 필수",
+    facts: [
+      { label: "총 시수", value: "27시간 (9강)" },
+      { label: "수강 기간", value: "9주 과정" },
+      { label: "수료 조건", value: "6주 이상 이수 + 시험 60점 + 경력증명서" },
+      { label: "권장 선수", value: "2급 수료 또는 경력 1년↑" },
+    ],
+    price: "195,000원 (강의 150,000 + 교재 45,000)",
     href: "/store/courses?level=1",
   },
 ];
 
 const STEPS = [
-  { step: "01", title: "과정 수강 신청", text: "강의 안내에서 급수별 과정을 선택해 수강 신청·결제를 완료합니다." },
-  { step: "02", title: "온라인 학습", text: "나의 강의실에서 차시별 강의를 수강합니다. 수료 기준 진도를 충족해야 평가에 응시할 수 있습니다." },
-  { step: "03", title: "평가·과제 응시", text: "이론 평가와 과제를 제출하면 심사 결과가 학습운영·문의에 안내됩니다." },
-  { step: "04", title: "자격증 발급", text: "합격 시 자격증이 발급되며, PDF 다운로드와 검증 링크를 제공합니다. 실물 발급은 별도 신청 시 배송됩니다." },
+  { step: "01", title: "수강 신청·결제", text: "개강일은 매월 1일입니다. 급수별 과정을 선택해 수강 신청·결제를 완료합니다. 1급은 경력증명서를 함께 제출해야 합니다." },
+  { step: "02", title: "온라인 학습", text: "1차시는 5분 안내 + 25분 강의 + 15분 시험으로 총 45분입니다. 1과목 3강, 총 9강으로 구성되며 배속 재생·구간 반복이 모두 허용됩니다." },
+  { step: "03", title: "주간 테스트", text: "9주 이내에 강의·시험 6주치 이상을 완료하고 시험 60점 이상을 획득해야 수료로 인정됩니다. 재응시 횟수 제한은 없습니다." },
+  { step: "04", title: "자격증 발급", text: "수료생 전원에게 PDF와 실물 자격증이 발급됩니다. PDF는 이메일로 3~5영업일 내 발송(재발급 무료), 실물은 배송비 3,000원으로 3~5영업일 내 배송됩니다." },
+];
+
+const ISSUE_NOTES = [
+  "자격증에 기재된 성명은 발급 후 변경이 불가합니다.",
+  "PDF는 이메일로 먼저 발송되며, 실물은 순차 배송됩니다.",
+  "허위 정보 기재 시 자격증이 취소될 수 있습니다.",
 ];
 
 const FAQS = [
-  { q: "2급을 건너뛰고 1급부터 수강할 수 있나요?", a: "1급은 심화 과정으로, 2급 취득자 또는 동등한 실무 경력자를 대상으로 합니다. 자격 여부가 불확실한 경우 학습운영·문의로 문의해 주세요." },
-  { q: "수료 기준은 어떻게 되나요?", a: "각 과정에 설정된 진도율과 평가 기준을 모두 충족해야 수료로 인정됩니다. 과정 상세 페이지에서 기준을 확인할 수 있습니다." },
-  { q: "자격증은 어디에서 확인·다운로드하나요?", a: "로그인 후 자격증 신청 및 발급 메뉴의 발급 내역에서 PDF 다운로드와 검증 페이지 링크를 이용할 수 있습니다." },
-  { q: "실물 자격증도 받을 수 있나요?", a: "실물 자격증은 별도 신청 후 배송됩니다. 배송 현황 조회 기능은 준비 중이며, 문의는 1:1 문의 게시판을 이용해 주세요." },
-  { q: "수강 취소·환불은 가능한가요?", a: "환불은 교육원 환불 규정에 따라 진행됩니다. 결제 내역에서 환불을 신청하거나 1:1 문의로 요청해 주세요." },
+  { q: "영상을 빠르게 돌려봐도 출석으로 인정되나요?", a: "네, 인정됩니다. 배속 재생(0.5배~2.0배)과 구간 반복 모두 허용되며, 영상 종료 지점까지 재생 완료 시 자동으로 출석 처리됩니다." },
+  { q: "테스트에 몇 번이나 응시할 수 있나요?", a: "횟수 제한이 없습니다. 60점 이상 합격할 때까지 즉시 재응시가 가능합니다." },
+  { q: "수강 기간 안에 완료하지 못하면 어떻게 되나요?", a: "수강 기간은 9주입니다. 9주 이내에 강의·시험 6주치 이상을 완료해야 수료 처리됩니다." },
+  { q: "환불은 어떻게 신청하나요?", a: "결제 후 7일 이내, 진도율 0%이면 전액 환불됩니다. 진도율 50% 미만이면 50% 환불됩니다." },
 ];
+
 
 const About = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -107,21 +144,57 @@ const About = () => {
           {/* 교육원 소개 */}
           <TabsContent value="intro" className="mt-8 space-y-8">
             <section className="space-y-3">
-              <h2 className="text-xl font-semibold">교육원 소개</h2>
+              <h2 className="text-xl font-semibold">크리에이티브쉐이크 부설 평생교육원</h2>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                festcert 축제운영전문가 자격증 교육원은 지역 축제와 이벤트 산업의 현장 실무 인력을 양성하기 위해 설립되었습니다.
-                기획서 작성부터 예산·행정, 현장 운영, 안전관리까지 실제 업무 흐름에 맞춘 온라인 과정을 제공합니다.
+                언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영
               </p>
             </section>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {HIGHLIGHTS.map((h) => (
+                <Card key={h.title}>
+                  <CardContent className="p-6 space-y-2">
+                    <h3 className="font-semibold text-navy">{h.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{h.text}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
             <section className="space-y-4">
-              <h3 className="font-semibold">교육원 연혁·운영 방향</h3>
+              <h3 className="font-semibold">이런 분들께 추천합니다</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {RECOMMENDED.map((r) => (
+                  <div key={r} className="bg-brand-blue-light rounded-md px-4 py-3 text-sm min-w-0">✓ {r}</div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">학회 연혁</h3>
+              <p className="text-sm text-muted-foreground">사단법인 마이스교육학회 설립 및 운영 이력</p>
               <div className="border-t-2 border-border/80">
                 {HISTORY.map((h) => (
-                  <div key={h.year} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-6 py-4 border-b-2 border-border/80">
+                  <div key={`${h.year}-${h.text}`} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-6 py-4 border-b-2 border-border/80">
                     <div className="font-semibold text-navy">{h.year}</div>
                     <p className="text-muted-foreground leading-relaxed min-w-0">{h.text}</p>
                   </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">운영 기관</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {ORGS.map((o) => (
+                  <Card key={o.name}>
+                    <CardContent className="p-6 space-y-2">
+                      <p className="font-semibold text-navy">{o.name}</p>
+                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1">
+                        {o.lines.map((l) => <p key={l}>{l}</p>)}
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </section>
@@ -144,7 +217,8 @@ const About = () => {
             <section className="space-y-3">
               <h2 className="text-xl font-semibold">자격 제도</h2>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                축제운영전문가 자격은 2급(입문·기본)과 1급(심화·전문)으로 구성됩니다. 급수별 학습 범위와 검정 방식이 다릅니다.
+                개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성됩니다.
+                자격은 2급(기초)과 1급(심화)으로 나뉩니다.
               </p>
             </section>
 
@@ -156,20 +230,20 @@ const About = () => {
                       <h3 className="text-lg font-bold text-navy">축제운영전문가 {l.level}</h3>
                       <Badge variant="secondary" className="whitespace-nowrap">{l.badge}</Badge>
                     </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{l.summary}</p>
                     <div className="space-y-1">
                       <p className="text-sm font-semibold">수강 대상</p>
                       <p className="text-sm text-muted-foreground leading-relaxed">{l.target}</p>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold">주요 학습 내용</p>
-                      <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
-                        {l.subjects.map((s) => <li key={s}>{s}</li>)}
-                      </ul>
+                    <div className="border-t-2 border-border/80">
+                      {l.facts.map((f) => (
+                        <div key={f.label} className="flex items-start justify-between gap-4 py-2 border-b-2 border-border/80 text-sm">
+                          <span className="text-muted-foreground whitespace-nowrap">{f.label}</span>
+                          <span className="font-medium text-right min-w-0">{f.value}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold">검정 방식</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{l.exam}</p>
-                    </div>
+                    <p className="font-semibold text-navy">{l.price}</p>
                     <Button asChild variant="outline" className="w-full">
                       <Link to={l.href}>{l.level} 과정 보기</Link>
                     </Button>
@@ -179,12 +253,13 @@ const About = () => {
             </div>
           </TabsContent>
 
+
           {/* 발급 안내 */}
           <TabsContent value="certificate" className="mt-8 space-y-6">
             <section className="space-y-3">
               <h2 className="text-xl font-semibold">자격증 발급 안내</h2>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                수강 신청부터 자격증 발급까지의 절차입니다. 발급된 자격증은 검증 코드로 진위를 확인할 수 있습니다.
+                수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
               </p>
             </section>
 
@@ -201,6 +276,17 @@ const About = () => {
                 </li>
               ))}
             </ol>
+
+            <Card>
+              <CardContent className="p-6 space-y-2">
+                <h3 className="font-semibold">발급 전 확인 사항</h3>
+                <ul className="text-sm text-muted-foreground leading-relaxed list-disc pl-5 space-y-1">
+                  {ISSUE_NOTES.map((n) => <li key={n}>{n}</li>)}
+                </ul>
+              </CardContent>
+            </Card>
+
+
 
             <Card className="bg-brand-blue-light border-border">
               <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
