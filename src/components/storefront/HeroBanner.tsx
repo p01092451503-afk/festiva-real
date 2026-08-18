@@ -146,17 +146,17 @@ const HeroBanner = () => {
                 ) : (
                 <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 md:py-24 min-h-[320px] sm:min-h-[380px]">
                   {banner.title && (
-                    <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-white leading-snug tracking-tight mb-4 whitespace-pre-line drop-shadow">
+                    <h2 className="text-xl sm:text-4xl md:text-5xl font-bold text-white leading-snug tracking-tight mb-4 whitespace-pre-line drop-shadow">
                       {banner.title}
                     </h2>
                   )}
                   {banner.subtitle && (
-                    <p className="text-white/80 text-sm sm:text-base max-w-xl whitespace-pre-line mb-6 leading-relaxed drop-shadow">
+                    <p className="text-white/80 text-base sm:text-lg max-w-xl whitespace-pre-line mb-6 leading-relaxed drop-shadow">
                       {banner.subtitle}
                     </p>
                   )}
                   {banner.cta_text && banner.cta_url && (
-                    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white text-foreground text-sm font-medium hover:bg-white/90 transition">
+                    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white text-foreground text-base font-medium hover:bg-white/90 transition">
                       {banner.cta_text}
                     </span>
                   )}
