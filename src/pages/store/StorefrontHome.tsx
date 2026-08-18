@@ -200,7 +200,7 @@ const StorefrontHome = () => {
           <>
             {renderHero()}
             {renderCategories()}
-            {renderCourses()}
+            {renderFestivals()}
           </>
         )}
       </main>
