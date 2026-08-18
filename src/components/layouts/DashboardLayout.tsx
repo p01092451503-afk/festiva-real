@@ -46,7 +46,6 @@ import LanguageToggle from "@/components/LanguageToggle";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import NotificationBell from "@/components/NotificationBell";
 import GuidedTourButton from "@/components/GuidedTourButton";
-import webheadsLogoPng from "@/assets/webheads-logo.png";
 import AnimatedBrand from "@/components/AnimatedBrand";
 import { useFeatureModules } from "@/hooks/useFeatureModules";
 
