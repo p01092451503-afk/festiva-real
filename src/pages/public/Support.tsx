@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Megaphone, MessageSquare, HelpCircle, Star, Pin } from "lucide-react";
 import { toast } from "sonner";
 import StorefrontHeader from "@/components/StorefrontHeader";
+import { PageBanner } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 import SiteFooter from "@/components/SiteFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
