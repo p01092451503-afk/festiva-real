@@ -92,7 +92,10 @@ const StorefrontCourseCard = forwardRef<HTMLAnchorElement, StorefrontCourseCardP
     <Link
       to={`/store/courses/${course.id}`}
       onClick={handleCardClick}
-      className="group block rounded-2xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className={cn(
+        "group block rounded-2xl overflow-hidden bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        isLg && "border-2 border-border shadow-sm"
+      )}
       aria-label={displayTitle}
     >
       {/* Thumbnail */}
