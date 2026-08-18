@@ -219,43 +219,43 @@ const StorefrontHeader = () => {
                 const isExternal = /^https?:\/\//i.test(item.url);
                 const label = isEn && item.label_en ? item.label_en : item.label;
                 return isExternal ? (
-                  <a key={item.id} href={item.url} target={item.open_in_new_tab ? "_blank" : undefined} rel="noopener noreferrer" className="block px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</a>
+                  <a key={item.id} href={item.url} target={item.open_in_new_tab ? "_blank" : undefined} rel="noopener noreferrer" className="block px-2 py-3 text-base text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</a>
                 ) : (
-                  <Link key={item.id} to={item.url} className="block px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</Link>
+                  <Link key={item.id} to={item.url} className="block px-2 py-3 text-base text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</Link>
                 );
               })}
             </div>
           )}
           {!user ? (
             <div className="flex flex-col gap-2 pt-2">
-              <Button variant="outline" size="sm" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
+              <Button variant="outline" size="default" className="text-base" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
                 {t("auth.login")}
               </Button>
-              <Button size="sm" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
+              <Button size="default" className="text-base" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
                 {t("common.freeStart")}
               </Button>
             </div>
           ) : (
             <div className="space-y-1 pt-2">
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/cart"); setMobileOpen(false); }}>
-                <ShoppingBag className="h-4 w-4" />{t("common.cart")}{cartCount > 0 && ` (${cartCount})`}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/cart"); setMobileOpen(false); }}>
+                <ShoppingBag className="h-5 w-5" />{t("common.cart")}{cartCount > 0 && ` (${cartCount})`}
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/student"); setMobileOpen(false); }}>
-                <BookOpen className="h-4 w-4" />{t("common.myClassroom")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/student"); setMobileOpen(false); }}>
+                <BookOpen className="h-5 w-5" />{t("common.myClassroom")}
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/my/orders"); setMobileOpen(false); }}>
-                <Receipt className="h-4 w-4" />{t("mypage.ordersTab")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/my/orders"); setMobileOpen(false); }}>
+                <Receipt className="h-5 w-5" />{t("mypage.ordersTab")}
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/my/wishlist"); setMobileOpen(false); }}>
-                <Heart className="h-4 w-4" />{t("mypage.wishlistTab")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/my/wishlist"); setMobileOpen(false); }}>
+                <Heart className="h-5 w-5" />{t("mypage.wishlistTab")}
               </Button>
               {isAdmin && (
-                <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/admin"); setMobileOpen(false); }}>
-                  <Settings className="h-4 w-4" />{t("common.adminPanel")}
+                <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/admin"); setMobileOpen(false); }}>
+                  <Settings className="h-5 w-5" />{t("common.adminPanel")}
                 </Button>
               )}
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-destructive" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
-                <LogOut className="h-4 w-4" />{t("auth.logout")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base text-destructive" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
+                <LogOut className="h-5 w-5" />{t("auth.logout")}
               </Button>
             </div>
           )}
