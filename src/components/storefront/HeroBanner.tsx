@@ -106,44 +106,67 @@ const HeroBanner = () => {
                   <div className="absolute inset-0 bg-black/30" />
                 )}
                 {isFallback ? (
-                  <div className="relative overflow-hidden">
+                  <div className="relative overflow-hidden bg-background">
+                    {/* soft light gradient wash */}
                     <div
                       className="absolute inset-0"
-                      style={{ background: "linear-gradient(115deg, hsl(var(--navy-dark)) 0%, hsl(var(--navy)) 55%, hsl(var(--brand-blue)) 130%)" }}
+                      style={{
+                        background:
+                          "linear-gradient(180deg, hsl(var(--brand-blue-light)) 0%, hsl(0 0% 100%) 55%, hsl(var(--brand-blue-light)) 100%)",
+                      }}
                     />
-                    <div className="pointer-events-none absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full bg-white/[0.06]" />
-                    <div className="pointer-events-none absolute right-24 bottom-[-160px] h-[280px] w-[280px] rounded-full bg-white/[0.04]" />
-                    <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 sm:py-20 md:py-24">
-                      <p className="text-xs sm:text-sm font-semibold tracking-[0.25em] text-white/60 uppercase mb-4 sm:mb-5">
-                        Festival Expert Certification
-                      </p>
-                      <h2 className="text-white font-bold tracking-tight text-4xl sm:text-5xl md:text-[3.8rem] leading-[1.28]">
+                    {/* subtle sweeping arcs */}
+                    <svg
+                      className="pointer-events-none absolute inset-0 h-full w-full"
+                      viewBox="0 0 1440 520"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path d="M-100 470 C 300 300 700 470 1540 240" fill="none" stroke="hsl(var(--brand-blue) / 0.14)" strokeWidth="1.5" />
+                      <path d="M-100 520 C 340 350 760 520 1540 300" fill="none" stroke="hsl(var(--brand-blue) / 0.10)" strokeWidth="1.5" />
+                      <path d="M-100 420 C 260 260 660 420 1540 180" fill="none" stroke="hsl(var(--brand-orange) / 0.14)" strokeWidth="1.5" />
+                    </svg>
+                    <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-blue)/0.06)] blur-2xl" />
+                    <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
+
+                    <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-24">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-semibold text-navy shadow-sm">
+                        <span className="h-2 w-2 rounded-full bg-brand-orange" />
+                        축제운영전문가 자격증 교육원
+                      </span>
+                      <h2 className="mt-6 text-4xl font-bold leading-[1.3] tracking-tight text-foreground sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
                         <span className="text-brand-orange">실무 문서</span>를 만드는 자격증
                       </h2>
-                      <div className="mt-6 sm:mt-8 space-y-1.5 text-white/75 text-base sm:text-lg leading-relaxed">
+                      <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-muted-foreground sm:mt-7 sm:text-lg">
                         <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
-                        <p className="text-white/60">대한민국 유일의 온라인 축제전문가 자격증 과정</p>
+                        <p>대한민국 유일의 온라인 축제전문가 자격증 과정</p>
                       </div>
-                      <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3">
+                      <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10">
                         <Link
                           to="/store/courses"
-                          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-2.5 text-base font-semibold text-brand-orange-foreground transition hover:opacity-90"
+                          className="inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-navy-dark"
                         >
                           강의 안내 보기
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/about"
-                          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-2.5 text-base font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
+                          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-base font-medium text-foreground transition hover:bg-accent"
                         >
                           자격 제도 안내
                         </Link>
                       </div>
+                      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-border pt-6 text-sm text-muted-foreground sm:mt-12 sm:text-base">
+                        <span><strong className="font-semibold text-navy">2급·1급</strong> 단계별 과정</span>
+                        <span><strong className="font-semibold text-navy">9차시</strong> 온라인 강의</span>
+                        <span><strong className="font-semibold text-navy">교재 포함</strong> 195,000원</span>
+                      </div>
                     </div>
                   </div>
                 ) : (
+
                 <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 md:py-24 min-h-[320px] sm:min-h-[380px]">
                   {banner.title && (
                     <h2 className="text-xl sm:text-4xl md:text-5xl font-bold text-white leading-snug tracking-tight mb-4 whitespace-pre-line drop-shadow">
