@@ -63,15 +63,15 @@ const StorefrontHeader = () => {
             <img
               src={logoUrl}
               alt={siteSettings?.company_name || activePreset?.brand_name || "Logo"}
-              className="h-8 object-contain"
-              width={120}
-              height={32}
+              className="h-12 object-contain"
+              width={180}
+              height={48}
               loading="eager"
               {...({ fetchpriority: "high" } as any)}
               decoding="sync"
             />
           ) : (
-            <span className="flex items-baseline text-xl font-bold tracking-tight">
+            <span className="flex items-baseline text-3xl font-bold tracking-tight">
               <span className="text-primary-foreground">fest</span>
               <span className="text-brand-orange">cert</span>
             </span>

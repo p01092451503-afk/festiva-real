@@ -114,29 +114,29 @@ const HeroBanner = () => {
                     <div className="pointer-events-none absolute -right-24 -top-28 h-[420px] w-[420px] rounded-full bg-white/[0.06]" />
                     <div className="pointer-events-none absolute right-24 bottom-[-160px] h-[280px] w-[280px] rounded-full bg-white/[0.04]" />
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 sm:py-20 md:py-24">
-                      <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-white/60 uppercase mb-4 sm:mb-5">
+                      <p className="text-xs sm:text-sm font-semibold tracking-[0.25em] text-white/60 uppercase mb-4 sm:mb-5">
                         Festival Expert Certification
                       </p>
-                      <h2 className="text-white font-bold tracking-tight text-2xl sm:text-4xl md:text-[2.9rem] leading-[1.28]">
+                      <h2 className="text-white font-bold tracking-tight text-4xl sm:text-5xl md:text-[3.8rem] leading-[1.28]">
                         축제 기획부터 평가까지
                         <br />
                         <span className="text-brand-orange">실무 문서</span>를 만드는 자격증
                       </h2>
-                      <div className="mt-6 sm:mt-8 space-y-1.5 text-white/75 text-sm sm:text-base leading-relaxed">
+                      <div className="mt-6 sm:mt-8 space-y-1.5 text-white/75 text-base sm:text-lg leading-relaxed">
                         <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
                         <p className="text-white/60">대한민국 유일의 온라인 축제전문가 자격증 과정</p>
                       </div>
                       <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3">
                         <Link
                           to="/store/courses"
-                          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-2.5 text-sm font-semibold text-brand-orange-foreground transition hover:opacity-90"
+                          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-6 py-2.5 text-base font-semibold text-brand-orange-foreground transition hover:opacity-90"
                         >
                           강의 안내 보기
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/about"
-                          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
+                          className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-2.5 text-base font-medium text-white backdrop-blur-sm transition hover:bg-white/20"
                         >
                           자격 제도 안내
                         </Link>
@@ -146,17 +146,17 @@ const HeroBanner = () => {
                 ) : (
                 <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 md:py-24 min-h-[320px] sm:min-h-[380px]">
                   {banner.title && (
-                    <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-white leading-snug tracking-tight mb-4 whitespace-pre-line drop-shadow">
+                    <h2 className="text-xl sm:text-4xl md:text-5xl font-bold text-white leading-snug tracking-tight mb-4 whitespace-pre-line drop-shadow">
                       {banner.title}
                     </h2>
                   )}
                   {banner.subtitle && (
-                    <p className="text-white/80 text-sm sm:text-base max-w-xl whitespace-pre-line mb-6 leading-relaxed drop-shadow">
+                    <p className="text-white/80 text-base sm:text-lg max-w-xl whitespace-pre-line mb-6 leading-relaxed drop-shadow">
                       {banner.subtitle}
                     </p>
                   )}
                   {banner.cta_text && banner.cta_url && (
-                    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white text-foreground text-sm font-medium hover:bg-white/90 transition">
+                    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white text-foreground text-base font-medium hover:bg-white/90 transition">
                       {banner.cta_text}
                     </span>
                   )}
