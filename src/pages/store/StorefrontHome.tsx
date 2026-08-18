@@ -172,8 +172,6 @@ const StorefrontHome = () => {
     switch (b.block_type) {
       case "hero":
         return <div key={b.id}>{renderHero()}</div>;
-      case "categories":
-        return <div key={b.id}>{renderCategories()}</div>;
       case "courses":
         return <div key={b.id}>{renderFeaturedCourses()}</div>;
       case "reviews":
