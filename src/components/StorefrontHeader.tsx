@@ -56,22 +56,22 @@ const StorefrontHeader = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-navy-dark bg-navy text-primary-foreground">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4">
+      <div className="max-w-7xl mx-auto flex h-24 items-center justify-between px-4">
         {/* Left: Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           {logoUrl ? (
             <img
               src={logoUrl}
               alt={siteSettings?.company_name || activePreset?.brand_name || "Logo"}
-              className="h-12 object-contain"
-              width={180}
-              height={48}
+              className="h-16 object-contain"
+              width={240}
+              height={64}
               loading="eager"
               {...({ fetchpriority: "high" } as any)}
               decoding="sync"
             />
           ) : (
-            <span className="flex items-baseline text-3xl font-bold tracking-tight">
+            <span className="flex items-baseline text-4xl font-bold tracking-tight">
               <span className="text-primary-foreground">fest</span>
               <span className="text-brand-orange">cert</span>
             </span>
@@ -88,7 +88,7 @@ const StorefrontHeader = () => {
                 !isExternal &&
                 (pathname === item.url ||
                   (item.url !== "/" && pathname.startsWith(item.url)));
-              const linkClass = `relative flex items-center h-16 px-4 text-sm font-semibold transition-colors border-b-[3px] ${
+              const linkClass = `relative flex items-center h-24 px-8 text-lg font-semibold transition-colors border-b-4 ${
                 isActive
                   ? "border-brand-orange text-primary-foreground"
                   : "border-transparent text-primary-foreground/80 hover:text-primary-foreground hover:border-brand-orange/50"
@@ -110,28 +110,28 @@ const StorefrontHeader = () => {
               );
             })
           ) : (
-            <span className="text-xs text-primary-foreground/50 italic">메뉴를 등록해주세요</span>
+            <span className="text-sm text-primary-foreground/50 italic">메뉴를 등록해주세요</span>
           )}
         </nav>
 
 
         {/* Right: Actions (desktop) */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-3">
           {!user ? (
             <>
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative"
+                className="relative h-11 w-11"
                 onClick={() => navigate("/auth")}
                 aria-label="장바구니"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-6 w-6" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/auth")}>
+              <Button variant="ghost" size="default" className="text-base" onClick={() => navigate("/auth")}>
                 로그인
               </Button>
-              <Button size="sm" onClick={() => navigate("/auth")}>
+              <Button size="default" className="text-base" onClick={() => navigate("/auth")}>
                 무료로 시작
               </Button>
             </>
@@ -141,15 +141,15 @@ const StorefrontHeader = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative"
+                className="relative h-11 w-11"
                 onClick={() => navigate("/cart")}
                 aria-label="장바구니"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-6 w-6" />
                 {cartCount > 0 && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center rounded-full"
+                    className="absolute -top-1 -right-1 h-5 min-w-5 px-1.5 text-[11px] flex items-center justify-center rounded-full"
                   >
                     {cartCount}
                   </Badge>
@@ -162,12 +162,12 @@ const StorefrontHeader = () => {
               {/* User dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-1.5 pl-1.5">
-                    <Avatar className="h-7 w-7">
+                  <Button variant="ghost" size="default" className="gap-2 pl-1.5 text-base">
+                    <Avatar className="h-9 w-9">
                       <AvatarImage src={profile?.avatar_url || undefined} />
-                      <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+                      <AvatarFallback className="text-sm">{initials}</AvatarFallback>
                     </Avatar>
-                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -202,11 +202,11 @@ const StorefrontHeader = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="md:hidden h-11 w-11"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={t("common.menu")}
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
       </div>
 
@@ -219,43 +219,43 @@ const StorefrontHeader = () => {
                 const isExternal = /^https?:\/\//i.test(item.url);
                 const label = isEn && item.label_en ? item.label_en : item.label;
                 return isExternal ? (
-                  <a key={item.id} href={item.url} target={item.open_in_new_tab ? "_blank" : undefined} rel="noopener noreferrer" className="block px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</a>
+                  <a key={item.id} href={item.url} target={item.open_in_new_tab ? "_blank" : undefined} rel="noopener noreferrer" className="block px-2 py-3 text-base text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</a>
                 ) : (
-                  <Link key={item.id} to={item.url} className="block px-2 py-2 text-sm text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</Link>
+                  <Link key={item.id} to={item.url} className="block px-2 py-3 text-base text-foreground hover:bg-accent rounded-md" onClick={() => setMobileOpen(false)}>{label}</Link>
                 );
               })}
             </div>
           )}
           {!user ? (
             <div className="flex flex-col gap-2 pt-2">
-              <Button variant="outline" size="sm" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
+              <Button variant="outline" size="default" className="text-base" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
                 {t("auth.login")}
               </Button>
-              <Button size="sm" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
+              <Button size="default" className="text-base" onClick={() => { navigate("/auth"); setMobileOpen(false); }}>
                 {t("common.freeStart")}
               </Button>
             </div>
           ) : (
             <div className="space-y-1 pt-2">
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/cart"); setMobileOpen(false); }}>
-                <ShoppingBag className="h-4 w-4" />{t("common.cart")}{cartCount > 0 && ` (${cartCount})`}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/cart"); setMobileOpen(false); }}>
+                <ShoppingBag className="h-5 w-5" />{t("common.cart")}{cartCount > 0 && ` (${cartCount})`}
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/student"); setMobileOpen(false); }}>
-                <BookOpen className="h-4 w-4" />{t("common.myClassroom")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/student"); setMobileOpen(false); }}>
+                <BookOpen className="h-5 w-5" />{t("common.myClassroom")}
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/my/orders"); setMobileOpen(false); }}>
-                <Receipt className="h-4 w-4" />{t("mypage.ordersTab")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/my/orders"); setMobileOpen(false); }}>
+                <Receipt className="h-5 w-5" />{t("mypage.ordersTab")}
               </Button>
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/my/wishlist"); setMobileOpen(false); }}>
-                <Heart className="h-4 w-4" />{t("mypage.wishlistTab")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/my/wishlist"); setMobileOpen(false); }}>
+                <Heart className="h-5 w-5" />{t("mypage.wishlistTab")}
               </Button>
               {isAdmin && (
-                <Button variant="ghost" size="sm" className="w-full justify-start gap-2" onClick={() => { navigate("/admin"); setMobileOpen(false); }}>
-                  <Settings className="h-4 w-4" />{t("common.adminPanel")}
+                <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/admin"); setMobileOpen(false); }}>
+                  <Settings className="h-5 w-5" />{t("common.adminPanel")}
                 </Button>
               )}
-              <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-destructive" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
-                <LogOut className="h-4 w-4" />{t("auth.logout")}
+              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base text-destructive" onClick={() => { handleSignOut(); setMobileOpen(false); }}>
+                <LogOut className="h-5 w-5" />{t("auth.logout")}
               </Button>
             </div>
           )}
