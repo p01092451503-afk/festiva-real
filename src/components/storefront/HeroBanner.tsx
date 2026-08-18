@@ -158,10 +158,35 @@ const HeroBanner = () => {
                           자격 제도 안내
                         </Link>
                       </div>
-                      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-border pt-6 text-sm text-muted-foreground sm:mt-12 sm:text-base">
-                        <span><strong className="font-semibold text-navy">2급·1급</strong> 단계별 과정</span>
-                        <span><strong className="font-semibold text-navy">9차시</strong> 온라인 강의</span>
-                        <span><strong className="font-semibold text-navy">교재 포함</strong> 195,000원</span>
+                      <div className="mt-10 sm:mt-12">
+                        <div className="mx-auto inline-flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-border bg-card/80 px-6 py-4 shadow-sm backdrop-blur-sm sm:gap-6 sm:px-8 sm:py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-blue-light text-navy">
+                              <Layers className="h-5 w-5" />
+                            </div>
+                            <span className="text-base font-medium text-muted-foreground sm:text-lg">
+                              <strong className="font-bold text-navy">2급·1급</strong> 단계별 과정
+                            </span>
+                          </div>
+                          <div className="hidden h-6 w-px bg-border sm:block" />
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-orange/10 text-brand-orange">
+                              <PlayCircle className="h-5 w-5" />
+                            </div>
+                            <span className="text-base font-medium text-muted-foreground sm:text-lg">
+                              <strong className="font-bold text-navy">9차시</strong> 온라인 강의
+                            </span>
+                          </div>
+                          <div className="hidden h-6 w-px bg-border sm:block" />
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-blue-light text-navy">
+                              <BookOpen className="h-5 w-5" />
+                            </div>
+                            <span className="text-base font-medium text-muted-foreground sm:text-lg">
+                              <strong className="font-bold text-navy">교재 포함</strong> 195,000원
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
