@@ -31,8 +31,18 @@ export default function VerifyCertificate() {
   }, [code]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-6">
+    <div className="relative min-h-screen bg-gradient-to-b from-brand-blue-light via-background to-background flex flex-col items-center justify-center p-6 overflow-hidden">
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.5]"
+        style={{
+          backgroundImage:
+            "linear-gradient(hsl(var(--brand-blue) / 0.07) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--brand-blue) / 0.07) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+        aria-hidden="true"
+      />
+      <div className="relative w-full max-w-md space-y-6">
+
         <Link to="/" className="block text-center text-sm text-muted-foreground hover:text-foreground">
           ← 홈으로
         </Link>
