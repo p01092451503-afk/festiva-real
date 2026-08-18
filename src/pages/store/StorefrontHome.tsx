@@ -109,8 +109,8 @@ const StorefrontHome = () => {
     enabled: allInstructorIds.length > 0,
   });
 
-  const categoryMap = new Map(localizedCategories.map((c: any) => [c.id, c.name]));
-  const instructorMap = new Map(instructors.map(i => [i.user_id, i.full_name]));
+  const categoryMap = new Map((Array.isArray(localizedCategories) ? localizedCategories : []).map((c: any) => [c.id, c.name]));
+  const instructorMap = new Map((Array.isArray(instructors) ? instructors : []).map((i: any) => [i.user_id, i.full_name]));
 
   const { data: wishlistIds = [] } = useQuery({
     queryKey: ["my-wishlists", user?.id],
