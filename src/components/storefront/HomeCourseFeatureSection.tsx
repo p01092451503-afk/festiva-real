@@ -47,10 +47,10 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
 
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-sm font-semibold tracking-[0.2em] text-brand-orange">CURRICULUM</span>
-          <h2 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight">
+          <h2 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
             축제 기획부터 평가까지, 단계별 실무 과정
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-primary-foreground/75 leading-relaxed">
+          <p className="mt-3 text-base sm:text-lg text-muted-foreground leading-relaxed">
             2급에서 기획의 기본기를, 1급에서 운영·안전·평가 실무를 완성합니다.
           </p>
         </div>
