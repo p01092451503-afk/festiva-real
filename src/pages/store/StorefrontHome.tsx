@@ -177,31 +177,36 @@ const StorefrontHome = () => {
   };
 
   const renderFestivals = () => (
-    <section key="festivals" className="bg-accent/30">
-      <div className="max-w-6xl mx-auto px-4 py-14">
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight mb-8">
+    <section key="festivals" className="bg-muted/20 border-t border-border">
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight mb-5">
           꼭 가봐야 할 전국 축제
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {FESTIVALS.map((festival) => (
             <button
               key={festival.name}
               type="button"
               onClick={() => setSelectedFestival(festival)}
               aria-label={`${festival.name} 자세히 보기`}
-              className="text-left bg-card rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="text-left bg-background rounded-xl border border-border/80 overflow-hidden transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className={`h-32 ${festival.bg} flex items-center justify-center`}>
-                <span className={`text-5xl ${festival.iconColor}`}>{festival.icon}</span>
+              <div className="h-24 overflow-hidden bg-muted">
+                <img
+                  src={festival.imageUrl}
+                  alt={festival.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-foreground">{festival.name}</h3>
-                <p className="text-base text-muted-foreground mt-1">
+              <div className="p-4">
+                <h3 className="text-base font-semibold text-foreground">{festival.name}</h3>
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {festival.location} · {festival.month}
                 </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-navy">
+                <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                   자세히 보기
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </span>
               </div>
             </button>
