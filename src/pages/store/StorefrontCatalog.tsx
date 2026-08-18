@@ -18,12 +18,8 @@ import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
-/** 급수(2급/1급) 서브메뉴 — `?level=1|2`로 카테고리를 자동 선택한다. */
-const LEVEL_TABS = [
-  { value: "all", label: "전체 과정" },
-  { value: "2", label: "2급 과정" },
-  { value: "1", label: "1급 과정" },
-] as const;
+
+
 
 const StorefrontCatalog = () => {
   const { user } = useUser();
@@ -96,12 +92,8 @@ const StorefrontCatalog = () => {
     setSelectedCategory(match ? match.id : "all");
   }, [level, categories]);
 
-  const setLevel = (next: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (next === "all") params.delete("level");
-    else params.set("level", next);
-    setSearchParams(params, { replace: true });
-  };
+
+
 
 
 
@@ -203,27 +195,6 @@ const StorefrontCatalog = () => {
       />
 
 
-      {/* 강의 안내 서브메뉴 (전체 / 2급 / 1급) */}
-      <nav aria-label="강의 안내 서브메뉴" className="border-b border-border bg-brand-blue-light/60">
-
-        <div className="max-w-7xl mx-auto flex items-center gap-1 px-4 overflow-x-auto">
-          {LEVEL_TABS.map(tab => (
-            <button
-              key={tab.value}
-              type="button"
-              onClick={() => setLevel(tab.value)}
-              aria-current={level === tab.value ? "page" : undefined}
-              className={`whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-[3px] transition-colors ${
-                level === tab.value
-                  ? "border-brand-orange text-navy"
-                  : "border-transparent text-muted-foreground hover:text-navy"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </nav>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
