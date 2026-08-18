@@ -130,10 +130,15 @@ const HeroBanner = () => {
                     <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
 
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-24">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-semibold text-navy shadow-sm">
-                        <span className="h-2 w-2 rounded-full bg-brand-orange" />
-                        축제운영전문가 자격증 교육원
+                      <span className="inline-flex items-stretch overflow-hidden rounded-sm border border-navy/15 bg-card/70 text-sm">
+                        <span className="bg-navy px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white">
+                          fest<span className="text-brand-orange">cert</span>
+                        </span>
+                        <span className="px-4 py-1.5 font-semibold tracking-tight text-navy">
+                          축제운영전문가 자격증 교육원
+                        </span>
                       </span>
+
                       <h2 className="mt-6 text-4xl font-bold leading-[1.3] tracking-tight text-foreground sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
