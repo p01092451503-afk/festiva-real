@@ -74,6 +74,17 @@ export default {
           800: "hsl(var(--warm-800))",
           900: "hsl(var(--warm-900))",
         },
+        navy: {
+          DEFAULT: "hsl(var(--navy))",
+          dark: "hsl(var(--navy-dark))",
+        },
+        brand: {
+          blue: "hsl(var(--brand-blue))",
+          "blue-light": "hsl(var(--brand-blue-light))",
+          orange: "hsl(var(--brand-orange))",
+          "orange-foreground": "hsl(var(--brand-orange-foreground))",
+        },
+
         success: {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
