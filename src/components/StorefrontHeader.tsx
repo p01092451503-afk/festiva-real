@@ -72,7 +72,7 @@ const StorefrontHeader = () => {
             />
           ) : (
             <span className="flex items-baseline text-4xl font-bold tracking-tight">
-              <span className="text-primary-foreground">fest</span>
+              <span className="text-navy">fest</span>
               <span className="text-brand-orange">cert</span>
             </span>
           )}
@@ -90,8 +90,8 @@ const StorefrontHeader = () => {
                   (item.url !== "/" && pathname.startsWith(item.url)));
               const linkClass = `relative flex items-center h-24 px-8 text-lg font-semibold transition-colors border-b-4 ${
                 isActive
-                  ? "border-brand-orange text-primary-foreground"
-                  : "border-transparent text-primary-foreground/80 hover:text-primary-foreground hover:border-brand-orange/50"
+                  ? "border-brand-orange text-foreground"
+                  : "border-transparent text-foreground/70 hover:text-foreground hover:border-brand-orange/50"
               }`;
               return isExternal ? (
                 <a
@@ -110,7 +110,7 @@ const StorefrontHeader = () => {
               );
             })
           ) : (
-            <span className="text-sm text-primary-foreground/50 italic">메뉴를 등록해주세요</span>
+            <span className="text-sm text-foreground/50 italic">메뉴를 등록해주세요</span>
           )}
         </nav>
 
