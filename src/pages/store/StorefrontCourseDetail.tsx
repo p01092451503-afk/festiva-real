@@ -295,11 +295,11 @@ const StorefrontCourseDetail = () => {
       {(isAdmin || isTeacher) && id && (
         <div className="bg-foreground text-background border-b border-border/60">
           <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
-            <span className="text-xs font-medium opacity-90">관리자 미리보기 화면입니다</span>
+            <span className="text-sm font-medium opacity-90">관리자 미리보기 화면입니다</span>
             <Button
               variant="secondary"
               size="sm"
-              className="h-8 rounded-lg gap-1.5 text-xs font-semibold"
+              className="h-8 rounded-lg gap-1.5 text-base font-semibold"
               onClick={() => navigate(isAdmin ? `/admin/courses/${id}` : `/teacher/courses/${id}`)}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
@@ -311,7 +311,7 @@ const StorefrontCourseDetail = () => {
 
       {/* Breadcrumb */}
       <div className="border-b border-border/60 bg-muted/20">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-xs text-muted-foreground">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-2 text-base text-muted-foreground">
           <Link to="/store" className="hover:text-foreground transition-colors">홈</Link>
           <span className="text-muted-foreground/40">/</span>
           <Link to="/store/courses" className="hover:text-foreground transition-colors">전체 과정</Link>
@@ -327,7 +327,7 @@ const StorefrontCourseDetail = () => {
       <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {/* Mega title — full width above hero */}
         <header className="mb-6 sm:mb-8 max-w-5xl">
-          <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
+          <div className="flex flex-wrap items-center gap-2 mb-3 text-base">
             {(course as any).categories?.name && (
               <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-foreground text-background font-semibold tracking-wide">
                 {(course as any).categories.name}
@@ -370,19 +370,19 @@ const StorefrontCourseDetail = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
                 <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Duration</span>
-                <span className="text-sm font-semibold text-foreground">{formatDurationMinutes(totalDuration)}</span>
+                <span className="text-base font-semibold text-foreground">{formatDurationMinutes(totalDuration)}</span>
               </div>
               <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
                 <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Lessons</span>
-                <span className="text-sm font-semibold text-foreground">{contents.length}개 차시</span>
+                <span className="text-base font-semibold text-foreground">{contents.length}개 차시</span>
               </div>
               <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
                 <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Students</span>
-                <span className="text-sm font-semibold text-foreground">{course.enrolled_count.toLocaleString()}명</span>
+                <span className="text-base font-semibold text-foreground">{course.enrolled_count.toLocaleString()}명</span>
               </div>
               <div className="rounded-xl border border-border/70 bg-card px-4 py-3 flex flex-col gap-1">
                 <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Level</span>
-                <span className="text-sm font-semibold text-foreground capitalize">{course.difficulty_level || "All"}</span>
+                <span className="text-base font-semibold text-foreground capitalize">{course.difficulty_level || "All"}</span>
               </div>
             </div>
 
@@ -394,7 +394,7 @@ const StorefrontCourseDetail = () => {
               <div className="space-y-4">
                 <div className="flex items-baseline gap-3">
                   <h3 className="text-lg font-bold text-foreground tracking-tight">베스트 수강 후기</h3>
-                  <span className="text-xs text-muted-foreground">{reviews.length}건</span>
+                  <span className="text-base text-muted-foreground">{reviews.length}건</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {reviews.slice(0, 4).map((review: any) => (
@@ -402,24 +402,24 @@ const StorefrontCourseDetail = () => {
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9">
                           <AvatarImage src={review.profiles?.avatar_url} />
-                          <AvatarFallback className="text-xs bg-accent">
+                          <AvatarFallback className="text-base bg-accent">
                             {(review.profiles?.full_name || "U")[0]}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">
+                          <p className="text-base font-medium text-foreground truncate">
                             {review.profiles?.full_name || "익명"}
                           </p>
                           <div className="flex items-center gap-1">
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star key={i} className={cn("h-3 w-3", i < review.rating ? "text-amber-500 fill-amber-500" : "text-muted-foreground/20")} />
                             ))}
-                            <span className="text-xs font-medium text-foreground ml-1">{review.rating.toFixed(1)}</span>
+                            <span className="text-base font-medium text-foreground ml-1">{review.rating.toFixed(1)}</span>
                           </div>
                         </div>
                       </div>
                       {review.content && (
-                        <p className="text-sm text-muted-foreground line-clamp-4 leading-relaxed">{review.content}</p>
+                        <p className="text-base text-muted-foreground line-clamp-4 leading-relaxed">{review.content}</p>
                       )}
                     </div>
                   ))}
@@ -434,7 +434,7 @@ const StorefrontCourseDetail = () => {
               <div className="rounded-2xl border border-border/70 bg-card p-6 space-y-5 shadow-[0_8px_30px_-12px_hsl(var(--foreground)/0.12)]">
                 {/* Compact title repeat + meta */}
                 <div className="space-y-3">
-                  <div className="flex items-center gap-1.5 text-xs">
+                  <div className="flex items-center gap-1.5 text-base">
                     {instructor?.full_name && (
                       <span className="text-primary font-semibold">{instructor.full_name}</span>
                     )}
@@ -453,15 +453,15 @@ const StorefrontCourseDetail = () => {
                           <Star key={i} className={cn("h-3.5 w-3.5", i < Math.round(course.rating_avg) ? "text-amber-500 fill-amber-500" : "text-muted-foreground/25")} />
                         ))}
                       </div>
-                      <span className="text-sm font-semibold text-foreground tabular-nums">{course.rating_avg.toFixed(1)}</span>
-                      <span className="text-xs text-muted-foreground">({course.rating_count.toLocaleString()})</span>
+                      <span className="text-base font-semibold text-foreground tabular-nums">{course.rating_avg.toFixed(1)}</span>
+                      <span className="text-base text-muted-foreground">({course.rating_count.toLocaleString()})</span>
                     </div>
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(window.location.href);
                         toast.success("링크가 복사되었습니다");
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      className="inline-flex items-center gap-1.5 text-base text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <Share2 className="h-3.5 w-3.5" /> 공유
                     </button>
@@ -471,7 +471,7 @@ const StorefrontCourseDetail = () => {
                 <Separator />
 
                 {/* Course structure row — like reference '차시 | 총 8강 > 26차시' */}
-                <div className="flex items-center justify-between py-1 text-sm">
+                <div className="flex items-center justify-between py-1 text-base">
                   <span className="text-muted-foreground">차시</span>
                   <span className="font-semibold text-foreground tabular-nums">
                     총 {contents.length}차시 · {formatDurationMinutes(totalDuration)}
@@ -485,21 +485,21 @@ const StorefrontCourseDetail = () => {
                   {isFree ? (
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl font-extrabold text-green-600 tracking-tight">무료</span>
-                      <span className="text-sm text-muted-foreground">평생 수강</span>
+                      <span className="text-base text-muted-foreground">평생 수강</span>
                     </div>
                   ) : (
                     <>
                       {isSaleActive && (
                         <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-xs font-bold tabular-nums">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-base font-bold tabular-nums">
                             {discountPct}% OFF
                           </span>
-                          <span className="text-sm text-muted-foreground line-through tabular-nums">{formatPrice(course.price)}</span>
+                          <span className="text-base text-muted-foreground line-through tabular-nums">{formatPrice(course.price)}</span>
                         </div>
                       )}
                       <p className="text-3xl font-extrabold text-foreground tracking-tight tabular-nums">{formatPrice(displayPrice)}</p>
                       {displayPrice >= 12000 && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-base text-muted-foreground">
                           12개월 무이자 할부시 <span className="font-bold text-foreground tabular-nums">월 {formatPrice(Math.round(displayPrice / 12 / 100) * 100)}</span>
                         </p>
                       )}
@@ -510,7 +510,7 @@ const StorefrontCourseDetail = () => {
 
                 {/* Course meta */}
                 {/* Meta grid — compact */}
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 rounded-xl bg-muted/40 p-3.5 text-[13px]">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 rounded-xl bg-muted/40 p-3.5 text-[15px]">
                   <div className="flex items-center gap-2 min-w-0">
                     <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                     <span className="text-foreground/80 truncate tabular-nums">{course.enrolled_count.toLocaleString()}명 수강</span>
@@ -660,7 +660,7 @@ const StorefrontCourseDetail = () => {
                   );
                 })}
                 {!course.description && detailBlocks.length === 0 && (
-                  <div className="border border-dashed border-border rounded-xl p-10 text-center text-sm text-muted-foreground">
+                  <div className="border border-dashed border-border rounded-xl p-10 text-center text-base text-muted-foreground">
                     아직 등록된 소개 내용이 없습니다.
                   </div>
                 )}
@@ -671,7 +671,7 @@ const StorefrontCourseDetail = () => {
               <div className="space-y-1">
                 <button
                   onClick={() => setCurriculumExpanded(!curriculumExpanded)}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+                  className="flex items-center gap-2 text-base text-muted-foreground hover:text-foreground mb-4"
                 >
                   {curriculumExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   {contents.length}개 차시 · 총 {formatDurationMinutes(totalDuration)}
@@ -681,15 +681,15 @@ const StorefrontCourseDetail = () => {
                   <div className="space-y-0.5">
                     {contents.map((content, idx) => (
                       <div key={content.id} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent/50 transition-colors">
-                        <span className="text-xs font-medium text-muted-foreground w-6 text-right shrink-0 tabular-nums">{idx + 1}</span>
+                        <span className="text-base font-medium text-muted-foreground w-6 text-right shrink-0 tabular-nums">{idx + 1}</span>
                         {content.is_preview ? (
                           <Eye className="h-4 w-4 text-primary shrink-0" />
                         ) : (
                           <Lock className="h-4 w-4 text-muted-foreground/40 shrink-0" />
                         )}
-                        <span className="text-sm text-foreground flex-1 truncate">{content.title.replace(/^\d+차시\.\s*/, "")}</span>
+                        <span className="text-base text-foreground flex-1 truncate">{content.title.replace(/^\d+차시\.\s*/, "")}</span>
                         {content.duration_minutes && (
-                          <span className="text-xs text-muted-foreground shrink-0 tabular-nums">{content.duration_minutes}분</span>
+                          <span className="text-base text-muted-foreground shrink-0 tabular-nums">{content.duration_minutes}분</span>
                         )}
                         {content.is_preview && (
                           <Badge variant="outline" className="text-[10px] shrink-0">미리보기</Badge>
@@ -715,21 +715,21 @@ const StorefrontCourseDetail = () => {
                       <div>
                         <h3 className="text-xl font-bold text-foreground">{instructor.full_name}</h3>
                         {(instructor as any).position && (
-                          <p className="text-sm text-muted-foreground mt-0.5">
+                          <p className="text-base text-muted-foreground mt-0.5">
                             {(instructor as any).position}
                             {(instructor as any).department ? ` · ${(instructor as any).department}` : ""}
                           </p>
                         )}
                       </div>
                       {c.instructor_bio ? (
-                        <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap pt-2">{c.instructor_bio}</p>
+                        <p className="text-base text-foreground leading-relaxed whitespace-pre-wrap pt-2">{c.instructor_bio}</p>
                       ) : (
-                        <p className="text-sm text-muted-foreground pt-2">등록된 강사 소개가 없습니다.</p>
+                        <p className="text-base text-muted-foreground pt-2">등록된 강사 소개가 없습니다.</p>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm py-12 text-center">강사 정보가 없습니다</p>
+                  <p className="text-muted-foreground text-base py-12 text-center">강사 정보가 없습니다</p>
                 )}
               </div>
             )}
@@ -747,7 +747,7 @@ const StorefrontCourseDetail = () => {
                   <div className="md:col-span-2 p-6 space-y-4">
                     <div>
                       <h3 className="text-xl font-bold text-foreground">{c.textbook_title || "교재"}</h3>
-                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-muted-foreground">
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-base text-muted-foreground">
                         {c.textbook_author && <span>저자 · {c.textbook_author}</span>}
                         {c.textbook_publisher && <span>출판사 · {c.textbook_publisher}</span>}
                         {c.textbook_isbn && <span>ISBN · {c.textbook_isbn}</span>}
@@ -757,14 +757,14 @@ const StorefrontCourseDetail = () => {
                       <p className="text-lg font-bold text-foreground">{formatPrice(c.textbook_price)}</p>
                     )}
                     {c.textbook_description && (
-                      <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{c.textbook_description}</p>
+                      <p className="text-base text-foreground leading-relaxed whitespace-pre-wrap">{c.textbook_description}</p>
                     )}
                     {c.textbook_purchase_url && (
                       <a
                         href={c.textbook_purchase_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-xl bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity"
+                        className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-xl bg-foreground text-background text-base font-medium hover:opacity-90 transition-opacity"
                       >
                         교재 구매하기 <Share2 className="h-3.5 w-3.5" />
                       </a>
@@ -777,33 +777,33 @@ const StorefrontCourseDetail = () => {
             {activeTab === "reviews" && (
               <div className="space-y-4">
                 {reviews.length === 0 ? (
-                  <p className="text-muted-foreground text-sm py-12 text-center">아직 리뷰가 없습니다</p>
+                  <p className="text-muted-foreground text-base py-12 text-center">아직 리뷰가 없습니다</p>
                 ) : (
                   reviews.map((review: any) => (
                     <div key={review.id} className="py-5 border-b border-border last:border-0">
                       <div className="flex items-center gap-3 mb-3">
                         <Avatar className="h-9 w-9">
                           <AvatarImage src={review.profiles?.avatar_url} />
-                          <AvatarFallback className="text-xs bg-accent">
+                          <AvatarFallback className="text-base bg-accent">
                             {(review.profiles?.full_name || "U")[0]}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-medium text-foreground">{review.profiles?.full_name || "익명"}</p>
+                          <p className="text-base font-medium text-foreground">{review.profiles?.full_name || "익명"}</p>
                           <div className="flex items-center gap-1.5">
                             <div className="flex items-center gap-0.5">
                               {Array.from({ length: 5 }).map((_, i) => (
                                 <Star key={i} className={cn("h-3 w-3", i < review.rating ? "text-amber-500 fill-amber-500" : "text-muted-foreground/20")} />
                               ))}
                             </div>
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-base text-muted-foreground">
                               {new Date(review.created_at).toLocaleDateString("ko-KR")}
                             </span>
                           </div>
                         </div>
                       </div>
                       {review.content && (
-                        <p className="text-sm text-foreground leading-relaxed">{review.content}</p>
+                        <p className="text-base text-foreground leading-relaxed">{review.content}</p>
                       )}
                     </div>
                   ))
@@ -812,7 +812,7 @@ const StorefrontCourseDetail = () => {
             )}
 
             {activeTab === "refund" && (
-              <div className="space-y-6 text-sm leading-relaxed">
+              <div className="space-y-6 text-base leading-relaxed">
                 <section className="rounded-2xl border border-border/70 bg-card p-6 space-y-3">
                   <h3 className="text-base font-bold text-foreground">수강 안내</h3>
                   <ul className="space-y-2 text-foreground/80">
