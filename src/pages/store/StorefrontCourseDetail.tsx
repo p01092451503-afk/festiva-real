@@ -908,6 +908,7 @@ const StorefrontCourseDetail = () => {
         onOpenChange={setShowLevel1Dialog}
         onConfirm={proceedBuyNow}
       />
+    </>
   );
 };
 
