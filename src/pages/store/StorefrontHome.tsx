@@ -104,7 +104,7 @@ const StorefrontHome = () => {
         .select("user_id, full_name")
         .in("user_id", allInstructorIds as string[]);
       if (error) throw error;
-      return data;
+      return data ?? [];
     },
     enabled: allInstructorIds.length > 0,
   });
