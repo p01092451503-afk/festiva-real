@@ -65,10 +65,9 @@ const StorefrontCourseDetail = () => {
     queryKey: ["store-course-contents", id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("course_contents")
-        .select("id, title, duration_minutes, content_type, is_preview, is_published")
+        .from("course_curriculum_public")
+        .select("id, title, duration_minutes, content_type, is_preview")
         .eq("course_id", id!)
-        .eq("is_published", true)
         .order("order_index", { ascending: true });
       if (error) throw error;
       return data;

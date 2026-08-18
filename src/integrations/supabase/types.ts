@@ -2031,6 +2031,13 @@ export type Database = {
             referencedRelation: "course_contents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "content_progress_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_curriculum_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       content_summaries: {
@@ -2085,6 +2092,13 @@ export type Database = {
             columns: ["content_id"]
             isOneToOne: true
             referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_summaries_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: true
+            referencedRelation: "course_curriculum_public"
             referencedColumns: ["id"]
           },
         ]
@@ -2484,6 +2498,13 @@ export type Database = {
             columns: ["content_id"]
             isOneToOne: false
             referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_content_i18n_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_curriculum_public"
             referencedColumns: ["id"]
           },
         ]
@@ -4894,6 +4915,13 @@ export type Database = {
             referencedRelation: "course_contents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "lesson_notes_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_curriculum_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       main_page_blocks: {
@@ -7117,6 +7145,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "review_quizzes_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_curriculum_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "review_quizzes_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
@@ -7180,6 +7215,13 @@ export type Database = {
             columns: ["content_id"]
             isOneToOne: false
             referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_wrong_notes_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_curriculum_public"
             referencedColumns: ["id"]
           },
           {
@@ -7713,6 +7755,13 @@ export type Database = {
             columns: ["content_id"]
             isOneToOne: false
             referencedRelation: "course_contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "study_plan_items_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_curriculum_public"
             referencedColumns: ["id"]
           },
           {
@@ -8779,7 +8828,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      course_curriculum_public: {
+        Row: {
+          content_type: Database["public"]["Enums"]["content_type"] | null
+          course_id: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string | null
+          is_preview: boolean | null
+          order_index: number | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_contents_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       apply_simple_i18n: {
