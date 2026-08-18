@@ -424,11 +424,11 @@ const AdminSiteSettings = () => {
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label className="text-xs">회사명</Label>
-                  <Input value={form.company_name || ""} onChange={(e) => update("company_name", e.target.value)} placeholder="WEBHEADS" />
+                  <Input value={form.company_name || ""} onChange={(e) => update("company_name", e.target.value)} placeholder="축제운영전문가 자격증 교육원" />
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs">회사명 (영문)</Label>
-                  <Input value={form.company_name_en || ""} onChange={(e) => update("company_name_en", e.target.value)} placeholder="WEBHEADS Inc." />
+                  <Input value={form.company_name_en || ""} onChange={(e) => update("company_name_en", e.target.value)} placeholder="Festival Management Certification Institute" />
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-xs">대표자</Label>
