@@ -1,1 +1,0 @@
-ALTER TABLE public.departments ADD COLUMN team_name TEXT DEFAULT NULL;

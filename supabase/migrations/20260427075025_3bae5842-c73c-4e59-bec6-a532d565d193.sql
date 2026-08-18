@@ -1,1 +1,0 @@
-UPDATE public.site_settings SET footer_description = NULL, copyright_text = NULL;

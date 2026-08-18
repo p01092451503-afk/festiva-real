@@ -1,1 +1,0 @@
-ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS privacy_policy text;

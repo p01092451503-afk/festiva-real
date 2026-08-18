@@ -1,1 +1,0 @@
-ALTER TABLE public.assessment_questions ADD COLUMN hint text;

@@ -1,3 +1,0 @@
-UPDATE track_steps SET description_en = 'Foundation stage building the essentials of clinic operations.' WHERE id = '22222222-bbbb-0000-0000-000000000001';
-UPDATE track_steps SET description_en = 'Practice stage strengthening consultation and marketing skills.' WHERE id = '22222222-bbbb-0000-0000-000000000002';
-UPDATE track_steps SET description_en = 'Expert stage for combined procedures and clinic operations.' WHERE id = '22222222-bbbb-0000-0000-000000000003';
