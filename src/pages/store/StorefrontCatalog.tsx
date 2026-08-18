@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -15,14 +16,24 @@ import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
+/** 급수(2급/1급) 서브메뉴 — `?level=1|2`로 카테고리를 자동 선택한다. */
+const LEVEL_TABS = [
+  { value: "all", label: "전체 과정" },
+  { value: "2", label: "2급 과정" },
+  { value: "1", label: "1급 과정" },
+] as const;
+
 const StorefrontCatalog = () => {
   const { user } = useUser();
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const level = searchParams.get("level") ?? "all";
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filterOpen, setFilterOpen] = useState(false);
+
 
   const { data: categories = [] } = useQuery({
     queryKey: ["store-categories"],
