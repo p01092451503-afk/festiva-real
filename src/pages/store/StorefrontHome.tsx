@@ -8,7 +8,7 @@ import HeroBanner from "@/components/storefront/HeroBanner";
 import { StorefrontHomeSkeleton } from "@/components/PageSkeletons";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
-import { useInlineEnName } from "@/hooks/useI18nMaps";
+
 import { useMainPageBlocks, type MainPageBlock } from "@/hooks/useMainPageBlocks";
 import SitePopups from "@/components/storefront/SitePopups";
 import DOMPurify from "dompurify";
