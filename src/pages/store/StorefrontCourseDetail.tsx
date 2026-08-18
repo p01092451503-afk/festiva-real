@@ -29,6 +29,7 @@ const StorefrontCourseDetail = () => {
   const isMobile = useIsMobile();
   const queryClient = useQueryClient();
   const [curriculumExpanded, setCurriculumExpanded] = useState(true);
+  const [showLevel1Dialog, setShowLevel1Dialog] = useState(false);
   const [activeTab, setActiveTab] = useState<"intro" | "instructor" | "curriculum" | "reviews" | "textbook" | "refund">("intro");
 
   // Course
