@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Building2, GraduationCap, FileCheck2, HelpCircle, ArrowRight } from "lucide-react";
+import {
+  Building2, GraduationCap, FileCheck2, HelpCircle, ArrowRight,
+  ShieldCheck, Sparkles, Layers, Check, CalendarClock, Users2,
+  BookOpen, ListChecks, Mail, Truck, Award, AlertTriangle, UserRound, Quote,
+} from "lucide-react";
+
 import StorefrontHeader from "@/components/StorefrontHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { Card, CardContent } from "@/components/ui/card";
