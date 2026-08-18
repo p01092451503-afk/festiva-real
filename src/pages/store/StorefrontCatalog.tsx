@@ -190,10 +190,32 @@ const StorefrontCatalog = () => {
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
+      {/* 강의 안내 서브메뉴 (전체 / 2급 / 1급) */}
+      <nav aria-label="강의 안내 서브메뉴" className="border-b border-border bg-brand-blue-light/60">
+        <div className="max-w-7xl mx-auto flex items-center gap-1 px-4 overflow-x-auto">
+          {LEVEL_TABS.map(tab => (
+            <button
+              key={tab.value}
+              type="button"
+              onClick={() => setLevel(tab.value)}
+              aria-current={level === tab.value ? "page" : undefined}
+              className={`whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-[3px] transition-colors ${
+                level === tab.value
+                  ? "border-brand-orange text-navy"
+                  : "border-transparent text-muted-foreground hover:text-navy"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-foreground">과정 탐색</h1>
+          <h1 className="text-2xl font-bold text-foreground">강의 안내</h1>
+
           <div className="flex items-center gap-3">
             <div className="relative flex-1 sm:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
