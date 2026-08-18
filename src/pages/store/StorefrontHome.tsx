@@ -62,8 +62,6 @@ const StorefrontHome = () => {
       return data;
     },
   });
-  const localizeCatName = useInlineEnName();
-  const localizedCategories = categories.map((c: any) => ({ ...c, name: localizeCatName(c) }));
 
 
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
