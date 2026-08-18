@@ -104,37 +104,6 @@ const StorefrontHome = () => {
 
   const renderHero = () => <HeroBanner key="hero" />;
 
-  const renderCategories = () =>
-    localizedCategories.length > 0 ? (
-      <section key="categories" className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-10">
-          <div className="flex items-center justify-center gap-8 sm:gap-12 overflow-x-auto scrollbar-hide pb-1">
-            {localizedCategories.map((cat: any, idx: number) => {
-              const style = categoryStyles[idx % categoryStyles.length];
-              const Icon = style.icon;
-              return (
-                <Link
-                  key={cat.id}
-                  to={`/store/courses?category=${cat.slug}`}
-                  className="flex flex-col items-center gap-3 group shrink-0"
-                >
-                  <div
-                    className="w-16 h-16 sm:w-[68px] sm:h-[68px] rounded-2xl flex items-center justify-center transition-all group-hover:scale-105"
-                    style={{ background: style.bg }}
-                  >
-                    <Icon className="h-7 w-7 sm:h-8 sm:w-8" style={{ color: style.iconColor }} strokeWidth={1.6} />
-                  </div>
-                  <span className="text-base sm:text-lg font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
-                    {cat.name}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    ) : null;
-
   const renderFeaturedCourses = () => {
     if (coursesLoading) return <div className="min-h-[300px]" />;
     if (!courses.length) return null;
