@@ -41,7 +41,7 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
   const findCourse = (match: string) => courses.find((c) => c.title?.includes(match));
 
   return (
-    <section className="relative overflow-hidden border-y border-border/80 bg-gray-50 text-foreground">
+    <section className="relative overflow-hidden border-y border-border/80 bg-slate-50 text-foreground">
 
       <div className="relative max-w-6xl mx-auto px-4 py-16">
 
