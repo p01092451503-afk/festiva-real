@@ -70,7 +70,6 @@ export default function Level1QualificationDialog({ open, onOpenChange, onConfir
             확인했습니다 — 1급 수강 신청하기
           </Button>
         </DialogFooter>
-      </DialogFooter>
       </DialogContent>
     </Dialog>
   );
