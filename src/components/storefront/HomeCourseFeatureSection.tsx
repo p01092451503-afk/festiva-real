@@ -41,43 +41,16 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
   const findCourse = (match: string) => courses.find((c) => c.title?.includes(match));
 
   return (
-    <section className="relative overflow-hidden border-y border-brand-blue/40 bg-[linear-gradient(115deg,hsl(var(--brand-blue))_0%,hsl(215_85%_58%)_45%,hsl(250_60%_62%)_100%)] text-primary-foreground">
-      {/* 형이상학적 유선 라인 패턴 */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-45">
-        <svg className="h-full w-full" viewBox="0 0 1440 520" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="hcfLine" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.05" />
-            </linearGradient>
-          </defs>
-          <g fill="none" stroke="url(#hcfLine)" strokeWidth="1">
-            {Array.from({ length: 22 }).map((_, i) => (
-              <path
-                key={`l-${i}`}
-                d={`M-120 ${40 + i * 9} C 220 ${-60 + i * 14}, 430 ${230 + i * 6}, 760 ${150 + i * 10} S 1180 ${20 + i * 12}, 1560 ${120 + i * 8}`}
-              />
-            ))}
-            {Array.from({ length: 16 }).map((_, i) => (
-              <path
-                key={`r-${i}`}
-                d={`M1560 ${300 + i * 11} C 1220 ${420 + i * 6}, 1040 ${210 + i * 12}, 760 ${330 + i * 9} S 260 ${470 + i * 5}, -120 ${380 + i * 10}`}
-              />
-            ))}
-          </g>
-          <ellipse cx="1180" cy="90" rx="300" ry="140" fill="hsl(var(--primary-foreground))" opacity="0.06" />
-          <ellipse cx="180" cy="440" rx="260" ry="120" fill="hsl(var(--primary-foreground))" opacity="0.05" />
-        </svg>
-      </div>
+    <section className="relative overflow-hidden border-y border-border/80 bg-violet-50 text-foreground">
 
       <div className="relative max-w-6xl mx-auto px-4 py-16">
 
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-sm font-semibold tracking-[0.2em] text-brand-orange">CURRICULUM</span>
-          <h2 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight">
+          <h2 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
             축제 기획부터 평가까지, 단계별 실무 과정
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-primary-foreground/75 leading-relaxed">
+          <p className="mt-3 text-base sm:text-lg text-muted-foreground leading-relaxed">
             2급에서 기획의 기본기를, 1급에서 운영·안전·평가 실무를 완성합니다.
           </p>
         </div>
@@ -133,10 +106,10 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
 
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
           {FEATURES.map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 backdrop-blur-sm p-5 shadow-sm">
+            <div key={label} className="rounded-xl border border-border bg-background p-5 shadow-sm">
               <Icon className="w-5 h-5 text-brand-orange" aria-hidden="true" />
-              <p className="mt-3 text-base font-semibold">{label}</p>
-              <p className="mt-1 text-sm text-primary-foreground/70 leading-relaxed">{desc}</p>
+              <p className="mt-3 text-base font-semibold text-foreground">{label}</p>
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
