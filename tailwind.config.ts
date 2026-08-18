@@ -83,6 +83,7 @@ export default {
           "blue-light": "hsl(var(--brand-blue-light))",
           orange: "hsl(var(--brand-orange))",
           "orange-foreground": "hsl(var(--brand-orange-foreground))",
+          "pink-light": "hsl(var(--brand-pink-light))",
         },
 
         success: {
