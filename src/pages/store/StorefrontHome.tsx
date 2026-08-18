@@ -1,14 +1,14 @@
 import { lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Sparkles, TrendingUp, Clock, GraduationCap, Flame, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import HeroBanner from "@/components/storefront/HeroBanner";
 import { StorefrontHomeSkeleton } from "@/components/PageSkeletons";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
-import { useInlineEnName } from "@/hooks/useI18nMaps";
+
 import { useMainPageBlocks, type MainPageBlock } from "@/hooks/useMainPageBlocks";
 import SitePopups from "@/components/storefront/SitePopups";
 import DOMPurify from "dompurify";
@@ -62,17 +62,7 @@ const StorefrontHome = () => {
       return data;
     },
   });
-  const localizeCatName = useInlineEnName();
-  const localizedCategories = categories.map((c: any) => ({ ...c, name: localizeCatName(c) }));
 
-  // Category icon config: colorful rounded-square style like app icons
-  const categoryStyles: { icon: typeof GraduationCap; bg: string; iconColor: string }[] = [
-    { icon: GraduationCap, bg: "hsl(260 30% 62%)", iconColor: "#fff" },
-    { icon: TrendingUp, bg: "hsl(210 30% 58%)", iconColor: "#fff" },
-    { icon: Flame, bg: "hsl(15 30% 60%)", iconColor: "#fff" },
-    { icon: Sparkles, bg: "hsl(330 28% 60%)", iconColor: "#fff" },
-    { icon: Clock, bg: "hsl(170 25% 55%)", iconColor: "#fff" },
-  ];
 
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
     queryKey: ["store-home-courses"],
@@ -111,37 +101,6 @@ const StorefrontHome = () => {
   }
 
   const renderHero = () => <HeroBanner key="hero" />;
-
-  const renderCategories = () =>
-    localizedCategories.length > 0 ? (
-      <section key="categories" className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-10">
-          <div className="flex items-center justify-center gap-8 sm:gap-12 overflow-x-auto scrollbar-hide pb-1">
-            {localizedCategories.map((cat: any, idx: number) => {
-              const style = categoryStyles[idx % categoryStyles.length];
-              const Icon = style.icon;
-              return (
-                <Link
-                  key={cat.id}
-                  to={`/store/courses?category=${cat.slug}`}
-                  className="flex flex-col items-center gap-3 group shrink-0"
-                >
-                  <div
-                    className="w-16 h-16 sm:w-[68px] sm:h-[68px] rounded-2xl flex items-center justify-center transition-all group-hover:scale-105"
-                    style={{ background: style.bg }}
-                  >
-                    <Icon className="h-7 w-7 sm:h-8 sm:w-8" style={{ color: style.iconColor }} strokeWidth={1.6} />
-                  </div>
-                  <span className="text-base sm:text-lg font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">
-                    {cat.name}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    ) : null;
 
   const renderFeaturedCourses = () => {
     if (coursesLoading) return <div className="min-h-[300px]" />;
@@ -211,8 +170,6 @@ const StorefrontHome = () => {
     switch (b.block_type) {
       case "hero":
         return <div key={b.id}>{renderHero()}</div>;
-      case "categories":
-        return <div key={b.id}>{renderCategories()}</div>;
       case "courses":
         return <div key={b.id}>{renderFeaturedCourses()}</div>;
       case "reviews":
@@ -269,7 +226,6 @@ const StorefrontHome = () => {
         ) : (
           <>
             {renderHero()}
-            {renderCategories()}
           </>
         )}
         {!blocks.some((b: MainPageBlock) => b.block_type === "courses") && renderFeaturedCourses()}
