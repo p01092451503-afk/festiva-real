@@ -56,22 +56,22 @@ const StorefrontHeader = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-navy-dark bg-navy text-primary-foreground">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4">
+      <div className="max-w-7xl mx-auto flex h-24 items-center justify-between px-4">
         {/* Left: Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           {logoUrl ? (
             <img
               src={logoUrl}
               alt={siteSettings?.company_name || activePreset?.brand_name || "Logo"}
-              className="h-12 object-contain"
-              width={180}
-              height={48}
+              className="h-16 object-contain"
+              width={240}
+              height={64}
               loading="eager"
               {...({ fetchpriority: "high" } as any)}
               decoding="sync"
             />
           ) : (
-            <span className="flex items-baseline text-3xl font-bold tracking-tight">
+            <span className="flex items-baseline text-4xl font-bold tracking-tight">
               <span className="text-primary-foreground">fest</span>
               <span className="text-brand-orange">cert</span>
             </span>
@@ -88,7 +88,7 @@ const StorefrontHeader = () => {
                 !isExternal &&
                 (pathname === item.url ||
                   (item.url !== "/" && pathname.startsWith(item.url)));
-              const linkClass = `relative flex items-center h-16 px-4 text-sm font-semibold transition-colors border-b-[3px] ${
+              const linkClass = `relative flex items-center h-24 px-8 text-lg font-semibold transition-colors border-b-4 ${
                 isActive
                   ? "border-brand-orange text-primary-foreground"
                   : "border-transparent text-primary-foreground/80 hover:text-primary-foreground hover:border-brand-orange/50"
@@ -110,7 +110,7 @@ const StorefrontHeader = () => {
               );
             })
           ) : (
-            <span className="text-xs text-primary-foreground/50 italic">메뉴를 등록해주세요</span>
+            <span className="text-sm text-primary-foreground/50 italic">메뉴를 등록해주세요</span>
           )}
         </nav>
 
