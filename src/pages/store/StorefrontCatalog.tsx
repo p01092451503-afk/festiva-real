@@ -190,8 +190,33 @@ const StorefrontCatalog = () => {
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
+      {/* Page banner */}
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-background via-accent/40 to-brand-blue-light">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-40"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, hsl(var(--brand-blue) / 0.10) 0px, hsl(var(--brand-blue) / 0.10) 2px, transparent 2px, transparent 14px)",
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute -left-16 -bottom-20 w-64 h-64 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsl(var(--brand-orange) / 0.14) 0%, transparent 70%)" }}
+          aria-hidden="true"
+        />
+        <div className="relative max-w-7xl mx-auto px-4 py-12 sm:py-14 space-y-3">
+          <p className="text-sm font-semibold tracking-[0.18em] uppercase text-brand-orange">COURSES</p>
+          <h2 className="text-2xl sm:text-4xl font-bold text-navy">자격증 취득 과정</h2>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            2급·1급 단계별 온라인 과정으로 축제 기획·운영·안전관리 실무 문서를 직접 완성합니다.
+          </p>
+        </div>
+      </section>
+
       {/* 강의 안내 서브메뉴 (전체 / 2급 / 1급) */}
       <nav aria-label="강의 안내 서브메뉴" className="border-b border-border bg-brand-blue-light/60">
+
         <div className="max-w-7xl mx-auto flex items-center gap-1 px-4 overflow-x-auto">
           {LEVEL_TABS.map(tab => (
             <button
