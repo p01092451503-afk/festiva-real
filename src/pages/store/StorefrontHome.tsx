@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -12,6 +12,14 @@ import { useUser } from "@/contexts/UserContext";
 import { useMainPageBlocks, type MainPageBlock } from "@/hooks/useMainPageBlocks";
 import SitePopups from "@/components/storefront/SitePopups";
 import DOMPurify from "dompurify";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
 const SiteFooter = lazy(() => import("@/components/SiteFooter"));
@@ -28,6 +36,16 @@ const FESTIVALS = [
     icon: "🎣",
     bg: "bg-brand-blue-light",
     iconColor: "text-brand-blue",
+    period: "매년 1월 초 ~ 1월 하순 (약 23일간)",
+    summary:
+      "얼음으로 덮인 화천천 위에서 열리는 국내 대표 겨울 축제입니다. 얼음낚시를 중심으로 눈·얼음 조형물, 선등거리 등 겨울 콘텐츠를 한곳에 모아 매년 100만 명 이상이 찾습니다.",
+    highlights: [
+      "얼음낚시터 · 맨손잡기 등 체험형 프로그램 운영",
+      "화천천 일대 얼음 안전관리와 구역별 인원 통제가 핵심 과제",
+      "선등거리 야간 경관 조명으로 체류 시간 확대",
+    ],
+    opsPoint:
+      "결빙 두께 상시 점검, 구역별 입장 인원 제한, 한파 대비 온열 쉼터 배치가 운영계획서의 필수 항목입니다.",
   },
   {
     name: "보령 머드축제",
@@ -36,6 +54,16 @@ const FESTIVALS = [
     icon: "🌊",
     bg: "bg-brand-orange/10",
     iconColor: "text-brand-orange",
+    period: "매년 7월 중순 ~ 하순 (약 10일간)",
+    summary:
+      "대천해수욕장의 갯벌 진흙을 활용한 체험형 여름 축제로, 외국인 방문객 비중이 가장 높은 축제 중 하나입니다. 머드 체험존과 해변 공연이 결합된 구조입니다.",
+    highlights: [
+      "머드탕·머드슬라이드 등 대규모 체험 시설 운영",
+      "해변 무대 공연과 야간 콘서트로 청년층 집중 유입",
+      "다국어 안내와 외국인 전용 안내데스크 운영",
+    ],
+    opsPoint:
+      "샤워·탈의 시설 동선, 응급의료 부스, 해변 안전요원 배치 계획이 안전관리계획의 중심이 됩니다.",
   },
   {
     name: "진해 군항제",
@@ -44,11 +72,24 @@ const FESTIVALS = [
     icon: "🌸",
     bg: "bg-brand-pink-light",
     iconColor: "text-primary",
+    period: "매년 3월 말 ~ 4월 초 (약 10일간)",
+    summary:
+      "36만여 그루의 벚나무가 만개하는 국내 최대 봄 축제입니다. 여좌천 로망스교, 경화역 등 도심 전역이 축제 공간으로 확장되는 개방형 구조가 특징입니다.",
+    highlights: [
+      "여좌천·경화역 벚꽃길 야간 개방 및 경관 조명",
+      "군악의장 페스티벌 등 해군 연계 특화 프로그램",
+      "단기간 대규모 인파가 도심에 집중되는 개방형 축제",
+    ],
+    opsPoint:
+      "일방통행 보행 동선 설계, 대중교통 증편, 혼잡도 실시간 모니터링이 인파 관리의 핵심입니다.",
   },
 ];
 
+
 const StorefrontHome = () => {
+  const [selectedFestival, setSelectedFestival] = useState<(typeof FESTIVALS)[number] | null>(null);
   const { data: blocks = [] } = useMainPageBlocks();
+
 
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ["store-categories"],
@@ -146,9 +187,12 @@ const StorefrontHome = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {FESTIVALS.map((festival) => (
-            <div
+            <button
               key={festival.name}
-              className="bg-card rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+              type="button"
+              onClick={() => setSelectedFestival(festival)}
+              aria-label={`${festival.name} 자세히 보기`}
+              className="text-left bg-card rounded-2xl border border-border overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <div className={`h-32 ${festival.bg} flex items-center justify-center`}>
                 <span className={`text-5xl ${festival.iconColor}`}>{festival.icon}</span>
@@ -158,9 +202,14 @@ const StorefrontHome = () => {
                 <p className="text-base text-muted-foreground mt-1">
                   {festival.location} · {festival.month}
                 </p>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-navy">
+                  자세히 보기
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </span>
               </div>
-            </div>
+            </button>
           ))}
+
         </div>
       </div>
     </section>
@@ -237,7 +286,46 @@ const StorefrontHome = () => {
         <SiteFooter />
       </Suspense>
 
+      <Dialog open={!!selectedFestival} onOpenChange={(o) => !o && setSelectedFestival(null)}>
+        <DialogContent className="max-w-xl">
+          {selectedFestival && (
+            <>
+              <div
+                className={`-mx-6 -mt-6 mb-2 h-28 ${selectedFestival.bg} flex items-center justify-center rounded-t-lg`}
+              >
+                <span className={`text-5xl ${selectedFestival.iconColor}`}>{selectedFestival.icon}</span>
+              </div>
+              <DialogHeader>
+                <DialogTitle className="text-xl">{selectedFestival.name}</DialogTitle>
+                <DialogDescription className="text-base">
+                  {selectedFestival.location} · {selectedFestival.period}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-5 text-base">
+                <p className="leading-relaxed text-foreground/90">{selectedFestival.summary}</p>
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-navy">주요 특징</h4>
+                  <ul className="space-y-2">
+                    {selectedFestival.highlights.map((h) => (
+                      <li key={h} className="flex gap-2 text-muted-foreground leading-relaxed">
+                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-brand-orange shrink-0" aria-hidden="true" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-xl border border-border bg-muted/40 p-4">
+                  <h4 className="font-semibold text-navy mb-1">운영 실무 포인트</h4>
+                  <p className="text-muted-foreground leading-relaxed">{selectedFestival.opsPoint}</p>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <SitePopups />
+
     </div>
   );
 };
