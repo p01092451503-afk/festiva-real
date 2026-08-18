@@ -191,20 +191,17 @@ const StorefrontCatalog = () => {
       <StorefrontHeader />
 
       {/* Page banner */}
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-background via-accent/40 to-brand-blue-light">
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-brand-blue-light/50 to-background">
         <div
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-60"
           style={{
             backgroundImage:
-              "repeating-linear-gradient(135deg, hsl(var(--brand-blue) / 0.10) 0px, hsl(var(--brand-blue) / 0.10) 2px, transparent 2px, transparent 14px)",
+              "radial-gradient(hsl(var(--brand-blue) / 0.14) 1px, transparent 1px)",
+            backgroundSize: "18px 18px",
           }}
           aria-hidden="true"
         />
-        <div
-          className="absolute -left-16 -bottom-20 w-64 h-64 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(var(--brand-orange) / 0.14) 0%, transparent 70%)" }}
-          aria-hidden="true"
-        />
+
         <div className="relative max-w-7xl mx-auto px-4 py-12 sm:py-14 space-y-3">
           <p className="text-sm font-semibold tracking-[0.18em] uppercase text-brand-orange">COURSES</p>
           <h2 className="text-2xl sm:text-4xl font-bold text-navy">자격증 취득 과정</h2>
