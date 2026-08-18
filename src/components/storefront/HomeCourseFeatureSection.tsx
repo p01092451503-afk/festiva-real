@@ -41,34 +41,7 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
   const findCourse = (match: string) => courses.find((c) => c.title?.includes(match));
 
   return (
-    <section className="relative overflow-hidden border-y border-brand-blue/40 bg-[linear-gradient(115deg,hsl(var(--brand-blue))_0%,hsl(215_85%_58%)_45%,hsl(250_60%_62%)_100%)] text-primary-foreground">
-      {/* 형이상학적 유선 라인 패턴 */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-45">
-        <svg className="h-full w-full" viewBox="0 0 1440 520" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="hcfLine" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.05" />
-            </linearGradient>
-          </defs>
-          <g fill="none" stroke="url(#hcfLine)" strokeWidth="1">
-            {Array.from({ length: 22 }).map((_, i) => (
-              <path
-                key={`l-${i}`}
-                d={`M-120 ${40 + i * 9} C 220 ${-60 + i * 14}, 430 ${230 + i * 6}, 760 ${150 + i * 10} S 1180 ${20 + i * 12}, 1560 ${120 + i * 8}`}
-              />
-            ))}
-            {Array.from({ length: 16 }).map((_, i) => (
-              <path
-                key={`r-${i}`}
-                d={`M1560 ${300 + i * 11} C 1220 ${420 + i * 6}, 1040 ${210 + i * 12}, 760 ${330 + i * 9} S 260 ${470 + i * 5}, -120 ${380 + i * 10}`}
-              />
-            ))}
-          </g>
-          <ellipse cx="1180" cy="90" rx="300" ry="140" fill="hsl(var(--primary-foreground))" opacity="0.06" />
-          <ellipse cx="180" cy="440" rx="260" ry="120" fill="hsl(var(--primary-foreground))" opacity="0.05" />
-        </svg>
-      </div>
+    <section className="relative overflow-hidden border-y border-border/80 bg-violet-50 text-foreground">
 
       <div className="relative max-w-6xl mx-auto px-4 py-16">
 
