@@ -1,12 +1,11 @@
 import { lazy, Suspense } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, TrendingUp, Clock, GraduationCap, Flame } from "lucide-react";
+import { Sparkles, TrendingUp, Clock, GraduationCap, Flame } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import HeroBanner from "@/components/storefront/HeroBanner";
-import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
 import { StorefrontHomeSkeleton } from "@/components/PageSkeletons";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -18,7 +17,6 @@ import SitePopups from "@/components/storefront/SitePopups";
 import DOMPurify from "dompurify";
 
 // Lazy-load below-the-fold sections to reduce initial JS bundle
-const CategoryCoursesSection = lazy(() => import("@/components/storefront/CategoryCoursesSection"));
 const SiteFooter = lazy(() => import("@/components/SiteFooter"));
 const HomeReviewsSection = lazy(() => import("@/components/storefront/HomeReviewsSection"));
 const HomeInstructorsSection = lazy(() => import("@/components/storefront/HomeInstructorsSection"));
