@@ -5,69 +5,81 @@
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 30 10% 12%;
+    /* festcert brand palette
+       navy #1a3a8c · navy-dark #122a6e · blue #2957c4 · blue-light #eef2fc
+       accent orange #e05a1e · text #1a1a2e · muted #4b5563 · border #dde2ee */
+    --background: 0 0% 100%;
+    --foreground: 240 28% 14%;
 
-    --card: 40 25% 97%;
-    --card-foreground: 30 10% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 28% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 10% 12%;
+    --popover-foreground: 240 28% 14%;
 
-    --primary: 30 10% 12%;
-    --primary-foreground: 40 20% 97%;
+    --primary: 223 69% 33%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 35 18% 93%;
-    --secondary-foreground: 30 12% 15%;
+    --secondary: 223 70% 96%;
+    --secondary-foreground: 224 72% 25%;
 
-    --muted: 35 12% 94%;
-    --muted-foreground: 30 8% 35%;
+    --muted: 223 40% 97%;
+    --muted-foreground: 215 14% 34%;
 
-    --accent: 28 30% 88%;
-    --accent-foreground: 30 10% 12%;
+    --accent: 223 70% 96%;
+    --accent-foreground: 224 72% 25%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 15% 90%;
-    --input: 35 15% 90%;
-    --ring: 30 10% 30%;
+    --border: 222 33% 90%;
+    --input: 222 33% 90%;
+    --ring: 223 69% 33%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --sidebar-background: 40 20% 97%;
-    --sidebar-foreground: 30 10% 25%;
-    --sidebar-primary: 30 10% 12%;
-    --sidebar-primary-foreground: 40 20% 97%;
-    --sidebar-accent: 35 18% 93%;
-    --sidebar-accent-foreground: 30 10% 15%;
-    --sidebar-border: 35 15% 90%;
-    --sidebar-ring: 30 10% 30%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 14% 34%;
+    --sidebar-primary: 223 69% 33%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 223 70% 96%;
+    --sidebar-accent-foreground: 224 72% 25%;
+    --sidebar-border: 222 33% 90%;
+    --sidebar-ring: 223 69% 33%;
 
-    /* Custom tokens */
-    --warm-50: 40 25% 97%;
-    --warm-100: 35 20% 94%;
-    --warm-200: 33 18% 88%;
-    --warm-300: 30 16% 75%;
-    --warm-400: 28 14% 55%;
-    --warm-500: 26 12% 40%;
-    --warm-600: 24 14% 30%;
-    --warm-700: 22 16% 22%;
-    --warm-800: 20 18% 15%;
-    --warm-900: 18 20% 10%;
+    /* Brand tokens */
+    --navy: 223 69% 33%;
+    --navy-dark: 224 72% 25%;
+    --brand-blue: 222 65% 46%;
+    --brand-blue-light: 223 70% 96%;
+    --brand-orange: 19 76% 50%;
+    --brand-orange-foreground: 0 0% 100%;
 
-    --flip-bg: 215 80% 55%;
+    /* Neutral scale (legacy "warm" names kept for compatibility) */
+    --warm-50: 223 70% 98%;
+    --warm-100: 223 60% 96%;
+    --warm-200: 222 40% 92%;
+    --warm-300: 222 28% 80%;
+    --warm-400: 220 18% 60%;
+    --warm-500: 218 16% 45%;
+    --warm-600: 215 14% 34%;
+    --warm-700: 222 30% 25%;
+    --warm-800: 230 30% 18%;
+    --warm-900: 240 28% 14%;
+
+    --flip-bg: 222 65% 46%;
     --flip-foreground: 0 0% 100%;
-    --video-bg: 0 72% 51%;
+    --video-bg: 19 76% 50%;
     --video-foreground: 0 0% 100%;
 
     --success: 152 60% 40%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
-    --warning-foreground: 30 10% 12%;
-    --info: 210 60% 50%;
+    --warning-foreground: 240 28% 14%;
+    --info: 222 65% 46%;
     --info-foreground: 0 0% 100%;
   }
+
 
   * {
     @apply border-border;
