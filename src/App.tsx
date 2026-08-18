@@ -211,6 +211,8 @@ const App = () => (
             <Routes>
               {/* Public Store */}
               <Route path="/" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
+              <Route path="/about" element={<About />} />
+
               <Route path="/store" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/store/courses" element={<StorefrontGate><StorefrontCatalog /></StorefrontGate>} />
               <Route path="/store/courses/:courseId" element={<StorefrontGate><StorefrontCourseDetail /></StorefrontGate>} />
