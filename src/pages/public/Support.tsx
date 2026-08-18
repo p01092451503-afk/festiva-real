@@ -16,7 +16,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 
 /**
  * 학습운영·문의 (/support)
@@ -47,7 +47,7 @@ export default function Support() {
   const [searchParams, setSearchParams] = useSearchParams();
   const raw = searchParams.get("tab") ?? "notice";
   const tab = TABS.some((t) => t.value === raw) ? raw : "notice";
-  const { user } = useAuth();
+  const { user } = useUser();
   const queryClient = useQueryClient();
 
   const [openNotice, setOpenNotice] = useState<any | null>(null);
