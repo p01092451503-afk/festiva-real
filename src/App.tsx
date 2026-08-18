@@ -213,6 +213,7 @@ const App = () => (
               {/* Public Store */}
               <Route path="/" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/about" element={<About />} />
+              <Route path="/support" element={<Support />} />
 
               <Route path="/store" element={<StorefrontGate><StorefrontHome /></StorefrontGate>} />
               <Route path="/store/courses" element={<StorefrontGate><StorefrontCatalog /></StorefrontGate>} />
