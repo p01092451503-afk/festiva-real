@@ -203,27 +203,6 @@ const StorefrontCatalog = () => {
       />
 
 
-      {/* 강의 안내 서브메뉴 (전체 / 2급 / 1급) */}
-      <nav aria-label="강의 안내 서브메뉴" className="border-b border-border bg-brand-blue-light/60">
-
-        <div className="max-w-7xl mx-auto flex items-center gap-1 px-4 overflow-x-auto">
-          {LEVEL_TABS.map(tab => (
-            <button
-              key={tab.value}
-              type="button"
-              onClick={() => setLevel(tab.value)}
-              aria-current={level === tab.value ? "page" : undefined}
-              className={`whitespace-nowrap px-4 py-3 text-sm font-semibold border-b-[3px] transition-colors ${
-                level === tab.value
-                  ? "border-brand-orange text-navy"
-                  : "border-transparent text-muted-foreground hover:text-navy"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </nav>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
