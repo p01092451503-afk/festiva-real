@@ -144,21 +144,57 @@ const About = () => {
           {/* 교육원 소개 */}
           <TabsContent value="intro" className="mt-8 space-y-8">
             <section className="space-y-3">
-              <h2 className="text-xl font-semibold">교육원 소개</h2>
+              <h2 className="text-xl font-semibold">크리에이티브쉐이크 부설 평생교육원</h2>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                festcert 축제운영전문가 자격증 교육원은 지역 축제와 이벤트 산업의 현장 실무 인력을 양성하기 위해 설립되었습니다.
-                기획서 작성부터 예산·행정, 현장 운영, 안전관리까지 실제 업무 흐름에 맞춘 온라인 과정을 제공합니다.
+                언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영
               </p>
             </section>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {HIGHLIGHTS.map((h) => (
+                <Card key={h.title}>
+                  <CardContent className="p-6 space-y-2">
+                    <h3 className="font-semibold text-navy">{h.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{h.text}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
             <section className="space-y-4">
-              <h3 className="font-semibold">교육원 연혁·운영 방향</h3>
+              <h3 className="font-semibold">이런 분들께 추천합니다</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {RECOMMENDED.map((r) => (
+                  <div key={r} className="bg-brand-blue-light rounded-md px-4 py-3 text-sm min-w-0">✓ {r}</div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">학회 연혁</h3>
+              <p className="text-sm text-muted-foreground">사단법인 마이스교육학회 설립 및 운영 이력</p>
               <div className="border-t-2 border-border/80">
                 {HISTORY.map((h) => (
-                  <div key={h.year} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-6 py-4 border-b-2 border-border/80">
+                  <div key={`${h.year}-${h.text}`} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-6 py-4 border-b-2 border-border/80">
                     <div className="font-semibold text-navy">{h.year}</div>
                     <p className="text-muted-foreground leading-relaxed min-w-0">{h.text}</p>
                   </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <h3 className="font-semibold">운영 기관</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {ORGS.map((o) => (
+                  <Card key={o.name}>
+                    <CardContent className="p-6 space-y-2">
+                      <p className="font-semibold text-navy">{o.name}</p>
+                      <div className="text-sm text-muted-foreground leading-relaxed space-y-1">
+                        {o.lines.map((l) => <p key={l}>{l}</p>)}
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </section>
@@ -181,7 +217,8 @@ const About = () => {
             <section className="space-y-3">
               <h2 className="text-xl font-semibold">자격 제도</h2>
               <p className="text-muted-foreground leading-relaxed max-w-3xl">
-                축제운영전문가 자격은 2급(입문·기본)과 1급(심화·전문)으로 구성됩니다. 급수별 학습 범위와 검정 방식이 다릅니다.
+                개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성됩니다.
+                자격은 2급(기초)과 1급(심화)으로 나뉩니다.
               </p>
             </section>
 
@@ -193,20 +230,20 @@ const About = () => {
                       <h3 className="text-lg font-bold text-navy">축제운영전문가 {l.level}</h3>
                       <Badge variant="secondary" className="whitespace-nowrap">{l.badge}</Badge>
                     </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{l.summary}</p>
                     <div className="space-y-1">
                       <p className="text-sm font-semibold">수강 대상</p>
                       <p className="text-sm text-muted-foreground leading-relaxed">{l.target}</p>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold">주요 학습 내용</p>
-                      <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
-                        {l.subjects.map((s) => <li key={s}>{s}</li>)}
-                      </ul>
+                    <div className="border-t-2 border-border/80">
+                      {l.facts.map((f) => (
+                        <div key={f.label} className="flex items-start justify-between gap-4 py-2 border-b-2 border-border/80 text-sm">
+                          <span className="text-muted-foreground whitespace-nowrap">{f.label}</span>
+                          <span className="font-medium text-right min-w-0">{f.value}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold">검정 방식</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{l.exam}</p>
-                    </div>
+                    <p className="font-semibold text-navy">{l.price}</p>
                     <Button asChild variant="outline" className="w-full">
                       <Link to={l.href}>{l.level} 과정 보기</Link>
                     </Button>
@@ -215,6 +252,7 @@ const About = () => {
               ))}
             </div>
           </TabsContent>
+
 
           {/* 발급 안내 */}
           <TabsContent value="certificate" className="mt-8 space-y-6">
