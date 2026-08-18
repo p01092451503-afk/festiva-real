@@ -97,24 +97,27 @@ const ISSUE_NOTES = [
 ];
 
 const COMPLETION_CONDITIONS = [
-  { label: "강의 이수", value: "6주 이상 이수", note: "필수" },
-  { label: "시험", value: "60점 이상", note: "합격" },
-  { label: "수강 기간", value: "9주", note: "기간 내" },
-  { label: "수료 후", value: "PDF + 실물 수료증", note: "발급" },
+  { label: "강의 이수", value: "6주 이상 이수", note: "필수", icon: ListChecks },
+  { label: "시험", value: "60점 이상", note: "합격", icon: GraduationCap },
+  { label: "수강 기간", value: "9주", note: "기간 내", icon: CalendarClock },
+  { label: "수료 후", value: "PDF + 실물 수료증", note: "발급", icon: Award },
 ];
 
 const ISSUE_METHODS = [
   {
     title: "PDF 온라인 발급",
     fee: "무료",
+    icon: Mail,
     lines: ["수신 이메일로 발송", "3~5영업일 이내", "재발급 무료 (횟수 제한 없음)"],
   },
   {
     title: "실물 우편 수령",
     fee: "유료",
+    icon: Truck,
     lines: ["배송비 3,000원", "3~5영업일 배송", "자격증 + 봉투 구성"],
   },
 ];
+
 
 const CURRICULUM = [
   {
