@@ -133,7 +133,7 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
 
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
           {FEATURES.map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="rounded-xl border border-primary-foreground/15 bg-primary-foreground/5 p-5">
+            <div key={label} className="rounded-xl border border-primary-foreground/20 bg-primary-foreground/10 backdrop-blur-sm p-5 shadow-sm">
               <Icon className="w-5 h-5 text-brand-orange" aria-hidden="true" />
               <p className="mt-3 text-base font-semibold">{label}</p>
               <p className="mt-1 text-sm text-primary-foreground/70 leading-relaxed">{desc}</p>
