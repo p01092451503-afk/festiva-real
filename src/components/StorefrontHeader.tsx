@@ -116,22 +116,22 @@ const StorefrontHeader = () => {
 
 
         {/* Right: Actions (desktop) */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-3">
           {!user ? (
             <>
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative"
+                className="relative h-11 w-11"
                 onClick={() => navigate("/auth")}
                 aria-label="장바구니"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-6 w-6" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/auth")}>
+              <Button variant="ghost" size="default" className="text-base" onClick={() => navigate("/auth")}>
                 로그인
               </Button>
-              <Button size="sm" onClick={() => navigate("/auth")}>
+              <Button size="default" className="text-base" onClick={() => navigate("/auth")}>
                 무료로 시작
               </Button>
             </>
@@ -141,15 +141,15 @@ const StorefrontHeader = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative"
+                className="relative h-11 w-11"
                 onClick={() => navigate("/cart")}
                 aria-label="장바구니"
               >
-                <ShoppingBag className="h-5 w-5" />
+                <ShoppingBag className="h-6 w-6" />
                 {cartCount > 0 && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center rounded-full"
+                    className="absolute -top-1 -right-1 h-5 min-w-5 px-1.5 text-[11px] flex items-center justify-center rounded-full"
                   >
                     {cartCount}
                   </Badge>
@@ -162,12 +162,12 @@ const StorefrontHeader = () => {
               {/* User dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-1.5 pl-1.5">
-                    <Avatar className="h-7 w-7">
+                  <Button variant="ghost" size="default" className="gap-2 pl-1.5 text-base">
+                    <Avatar className="h-9 w-9">
                       <AvatarImage src={profile?.avatar_url || undefined} />
-                      <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+                      <AvatarFallback className="text-sm">{initials}</AvatarFallback>
                     </Avatar>
-                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -202,11 +202,11 @@ const StorefrontHeader = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="md:hidden h-11 w-11"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={t("common.menu")}
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
       </div>
 
