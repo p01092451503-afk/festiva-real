@@ -22,7 +22,7 @@ interface HeroBannerRow {
 const staticFallback = [
   {
     id: "fallback-1",
-    bg_color: "#6C3AED",
+    bg_color: "#1a3a8c",
     image_url: "",
     title: "이 영역은 메인 비주얼 배너입니다\n고객사 브랜드에 맞게 교체됩니다",
     subtitle: "관리자 대시보드에서 배너 이미지, 타이틀, 설명문구를\n자유롭게 등록하고 순서를 변경할 수 있습니다.",
@@ -31,7 +31,7 @@ const staticFallback = [
   },
   {
     id: "fallback-2",
-    bg_color: "#1D4ED8",
+    bg_color: "#122a6e",
     image_url: "",
     title: "학습의 시작, 성장의 기록\n맞춤형 이러닝 플랫폼",
     subtitle: "강의 등록부터 수강 관리, 평가와 이수증 발급까지\n하나의 시스템에서 효율적으로 운영하세요.",

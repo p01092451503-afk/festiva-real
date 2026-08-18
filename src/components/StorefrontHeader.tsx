@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ShoppingBag, Bell, LogOut, BookOpen, Receipt, Heart, Settings, ChevronDown, Menu, X, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +25,7 @@ const StorefrontHeader = () => {
   const { data: siteSettings } = useSiteSettings();
   const { data: navItems = [] } = useNavItems("header");
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const isAdmin = roles.includes("admin") || roles.includes("super_admin");
@@ -54,7 +55,7 @@ const StorefrontHeader = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="sticky top-0 z-50 w-full border-b border-navy-dark bg-navy text-primary-foreground">
       <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4">
         {/* Left: Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
@@ -70,45 +71,49 @@ const StorefrontHeader = () => {
               decoding="sync"
             />
           ) : (
-            <>
-              <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-muted border border-border">
-                <ImageIcon className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <span className="text-sm font-medium text-muted-foreground tracking-wide">회사 로고 영역</span>
-            </>
+            <span className="flex items-baseline text-xl font-bold tracking-tight">
+              <span className="text-primary-foreground">fest</span>
+              <span className="text-brand-orange">cert</span>
+            </span>
           )}
         </Link>
 
         {/* Center: Nav (desktop) */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-1 h-full">
           {navItems.length > 0 ? (
             navItems.map((item) => {
               const isExternal = /^https?:\/\//i.test(item.url);
               const label = isEn && item.label_en ? item.label_en : item.label;
+              const isActive =
+                !isExternal &&
+                (pathname === item.url ||
+                  (item.url !== "/" && pathname.startsWith(item.url)));
+              const linkClass = `relative flex items-center h-16 px-4 text-sm font-semibold transition-colors border-b-[3px] ${
+                isActive
+                  ? "border-brand-orange text-primary-foreground"
+                  : "border-transparent text-primary-foreground/80 hover:text-primary-foreground hover:border-brand-orange/50"
+              }`;
               return isExternal ? (
                 <a
                   key={item.id}
                   href={item.url}
                   target={item.open_in_new_tab ? "_blank" : undefined}
                   rel={item.open_in_new_tab ? "noopener noreferrer" : undefined}
-                  className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className={linkClass}
                 >
                   {label}
                 </a>
               ) : (
-                <Link
-                  key={item.id}
-                  to={item.url}
-                  className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
+                <Link key={item.id} to={item.url} className={linkClass} aria-current={isActive ? "page" : undefined}>
                   {label}
                 </Link>
               );
             })
           ) : (
-            <span className="text-xs text-muted-foreground/50 italic">메뉴를 등록해주세요</span>
+            <span className="text-xs text-primary-foreground/50 italic">메뉴를 등록해주세요</span>
           )}
         </nav>
+
 
         {/* Right: Actions (desktop) */}
         <div className="hidden md:flex items-center gap-2">

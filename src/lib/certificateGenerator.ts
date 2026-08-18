@@ -18,7 +18,7 @@ interface CertificateData {
   language?: "ko" | "en";
 }
 
-// WEBHEADS wordmark is rendered as text in the certificate header to avoid
+// festcert wordmark is rendered as text in the certificate header to avoid
 // html2canvas CORS issues with raster image imports.
 
 // Pretendard font is only required for certificate rendering. Lazy-inject the
@@ -131,7 +131,7 @@ function buildCertificateHtml(data: CertificateData): HTMLElement {
       <!-- Header -->
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px; position:relative; z-index:1;">
         <div style="display:flex; align-items:center; height:32px;">
-          <div style="height:32px; display:flex; align-items:center; font-family:'Pretendard','Noto Sans KR',sans-serif; font-style:italic; font-weight:800; font-size:22px; letter-spacing:0.02em; color:#191F28;">WEBHEADS.</div>
+          <div style="height:32px; display:flex; align-items:center; font-family:'Pretendard','Noto Sans KR',sans-serif; font-weight:800; font-size:22px; letter-spacing:0.02em; color:#1a3a8c;">fest<span style="color:#e05a1e;">cert</span></div>
         </div>
         <div style="text-align:right;">
           <div style="font-size:10px; color:#8B95A1; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:3px;">

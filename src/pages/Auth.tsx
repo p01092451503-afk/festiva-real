@@ -11,7 +11,6 @@ import LoginVisualPanel from "@/components/auth/LoginVisualPanel";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
 import { getAuthRedirectOrigin } from "@/lib/canonicalDomain";
-import webheadsLogoPng from "@/assets/webheads-logo.png";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -227,9 +226,9 @@ const Auth = () => {
     >
       {/* Left - Visual Panel */}
       <LoginVisualPanel
-        brandName="WEBHEADS"
+        brandName="festcert"
         tagline={t("auth.heroTitle")}
-        accentColor="262 70% 65%"
+        accentColor="223 69% 33%"
       />
 
       {/* Right - Form */}
@@ -251,11 +250,10 @@ const Auth = () => {
               {activePreset.login_form_brand_name || activePreset.brand_name}
             </div>
           ) : (
-            <img
-              src={webheadsLogoPng}
-              alt="WEBHEADS"
-              className="h-[2.6rem] w-auto object-contain mx-auto"
-            />
+            <div className="h-[2.6rem] flex items-baseline justify-center text-3xl font-bold tracking-tight">
+              <span className="text-navy">fest</span>
+              <span className="text-brand-orange">cert</span>
+            </div>
           )}
 
           <div className="space-y-2 !mt-20">
@@ -321,7 +319,7 @@ const Auth = () => {
                     autoCapitalize="none"
                     autoCorrect="off"
                     spellCheck={false}
-                    placeholder="name@webheads.co.kr"
+                    placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="h-12 pl-11 bg-white border border-border rounded-xl text-sm placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-foreground/20"
@@ -487,7 +485,7 @@ const ForgotPasswordModal = ({ resetEmail, setResetEmail, isResetting, onClose, 
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
-            placeholder="name@webheads.co.kr"
+            placeholder="name@example.com"
             value={resetEmail}
             onChange={(e) => setResetEmail(e.target.value)}
             className="h-12 pl-11 bg-white border border-border rounded-xl text-sm placeholder:text-muted-foreground/50 focus-visible:ring-1 focus-visible:ring-foreground/20"
