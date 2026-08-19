@@ -158,12 +158,18 @@ const StorefrontHome = () => {
 
 
   const renderFestivals = () => (
-    <section key="festivals" className="bg-muted/40 border-y border-border/60">
-      <div className="max-w-6xl mx-auto px-4 py-14">
+    <section key="festivals" className="bg-background">
+      <div className="max-w-6xl mx-auto px-4 py-20 sm:py-24">
 
-        <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight mb-5">
-          꼭 가봐야 할 전국 축제
-        </h2>
+        <div className="mb-10">
+          <span className="text-sm font-semibold text-brand-orange">Festival</span>
+          <h2 className="mt-4 text-2xl sm:text-4xl font-bold tracking-tight leading-[1.5] text-foreground">
+            꼭 가봐야 할 전국 축제
+          </h2>
+          <p className="mt-3 text-base sm:text-lg text-muted-foreground leading-relaxed">
+            대표 축제의 운영 구조와 실무 포인트를 함께 살펴보세요.
+          </p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {FESTIVALS.map((festival) => (
             <button
@@ -171,9 +177,9 @@ const StorefrontHome = () => {
               type="button"
               onClick={() => setSelectedFestival(festival)}
               aria-label={`${festival.name} 자세히 보기`}
-              className="text-left bg-background rounded-xl border border-border/80 overflow-hidden transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="text-left bg-background rounded-3xl overflow-hidden ring-1 ring-border/60 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="h-44 sm:h-48 overflow-hidden bg-muted">
+              <div className="h-48 sm:h-56 overflow-hidden bg-muted">
                 <img
                   src={festival.imageUrl}
                   alt={festival.name}
@@ -181,12 +187,12 @@ const StorefrontHome = () => {
                   loading="lazy"
                 />
               </div>
-              <div className="p-4">
-                <h3 className="text-base font-semibold text-foreground">{festival.name}</h3>
-                <p className="text-sm text-muted-foreground mt-0.5">
+              <div className="p-6">
+                <h3 className="text-lg font-bold text-foreground">{festival.name}</h3>
+                <p className="text-base text-muted-foreground mt-1">
                   {festival.location} · {festival.month}
                 </p>
-                <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                <span className="mt-3 inline-flex items-center gap-1 text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
                   자세히 보기
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </span>

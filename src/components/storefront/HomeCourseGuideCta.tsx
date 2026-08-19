@@ -3,11 +3,11 @@ import { ArrowRight, Compass } from "lucide-react";
 
 /** 홈페이지 하단: 과정 선택 안내 CTA 배너 */
 const HomeCourseGuideCta = () => (
-  <section className="bg-slate-50 border-y border-border/60">
+  <section className="bg-background">
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-2xl bg-white border border-border p-6 sm:p-8 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-3xl bg-brand-blue-light/40 p-7 sm:p-9 ring-1 ring-border/60">
         <div className="flex items-start gap-4">
-          <span className="hidden sm:inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-blue-light shrink-0">
+          <span className="hidden sm:inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background shrink-0">
             <Compass className="w-6 h-6 text-navy" aria-hidden="true" />
           </span>
           <div>
