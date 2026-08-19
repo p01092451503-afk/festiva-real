@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+
 
 const roleConfig = {
   admin: { icon: Shield, path: "/admin", labelKey: "roles.admin" },
@@ -23,23 +23,16 @@ const RoleSwitcher = () => {
   const { roles, primaryRole } = useUserRole();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { data: siteSettings } = useSiteSettings();
-  const teacherRoleEnabled = siteSettings?.teacher_role_enabled !== false;
 
   // Map roles to switchable dashboard roles (super_admin → admin).
-  // Admin/super_admin/teacher always get a "student" option so they can
-  // preview the learner experience.
+  // Teacher / branch_admin roles are hidden for this deployment.
   const mapped = new Set(roles.map((r) => (r === "super_admin" ? "admin" : r)));
   if (mapped.has("admin") || mapped.has("teacher") || mapped.has("branch_admin")) {
     mapped.add("student");
   }
-  // Admin/super_admin can preview teacher dashboard when teacher role is enabled site-wide.
-  if (teacherRoleEnabled && mapped.has("admin")) {
-    mapped.add("teacher");
-  }
   const switchableRoles = Array.from(mapped)
     .filter((r) => r in roleConfig)
-    .filter((r) => teacherRoleEnabled || r !== "teacher") as Array<keyof typeof roleConfig>;
+    .filter((r) => r !== "teacher" && r !== "branch_admin") as Array<keyof typeof roleConfig>;
 
   if (switchableRoles.length <= 1) return null;
 

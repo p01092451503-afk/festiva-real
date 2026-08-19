@@ -569,7 +569,7 @@ const AdminBranches = () => {
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="student">{t("roles.studentLabel")}</SelectItem>
-                  <SelectItem value="teacher">{t("roles.teacherLabel")}</SelectItem>
+                  
                   <SelectItem value="admin">{t("roles.adminLabel")}</SelectItem>
                 </SelectContent>
               </Select>
