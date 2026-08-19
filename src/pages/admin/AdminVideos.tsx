@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Video, Plus, Search, Trash2, Copy, Edit, ExternalLink, HardDrive, Clock, Upload } from "lucide-react";
+import { Video, Plus, Search, Trash2, Copy, Edit, ExternalLink, HardDrive, Clock, Upload, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
