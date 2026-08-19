@@ -121,6 +121,28 @@ const AdminTraffic = () => {
     },
   });
 
+  // Live Bunny Stream library stats (storage + count + duration), refreshed periodically
+  const { data: bunnyLive } = useQuery({
+    queryKey: ["bunny-live-stats"],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke("bunny-stream-list");
+      if (error) throw error;
+      const videos = ((data as any)?.videos || []) as {
+        storage_size_bytes: number;
+        length_seconds: number;
+      }[];
+      return {
+        count: videos.length,
+        bytes: videos.reduce((s, v) => s + (Number(v.storage_size_bytes) || 0), 0),
+        seconds: videos.reduce((s, v) => s + (Number(v.length_seconds) || 0), 0),
+      };
+    },
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+    retry: false,
+  });
+
+
   // Learning outcome metrics
   const { data: enrollmentStats } = useQuery({
     queryKey: ["learning-outcome-enrollments"],
@@ -179,10 +201,14 @@ const AdminTraffic = () => {
     (sum, v) => sum + (Number(v.file_size_mb) || 0),
     0,
   );
-  const cdnStorageBytes = cdnStorageMb * 1024 * 1024;
-  const cdnStoredCount = (videoAssets || []).filter((v) =>
+  const dbCdnStorageBytes = cdnStorageMb * 1024 * 1024;
+  const dbCdnStoredCount = (videoAssets || []).filter((v) =>
     ["bunny", "cloudflare", "upload", "custom"].includes(v.video_provider || ""),
   ).length;
+  // Prefer live Bunny numbers when available (DB rows may lack file_size_mb)
+  const cdnStorageBytes = bunnyLive ? Math.max(bunnyLive.bytes, dbCdnStorageBytes) : dbCdnStorageBytes;
+  const cdnStoredCount = bunnyLive ? Math.max(bunnyLive.count, dbCdnStoredCount) : dbCdnStoredCount;
+
 
   // === Learning outcome calculations ===
   const allEnrollments = enrollmentStats || [];
@@ -399,9 +425,12 @@ const AdminTraffic = () => {
                   icon={Database}
                   label="CDN 저장"
                   value={formatBytes(cdnStorageBytes)}
-                  sub={`${cdnStoredCount}개`}
+                  sub={bunnyLive
+                    ? `${cdnStoredCount}개 · ${Math.round(bunnyLive.seconds / 60)}분 (실시간)`
+                    : `${cdnStoredCount}개`}
                   tone="text-amber-600 dark:text-amber-400"
                 />
+
                 <CompactMetric
                   icon={HardDrive}
                   label="저장 차시"
