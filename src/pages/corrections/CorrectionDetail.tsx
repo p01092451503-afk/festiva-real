@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, Suspense, lazy } from "react";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Loader2, Save, CheckCircle2, Pencil, MessageSquareText, Clock, Sparkles, AlertCircle, ImageIcon, Eye, Trash2, Camera, Plus, X } from "lucide-react";
@@ -22,7 +22,9 @@ import { useUser } from "@/contexts/UserContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useToast } from "@/hooks/use-toast";
 import { compressAnswerImage } from "@/lib/imageCompression";
-import CorrectionCanvas from "@/components/corrections/CorrectionCanvas";
+// tldraw 기반 캔버스는 1.5MB가 넘는 무거운 번들이므로 화면에 실제로 필요한
+// 시점에만 내려받도록 지연 로딩합니다.
+const CorrectionCanvas = lazy(() => import("@/components/corrections/CorrectionCanvas"));
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "대기",
@@ -487,6 +489,7 @@ const CorrectionDetail = () => {
                 <TabsContent key={p.id} value={p.id} className="space-y-4 mt-4">
                   {url ? (
                     <div className="relative">
+                      <Suspense fallback={<div className="h-[420px] flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
                       <CorrectionCanvas
                         key={p.id + (canEdit ? "-edit" : "-view") + (studentHideAnnotations ? "-clean" : "-ann")}
                         imageUrl={url}
@@ -494,6 +497,7 @@ const CorrectionDetail = () => {
                         readOnly={!canEdit}
                         onReady={(api) => { canvasApiRef.current = api; }}
                       />
+                      </Suspense>
                       {!isStaff && req.status === "pending" && (
                         <div className="absolute top-2 left-2 inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-background/90 backdrop-blur border shadow-sm">
                           <Eye className="h-3 w-3" /> 내가 제출한 답안

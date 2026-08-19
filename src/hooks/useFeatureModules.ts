@@ -36,9 +36,11 @@ export function useFeatureModules() {
       if (error) throw error;
       return (data as FeatureModule[]) || [];
     },
-    staleTime: 0,
-    gcTime: 5 * 60 * 1000,
-    refetchOnMount: true,
+    // 5분 캐시 — 페이지 진입마다 재조회하면 사이드바/라우트 렌더가 지연됩니다.
+    // 관리자 토글 시에는 mutation이 직접 invalidate 하므로 즉시 반영됩니다.
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: false,
   });
 
   const map = new Map<string, FeatureModule>();
