@@ -216,7 +216,7 @@ const HeroBanner = () => {
                       <h2 className="text-4xl font-bold leading-[1.3] tracking-tight text-navy-dark sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
-                        실무 전문가를 양성하는 자격증
+                        실무 전문가를 양성하는 자격증 과정
                       </h2>
                       <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-navy/75 sm:mt-7 sm:text-lg">
                         <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
