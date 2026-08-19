@@ -289,7 +289,6 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
       ? [{ navKey: "admin.orders", label: t("nav.paymentManagement", "결제 관리"), href: "/admin/orders", icon: CreditCard }]
       : []),
     { navKey: "admin.branches", label: t("nav.branchManagement", "지점 관리"), href: "/admin/branches", icon: Building2, tourId: "nav-branch-mgmt" },
-    { navKey: "admin.branchAdmins", label: t("nav.branchAdminMgmt", "중간관리자 관리"), href: "/admin/branch-admins", icon: ShieldCheck },
     { navKey: "admin.courses", label: t("nav.courseManagement"), href: "/admin/courses", icon: BookOpen, tourId: "nav-course-mgmt" },
     { navKey: "admin.saleStatus", label: t("nav.saleStatus", "상품 판매 상태"), href: "/admin/sale-status", icon: BookOpen },
     { navKey: "admin.contentLibrary", label: t("nav.contentLibrary", "콘텐츠 라이브러리"), href: "/admin/content-library", icon: Film },
