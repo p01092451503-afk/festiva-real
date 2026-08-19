@@ -138,18 +138,53 @@ export default function StudentCertificates() {
             )}
           </TabsContent>
 
-          {/* 실물 자격증 배송 추적 — UI 스텁(추후 배송 데이터 연동) */}
+          {/* 실물 자격증 배송 추적 */}
           <TabsContent value="shipping" className="mt-6">
-            <Card>
-              <CardContent className="py-12 text-center space-y-2">
-                <Truck className="w-6 h-6 mx-auto text-muted-foreground" aria-hidden="true" />
-                <p className="font-medium">배송 현황 준비 중입니다</p>
-                <p className="text-sm text-muted-foreground">
-                  실물 자격증 배송 조회 기능은 준비 중입니다. 배송 관련 문의는 학습운영·문의 &gt; 1:1 문의를 이용해 주세요.
-                </p>
-              </CardContent>
-            </Card>
+            {shipLoading ? (
+              <p className="text-sm text-muted-foreground">불러오는 중…</p>
+            ) : shipments.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center space-y-2">
+                  <Truck className="w-6 h-6 mx-auto text-muted-foreground" aria-hidden="true" />
+                  <p className="font-medium">배송 내역이 없습니다</p>
+                  <p className="text-sm text-muted-foreground">
+                    실물(우편) 발급을 신청하면 이곳에서 배송 상태를 확인할 수 있습니다.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {shipments.map((s) => (
+                  <Card key={s.id}>
+                    <CardContent className="p-5 space-y-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="font-semibold truncate">{s.course_title}</div>
+                          <div className="text-xs text-muted-foreground">
+                            신청일 {new Date(s.created_at).toLocaleDateString("ko-KR")} · 배송비 {s.shipping_fee.toLocaleString()}원
+                          </div>
+                        </div>
+                        <Badge variant={s.status === "delivered" ? "default" : s.status === "rejected" ? "destructive" : "secondary"}>
+                          {SHIP_STATUS[s.status] ?? s.status}
+                        </Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p>수령인 {s.recipient_name}</p>
+                        {s.postcode && <p>({s.postcode}) {s.address1} {s.address2 ?? ""}</p>}
+                        {s.admin_note && (
+                          <p className="flex items-center gap-1.5 text-foreground">
+                            <Truck className="w-4 h-4 text-primary" aria-hidden="true" />
+                            {s.admin_note}
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </TabsContent>
+
         </Tabs>
       </div>
 
