@@ -392,22 +392,78 @@ const About = () => {
               </div>
 
               <Dialog open={!!openOrg} onOpenChange={(next) => !next && setOpenOrg(null)}>
-                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                <DialogContent className="max-w-3xl max-h-[88vh] overflow-y-auto p-0 gap-0 overflow-x-hidden">
                   {activeOrg && (
                     <>
-                      <DialogHeader>
-                        <DialogTitle className="text-2xl text-navy">{activeOrg.detail.title}</DialogTitle>
-                        <DialogDescription className="text-base">{activeOrg.detail.subtitle}</DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        {activeOrg.detail.paragraphs.map((p, i) => (
-                          <p key={i} className="text-base text-muted-foreground leading-relaxed">{p}</p>
-                        ))}
+                      {/* 헤더 밴드 */}
+                      <div className="relative bg-navy px-7 sm:px-10 pt-9 pb-8 overflow-hidden">
+                        <div
+                          aria-hidden
+                          className="absolute inset-0 opacity-[0.18]"
+                          style={{
+                            backgroundImage:
+                              "radial-gradient(circle at 1px 1px, hsl(var(--brand-orange)) 1px, transparent 0)",
+                            backgroundSize: "22px 22px",
+                          }}
+                        />
+                        <div aria-hidden className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-brand-orange/20 blur-3xl" />
+                        <DialogHeader className="relative space-y-3 text-left">
+                          <div className="inline-flex items-center gap-2 self-start rounded-sm bg-brand-orange px-2.5 py-1 text-[11px] font-semibold tracking-[0.14em] text-white">
+                            <Building2 className="h-3.5 w-3.5" />
+                            운영 기관 소개
+                          </div>
+                          <DialogTitle className="text-2xl sm:text-3xl font-bold text-white leading-snug">
+                            {activeOrg.detail.title}
+                          </DialogTitle>
+                          <DialogDescription className="text-sm sm:text-base text-white/75">
+                            {activeOrg.detail.subtitle}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="relative mt-5 flex flex-wrap gap-2">
+                          {activeOrg.lines.map((l) => (
+                            <span
+                              key={l}
+                              className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs sm:text-[13px] text-white/90"
+                            >
+                              {l}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 본문 */}
+                      <div className="px-7 sm:px-10 py-8 sm:py-10 bg-background">
+                        <div className="space-y-6">
+                          {activeOrg.detail.paragraphs.map((p, i) => (
+                            <div key={i} className="flex gap-4 sm:gap-5">
+                              <div className="hidden sm:flex shrink-0 pt-1">
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-navy/5 text-[12px] font-semibold text-navy">
+                                  {String(i + 1).padStart(2, "0")}
+                                </span>
+                              </div>
+                              <p
+                                className={`min-w-0 text-[16px] sm:text-[17px] leading-[1.85] tracking-[-0.01em] ${
+                                  i === 0 ? "text-foreground font-medium" : "text-muted-foreground"
+                                }`}
+                              >
+                                {p}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="mt-9 border-t border-border pt-6 flex items-center gap-3">
+                          <ShieldCheck className="h-5 w-5 text-brand-orange shrink-0" />
+                          <p className="min-w-0 text-sm sm:text-[15px] text-muted-foreground">
+                            축제운영전문가 자격증 과정은 두 기관의 협력으로 운영됩니다.
+                          </p>
+                        </div>
                       </div>
                     </>
                   )}
                 </DialogContent>
               </Dialog>
+
 
             </section>
 
