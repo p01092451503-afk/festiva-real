@@ -103,14 +103,14 @@ const StaffEditDialog = ({
       label: t("roles.teacherLabel", "강사"),
       desc: t("admin.roleDesc.teacher", "강의를 개설하고 학습자를 지도합니다."),
       icon: <Presentation className="h-4 w-4" />,
-      show: teacherRoleEnabled,
+      show: false,
     },
     {
       value: "branch_admin",
       label: t("roles.branchAdminLabel", "지점 중간관리자"),
       desc: t("admin.roleDesc.branchAdmin", "담당 지점의 회원과 학습 현황을 관리합니다."),
       icon: <Building2 className="h-4 w-4" />,
-      show: true,
+      show: false,
     },
     {
       value: "admin",
