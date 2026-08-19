@@ -83,13 +83,7 @@ const LoginVisualPanel = memo(({
       )}
 
       {/* Brand info overlay */}
-      <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-        <div>
-          <p className="tracking-[0.3em] uppercase text-white drop-shadow-sm">
-            <span className="text-[1.75rem] font-light leading-none align-middle">{topText}</span>
-            {subtitle && <span className="text-lg align-middle ml-2">{subtitle}</span>}
-          </p>
-        </div>
+      <div className="relative z-10 flex flex-col justify-end p-12 w-full h-full">
 
         <div className="space-y-5 max-w-[30rem]">
           <p className="text-sm font-semibold tracking-[0.2em] uppercase text-brand-orange">
