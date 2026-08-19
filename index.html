@@ -96,14 +96,54 @@
     <script type="module" src="/src/main.tsx"></script>
 
     <script>
-      window.addEventListener('error', function(e) {
-        if (e.message && e.message.indexOf('module script') !== -1) {
-          if (!sessionStorage.getItem('chunk_reload')) {
-            sessionStorage.setItem('chunk_reload', '1');
-            window.location.reload();
-          }
+      /*
+        Boot recovery: when a stale cached index.html points at JS chunks that
+        no longer exist, the module load fails and the app never mounts — the
+        boot spinner would spin forever. We reload with a cache-busting query
+        (max 2 attempts) so the browser fetches a fresh index.html + chunks.
+      */
+      (function () {
+        var KEY = 'boot_recover_attempts';
+        function attempts() { try { return parseInt(sessionStorage.getItem(KEY) || '0', 10) || 0; } catch (e) { return 99; } }
+        function recover() {
+          var n = attempts();
+          if (n >= 2) { showFallback(); return; }
+          try { sessionStorage.setItem(KEY, String(n + 1)); } catch (e) {}
+          var url = window.location.pathname + '?_r=' + Date.now() + window.location.hash;
+          window.location.replace(url);
         }
-      });
+        function showFallback() {
+          var el = document.getElementById('boot-spinner');
+          if (!el) return;
+          el.innerHTML = '<div style="text-align:center;max-width:320px;padding:24px;font-size:15px;line-height:1.6">' +
+            '<p style="margin:0 0 16px">페이지를 불러오지 못했습니다.<br>브라우저 캐시를 지우고 다시 시도해 주세요.</p>' +
+            '<button id="boot-retry" style="border:0;border-radius:999px;background:#1a3a8c;color:#fff;padding:10px 22px;font-size:15px;cursor:pointer">다시 시도</button></div>';
+          var btn = document.getElementById('boot-retry');
+          if (btn) btn.addEventListener('click', function () {
+            try { sessionStorage.removeItem(KEY); } catch (e) {}
+            window.location.replace(window.location.pathname + '?_r=' + Date.now());
+          });
+        }
+        function isChunkError(msg) {
+          if (!msg) return false;
+          return msg.indexOf('module script') !== -1 ||
+            msg.indexOf('dynamically imported module') !== -1 ||
+            msg.indexOf('Importing a module') !== -1 ||
+            msg.indexOf('Loading chunk') !== -1;
+        }
+        window.addEventListener('error', function (e) {
+          if (isChunkError(e && e.message)) recover();
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+          var r = e && e.reason;
+          if (isChunkError(r && (r.message || String(r)))) recover();
+        });
+        // Failsafe: if React still hasn't mounted after 12s, try recovery once.
+        setTimeout(function () {
+          if (document.getElementById('boot-spinner')) recover();
+        }, 12000);
+      })();
     </script>
+
   </body>
 </html>

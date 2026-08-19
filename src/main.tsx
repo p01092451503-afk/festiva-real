@@ -17,6 +17,13 @@ requestAnimationFrame(() => {
   requestAnimationFrame(() => {
     const el = document.getElementById("boot-spinner");
     if (el) el.remove();
+    // React mounted successfully — clear the boot-recovery counter.
+    try {
+      sessionStorage.removeItem("boot_recover_attempts");
+      sessionStorage.removeItem("chunk_reload");
+    } catch {
+      /* ignore */
+    }
   });
 });
 

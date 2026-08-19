@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-08-19T12:34:03.910Z",
+  "timestamp": "2026-08-19T14:34:32.026Z",
   "totals": {
-    "raw": 9986360,
-    "gzipText": 2427240,
-    "files": 308
+    "raw": 9995952,
+    "gzipText": 2430410,
+    "files": 309
   },
   "buckets": {
     "js": {
-      "files": 259,
-      "raw": 8189351,
-      "gzip": 2386859
+      "files": 260,
+      "raw": 8198574,
+      "gzip": 2389971
     },
     "css": {
       "files": 2,
-      "raw": 229348,
-      "gzip": 38133
+      "raw": 229717,
+      "gzip": 38190
     },
     "img": {
       "files": 42,
@@ -29,7 +29,7 @@
     "html": {
       "files": 1,
       "raw": 6095,
-      "gzip": 2248
+      "gzip": 2249
     },
     "other": {
       "files": 4,
@@ -39,19 +39,19 @@
   },
   "topJs": [
     {
-      "path": "assets/CorrectionDetail-BcqSQFb4.js",
-      "size": 1617198,
-      "gzip": 483240
+      "path": "assets/CorrectionCanvas-DQWxFyHX.js",
+      "size": 1598192,
+      "gzip": 478120
     },
     {
-      "path": "assets/vendor-icons-5MnSiEQL.js",
+      "path": "assets/vendor-icons-SmAhh2TV.js",
       "size": 779690,
-      "gzip": 137108
+      "gzip": 137105
     },
     {
-      "path": "assets/vendor-charts-CJCxRpph.js",
+      "path": "assets/vendor-charts-DGHPLoGs.js",
       "size": 432248,
-      "gzip": 113242
+      "gzip": 113315
     },
     {
       "path": "assets/xlsx-Ck5MUZvf.js",
@@ -59,19 +59,19 @@
       "gzip": 140683
     },
     {
-      "path": "assets/vendor-pdf-DXIpiaXv.js",
+      "path": "assets/vendor-pdf-Dj5Ws8TX.js",
       "size": 416471,
-      "gzip": 135084
+      "gzip": 135085
     },
     {
-      "path": "assets/VideoRoom-BJnSfcjb.js",
+      "path": "assets/VideoRoom-Det3dSkf.js",
       "size": 252222,
-      "gzip": 70957
+      "gzip": 70956
     },
     {
-      "path": "assets/index-CpXwbC8V.js",
-      "size": 206420,
-      "gzip": 63165
+      "path": "assets/index-CkU6fpVi.js",
+      "size": 208630,
+      "gzip": 63897
     },
     {
       "path": "assets/vendor-canvas-BfxBtG_O.js",
@@ -79,37 +79,37 @@
       "gzip": 47691
     },
     {
-      "path": "assets/vendor-supabase-CFOXIwhO.js",
+      "path": "assets/vendor-supabase-XfMpBgh4.js",
       "size": 193827,
       "gzip": 51316
     },
     {
-      "path": "assets/vendor-react-vLNqtMOm.js",
+      "path": "assets/vendor-react-BCOLYn79.js",
       "size": 162873,
-      "gzip": 53138
+      "gzip": 53139
     },
     {
-      "path": "assets/index.es-COGnWjQb.js",
+      "path": "assets/index.es-Bd6S7iqP.js",
       "size": 150883,
-      "gzip": 51453
+      "gzip": 51455
     },
     {
-      "path": "assets/index-fC5g9zYR.js",
+      "path": "assets/index-DinMmrpC.js",
       "size": 117611,
-      "gzip": 36027
+      "gzip": 36028
     },
     {
-      "path": "assets/vendor-ui-B8RlQ82T.js",
+      "path": "assets/vendor-ui-Dzjljd8t.js",
       "size": 113203,
-      "gzip": 36218
+      "gzip": 36061
     },
     {
-      "path": "assets/CreateCourse-C-8XP3cO.js",
+      "path": "assets/CreateCourse-pqaH_Dfi.js",
       "size": 107371,
-      "gzip": 25730
+      "gzip": 25724
     },
     {
-      "path": "assets/jszip.min-CGxlIdWd.js",
+      "path": "assets/jszip.min-iBrHrPu8.js",
       "size": 97138,
       "gzip": 30022
     }
