@@ -1,26 +1,24 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import ko from './locales/ko.json';
-import en from './locales/en.json';
 
+// 한국어 전용 서비스 — 언어 감지/전환 없이 KO로 고정합니다.
 i18n
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources: { ko: { translation: ko }, en: { translation: en } },
+    resources: { ko: { translation: ko } },
+    lng: 'ko',
     fallbackLng: 'ko',
-    supportedLngs: ['ko', 'en'],
-    nonExplicitSupportedLngs: true,
+    supportedLngs: ['ko'],
     load: 'languageOnly',
-    detection: {
-      order: ['querystring', 'localStorage', 'navigator'],
-      caches: ['localStorage'],
-      lookupLocalStorage: 'nfl-lang',
-      lookupQuerystring: 'lang',
-    },
     interpolation: { escapeValue: false },
   });
+
+try {
+  localStorage.removeItem('nfl-lang');
+} catch {
+  /* ignore */
+}
 
 // Keep the document language attribute in sync with the active language so
 // that screen readers, search engines, and browser features (e.g. spell-check)
