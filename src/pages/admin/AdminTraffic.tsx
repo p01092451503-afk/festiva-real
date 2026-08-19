@@ -121,6 +121,28 @@ const AdminTraffic = () => {
     },
   });
 
+  // Live Bunny Stream library stats (storage + count + duration), refreshed periodically
+  const { data: bunnyLive } = useQuery({
+    queryKey: ["bunny-live-stats"],
+    queryFn: async () => {
+      const { data, error } = await supabase.functions.invoke("bunny-stream-list");
+      if (error) throw error;
+      const videos = ((data as any)?.videos || []) as {
+        storage_size_bytes: number;
+        length_seconds: number;
+      }[];
+      return {
+        count: videos.length,
+        bytes: videos.reduce((s, v) => s + (Number(v.storage_size_bytes) || 0), 0),
+        seconds: videos.reduce((s, v) => s + (Number(v.length_seconds) || 0), 0),
+      };
+    },
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+    retry: false,
+  });
+
+
   // Learning outcome metrics
   const { data: enrollmentStats } = useQuery({
     queryKey: ["learning-outcome-enrollments"],
