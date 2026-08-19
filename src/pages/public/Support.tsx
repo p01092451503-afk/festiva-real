@@ -7,6 +7,7 @@ import StorefrontHeader from "@/components/StorefrontHeader";
 import { PageBanner } from "@/components/PagePattern";
 import { pageBg } from "@/config/pageBackgrounds";
 import SiteFooter from "@/components/SiteFooter";
+import SectionHeading from "@/components/storefront/SectionHeading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -151,19 +152,24 @@ export default function Support() {
 
 
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 min-w-0">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-14 sm:py-16 min-w-0">
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
-          <TabsList className="flex-wrap h-auto">
+          <TabsList className="flex-wrap h-auto rounded-full bg-muted/60 p-1.5 gap-1">
             {TABS.map((t) => (
-              <TabsTrigger key={t.value} value={t.value} className="gap-2 text-base">
-                <t.icon className="w-4 h-4" aria-hidden="true" />
+              <TabsTrigger key={t.value} value={t.value} className="gap-2 text-base px-6 py-2.5 rounded-full data-[state=active]:bg-navy data-[state=active]:text-white data-[state=active]:shadow-sm">
+                <t.icon className="w-5 h-5" aria-hidden="true" />
                 {t.label}
               </TabsTrigger>
             ))}
           </TabsList>
 
           {/* 공지사항 */}
-          <TabsContent value="notice" className="mt-8">
+          <TabsContent value="notice" className="mt-10 space-y-8">
+            <SectionHeading
+              label="Notice"
+              title={<>학습 운영과 일정에 관한<br />공식 안내</>}
+              description="수강 신청, 학습 일정, 자격증 발급 관련 공지를 확인하세요."
+            />
             {notices.length === 0 ? (
               <p className="text-muted-foreground">등록된 공지가 없습니다.</p>
             ) : (
@@ -172,7 +178,7 @@ export default function Support() {
                   <button
                     key={n.id}
                     onClick={() => setOpenNotice(n)}
-                    className="w-full text-left grid grid-cols-1 sm:grid-cols-[1fr_120px] gap-1 sm:gap-6 py-5 border-b-2 border-border/80 hover:bg-accent/40 transition-colors px-1 min-w-0"
+                    className="w-full text-left grid grid-cols-1 sm:grid-cols-[1fr_120px] gap-1 sm:gap-6 py-5 border-b-2 border-border/80 hover:bg-brand-blue-light/40 transition-colors px-2 rounded-xl min-w-0"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       {n.is_pinned && <Pin className="h-4 w-4 shrink-0 text-brand-orange" aria-hidden="true" />}
@@ -186,13 +192,14 @@ export default function Support() {
           </TabsContent>
 
           {/* 1:1 문의 */}
-          <TabsContent value="inquiry" className="mt-8 space-y-8">
-            <Card>
-              <CardContent className="p-6 space-y-5">
-                <div className="space-y-1">
-                  <h2 className="text-xl font-semibold">1:1 문의하기</h2>
-                  <p className="text-sm text-muted-foreground">평일 09:00~18:00 · 24시간 내 답변</p>
-                </div>
+          <TabsContent value="inquiry" className="mt-10 space-y-10">
+            <SectionHeading
+              label="Contact"
+              title={<>궁금한 점은<br />1:1 문의로 남겨주세요</>}
+              description="평일 09:00~18:00 접수 · 24시간 이내 답변드립니다."
+            />
+            <Card className="rounded-3xl border-0 bg-background ring-1 ring-border/60 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)]">
+              <CardContent className="p-7 sm:p-9 space-y-6">
 
                 {!user ? (
                   <p className="text-muted-foreground">문의 접수는 로그인 후 이용할 수 있습니다.</p>
@@ -227,7 +234,7 @@ export default function Support() {
                       <Label htmlFor="inquiry-content">내용</Label>
                       <Textarea id="inquiry-content" rows={6} value={form.content} onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))} required />
                     </div>
-                    <Button type="submit" size="lg" disabled={submitInquiry.isPending}>문의 접수하기</Button>
+                    <Button type="submit" size="lg" className="rounded-full px-8 text-base leading-normal" disabled={submitInquiry.isPending}>문의 접수하기</Button>
                   </form>
                 )}
               </CardContent>
@@ -235,7 +242,7 @@ export default function Support() {
 
             {user && myInquiries.length > 0 && (
               <section className="space-y-4">
-                <h3 className="text-lg font-semibold">내 문의 내역</h3>
+                <h3 className="text-xl sm:text-2xl font-bold tracking-tight">내 문의 내역</h3>
                 <div className="border-t-2 border-border/80">
                   {myInquiries.map((q: any) => (
                     <div key={q.id} className="py-5 border-b-2 border-border/80 space-y-2 min-w-0">
@@ -247,7 +254,7 @@ export default function Support() {
                       </div>
                       <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">{q.content}</p>
                       {q.answer && (
-                        <div className="bg-brand-blue-light rounded-md p-4 whitespace-pre-wrap leading-relaxed">
+                        <div className="bg-brand-blue-light/70 rounded-2xl p-5 whitespace-pre-wrap leading-relaxed">
                           <span className="font-semibold text-navy">답변 </span>
                           {q.answer}
                         </div>
@@ -260,22 +267,42 @@ export default function Support() {
           </TabsContent>
 
           {/* FAQ */}
-          <TabsContent value="faq" className="mt-8">
-            <Accordion type="single" collapsible className="border-t-2 border-border/80">
+          <TabsContent value="faq" className="mt-10 space-y-8">
+            <SectionHeading
+              label="FAQ"
+              title={<>수강생이 가장 많이<br />물어보신 질문들</>}
+              description="답을 찾지 못했다면 1:1 문의 탭으로 남겨주세요."
+            />
+            <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((f: any) => (
-                <AccordionItem key={f.id} value={f.id} className="border-b-2 border-border/80">
-                  <AccordionTrigger className="text-left text-lg font-semibold">{f.question}</AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed text-base">{f.answer}</AccordionContent>
+                <AccordionItem
+                  key={f.id}
+                  value={f.id}
+                  className="border-0 rounded-2xl px-6 bg-background ring-1 ring-border/60 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] data-[state=open]:ring-navy/20"
+                >
+                  <AccordionTrigger className="text-left text-lg font-semibold hover:no-underline py-5">
+                    <span className="flex items-start gap-3 min-w-0">
+                      <HelpCircle className="w-5 h-5 mt-1 text-brand-orange shrink-0" aria-hidden="true" />
+                      <span className="min-w-0">{f.question}</span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed text-base pl-8 pb-5">{f.answer}</AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
           </TabsContent>
 
           {/* 리뷰게시판 */}
-          <TabsContent value="review" className="mt-8 space-y-4">
+          <TabsContent value="review" className="mt-10 space-y-8">
+            <SectionHeading
+              label="Reviews"
+              title={<>수강생이 직접 남긴<br />학습 후기</>}
+              description="축제 기획·운영 실무자들의 실제 학습 경험을 확인해 보세요."
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {reviews.map((r: any) => (
-              <Card key={r.id}>
-                <CardContent className="p-6 space-y-3 min-w-0">
+              <Card key={r.id} className="rounded-3xl border-0 bg-background ring-1 ring-border/60 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)]">
+                <CardContent className="p-7 space-y-4 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold text-lg">{r.author_label}</span>
                     <Badge variant="outline">{r.course_label}</Badge>
@@ -284,10 +311,11 @@ export default function Support() {
                     </span>
                     <span className="text-sm text-muted-foreground ml-auto whitespace-nowrap">{formatDate(r.published_at)}</span>
                   </div>
-                  <p className="text-muted-foreground leading-relaxed">{r.content}</p>
+                  <p className="text-base text-foreground/85 leading-relaxed">{r.content}</p>
                 </CardContent>
               </Card>
             ))}
+            </div>
           </TabsContent>
         </Tabs>
       </main>
