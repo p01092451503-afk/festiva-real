@@ -111,14 +111,15 @@ const HeroBanner = () => {
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-14 sm:py-16 md:py-20">
                       {/* headline row */}
                       <div className="grid gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] md:items-start md:gap-12">
-                        <h2 className="text-3xl font-bold leading-[1.35] tracking-tight text-navy-dark sm:text-4xl md:text-[2.9rem]">
+                        <h2 className="text-3xl font-bold leading-[1.6] tracking-tight text-navy-dark sm:text-4xl md:text-[2.7rem]">
                           축제 기획부터 평가까지,
                           <br />
-                          <span className="mr-3 inline-flex h-9 w-9 translate-y-1 items-center justify-center rounded-full bg-brand-orange align-middle sm:h-11 sm:w-11">
+                          <span className="mr-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-orange align-middle sm:h-11 sm:w-11">
                             <Sparkles className="h-5 w-5 text-white sm:h-6 sm:w-6" strokeWidth={2} />
                           </span>
-                          실무로 증명하는 축제운영전문가
+                          <span className="align-middle">실무로 증명하는 축제운영전문가</span>
                         </h2>
+
 
                         <div className="md:pt-3">
                           <p className="text-base leading-relaxed text-navy/70">
