@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  BookOpen, Heart, Star, Users, ShoppingBag, Play, Clock, BarChart3,
+  BookOpen, Heart, Star, Users, Play, Clock, BarChart3,
   ChevronDown, ChevronUp, CheckCircle2, Lock, Eye, Share2, ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -139,53 +139,6 @@ const StorefrontCourseDetail = () => {
     enabled: !!user?.id && !!id,
   });
 
-  // Cart check
-  const { data: isInCart } = useQuery({
-    queryKey: ["store-cart-check", id, user?.id],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("cart_items")
-        .select("id")
-        .eq("user_id", user!.id)
-        .eq("course_id", id!)
-        .maybeSingle();
-      return !!data;
-    },
-    enabled: !!user?.id && !!id,
-  });
-
-  // Add to cart
-  const addToCartMutation = useMutation({
-    mutationFn: async () => {
-      // 이미 수강 중인지 서버에서 재확인
-      const { data: existingEnrollment } = await supabase
-        .from("enrollments")
-        .select("id, status")
-        .eq("user_id", user!.id)
-        .eq("course_id", id!)
-        .eq("status", "approved")
-        .maybeSingle();
-      if (existingEnrollment) {
-        throw new Error("ALREADY_ENROLLED");
-      }
-      const { error } = await supabase.from("cart_items").insert({ user_id: user!.id, course_id: id! });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["store-cart-check", id] });
-      queryClient.invalidateQueries({ queryKey: ["cart-count"] });
-      queryClient.invalidateQueries({ queryKey: ["cart-items"] });
-      toast.success("장바구니에 추가되었습니다");
-    },
-    onError: (err: any) => {
-      if (err?.message === "ALREADY_ENROLLED") {
-        toast.error("이미 수강 중인 강의입니다. 장바구니에 담을 수 없습니다.");
-      } else {
-        toast.error("장바구니 추가에 실패했습니다");
-      }
-    },
-  });
-
   // Wishlist toggle
   const wishlistMutation = useMutation({
     mutationFn: async () => {
@@ -208,12 +161,6 @@ const StorefrontCourseDetail = () => {
   const discountPct = isSaleActive ? Math.round((1 - course!.sale_price! / course!.price) * 100) : 0;
 
   const totalDuration = contents.reduce((sum, c) => sum + (c.duration_minutes || 0), 0);
-
-  const handleAddToCart = () => {
-    if (!user) { navigate("/auth"); return; }
-    if (isEnrolled) { toast.info("이미 수강 중인 과정입니다"); return; }
-    addToCartMutation.mutate();
-  };
 
   // 1급 과정은 팝업-1(자격 확인)을 통과해야 결제로 진행
   const isLevel1 = /1\s*급/.test(course?.title ?? "");
@@ -556,16 +503,6 @@ const StorefrontCourseDetail = () => {
                       >
                         <Heart className={cn("h-5 w-5", isInWishlist ? "fill-destructive text-destructive" : "text-muted-foreground")} />
                       </button>
-                      {!isFree && (
-                        <button
-                          onClick={handleAddToCart}
-                          disabled={isInCart || addToCartMutation.isPending}
-                          aria-label={isInCart ? "장바구니에 있음" : "장바구니 담기"}
-                          className="h-12 w-12 shrink-0 inline-flex items-center justify-center rounded-xl border border-border hover:bg-accent transition-colors disabled:opacity-50"
-                        >
-                          <ShoppingBag className={cn("h-5 w-5", isInCart ? "text-foreground" : "text-muted-foreground")} />
-                        </button>
-                      )}
                       <Button className="flex-1 h-12 text-lg rounded-xl font-bold shadow-sm" onClick={handleBuyNow}>
                         {saleCtaLabel(course?.sale_status, isFree)}
                       </Button>
@@ -880,11 +817,6 @@ const StorefrontCourseDetail = () => {
             </Button>
           ) : isPurchasable(course?.sale_status) ? (
             <>
-              {!isFree && (
-                <Button variant="outline" size="lg" className="rounded-xl" onClick={handleAddToCart} disabled={isInCart}>
-                  <ShoppingBag className="h-4 w-4" />
-                </Button>
-              )}
               <Button size="lg" className="rounded-xl" onClick={handleBuyNow}>
                 {saleCtaLabel(course?.sale_status, isFree)}
               </Button>

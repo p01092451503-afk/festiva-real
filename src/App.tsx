@@ -174,7 +174,6 @@ const StorefrontCourseDetail = lazy(() => import("./pages/store/StorefrontCourse
 const StorefrontBooks = lazy(() => import("./pages/store/StorefrontBooks"));
 const StorefrontSubscriptions = lazy(() => import("./pages/store/StorefrontSubscriptions"));
 const StorefrontClasses = lazy(() => import("./pages/store/StorefrontClasses"));
-const CartPage = lazy(() => import("./pages/store/CartPage"));
 const CheckoutPage = lazy(() => import("./pages/store/CheckoutPage"));
 const CheckoutSuccess = lazy(() => import("./pages/store/CheckoutSuccess"));
 const CheckoutFail = lazy(() => import("./pages/store/CheckoutFail"));
@@ -234,8 +233,7 @@ const App = () => (
               <Route path="/admin/invitations/logs" element={<AdminRoute><AdminInvitationLogs /></AdminRoute>} />
               <Route path="/admin/settings/sms" element={<AdminRoute><AdminSmsSettings /></AdminRoute>} />
 
-              {/* Cart & Checkout */}
-              <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+              {/* Checkout */}
               <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
               <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
               <Route path="/checkout/fail" element={<CheckoutFail />} />

@@ -68,7 +68,7 @@ const CheckoutPage = () => {
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
 
   const handleClose = () => {
-    navigate("/cart");
+    navigate("/store/courses");
   };
 
   const handleRemoveItem = async (courseId: string) => {
@@ -112,18 +112,18 @@ const CheckoutPage = () => {
     const raw = localStorage.getItem("checkout_data");
     if (!raw) {
       toast({ title: "결제 정보가 없습니다.", variant: "destructive" });
-      navigate("/cart");
+      navigate("/store/courses");
       return;
     }
     try {
       const parsed = JSON.parse(raw) as CheckoutData;
       if (!parsed.items || parsed.items.length === 0) {
-        navigate("/cart");
+        navigate("/store/courses");
         return;
       }
       setCheckoutData(parsed);
     } catch {
-      navigate("/cart");
+      navigate("/store/courses");
     }
   }, []);
 
@@ -178,7 +178,7 @@ const CheckoutPage = () => {
 
         if (validItems.length === 0) {
           toast({ title: "이미 수강 중이거나 결제 대기 중인 강의입니다.", variant: "destructive" });
-          navigate("/cart");
+          navigate("/store/courses");
           return;
         }
 
@@ -229,7 +229,7 @@ const CheckoutPage = () => {
       } catch (e: any) {
         console.error("Order creation failed:", e);
         toast({ title: "주문 생성에 실패했습니다.", description: e.message, variant: "destructive" });
-        navigate("/cart");
+        navigate("/store/courses");
       } finally {
         setIsCreatingOrder(false);
       }

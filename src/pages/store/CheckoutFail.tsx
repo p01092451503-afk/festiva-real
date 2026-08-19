@@ -15,7 +15,7 @@ const CheckoutFail = () => {
         <h1 className="text-2xl font-bold text-foreground">결제 실패</h1>
         <p className="text-muted-foreground mt-2 mb-8">{message}</p>
         <div className="flex gap-3 justify-center">
-          <Button asChild variant="outline"><Link to="/cart">장바구니로 돌아가기</Link></Button>
+          <Button asChild variant="outline"><Link to="/store/courses">강의 안내로 돌아가기</Link></Button>
           <Button asChild><Link to="/store">스토어로 돌아가기</Link></Button>
         </div>
       </main>
