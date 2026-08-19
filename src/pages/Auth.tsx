@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import LoginVisualPanel from "@/components/auth/LoginVisualPanel";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
