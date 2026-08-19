@@ -56,11 +56,11 @@
     --brand-orange-foreground: 0 0% 100%;
     --brand-pink-light: 350 80% 96%;
 
-    /* Footer (dark band) */
-    --footer-bg: 240 28% 14%;
+    /* Footer (brand blue band) */
+    --footer-bg: 220 45% 42%;
     --footer-fg: 0 0% 100%;
-    --footer-muted: 220 20% 75%;
-    --footer-border: 220 25% 25%;
+    --footer-muted: 220 60% 88%;
+    --footer-border: 220 40% 55%;
 
     /* Neutral scale (legacy "warm" names kept for compatibility) */
     --warm-50: 223 70% 98%;
