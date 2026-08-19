@@ -115,17 +115,7 @@ const HeroBanner = () => {
                           "linear-gradient(180deg, hsl(var(--brand-blue-light)) 0%, hsl(0 0% 100%) 55%, hsl(var(--brand-blue-light)) 100%)",
                       }}
                     />
-                    {/* subtle sweeping arcs */}
-                    <svg
-                      className="pointer-events-none absolute inset-0 h-full w-full"
-                      viewBox="0 0 1440 520"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    >
-                      <path d="M-100 470 C 300 300 700 470 1540 240" fill="none" stroke="hsl(var(--brand-blue) / 0.14)" strokeWidth="1.5" />
-                      <path d="M-100 520 C 340 350 760 520 1540 300" fill="none" stroke="hsl(var(--brand-blue) / 0.10)" strokeWidth="1.5" />
-                      <path d="M-100 420 C 260 260 660 420 1540 180" fill="none" stroke="hsl(var(--brand-orange) / 0.14)" strokeWidth="1.5" />
-                    </svg>
+                    {/* clean background: gradient wash + soft blur spots only */}
                     <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-blue)/0.06)] blur-2xl" />
                     <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
 
