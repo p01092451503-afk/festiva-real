@@ -157,8 +157,9 @@ const StorefrontHome = () => {
 
 
   const renderFestivals = () => (
-    <section key="festivals" className="bg-muted/20 border-t border-border">
-      <div className="max-w-6xl mx-auto px-4 py-10">
+    <section key="festivals" className="bg-muted/40 border-y border-border/60">
+      <div className="max-w-6xl mx-auto px-4 py-14">
+
         <h2 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight mb-5">
           꼭 가봐야 할 전국 축제
         </h2>
