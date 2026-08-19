@@ -116,27 +116,27 @@ const LEVELS = [
   },
 ];
 
-const STEPS = [
+export const STEPS = [
   { step: "01", title: "수강 신청·결제", text: "개강일은 매월 1일입니다. 급수별 과정을 선택해 수강 신청·결제를 완료합니다. 1급은 경력증명서를 함께 제출해야 합니다." },
   { step: "02", title: "온라인 학습", text: "1차시는 5분 안내 + 25분 강의 + 15분 시험으로 총 45분입니다. 1과목 3강, 총 9강으로 구성되며 배속 재생·구간 반복이 모두 허용됩니다." },
   { step: "03", title: "주간 테스트", text: "9주 이내에 강의·시험 6주치 이상을 완료하고 시험 60점 이상을 획득해야 수료로 인정됩니다. 재응시 횟수 제한은 없습니다." },
   { step: "04", title: "자격증 발급", text: "수료생 전원에게 PDF와 실물 자격증이 발급됩니다. PDF는 이메일로 3~5영업일 내 발송(재발급 무료), 실물은 배송비 3,000원으로 3~5영업일 내 배송됩니다." },
 ];
 
-const ISSUE_NOTES = [
+export const ISSUE_NOTES = [
   "자격증에 기재된 성명은 발급 후 변경이 불가합니다.",
   "PDF는 이메일로 먼저 발송되며, 실물은 순차 배송됩니다.",
   "허위 정보 기재 시 자격증이 취소될 수 있습니다.",
 ];
 
-const COMPLETION_CONDITIONS = [
+export const COMPLETION_CONDITIONS = [
   { label: "강의 이수", value: "6주 이상 이수", note: "필수", icon: ListChecks },
   { label: "시험", value: "60점 이상", note: "합격", icon: GraduationCap },
   { label: "수강 기간", value: "9주", note: "기간 내", icon: CalendarClock },
   { label: "수료 후", value: "PDF + 실물 수료증", note: "발급", icon: Award },
 ];
 
-const ISSUE_METHODS = [
+export const ISSUE_METHODS = [
   {
     title: "PDF 온라인 발급",
     fee: "무료",
