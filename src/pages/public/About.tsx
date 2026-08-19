@@ -690,10 +690,9 @@ const About = () => {
               <ol className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {STEPS.map((s) => (
                   <li key={s.step}>
-                    <Card className="h-full border-border/70 overflow-hidden">
-                      <div className="h-1.5 bg-brand-orange" aria-hidden="true" />
+                    <Card className="h-full border-border/70 shadow-sm">
                       <CardContent className="p-7 space-y-3">
-                        <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-brand-orange/10 text-lg font-bold text-brand-orange">{s.step}</span>
+                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-navy text-sm font-bold text-white shadow-sm">{s.step}</span>
                         <h4 className="text-xl font-bold text-navy">{s.title}</h4>
                         <p className="text-base text-muted-foreground leading-relaxed">{s.text}</p>
                       </CardContent>
