@@ -1,5 +1,122 @@
 [
   {
+    "timestamp": "2026-08-19T04:18:04.115Z",
+    "totals": {
+      "raw": 9991918,
+      "gzipText": 2428997,
+      "files": 308
+    },
+    "buckets": {
+      "js": {
+        "files": 259,
+        "raw": 8197878,
+        "gzip": 2388637
+      },
+      "css": {
+        "files": 2,
+        "raw": 225440,
+        "gzip": 37770
+      },
+      "img": {
+        "files": 42,
+        "raw": 1560241,
+        "gzip": 0
+      },
+      "font": {
+        "files": 0,
+        "raw": 0,
+        "gzip": 0
+      },
+      "html": {
+        "files": 1,
+        "raw": 7034,
+        "gzip": 2590
+      },
+      "other": {
+        "files": 4,
+        "raw": 1325,
+        "gzip": 0
+      }
+    },
+    "topJs": [
+      {
+        "path": "assets/CorrectionDetail-Cl6mfcbH.js",
+        "size": 1617198,
+        "gzip": 483237
+      },
+      {
+        "path": "assets/vendor-icons-CVdQOoPz.js",
+        "size": 779690,
+        "gzip": 137109
+      },
+      {
+        "path": "assets/vendor-charts-CJCxRpph.js",
+        "size": 432248,
+        "gzip": 113242
+      },
+      {
+        "path": "assets/xlsx-Ck5MUZvf.js",
+        "size": 425055,
+        "gzip": 140683
+      },
+      {
+        "path": "assets/vendor-pdf-DXIpiaXv.js",
+        "size": 416471,
+        "gzip": 135084
+      },
+      {
+        "path": "assets/VideoRoom-Dhhy7jhA.js",
+        "size": 252222,
+        "gzip": 70956
+      },
+      {
+        "path": "assets/index-Dge0gKug.js",
+        "size": 206649,
+        "gzip": 63089
+      },
+      {
+        "path": "assets/vendor-canvas-BfxBtG_O.js",
+        "size": 202285,
+        "gzip": 47691
+      },
+      {
+        "path": "assets/vendor-supabase-CFOXIwhO.js",
+        "size": 193827,
+        "gzip": 51316
+      },
+      {
+        "path": "assets/vendor-react-vLNqtMOm.js",
+        "size": 162873,
+        "gzip": 53138
+      },
+      {
+        "path": "assets/index.es-COGnWjQb.js",
+        "size": 150883,
+        "gzip": 51453
+      },
+      {
+        "path": "assets/index-fC5g9zYR.js",
+        "size": 117611,
+        "gzip": 36027
+      },
+      {
+        "path": "assets/vendor-ui-B8RlQ82T.js",
+        "size": 113203,
+        "gzip": 36218
+      },
+      {
+        "path": "assets/CreateCourse-DTYP6-Iv.js",
+        "size": 107371,
+        "gzip": 25732
+      },
+      {
+        "path": "assets/jszip.min-CGxlIdWd.js",
+        "size": 97138,
+        "gzip": 30022
+      }
+    ]
+  },
+  {
     "timestamp": "2026-08-19T04:06:05.950Z",
     "totals": {
       "raw": 9985951,
