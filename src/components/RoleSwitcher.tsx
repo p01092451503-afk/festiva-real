@@ -23,8 +23,6 @@ const RoleSwitcher = () => {
   const { roles, primaryRole } = useUserRole();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { data: siteSettings } = useSiteSettings();
-  const teacherRoleEnabled = siteSettings?.teacher_role_enabled !== false;
 
   // Map roles to switchable dashboard roles (super_admin → admin).
   // Teacher / branch_admin roles are hidden for this deployment.
