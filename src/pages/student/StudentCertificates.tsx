@@ -29,6 +29,28 @@ type Cert = {
   revoked_at: string | null;
 };
 
+type Shipment = {
+  id: string;
+  course_title: string;
+  recipient_name: string;
+  postcode: string | null;
+  address1: string | null;
+  address2: string | null;
+  shipping_fee: number;
+  status: string;
+  admin_note: string | null;
+  created_at: string;
+};
+
+const SHIP_STATUS: Record<string, string> = {
+  pending: "접수 대기",
+  approved: "승인 완료",
+  issued: "발급 완료",
+  shipped: "배송 중",
+  delivered: "배송 완료",
+  rejected: "반려",
+};
+
 export default function StudentCertificates() {
   const { user } = useUser();
   const { toast } = useToast();
