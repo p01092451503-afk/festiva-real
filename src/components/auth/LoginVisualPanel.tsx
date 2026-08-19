@@ -83,7 +83,7 @@ const LoginVisualPanel = memo(({
       )}
 
       {/* Brand info overlay */}
-      <div className="relative z-10 flex flex-col justify-end px-12 pb-40 pt-12 w-full h-full">
+      <div className="relative z-10 flex flex-col justify-end px-12 pb-24 pt-12 w-full h-full">
 
         <div className="space-y-5 max-w-[30rem]">
           <p className="text-sm font-semibold tracking-[0.2em] uppercase text-brand-orange">
