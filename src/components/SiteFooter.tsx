@@ -166,8 +166,8 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
           </div>
 
           {/* 링크 + 저작권 */}
-          <div className="lg:col-span-5 min-w-0 flex flex-col gap-5">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <div className="lg:col-span-5 min-w-0 flex flex-col gap-5 lg:text-right lg:items-end">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 lg:justify-end">
               <Link to="/support" className="text-sm font-semibold text-footer-foreground hover:opacity-70 transition-opacity">
                 고객센터 안내
               </Link>
