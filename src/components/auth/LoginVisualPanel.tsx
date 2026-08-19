@@ -83,7 +83,7 @@ const LoginVisualPanel = memo(({
       )}
 
       {/* Brand info overlay */}
-      <div className="relative z-10 flex flex-col justify-end p-12 w-full h-full">
+      <div className="relative z-10 flex flex-col justify-end px-12 pb-24 pt-12 w-full h-full">
 
         <div className="space-y-5 max-w-[30rem]">
           <p className="text-sm font-semibold tracking-[0.2em] uppercase text-brand-orange">
@@ -92,10 +92,6 @@ const LoginVisualPanel = memo(({
           <h2 className="text-4xl font-semibold whitespace-pre-line text-white drop-shadow-sm" style={{ lineHeight: 1.5 }}>
             {displayTagline}
           </h2>
-          <p className="text-base leading-relaxed text-white/80">
-            2급·1급 온라인 과정, 실무 문서 중심 커리큘럼, 수료 후 자격증 발급까지
-            한 곳에서 진행하는 축제운영전문가 교육 플랫폼입니다.
-          </p>
         </div>
 
       </div>
