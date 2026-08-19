@@ -10,6 +10,17 @@ export default function StudentCertGuide() {
   return (
     <DashboardLayout role="student" contentClassName="flex-1 min-w-0 p-0">
       <div className="p-4 sm:p-6 lg:p-8 space-y-8 min-w-0">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-blue-light text-navy">
+              <FileCheck2 className="w-5 h-5" aria-hidden="true" />
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-bold text-navy">발급 절차 안내</h1>
+          </div>
+          <p className="text-base text-muted-foreground pl-11.5">
+            자격증 수료 조건과 발급 방법, 수강부터 발급까지의 절차를 안내해 드립니다.
+          </p>
+        </div>
 
         <section className="space-y-4">
           <h2 className="text-lg font-semibold">수료 조건 안내</h2>

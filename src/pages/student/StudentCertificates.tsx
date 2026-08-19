@@ -114,6 +114,18 @@ export default function StudentCertificates() {
   return (
     <DashboardLayout contentClassName="flex-1 min-w-0 p-0">
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 min-w-0">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-blue-light text-navy">
+              <Award className="w-5 h-5" aria-hidden="true" />
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-bold text-navy">자격증 신청 및 발급</h1>
+          </div>
+          <p className="text-base text-muted-foreground pl-11.5">
+            수료한 과정의 자격증을 신청하고, 발급 내역과 배송 현황을 확인할 수 있습니다.
+          </p>
+        </div>
+
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
           <TabsList>
             <TabsTrigger value="apply">발급 신청</TabsTrigger>
