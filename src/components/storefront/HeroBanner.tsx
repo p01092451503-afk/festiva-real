@@ -107,63 +107,63 @@ const HeroBanner = () => {
                 )}
                 {isFallback ? (
                   <div className="relative overflow-hidden bg-background">
-                    {/* abstract gradient wash */}
+                    {/* warm cream gradient wash */}
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(135deg, #f0f4ff 0%, #f8f5ff 35%, #ffffff 55%, #f0f9ff 100%)",
+                          "linear-gradient(135deg, #faf6f0 0%, #fdfbf7 40%, #f7f2ea 70%, #ede6d8 100%)",
                       }}
                     />
-                    {/* soft radial gradient blobs */}
+                    {/* soft warm radial blobs */}
                     <div
                       className="pointer-events-none absolute -left-[15%] -top-[25%] h-[60%] w-[60%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%)" }}
+                      style={{ background: "radial-gradient(circle, rgba(232,221,208,0.55) 0%, transparent 70%)" }}
                     />
                     <div
                       className="pointer-events-none absolute -right-[15%] top-[10%] h-[55%] w-[55%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%)" }}
+                      style={{ background: "radial-gradient(circle, rgba(250,246,240,0.70) 0%, transparent 70%)" }}
                     />
                     <div
                       className="pointer-events-none absolute bottom-[-10%] left-[20%] h-[45%] w-[45%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)" }}
+                      style={{ background: "radial-gradient(circle, rgba(224,90,30,0.06) 0%, transparent 70%)" }}
                     />
-                    {/* abstract geometric pattern */}
+                    {/* warm abstract geometric pattern */}
                     <svg
-                      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.35]"
+                      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.25]"
                       viewBox="0 0 1440 520"
                       preserveAspectRatio="none"
                       aria-hidden="true"
                     >
                       <defs>
                         <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(99,102,241,0.22)" />
-                          <stop offset="100%" stopColor="rgba(59,130,246,0.12)" />
+                          <stop offset="0%" stopColor="rgba(232,221,208,0.45)" />
+                          <stop offset="100%" stopColor="rgba(250,246,240,0.25)" />
                         </linearGradient>
                         <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(139,92,246,0.18)" />
-                          <stop offset="100%" stopColor="rgba(99,102,241,0.08)" />
+                          <stop offset="0%" stopColor="rgba(26,58,140,0.10)" />
+                          <stop offset="100%" stopColor="rgba(224,90,30,0.06)" />
                         </linearGradient>
                       </defs>
-                      <circle cx="180" cy="120" r="90" fill="url(#heroGrad1)" opacity="0.6" />
-                      <circle cx="1260" cy="380" r="120" fill="url(#heroGrad2)" opacity="0.5" />
-                      <circle cx="1100" cy="80" r="60" fill="url(#heroGrad1)" opacity="0.4" />
-                      <circle cx="320" cy="420" r="70" fill="url(#heroGrad2)" opacity="0.35" />
+                      <circle cx="180" cy="120" r="90" fill="url(#heroGrad1)" />
+                      <circle cx="1260" cy="380" r="120" fill="url(#heroGrad2)" />
+                      <circle cx="1100" cy="80" r="60" fill="url(#heroGrad1)" />
+                      <circle cx="320" cy="420" r="70" fill="url(#heroGrad2)" />
                       <path
                         d="M-100 260 C 240 180 480 340 1540 200"
                         fill="none"
-                        stroke="rgba(99,102,241,0.12)"
+                        stroke="rgba(232,221,208,0.55)"
                         strokeWidth="2"
                       />
                       <path
                         d="M-100 300 C 280 220 560 380 1540 240"
                         fill="none"
-                        stroke="rgba(59,130,246,0.10)"
+                        stroke="rgba(232,221,208,0.40)"
                         strokeWidth="2"
                       />
                     </svg>
-                    <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-blue)/0.06)] blur-2xl" />
-                    <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
+                    <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-orange)/0.04)] blur-2xl" />
+                    <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-blue)/0.04)] blur-2xl" />
 
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-24">
                       <span className="inline-flex items-stretch overflow-hidden rounded-sm border border-navy/15 bg-card/70 text-sm">
