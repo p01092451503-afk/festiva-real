@@ -130,17 +130,11 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
   };
 
   const openEdit = async (post: any) => {
-    const { data: i18nRows } = await supabase
-      .from("board_post_i18n")
-      .select("language_code, title, content")
-      .eq("post_id", post.id);
-    const ko = i18nRows?.find((r) => r.language_code === "ko");
-    const en = i18nRows?.find((r) => r.language_code === "en");
     setForm({
-      title_ko: ko?.title ?? post.title,
-      content_ko: ko?.content ?? post.content,
-      title_en: en?.title ?? "",
-      content_en: en?.content ?? "",
+      title_ko: post.title,
+      content_ko: post.content,
+      title_en: "",
+      content_en: "",
       is_pinned: post.is_pinned,
       is_published: post.is_published,
       target_country_codes: post.target_country_codes ?? [],

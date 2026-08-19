@@ -100,17 +100,11 @@ const TeacherAnnouncements = () => {
 
   const openEdit = async (ann: any) => {
     setEditId(ann.id);
-    const { data: i18nRows } = await supabase
-      .from("announcement_i18n")
-      .select("language_code, title, content")
-      .eq("announcement_id", ann.id);
-    const ko = i18nRows?.find((r) => r.language_code === "ko");
-    const en = i18nRows?.find((r) => r.language_code === "en");
     setForm({
-      title_ko: ko?.title ?? ann.title,
-      content_ko: ko?.content ?? ann.content,
-      title_en: en?.title ?? "",
-      content_en: en?.content ?? "",
+      title_ko: ann.title,
+      content_ko: ann.content,
+      title_en: "",
+      content_en: "",
       is_pinned: ann.is_pinned,
       is_published: ann.is_published,
       target_country_codes: ann.target_country_codes ?? [],
