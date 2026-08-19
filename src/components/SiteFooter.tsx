@@ -58,12 +58,12 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
           {/* 공지사항 */}
           <div className="lg:col-span-7 min-w-0">
             <div className="flex items-center gap-3">
-              <h2 className="text-lg sm:text-xl font-bold tracking-tight">공지사항</h2>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight">공지사항</h2>
               <Link
                 to="/student/announcements"
-                className="inline-flex items-center gap-1 text-sm text-footer-muted hover:text-footer-foreground transition-colors"
+                className="inline-flex items-center gap-1 text-base text-footer-muted hover:text-footer-foreground transition-colors"
               >
-                전체보기 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                전체보기 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
             {latestNotice ? (
@@ -71,8 +71,8 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 to="/student/announcements"
                 className="mt-4 flex items-center justify-between gap-4 py-3 border-b border-footer-border hover:opacity-80 transition-opacity"
               >
-                <span className="truncate text-base sm:text-lg font-medium">{latestNotice.title}</span>
-                <span className="shrink-0 text-sm text-footer-muted">
+                <span className="truncate text-lg sm:text-xl font-medium">{latestNotice.title}</span>
+                <span className="shrink-0 text-base text-footer-muted">
                   {new Date(latestNotice.created_at).toLocaleDateString("ko-KR", {
                     year: "2-digit",
                     month: "2-digit",
@@ -81,16 +81,16 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 </span>
               </Link>
             ) : (
-              <div className="mt-4 py-3 border-b border-footer-border text-sm text-footer-muted">
+              <div className="mt-4 py-3 border-b border-footer-border text-base text-footer-muted">
                 등록된 공지사항이 없습니다.
               </div>
             )}
           </div>
 
           {/* 고객센터 */}
-          <div className="lg:col-span-5 min-w-0 lg:text-right">
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight">고객센터</h2>
-            <div className="mt-4 space-y-1.5 text-base text-footer-muted leading-relaxed">
+          <div className="lg:col-span-5 min-w-0 lg:text-right lg:items-end">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">고객센터</h2>
+            <div className="mt-4 space-y-1.5 text-lg text-footer-muted leading-relaxed">
               {workingHours.length > 0 ? (
                 workingHours.map((line) => <p key={line}>{line}</p>)
               ) : (
@@ -103,11 +103,11 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             </div>
             <Link
               to="/support?tab=inquiry"
-              className="mt-5 inline-flex items-center gap-2 rounded-full border border-footer-border px-6 py-2.5 text-base font-medium hover:bg-footer-foreground hover:text-footer transition-colors"
+              className="mt-5 inline-flex items-center gap-2 rounded-full border border-footer-border px-7 py-3 text-lg font-medium hover:bg-footer-foreground hover:text-footer transition-colors"
             >
-              <MessageCircle className="h-4 w-4" aria-hidden="true" />
+              <MessageCircle className="h-5 w-5" aria-hidden="true" />
               1:1 문의하기
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </Link>
           </div>
         </div>
