@@ -198,7 +198,7 @@ const HeroBanner = () => {
                       <h2 className="text-4xl font-bold leading-[1.3] tracking-tight text-white sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
-                        실무 전문가를 만드는 자격증
+                        실무 문서를 만드는 자격증
                       </h2>
                       <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-white/80 sm:mt-7 sm:text-lg">
                         <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
@@ -225,6 +225,22 @@ const HeroBanner = () => {
                         >
                           자격 제도 안내
                         </Link>
+                      </div>
+                      <div className="mt-12 sm:mt-14">
+                        <div className="mx-auto inline-flex flex-wrap items-center justify-center divide-y divide-white/15 border-y border-white/15 sm:divide-x sm:divide-y-0">
+                          {[
+                            { Icon: Layers, strong: "2급·1급", label: "단계별 과정" },
+                            { Icon: PlayCircle, strong: "9차시", label: "온라인 강의" },
+                            { Icon: BookOpen, strong: "교재 포함", label: "195,000원" },
+                          ].map(({ Icon, strong, label }) => (
+                            <div key={strong} className="flex items-center gap-3 px-6 py-4 sm:px-8">
+                              <Icon className="h-5 w-5 shrink-0 text-white/70" strokeWidth={1.5} />
+                              <span className="text-base text-white/75 sm:text-lg">
+                                <strong className="font-bold text-white">{strong}</strong> {label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
