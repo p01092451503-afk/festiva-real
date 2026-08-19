@@ -98,6 +98,12 @@ export default {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
+        footer: {
+          DEFAULT: "hsl(var(--footer-bg))",
+          foreground: "hsl(var(--footer-fg))",
+          muted: "hsl(var(--footer-muted))",
+          border: "hsl(var(--footer-border))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
