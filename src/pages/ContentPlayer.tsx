@@ -955,8 +955,8 @@ const ContentPlayer = () => {
               </div>
 
 
-              {/* Notes & Up Next — fills empty space below the player */}
-              {contentId && courseId && routePrefix === "/student" && (
+              {/* 학습 메모 · AI 요약 · AI 튜터 · 다음 차시 (학생/강사/관리자 모두 노출) */}
+              {contentId && courseId && (
                 <LessonExtras
                   contentId={contentId}
                   courseId={courseId}
