@@ -211,6 +211,8 @@ const ContentPlayer = () => {
   const [bunnyEmbedUrl, setBunnyEmbedUrl] = useState<string | null>(null);
   const [bunnyLoading, setBunnyLoading] = useState(false);
   const [bunnyTokenExpiresAt, setBunnyTokenExpiresAt] = useState<number | null>(null);
+  // Bunny 인코딩(트랜스코딩) 진행 상태 — status 4/5 = 재생 가능
+  const [bunnyEncoding, setBunnyEncoding] = useState(false);
 
   const currentContent = contents.find((c) => c.id === contentId);
 
