@@ -8,28 +8,20 @@ import type { PatternConfig } from "@/components/PagePattern";
  * pattern: "dots" | "grid" | "diagonal" | "wave" | "plain"
  * glow: "none" | "top-right" | "bottom-left"
  */
-export const PAGE_BACKGROUNDS = {
-  about: {
-    gradient: "bg-gradient-to-br from-brand-blue-light via-background to-background",
-    pattern: "wave",
-    glow: "top-right",
-    glowToken: "brand-blue",
-  },
-  support: {
-    // 교육원 소개와 유사한 톤이지만, 형이상학적인 궤도(orbit) 패턴으로 차별화
-    gradient: "bg-gradient-to-bl from-brand-blue-light via-background to-background",
-    pattern: "orbit",
-    glow: "top-right",
-    glowToken: "brand-blue",
-  },
 
-  courses: {
-    gradient: "bg-gradient-to-b from-brand-blue-light/50 to-background",
-    pattern: "dots",
-    patternOpacity: 0.6,
-    patternSize: 18,
-    glow: "none",
-  },
+/** About 페이지와 동일한 브랜드 배너 스타일 (wave + 우상단 글로우) */
+const aboutStyle = {
+  gradient: "bg-gradient-to-br from-brand-blue-light via-background to-background",
+  pattern: "wave",
+  glow: "top-right",
+  glowToken: "brand-blue",
+} as const;
+
+export const PAGE_BACKGROUNDS = {
+  about: aboutStyle,
+  support: aboutStyle,
+  courses: aboutStyle,
+  certificate: aboutStyle,
   verify: {
     gradient: "bg-gradient-to-b from-brand-blue-light via-background to-background",
     pattern: "grid",
