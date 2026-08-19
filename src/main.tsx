@@ -11,11 +11,11 @@ enforceCanonicalDomain();
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-// Remove the inline boot skeleton once React has had a chance to paint.
+// Remove the inline boot spinner once React has had a chance to paint.
 // Using requestAnimationFrame ensures we wait for the first render frame.
 requestAnimationFrame(() => {
   requestAnimationFrame(() => {
-    const el = document.getElementById("boot-skeleton");
+    const el = document.getElementById("boot-spinner");
     if (el) el.remove();
   });
 });
