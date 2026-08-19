@@ -32,8 +32,9 @@ const REASONS = [
 
 /** 기관 특징(선택 이유) 홈 섹션 */
 const HomeWhySection = () => (
-  <section className="bg-brand-blue-light/40 border-y border-border">
-    <div className="max-w-6xl mx-auto px-4 py-16">
+  <section className="bg-background">
+    <div className="max-w-6xl mx-auto px-4 py-20 sm:py-24">
+
       <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
         축제운영전문가 자격증, festcert를 선택하는 이유
       </h2>

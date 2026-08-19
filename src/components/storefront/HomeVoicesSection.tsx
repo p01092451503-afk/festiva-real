@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Quote, Star, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-const TONES = ["bg-brand-blue-light", "bg-brand-pink-light", "bg-muted"];
+const TONES = ["bg-brand-blue-light/60", "bg-brand-blue-light/60", "bg-brand-blue-light/60"];
 
 /** 수강 후기 홈 섹션 (support_reviews 기반) */
 const HomeVoicesSection = () => {
@@ -25,8 +25,9 @@ const HomeVoicesSection = () => {
   if (!Array.isArray(reviews) || reviews.length === 0) return null;
 
   return (
-    <section className="border-b border-border">
-      <div className="max-w-6xl mx-auto px-4 py-16">
+    <section className="border-y border-border/60 bg-muted/40">
+      <div className="max-w-6xl mx-auto px-4 py-20 sm:py-24">
+
         <div className="text-center">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">수강생 실제 후기</h2>
           <p className="mt-3 text-base sm:text-lg text-muted-foreground">

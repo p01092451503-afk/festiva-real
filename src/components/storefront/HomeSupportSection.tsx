@@ -52,8 +52,9 @@ const HomeSupportSection = () => {
   if (items.length === 0) return null;
 
   return (
-    <section className="border-b border-border bg-muted/20">
-      <div className="max-w-6xl mx-auto px-4 py-14 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <section className="bg-background">
+      <div className="max-w-6xl mx-auto px-4 py-20 sm:py-24 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         {/* 공지 / FAQ 탭 */}
         <div className="lg:col-span-2 rounded-2xl border border-border bg-background overflow-hidden">
           <div className="grid grid-cols-2" role="tablist" aria-label="공지사항 및 자주 묻는 질문">
