@@ -11,7 +11,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import TeacherRoute from "@/components/TeacherRoute";
 import TrafficLogger from "@/components/TrafficLogger";
-import { FullScreenSkeleton } from "@/components/PageSkeletons";
+
 import StorefrontGate from "@/components/StorefrontGate";
 import AppUpdateBanner from "@/components/AppUpdateBanner";
 import RouteReporter from "@/components/RouteReporter";
