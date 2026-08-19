@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Quote, Star, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-const TONES = ["bg-brand-blue-light", "bg-brand-pink-light", "bg-muted"];
+const TONES = ["bg-brand-blue-light/60", "bg-brand-blue-light/60", "bg-brand-blue-light/60"];
 
 /** 수강 후기 홈 섹션 (support_reviews 기반) */
 const HomeVoicesSection = () => {
