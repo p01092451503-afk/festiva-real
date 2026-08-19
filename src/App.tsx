@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { FullPageLoading } from "@/components/PageLoading";
 import { lazyWithRetry as lazy } from "@/lib/lazyWithRetry";
+import { hydrateQueryCache, persistQueryCache } from "@/lib/queryPersist";
+import { prefetchCommonRoutes } from "@/lib/prefetchRoutes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
