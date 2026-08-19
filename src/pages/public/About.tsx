@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Building2, GraduationCap, FileCheck2, HelpCircle, ArrowRight,
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 /**
  * 교육원 소개 (/about)
@@ -50,9 +51,39 @@ const HISTORY = [
 ];
 
 const ORGS = [
-  { name: "크리에이티브쉐이크㈜", lines: ["언론기관부설 평생교육시설 설치·운영", "LMS 플랫폼 개발·운영", "서울특별시 종로구 소재"] },
-  { name: "사단법인 마이스교육학회", lines: ["교육과정 개발 및 콘텐츠 저작권 보유", "자격증 심사·발급 권한", "위탁운영 계약 체결"] },
+  {
+    name: "크리에이티브쉐이크㈜",
+    lines: ["언론기관부설 평생교육시설 설치·운영", "LMS 플랫폼 개발·운영", "서울특별시 종로구 소재"],
+    detail: {
+      title: "크리에이티브쉐이크 부설 평생교육원",
+      subtitle: "언론기관부설 평생교육시설 · LMS 기반 원격 교육 운영",
+      paragraphs: [
+        "크리에이티브쉐이크 부설 평생교육원은 「평생교육법」 제37조에 따라 관할 교육청에 신고된 언론기관부설 평생교육시설로, 크리에이티브쉐이크㈜가 설치·운영하고 있습니다. 오프라인 중심으로 운영해 온 기존 교육 기반 위에 인터넷·LMS 기반의 원격 교육과정을 추가로 개설하여, 학습자의 시간과 장소에 구애받지 않는 교육 접근성을 제공하고 있습니다.",
+        "본 교육원은 사단법인 마이스교육학회와 공동으로 과정을 운영합니다. 크리에이티브쉐이크㈜가 시설 설치와 LMS 플랫폼 운영을 담당한다면, 마이스교육학회는 교육과정 개발과 콘텐츠 저작권, 자격증 심사·발급 권한을 보유하고 있어 두 기관의 협력을 통해 신뢰도 높은 자격증 과정을 제공합니다.",
+        "핵심 과정은 축제운영전문가 자격증 과정으로, 기초 단계인 2급과 심화 단계인 1급으로 나뉘어 있습니다. 각 과정은 축제 콘셉트 기획, 홍보 및 마케팅, 운영 및 관리 등 실무에 바로 적용할 수 있는 3개 과목으로 구성되며, 과목마다 기획서·홍보 실행계획서·운영계획서와 같은 실제 산출물을 완성하는 방식으로 학습이 진행됩니다. 강의는 짧은 안내와 핵심 강의, 확인 시험으로 이루어진 압축적인 구성으로 제공되어 바쁜 실무자도 부담 없이 학습을 이어갈 수 있습니다.",
+        "지자체와 공공기관의 축제 담당 실무자, 문화재단·관광재단 종사자, 축제·행사 기획사 관계자는 물론 관련 분야로의 취업이나 창업을 준비하는 분들까지 폭넓게 함께할 수 있도록 과정을 설계했습니다. 학습자는 온라인으로 신청과 결제를 마치면 곧바로 학습을 시작할 수 있으며, 진도 관리부터 시험 응시, 수료증 및 자격증 발급까지 전 과정이 LMS 안에서 체계적으로 이루어집니다.",
+        "크리에이티브쉐이크 부설 평생교육원은 앞으로도 축제·행사 분야의 실무 역량을 갖춘 전문 인력을 양성하며, 지역 축제 산업의 발전에 기여해 나가겠습니다.",
+      ],
+    },
+  },
+  {
+    name: "사단법인 마이스교육학회",
+    lines: ["교육과정 개발 및 콘텐츠 저작권 보유", "자격증 심사·발급 권한", "위탁운영 계약 체결"],
+    detail: {
+      title: "마이스홍보교육학회",
+      subtitle: "MICE 산업 학술연구 · 청년 취업 지원 공익 활동",
+      paragraphs: [
+        "마이스홍보교육학회는 마이스(MICE) 산업의 발전과 관련된 제반 학술연구를 수행하며, 마이스 홍보교육과 관련된 청년 취업 문제 해결을 위한 사회 공익 활동을 이어가고 있습니다.",
+        "학회는 크게 다섯 가지 사업을 중심으로 활동을 전개합니다. 먼저 전국 축제 가운데 가족, 지인들과 함께 즐겁고 행복한 시간을 보내며 아름다운 추억을 남길 수 있는 우수 축제를 발굴하여 '대한민국 10대 지역축제(K-FESTIVAL)'로 선정, 소개하는 사업을 추진합니다.",
+        "또한 전국 각지에서 열리는 마이스 행사·전시·축제 가운데 체계적인 진행과 높은 관심을 받으며 전국민의 참여가 활발했던 지방자치단체와 개인을 선정하여 시상하는 '마이스 그랑프리 시상식'을 개최합니다.",
+        "교육 부문에서는 국내 유일의 마이스 온라인 교육을 실시하고 있습니다. 대학생과 취업 준비생, 그리고 마이스 산업 재직자를 대상으로 디지털 역량 강화를 위한 전문 교육을 기획·운영하며, 연 1회 무료 교육을 제공함으로써 마이스 산업 인재 양성에 기여하고 있습니다.",
+        "아울러 마이스 산업의 발전을 위해 마이스 협회 및 이벤트 협회, 전국 지자체 마이스 협회, 정부 부처 및 관련 기관과의 협약을 통해 협력 네트워크를 확대해 나가고 있습니다.",
+        "마지막으로 학회와 회원들의 활동, 각종 세미나 및 축제 심사평가 내용, 국내외 마이스 이벤트 행사 등을 담은 학회지와 회보를 정기적으로 발간하여 학회 활동의 성과를 널리 공유하고 있습니다.",
+      ],
+    },
+  },
 ];
+
 
 const LEVELS = [
   {
@@ -229,6 +260,8 @@ const FAQS = [
 
 const About = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openOrg, setOpenOrg] = useState<string | null>(null);
+  const activeOrg = ORGS.find((o) => o.name === openOrg) ?? null;
   const raw = searchParams.get("tab") ?? "intro";
   const tab = TABS.some((t) => t.value === raw) ? raw : "intro";
 
@@ -323,28 +356,59 @@ const About = () => {
 
             <section className="space-y-5">
               <h3 className="text-2xl font-bold">운영 기관</h3>
+              <p className="text-base text-muted-foreground">카드를 클릭하면 기관 상세 소개를 확인할 수 있습니다.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {ORGS.map((o) => (
-                  <Card key={o.name} className="border-border/70">
-                    <CardContent className="p-7 space-y-4">
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-navy/5 text-navy">
-                          <Building2 className="w-5 h-5" aria-hidden="true" />
+                  <button
+                    key={o.name}
+                    type="button"
+                    onClick={() => setOpenOrg(o.name)}
+                    className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+                    aria-label={`${o.name} 상세 소개 보기`}
+                  >
+                    <Card className="border-border/70 h-full hover:shadow-md hover:-translate-y-0.5 transition-all">
+                      <CardContent className="p-7 space-y-4">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-navy/5 text-navy">
+                            <Building2 className="w-5 h-5" aria-hidden="true" />
+                          </span>
+                          <p className="text-xl font-bold text-navy min-w-0">{o.name}</p>
+                        </div>
+                        <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                          {o.lines.map((l) => (
+                            <li key={l} className="flex items-start gap-2">
+                              <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                              <span className="min-w-0">{l}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-orange">
+                          상세 소개 보기 <ArrowRight className="w-4 h-4" aria-hidden="true" />
                         </span>
-                        <p className="text-xl font-bold text-navy min-w-0">{o.name}</p>
-                      </div>
-                      <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
-                        {o.lines.map((l) => (
-                          <li key={l} className="flex items-start gap-2">
-                            <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
-                            <span className="min-w-0">{l}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </button>
                 ))}
               </div>
+
+              <Dialog open={!!openOrg} onOpenChange={(next) => !next && setOpenOrg(null)}>
+                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                  {activeOrg && (
+                    <>
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl text-navy">{activeOrg.detail.title}</DialogTitle>
+                        <DialogDescription className="text-base">{activeOrg.detail.subtitle}</DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        {activeOrg.detail.paragraphs.map((p, i) => (
+                          <p key={i} className="text-base text-muted-foreground leading-relaxed">{p}</p>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </DialogContent>
+              </Dialog>
+
             </section>
 
             <Card className="bg-brand-blue-light border-navy/10">
