@@ -198,6 +198,12 @@ const queryClient = new QueryClient({
   },
 });
 
+// Paint header/sidebar/footer immediately from the last known global config,
+// then let React Query revalidate in the background.
+hydrateQueryCache(queryClient);
+persistQueryCache(queryClient);
+prefetchCommonRoutes();
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <UserProvider>
