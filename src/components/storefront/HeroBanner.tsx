@@ -106,132 +106,142 @@ const HeroBanner = () => {
                   <div className="absolute inset-0 bg-black/30" />
                 )}
                 {isFallback ? (
-                  <div className="relative overflow-hidden bg-background">
-                    {/* warm cream gradient wash with depth */}
+                  <div className="relative overflow-hidden">
+                    {/* deep blue base */}
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(135deg, #f5efe6 0%, #faf6f0 35%, #fdfbf7 55%, #f0e8dc 100%)",
+                          "linear-gradient(115deg, #12306f 0%, #1a3a8c 42%, #23509f 72%, #2b62b4 100%)",
                       }}
                     />
-                    {/* bold navy diagonal accent for strong contrast */}
+                    {/* soft light source top-center */}
                     <div
-                      className="pointer-events-none absolute -right-[30%] -top-[40%] h-[110%] w-[80%] rotate-12 rounded-[60px]"
+                      className="pointer-events-none absolute inset-0"
                       style={{
-                        background: "linear-gradient(160deg, rgba(26,58,140,0.12) 0%, rgba(26,58,140,0.05) 60%, transparent 100%)",
-                        filter: "blur(60px)",
+                        background:
+                          "radial-gradient(120% 90% at 50% -10%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 40%, transparent 72%)",
                       }}
                     />
-                    <div
-                      className="pointer-events-none absolute -left-[25%] bottom-[-35%] h-[90%] w-[70%] -rotate-6 rounded-[60px]"
-                      style={{
-                        background: "linear-gradient(200deg, rgba(26,58,140,0.10) 0%, rgba(26,58,140,0.03) 55%, transparent 100%)",
-                        filter: "blur(55px)",
-                      }}
-                    />
-                    {/* warm radial blobs */}
-                    <div
-                      className="pointer-events-none absolute -left-[10%] -top-[20%] h-[55%] w-[55%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(232,221,208,0.65) 0%, transparent 70%)" }}
-                    />
-                    <div
-                      className="pointer-events-none absolute -right-[10%] top-[5%] h-[50%] w-[50%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(250,246,240,0.80) 0%, transparent 70%)" }}
-                    />
-                    {/* stronger orange accent blob */}
-                    <div
-                      className="pointer-events-none absolute bottom-[-5%] left-[15%] h-[40%] w-[40%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(224,90,30,0.14) 0%, transparent 70%)" }}
-                    />
-                    {/* abstract geometric pattern with higher contrast */}
+                    {/* floating glass objects, receding diagonally */}
                     <svg
-                      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.35]"
-                      viewBox="0 0 1440 520"
-                      preserveAspectRatio="none"
+                      className="pointer-events-none absolute inset-0 h-full w-full"
+                      viewBox="0 0 1440 560"
+                      preserveAspectRatio="xMidYMid slice"
                       aria-hidden="true"
                     >
                       <defs>
-                        <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(232,221,208,0.55)" />
-                          <stop offset="100%" stopColor="rgba(250,246,240,0.30)" />
+                        <linearGradient id="glassA" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(255,255,255,0.42)" />
+                          <stop offset="45%" stopColor="rgba(198,228,255,0.20)" />
+                          <stop offset="100%" stopColor="rgba(255,255,255,0.06)" />
                         </linearGradient>
-                        <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(26,58,140,0.18)" />
-                          <stop offset="100%" stopColor="rgba(224,90,30,0.10)" />
+                        <linearGradient id="glassB" x1="100%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(180,214,255,0.30)" />
+                          <stop offset="60%" stopColor="rgba(255,255,255,0.10)" />
+                          <stop offset="100%" stopColor="rgba(255,255,255,0.03)" />
                         </linearGradient>
+                        <filter id="glassBlur" x="-20%" y="-20%" width="140%" height="140%">
+                          <feGaussianBlur stdDeviation="1.2" />
+                        </filter>
                       </defs>
-                      <circle cx="180" cy="120" r="100" fill="url(#heroGrad1)" />
-                      <circle cx="1260" cy="380" r="140" fill="url(#heroGrad2)" />
-                      <circle cx="1100" cy="80" r="70" fill="url(#heroGrad1)" />
-                      <circle cx="320" cy="420" r="80" fill="url(#heroGrad2)" />
-                      <path
-                        d="M-100 260 C 240 180 480 340 1540 200"
-                        fill="none"
-                        stroke="rgba(232,221,208,0.65)"
-                        strokeWidth="2.5"
-                      />
-                      <path
-                        d="M-100 300 C 280 220 560 380 1540 240"
-                        fill="none"
-                        stroke="rgba(224,90,30,0.18)"
-                        strokeWidth="2.5"
-                      />
+
+                      {/* left cluster: large -> small, rising to the right */}
+                      <g filter="url(#glassBlur)">
+                        <g transform="translate(-40 300) rotate(-18)">
+                          <rect width="250" height="250" rx="42" fill="url(#glassA)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
+                        </g>
+                        <g transform="translate(190 250) rotate(-18)">
+                          <rect width="205" height="205" rx="36" fill="url(#glassB)" stroke="rgba(255,255,255,0.28)" strokeWidth="1.4" />
+                        </g>
+                        <g transform="translate(378 214) rotate(-18)">
+                          <rect width="164" height="164" rx="30" fill="url(#glassA)" stroke="rgba(255,255,255,0.22)" strokeWidth="1.2" />
+                        </g>
+                        <g transform="translate(524 190) rotate(-18)" opacity="0.75">
+                          <rect width="126" height="126" rx="24" fill="url(#glassB)" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+                        </g>
+                        <g transform="translate(634 176) rotate(-18)" opacity="0.5">
+                          <rect width="92" height="92" rx="18" fill="url(#glassA)" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
+                        </g>
+                      </g>
+
+                      {/* right cluster: mirrored, descending */}
+                      <g filter="url(#glassBlur)">
+                        <g transform="translate(1250 210) rotate(-18)">
+                          <rect width="260" height="260" rx="44" fill="url(#glassB)" stroke="rgba(255,255,255,0.32)" strokeWidth="1.5" />
+                        </g>
+                        <g transform="translate(1058 262) rotate(-18)">
+                          <rect width="200" height="200" rx="34" fill="url(#glassA)" stroke="rgba(255,255,255,0.24)" strokeWidth="1.3" />
+                        </g>
+                        <g transform="translate(908 306) rotate(-18)" opacity="0.8">
+                          <rect width="150" height="150" rx="28" fill="url(#glassB)" stroke="rgba(255,255,255,0.18)" strokeWidth="1.1" />
+                        </g>
+                        <g transform="translate(796 340) rotate(-18)" opacity="0.55">
+                          <rect width="108" height="108" rx="20" fill="url(#glassA)" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
+                        </g>
+                      </g>
+
+                      {/* faint horizon lines for depth */}
+                      <path d="M-40 452 C 320 404 1120 404 1480 452" fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1.5" />
+                      <path d="M-40 486 C 360 442 1080 442 1480 486" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
                     </svg>
-                    <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
-                    <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-blue)/0.08)] blur-2xl" />
+                    {/* bottom vignette so type stays legible */}
+                    <div
+                      className="pointer-events-none absolute inset-0"
+                      style={{
+                        background:
+                          "radial-gradient(70% 60% at 50% 45%, rgba(10,28,68,0.45) 0%, transparent 70%)",
+                      }}
+                    />
 
-                    <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-24">
-
-
-                      <h2 className="mt-6 text-4xl font-bold leading-[1.3] tracking-tight text-foreground sm:text-5xl md:text-[3.6rem]">
+                    <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-28">
+                      <h2 className="text-4xl font-bold leading-[1.3] tracking-tight text-white sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
-                        <span className="text-brand-orange">실무 문서</span>를 만드는 자격증
+                        실무 문서를 만드는 자격증
                       </h2>
-                      <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-muted-foreground sm:mt-7 sm:text-lg">
+                      <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-white/80 sm:mt-7 sm:text-lg">
                         <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
                         <p>대한민국 유일의 온라인 축제전문가 자격증 과정</p>
                       </div>
-                      <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10">
+                      <div className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:mt-11">
                         <Link
                           to="/store/courses"
-                          className="inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-navy-dark"
+                          className="inline-flex items-center gap-2 rounded-md bg-white px-8 py-3.5 text-base font-semibold text-navy shadow-lg transition hover:bg-white/90"
                         >
                           강의 안내 보기
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/student/certificates"
-                          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-7 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-brand-orange/90"
+                          className="inline-flex items-center gap-2 rounded-md border border-white/25 bg-navy-dark/60 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-navy-dark/80"
                         >
                           자격증 신청 및 발급
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/about?tab=system"
-                          className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-base font-medium text-foreground transition hover:bg-accent"
+                          className="inline-flex items-center gap-2 rounded-md border border-white/20 px-8 py-3.5 text-base font-medium text-white/90 transition hover:bg-white/10"
                         >
                           자격 제도 안내
                         </Link>
                       </div>
-                      <div className="mt-10 sm:mt-12">
-                        <div className="mx-auto inline-flex flex-wrap items-center justify-center divide-y divide-border border-y border-navy/15 sm:divide-x sm:divide-y-0">
+                      <div className="mt-12 sm:mt-14">
+                        <div className="mx-auto inline-flex flex-wrap items-center justify-center divide-y divide-white/15 border-y border-white/15 sm:divide-x sm:divide-y-0">
                           {[
                             { Icon: Layers, strong: "2급·1급", label: "단계별 과정" },
                             { Icon: PlayCircle, strong: "9차시", label: "온라인 강의" },
                             { Icon: BookOpen, strong: "교재 포함", label: "195,000원" },
                           ].map(({ Icon, strong, label }) => (
                             <div key={strong} className="flex items-center gap-3 px-6 py-4 sm:px-8">
-                              <Icon className="h-5 w-5 shrink-0 text-navy/70" strokeWidth={1.5} />
-                              <span className="text-base text-muted-foreground sm:text-lg">
-                                <strong className="font-bold text-navy">{strong}</strong> {label}
+                              <Icon className="h-5 w-5 shrink-0 text-white/70" strokeWidth={1.5} />
+                              <span className="text-base text-white/75 sm:text-lg">
+                                <strong className="font-bold text-white">{strong}</strong> {label}
                               </span>
                             </div>
                           ))}
                         </div>
                       </div>
-
                     </div>
                   </div>
                 ) : (
