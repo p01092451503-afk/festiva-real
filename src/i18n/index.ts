@@ -24,13 +24,8 @@ try {
 // that screen readers, search engines, and browser features (e.g. spell-check)
 // see the correct locale. This also ensures the very first paint reflects the
 // detected language without waiting for any component to mount.
-const applyHtmlLang = (lng: string) => {
-  const normalized = lng?.toLowerCase().startsWith('en') ? 'en' : 'ko';
-  if (typeof document !== 'undefined') {
-    document.documentElement.lang = normalized;
-  }
-};
-applyHtmlLang(i18n.language);
-i18n.on('languageChanged', applyHtmlLang);
+if (typeof document !== 'undefined') {
+  document.documentElement.lang = 'ko';
+}
 
 export default i18n;
