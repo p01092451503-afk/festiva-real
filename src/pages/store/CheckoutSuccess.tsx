@@ -130,7 +130,7 @@ const CheckoutSuccess = () => {
             </p>
             <div className="flex gap-3 justify-center">
               <Button asChild variant="outline">
-                <Link to="/cart">장바구니로 돌아가기</Link>
+                <Link to="/store/courses">강의 안내로 돌아가기</Link>
               </Button>
               <Button asChild>
                 <Link to="/store">스토어로 돌아가기</Link>
