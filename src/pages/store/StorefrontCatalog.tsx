@@ -15,7 +15,6 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import { PageBanner } from "@/components/PagePattern";
 import { pageBg } from "@/config/pageBackgrounds";
