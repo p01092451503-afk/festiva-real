@@ -1,5 +1,5 @@
 import { useState, lazy, Suspense } from "react";
-import { Settings, Bell, Shield, Building2, Plus, Pencil, Trash2, Palette, Users as UsersIcon, ToggleRight, CreditCard, EyeOff } from "lucide-react";
+import { Settings, Bell, Shield, Building2, Plus, Pencil, Trash2, Palette, Users as UsersIcon, ToggleRight, CreditCard, EyeOff, Folder, Layers } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
