@@ -107,63 +107,79 @@ const HeroBanner = () => {
                 )}
                 {isFallback ? (
                   <div className="relative overflow-hidden bg-background">
-                    {/* warm cream gradient wash */}
+                    {/* warm cream gradient wash with depth */}
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(135deg, #faf6f0 0%, #fdfbf7 40%, #f7f2ea 70%, #ede6d8 100%)",
+                          "linear-gradient(135deg, #f5efe6 0%, #faf6f0 35%, #fdfbf7 55%, #f0e8dc 100%)",
                       }}
                     />
-                    {/* soft warm radial blobs */}
+                    {/* bold navy diagonal accent for strong contrast */}
                     <div
-                      className="pointer-events-none absolute -left-[15%] -top-[25%] h-[60%] w-[60%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(232,221,208,0.55) 0%, transparent 70%)" }}
+                      className="pointer-events-none absolute -right-[30%] -top-[40%] h-[110%] w-[80%] rotate-12 rounded-[60px]"
+                      style={{
+                        background: "linear-gradient(160deg, rgba(26,58,140,0.12) 0%, rgba(26,58,140,0.05) 60%, transparent 100%)",
+                        filter: "blur(60px)",
+                      }}
                     />
                     <div
-                      className="pointer-events-none absolute -right-[15%] top-[10%] h-[55%] w-[55%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(250,246,240,0.70) 0%, transparent 70%)" }}
+                      className="pointer-events-none absolute -left-[25%] bottom-[-35%] h-[90%] w-[70%] -rotate-6 rounded-[60px]"
+                      style={{
+                        background: "linear-gradient(200deg, rgba(26,58,140,0.10) 0%, rgba(26,58,140,0.03) 55%, transparent 100%)",
+                        filter: "blur(55px)",
+                      }}
+                    />
+                    {/* warm radial blobs */}
+                    <div
+                      className="pointer-events-none absolute -left-[10%] -top-[20%] h-[55%] w-[55%] rounded-full blur-3xl"
+                      style={{ background: "radial-gradient(circle, rgba(232,221,208,0.65) 0%, transparent 70%)" }}
                     />
                     <div
-                      className="pointer-events-none absolute bottom-[-10%] left-[20%] h-[45%] w-[45%] rounded-full blur-3xl"
-                      style={{ background: "radial-gradient(circle, rgba(224,90,30,0.06) 0%, transparent 70%)" }}
+                      className="pointer-events-none absolute -right-[10%] top-[5%] h-[50%] w-[50%] rounded-full blur-3xl"
+                      style={{ background: "radial-gradient(circle, rgba(250,246,240,0.80) 0%, transparent 70%)" }}
                     />
-                    {/* warm abstract geometric pattern */}
+                    {/* stronger orange accent blob */}
+                    <div
+                      className="pointer-events-none absolute bottom-[-5%] left-[15%] h-[40%] w-[40%] rounded-full blur-3xl"
+                      style={{ background: "radial-gradient(circle, rgba(224,90,30,0.14) 0%, transparent 70%)" }}
+                    />
+                    {/* abstract geometric pattern with higher contrast */}
                     <svg
-                      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.25]"
+                      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.35]"
                       viewBox="0 0 1440 520"
                       preserveAspectRatio="none"
                       aria-hidden="true"
                     >
                       <defs>
                         <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(232,221,208,0.45)" />
-                          <stop offset="100%" stopColor="rgba(250,246,240,0.25)" />
+                          <stop offset="0%" stopColor="rgba(232,221,208,0.55)" />
+                          <stop offset="100%" stopColor="rgba(250,246,240,0.30)" />
                         </linearGradient>
                         <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(26,58,140,0.10)" />
-                          <stop offset="100%" stopColor="rgba(224,90,30,0.06)" />
+                          <stop offset="0%" stopColor="rgba(26,58,140,0.18)" />
+                          <stop offset="100%" stopColor="rgba(224,90,30,0.10)" />
                         </linearGradient>
                       </defs>
-                      <circle cx="180" cy="120" r="90" fill="url(#heroGrad1)" />
-                      <circle cx="1260" cy="380" r="120" fill="url(#heroGrad2)" />
-                      <circle cx="1100" cy="80" r="60" fill="url(#heroGrad1)" />
-                      <circle cx="320" cy="420" r="70" fill="url(#heroGrad2)" />
+                      <circle cx="180" cy="120" r="100" fill="url(#heroGrad1)" />
+                      <circle cx="1260" cy="380" r="140" fill="url(#heroGrad2)" />
+                      <circle cx="1100" cy="80" r="70" fill="url(#heroGrad1)" />
+                      <circle cx="320" cy="420" r="80" fill="url(#heroGrad2)" />
                       <path
                         d="M-100 260 C 240 180 480 340 1540 200"
                         fill="none"
-                        stroke="rgba(232,221,208,0.55)"
-                        strokeWidth="2"
+                        stroke="rgba(232,221,208,0.65)"
+                        strokeWidth="2.5"
                       />
                       <path
                         d="M-100 300 C 280 220 560 380 1540 240"
                         fill="none"
-                        stroke="rgba(232,221,208,0.40)"
-                        strokeWidth="2"
+                        stroke="rgba(224,90,30,0.18)"
+                        strokeWidth="2.5"
                       />
                     </svg>
-                    <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-orange)/0.04)] blur-2xl" />
-                    <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-blue)/0.04)] blur-2xl" />
+                    <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
+                    <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-blue)/0.08)] blur-2xl" />
 
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-24">
                       <span className="inline-flex items-stretch overflow-hidden rounded-sm border border-navy/15 bg-card/70 text-sm">
