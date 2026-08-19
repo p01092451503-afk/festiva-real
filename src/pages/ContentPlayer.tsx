@@ -784,6 +784,20 @@ const ContentPlayer = () => {
                       referrerPolicy="no-referrer-when-downgrade"
                       title={localTitle}
                     />
+                    {bunnyEncoding && (
+                      <div className="absolute inset-0 z-30 flex items-center justify-center bg-background">
+                        <div className="text-center space-y-4 px-6">
+                          <div className="mx-auto h-12 w-12 rounded-full border-4 border-primary/25 border-t-primary animate-spin" />
+                          <div className="space-y-1.5">
+                            <p className="text-base font-semibold text-foreground">영상 변환(인코딩) 중입니다</p>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              업로드된 영상을 재생용으로 변환하고 있습니다. 보통 영상 길이의 20~50% 정도 시간이 걸리며,
+                              완료되면 이 화면이 자동으로 플레이어로 바뀝니다.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {resumeDialogOpen && (
                       <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 p-3 sm:p-0">
                         <div
