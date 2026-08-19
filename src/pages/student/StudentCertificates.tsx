@@ -92,9 +92,14 @@ export default function StudentCertificates() {
 
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
           <TabsList>
+            <TabsTrigger value="apply">발급 신청</TabsTrigger>
             <TabsTrigger value="issued">발급 내역</TabsTrigger>
             <TabsTrigger value="shipping">배송 현황</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="apply" className="mt-6">
+            <CertificateApplyPanel />
+          </TabsContent>
 
           <TabsContent value="issued" className="mt-6">
             {isLoading ? (
