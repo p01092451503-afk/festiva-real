@@ -57,6 +57,20 @@ export default function StudentCertificates() {
     },
   });
 
+  const { data: shipments = [], isLoading: shipLoading } = useQuery({
+    queryKey: ["my_cert_shipments", user?.id],
+    enabled: !!user?.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("cert_issue_requests").select("*")
+        .eq("user_id", user!.id)
+        .eq("delivery_method", "post")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as Shipment[];
+    },
+  });
+
   if (!modulesLoading && !isEnabled("certificates_ops")) return <Navigate to="/" replace />;
 
   const download = async (c: Cert) => {
