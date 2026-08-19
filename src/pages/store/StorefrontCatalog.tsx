@@ -1,288 +1,462 @@
-import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Search, SlidersHorizontal, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Award,
+  BookOpen,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardList,
+  FileText,
+  GraduationCap,
+  ListChecks,
+  Receipt,
+  ShieldAlert,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import PageLoading from "@/components/PageLoading";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import { PageBanner } from "@/components/PagePattern";
 import { pageBg } from "@/config/pageBackgrounds";
-import StorefrontCourseCard from "@/components/storefront/StorefrontCourseCard";
+import Level1QualificationDialog from "@/components/storefront/Level1QualificationDialog";
 import { supabase } from "@/integrations/supabase/client";
-import { useUser } from "@/contexts/UserContext";
 import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { toast } from "sonner";
 
+type LevelKey = "2급" | "1급";
 
+interface LevelGuide {
+  level: LevelKey;
+  badge: string;
+  title: string;
+  subtitle: string;
+  target: string;
+  facts: { label: string; value: string }[];
+  highlights: { icon: typeof Award; text: string }[];
+  warning?: string[];
+  subjects: { title: string; meta: string; lessons: { no: string; title: string; desc: string }[] }[];
+  fees: { label: string; value: string }[];
+  feeNote: string;
+  instructors: { name: string; field: string }[];
+  book: { title: string; price: string; tagline: string; desc: string; toc: string[] };
+}
 
+const GUIDES: LevelGuide[] = [
+  {
+    level: "2급",
+    badge: "기초",
+    title: "축제운영전문가 2급",
+    subtitle: "아이디어를 현실로 만드는 축제 실무의 모든 것 — 축제 기획·운영 실무 전문가",
+    target: "지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자",
+    facts: [
+      { label: "총 시수", value: "27시간 (9강)" },
+      { label: "수강 기간", value: "9주 과정" },
+      { label: "수료 조건", value: "6주 이상 이수 + 시험 60점" },
+      { label: "자격증", value: "PDF + 실물 수료증" },
+    ],
+    highlights: [
+      { icon: ListChecks, text: "6주 이상 이수 필수" },
+      { icon: GraduationCap, text: "시험 60점 이상 합격" },
+      { icon: FileText, text: "과목별 실무 산출물 완성" },
+      { icon: Award, text: "수료 후 PDF + 실물 수료증" },
+    ],
+    subjects: [
+      {
+        title: "과목 1 — 축제 콘셉트 기획",
+        meta: "3강 · 산출물: 기본 기획서",
+        lessons: [
+          { no: "1강", title: "지역자원·타깃 분석 기반 콘셉트 도출", desc: "로컬 리소스 발굴, 빅데이터 기반 타깃 세그멘테이션, 킬러 콘텐츠 설계" },
+          { no: "2강", title: "프로그램·예산·공간 기초 설계", desc: "적정 예산 산정, 공간 배치 기초, 일정 로드맵 수립" },
+          { no: "3강", title: "기본 기획서 작성 실습", desc: "표준 문서 체계, 축제 정체성 확립과 네이밍 전략, 기획서 구조화" },
+        ],
+      },
+      {
+        title: "과목 2 — 축제 홍보 및 마케팅",
+        meta: "3강 · 산출물: 홍보 실행계획서",
+        lessons: [
+          { no: "4강", title: "홍보 목표·KPI 설정 및 채널 전략", desc: "축제 브랜딩, 홍보 KPI 정의, SNS 플랫폼별 콘텐츠 전략" },
+          { no: "5강", title: "콘텐츠 캘린더 수립", desc: "사전·현장·사후 홍보 일정표, 게시물 유형 및 제작 일정 관리" },
+          { no: "6강", title: "홍보 실행계획서 작성 실습", desc: "실제 제출 가능한 홍보 실행계획서 완성, 예산 배분 및 일정 매핑" },
+        ],
+      },
+      {
+        title: "과목 3 — 축제 운영 및 관리",
+        meta: "3강 · 산출물: 운영계획서 + 체크리스트",
+        lessons: [
+          { no: "7강", title: "운영조직·역할분장 및 현장 체크리스트", desc: "파트별 역할 정의, 현장 운영 표준 체크리스트 작성" },
+          { no: "8강", title: "안전관리 기초 및 동선·혼잡 관리", desc: "안전 매뉴얼 기초, 관람객 동선 설계, 혼잡 시나리오 대응" },
+          { no: "9강", title: "운영계획서 작성 실습", desc: "종합 운영계획서 완성, 현장 배치도 작성, 비상 대응 매뉴얼" },
+        ],
+      },
+    ],
+    fees: [
+      { label: "강의 수강료", value: "150,000원" },
+      { label: "교재 + 예상문제집", value: "45,000원" },
+    ],
+    feeNote: "면세 교육 서비스 · 부가세 없음",
+    instructors: [
+      { name: "유정숙 교수", field: "축제 기획·운영 실무" },
+      { name: "이병관 교수", field: "축제 홍보 및 마케팅" },
+      { name: "조용석 교수", field: "축제 운영 및 관리" },
+    ],
+    book: {
+      title: "[교재] 축제 기획·운영 실무 전문가 (2급)",
+      price: "45,000원",
+      tagline: "\"기획부터 현장 운영까지, 축제의 기본기를 마스터하다!\"",
+      desc: "지자체·공공기관 축제 담당자, 문화재단 실무자, 그리고 축제 기획자를 꿈꾸는 입문자를 위한 축제 실무 지침서. 현업에 즉시 적용 가능한 표준 문서 체계와 실전 노하우를 한 권에 압축했습니다.",
+      toc: [
+        "PART 1 — 과목 1: 축제 콘셉트 기획",
+        "PART 2 — 과목 2: 축제 홍보 및 마케팅",
+        "PART 3 — 과목 3: 축제 운영 및 관리",
+        "단원 평가 — 적중 예상문제 (OX 및 객관식 20문항)",
+      ],
+    },
+  },
+  {
+    level: "1급",
+    badge: "심화",
+    title: "축제운영전문가 1급",
+    subtitle: "메가 트렌드를 리드하는 축제 운영의 모든 것 — 축제 운영·평가·관리 전문가",
+    target: "관련 분야 현장 경력 3년 이상 (2급 수료 또는 경력 1년↑ 권장), 경력증명서 제출 필수",
+    facts: [
+      { label: "총 시수", value: "27시간 (9강)" },
+      { label: "수강 기간", value: "9주 과정" },
+      { label: "수료 조건", value: "6주 이상 이수 + 시험 60점 + 경력증명서" },
+      { label: "권장 선수", value: "2급 수료 또는 경력 1년↑" },
+    ],
+    highlights: [
+      { icon: ListChecks, text: "6주 이상 이수 필수" },
+      { icon: GraduationCap, text: "시험 60점 이상 합격" },
+      { icon: ClipboardList, text: "경력증명서 제출" },
+      { icon: Award, text: "수료 후 PDF + 실물 수료증" },
+    ],
+    warning: [
+      "자격 미달 시 1급 자격증이 취소됩니다",
+      "1급 지원 시 경력증명서를 반드시 제출해야 합니다",
+      "수강 자격: 관련 분야 현장 경력 3년 이상",
+    ],
+    subjects: [
+      {
+        title: "과목 1 — 축제 실전 기획",
+        meta: "3강 · 산출물: 종합 기획서",
+        lessons: [
+          { no: "1강", title: "환경분석·타깃 전략 수립", desc: "SWOT·PEST 분석, 경쟁 축제 벤치마킹, 전략적 타깃 세분화" },
+          { no: "2강", title: "차별화 콘셉트·예산·일정·안전 시나리오 통합", desc: "브랜드 포지셔닝, 통합 예산 배분, 리스크 시나리오 설계" },
+          { no: "3강", title: "종합 기획서 작성 실습", desc: "관계기관 제출용 종합 기획서 완성, 발표 자료 구성" },
+        ],
+      },
+      {
+        title: "과목 2 — 통합 마케팅 및 홍보",
+        meta: "3강 · 산출물: 통합 마케팅 플랜",
+        lessons: [
+          { no: "4강", title: "브랜드 포지셔닝 및 고객여정 기반 채널 전략", desc: "축제 브랜드 아이덴티티 설계, 터치포인트별 채널 믹스 전략" },
+          { no: "5강", title: "KPI·예산 배분 및 성과 측정 체계", desc: "마케팅 ROI 산정, 채널별 예산 배분, 실시간 성과 모니터링" },
+          { no: "6강", title: "통합 마케팅 플랜 작성 실습", desc: "KPI 포함 통합 마케팅 플랜 완성, 예산표·일정표 통합 작성" },
+        ],
+      },
+      {
+        title: "과목 3 — 축제 관리 및 평가",
+        meta: "3강 · 산출물: 운영·평가 보고서",
+        lessons: [
+          { no: "7강", title: "운영조직 표준화 및 안전·보험·인허가", desc: "조직 표준 매뉴얼 작성, 행사 보험·인허가 실무, 안전관리 계획 수립" },
+          { no: "8강", title: "정산·증빙 관리 및 성과지표 설계", desc: "예산 정산 체계, 증빙 관리 프로세스, KPI 기반 성과 측정 체계 구축" },
+          { no: "9강", title: "운영·평가 보고서 작성 실습", desc: "관계기관 제출용 사후 보고서 완성, 개선안 도출 및 차기 기획 연계" },
+        ],
+      },
+    ],
+    fees: [
+      { label: "강의 수강료", value: "150,000원" },
+      { label: "교재 + 예상문제집", value: "45,000원" },
+    ],
+    feeNote: "면세 교육 서비스 · 부가세 없음",
+    instructors: [
+      { name: "이현우", field: "축제 실전 기획" },
+      { name: "최형선", field: "통합 마케팅 및 홍보" },
+      { name: "윤지현", field: "축제 관리 및 평가" },
+    ],
+    book: {
+      title: "[교재] 축제 운영·평가·관리 전문가 (1급)",
+      price: "45,000원",
+      tagline: "\"메가 트렌드를 리드하는 축제 운영의 모든 것을 한 권에!\"",
+      desc: "축제 운영·평가·관리 전문가(1급) 과정 공식 채택 교재. 환경 분석, 통합 마케팅, 안전 관리, 성과 측정까지 메가 트렌드를 리드하는 실무 전략을 총망라했습니다.",
+      toc: [
+        "PART 1 — 과목 1: 축제 실전 기획",
+        "PART 2 — 과목 2: 통합 마케팅 및 홍보",
+        "PART 3 — 과목 3: 축제 관리 및 평가",
+        "단원 평가 — 적중 예상문제 (OX 및 객관식 20문항)",
+      ],
+    },
+  },
+];
 
 const StorefrontCatalog = () => {
-  const { user } = useUser();
-  const isMobile = useIsMobile();
-  const queryClient = useQueryClient();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const level = searchParams.get("level") ?? "all";
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("popular");
-  const [filterOpen, setFilterOpen] = useState(false);
+  const navigate = useNavigate();
+  const [level1Open, setLevel1Open] = useState(false);
 
+  useEffect(() => {
+    document.title = "강의 안내 | festcert 축제운영전문가 자격증 교육원";
+  }, []);
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ["store-categories"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("id, name, name_en, slug")
-        .eq("is_active", true)
-        .order("display_order", { ascending: true });
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const { data: rawCourses = [], isLoading } = useQuery({
+  const { data: rawCourses = [] } = useQuery({
     queryKey: ["store-catalog"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("id, title, thumbnail_url, price, sale_price, sale_ends_at, rating_avg, rating_count, enrolled_count, category_id, instructor_id, sale_status, status, created_at")
+        .select("id, title, price, sale_price, sale_status, status")
         .eq("is_b2c", true)
-        .eq("status", "published")
-        .order("created_at", { ascending: false });
+        .eq("status", "published");
       if (error) throw error;
       return data;
     },
   });
-
-  const { data: instructorMap = {} } = useQuery({
-    queryKey: ["store-instructors", rawCourses.map(c => c.instructor_id).filter(Boolean)],
-    queryFn: async () => {
-      const ids = [...new Set(rawCourses.map(c => c.instructor_id).filter(Boolean))] as string[];
-      if (!ids.length) return {};
-      const { data } = await supabase.from("profiles").select("user_id, full_name").in("user_id", ids);
-      const map: Record<string, string> = {};
-      data?.forEach(p => { map[p.user_id] = p.full_name || ""; });
-      return map;
-    },
-    enabled: rawCourses.length > 0,
-  });
-
-  const categoryMap = useMemo(() => {
-    const m: Record<string, string> = {};
-    categories.forEach(c => { m[c.id] = c.name; });
-    return m;
-  }, [categories]);
-
-  /** `?level=1|2` → "1급/2급" 카테고리를 자동 선택. 매칭 카테고리가 없으면 전체를 보여준다. */
-  useEffect(() => {
-    if (level === "all") {
-      setSelectedCategory("all");
-      return;
-    }
-    const match = categories.find(c => {
-      const hay = `${c.name ?? ""} ${c.slug ?? ""}`.toLowerCase();
-      return hay.includes(`${level}급`) || hay.includes(`level-${level}`) || hay.includes(`level${level}`);
-    });
-    setSelectedCategory(match ? match.id : "all");
-  }, [level, categories]);
-
-
-
-
-
-
-  const { data: wishlistSet = new Set<string>() } = useQuery({
-    queryKey: ["store-wishlist-ids", user?.id],
-    queryFn: async () => {
-      const { data } = await supabase.from("wishlists").select("course_id").eq("user_id", user!.id);
-      return new Set((data || []).map(w => w.course_id));
-    },
-    enabled: !!user?.id,
-  });
   const { data: enrolledIds = new Set<string>() } = useEnrolledCourseIds();
 
+  const courseByLevel = useMemo(() => {
+    const map: Partial<Record<LevelKey, string>> = {};
+    rawCourses.forEach((c) => {
+      if (c.title?.includes("2급")) map["2급"] = c.id;
+      if (c.title?.includes("1급")) map["1급"] = c.id;
+    });
+    return map;
+  }, [rawCourses]);
 
-  const wishlistToggle = useMutation({
-    mutationFn: async (courseId: string) => {
-      if (wishlistSet.has(courseId)) {
-        await supabase.from("wishlists").delete().eq("user_id", user!.id).eq("course_id", courseId);
-      } else {
-        await supabase.from("wishlists").insert({ user_id: user!.id, course_id: courseId });
-      }
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["store-wishlist-ids"] }),
-    onError: () => toast.error("오류가 발생했습니다"),
-  });
-
-  const handleWishlistToggle = (courseId: string) => {
-    if (!user) { toast.error("로그인이 필요합니다"); return; }
-    wishlistToggle.mutate(courseId);
+  const goToCourse = (level: LevelKey) => {
+    const id = courseByLevel[level];
+    if (!id) return;
+    if (enrolledIds.has(id)) navigate(`/student/courses/${id}`);
+    else navigate(`/store/courses/${id}`);
   };
 
-  const courses = useMemo(() => {
-    let filtered = rawCourses.map(c => ({
-      ...c,
-      category_name: c.category_id ? categoryMap[c.category_id] : null,
-      instructor_name: c.instructor_id ? (instructorMap as Record<string, string>)[c.instructor_id] : null,
-    }));
-
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(c => c.category_id === selectedCategory);
-    }
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      filtered = filtered.filter(c => c.title.toLowerCase().includes(q) || c.instructor_name?.toLowerCase().includes(q));
-    }
-
-    switch (sortBy) {
-      case "popular": return filtered.sort((a, b) => (b.enrolled_count ?? 0) - (a.enrolled_count ?? 0));
-      case "rating": return filtered.sort((a, b) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0));
-      case "newest":
-        return filtered.sort(
-          (a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime(),
-        );
-      case "price_low": return filtered.sort((a, b) => (a.sale_price ?? a.price ?? 0) - (b.sale_price ?? b.price ?? 0));
-      case "price_high": return filtered.sort((a, b) => (b.sale_price ?? b.price ?? 0) - (a.sale_price ?? a.price ?? 0));
-      default: return filtered;
-    }
-  }, [rawCourses, categoryMap, instructorMap, selectedCategory, search, sortBy]);
-
-  const FilterPanel = () => (
-    <div className="space-y-4">
-      <div>
-        <h3 className="text-sm font-medium text-foreground mb-2">카테고리</h3>
-        <div className="flex flex-wrap gap-2">
-          <Badge
-            variant={selectedCategory === "all" ? "default" : "outline"}
-            className="cursor-pointer"
-            onClick={() => { setSelectedCategory("all"); setFilterOpen(false); }}
-          >
-            전체
-          </Badge>
-          {categories.map(cat => (
-            <Badge
-              key={cat.id}
-              variant={selectedCategory === cat.id ? "default" : "outline"}
-              className="cursor-pointer"
-              onClick={() => { setSelectedCategory(cat.id); setFilterOpen(false); }}
-            >
-              {cat.name}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  const handleApply = (level: LevelKey) => {
+    if (level === "1급") setLevel1Open(true);
+    else goToCourse("2급");
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
-      {/* Page banner */}
       <PageBanner
         config={pageBg("courses")}
-        as="h2"
+        as="h1"
         eyebrow="COURSES"
-        title="자격증 취득 과정"
+        title="강의 안내"
         description="2급·1급 단계별 온라인 과정으로 축제 기획·운영·안전관리 실무 문서를 직접 완성합니다."
-        containerClassName="max-w-7xl"
+        containerClassName="max-w-6xl"
       />
 
-
-
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-foreground">강의 안내</h1>
-
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="과정명 또는 강사명 검색"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="pl-9"
-              />
-              {search && (
-                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <X className="h-4 w-4 text-muted-foreground" />
-                </button>
-              )}
-            </div>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="popular">인기순</SelectItem>
-                <SelectItem value="rating">평점순</SelectItem>
-                <SelectItem value="newest">최신순</SelectItem>
-                <SelectItem value="price_low">낮은 가격순</SelectItem>
-                <SelectItem value="price_high">높은 가격순</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Mobile filter button */}
-            {isMobile && (
-              <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <SlidersHorizontal className="h-4 w-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left">
-                  <SheetHeader>
-                    <SheetTitle>필터</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6">
-                    <FilterPanel />
+      <main className="max-w-6xl mx-auto px-4 py-16 space-y-20">
+        {GUIDES.map((g, idx) => {
+          const courseId = courseByLevel[g.level];
+          const isEnrolled = courseId ? enrolledIds.has(courseId) : false;
+          return (
+            <section key={g.level} id={`level-${g.level === "2급" ? 2 : 1}`} className="scroll-mt-28">
+              {/* 헤더 */}
+              <div className="rounded-3xl border border-border/60 bg-card overflow-hidden">
+                <div className="bg-navy px-6 sm:px-10 py-10 text-white">
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <Badge className="bg-brand-orange hover:bg-brand-orange text-white text-sm px-3 py-1">
+                      {g.level} · {g.badge}
+                    </Badge>
+                    <span className="text-sm text-white/70">STEP {idx + 1}</span>
                   </div>
-                </SheetContent>
-              </Sheet>
-            )}
-          </div>
-        </div>
+                  <h2 className="text-3xl sm:text-4xl font-bold leading-tight">{g.title}</h2>
+                  <p className="mt-4 text-base sm:text-lg text-white/80 leading-relaxed max-w-3xl">{g.subtitle}</p>
+                  <p className="mt-3 text-sm text-white/60 leading-relaxed max-w-3xl">
+                    <span className="font-semibold text-white/80">추천 대상 </span>
+                    {g.target}
+                  </p>
 
-        <div className="flex gap-8">
-          {/* Desktop filter panel */}
-          {!isMobile && (
-            <aside className="w-52 shrink-0">
-              <FilterPanel />
-            </aside>
-          )}
+                  {/* 신청 CTA */}
+                  <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-3">
+                    <Button
+                      size="lg"
+                      className="bg-brand-orange hover:bg-brand-orange/90 text-white text-base h-14 px-8 rounded-full font-semibold shadow-lg"
+                      onClick={() => handleApply(g.level)}
+                      disabled={!courseId}
+                    >
+                      {isEnrolled ? "수강중 · 이어보기" : `${g.level} 과정 신청하기`}
+                    </Button>
+                    <span className="text-white/80 text-sm">
+                      수강료 <strong className="text-xl font-bold text-white align-middle ml-1">195,000원</strong>
+                      <span className="ml-2 text-white/60">({g.feeNote})</span>
+                    </span>
+                  </div>
+                </div>
 
-          {/* Course grid */}
-          <div className="flex-1">
-            {isLoading ? (
-              <PageLoading size="lg" />
-            ) : courses.length === 0 ? (
-              <div className="py-20 text-center text-muted-foreground">
-                {search ? "검색 결과가 없습니다" : "공개된 과정이 없습니다"}
+                {/* 핵심 정보 */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y divide-border/60 border-b border-border/60">
+                  {g.facts.map((f) => (
+                    <div key={f.label} className="p-5">
+                      <p className="text-xs font-medium text-muted-foreground">{f.label}</p>
+                      <p className="mt-1.5 text-base font-semibold text-foreground leading-snug">{f.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-6 sm:p-10 space-y-10">
+                  {/* 수료 포인트 */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {g.highlights.map((h) => (
+                      <div key={h.text} className="flex items-center gap-3 rounded-xl bg-muted/50 px-4 py-3.5">
+                        <h.icon className="h-5 w-5 text-navy shrink-0" aria-hidden="true" />
+                        <span className="text-sm font-medium text-foreground leading-snug">{h.text}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 필수 확인 경고 */}
+                  {g.warning && (
+                    <div className="rounded-2xl border-2 border-brand-orange/40 bg-brand-orange/5 p-6">
+                      <p className="flex items-center gap-2 font-bold text-brand-orange text-lg">
+                        <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
+                        {g.level} 수강 전 필수 확인
+                      </p>
+                      <ul className="mt-3 space-y-2">
+                        {g.warning.map((w) => (
+                          <li key={w} className="flex gap-2 text-sm text-foreground/80 leading-relaxed">
+                            <span className="text-brand-orange">•</span>
+                            {w}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* 커리큘럼 */}
+                  <div>
+                    <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
+                      <ListChecks className="h-5 w-5 text-navy" aria-hidden="true" />
+                      커리큘럼 · 3과목 9강
+                    </h3>
+                    <div className="mt-5 space-y-5">
+                      {g.subjects.map((s) => (
+                        <div key={s.title} className="rounded-2xl border border-border/60 overflow-hidden">
+                          <div className="flex flex-wrap items-baseline justify-between gap-2 bg-muted/50 px-5 py-3.5">
+                            <p className="font-semibold text-foreground">{s.title}</p>
+                            <p className="text-xs text-muted-foreground">{s.meta}</p>
+                          </div>
+                          <ul className="divide-y divide-border/60">
+                            {s.lessons.map((l) => (
+                              <li key={l.no} className="flex gap-4 px-5 py-4">
+                                <span className="shrink-0 text-sm font-bold text-navy w-9 pt-0.5">{l.no}</span>
+                                <div className="min-w-0">
+                                  <p className="text-[0.95rem] font-medium text-foreground leading-snug">{l.title}</p>
+                                  <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{l.desc}</p>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 수강료 + 강사 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="rounded-2xl border border-border/60 p-6">
+                      <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
+                        <Receipt className="h-5 w-5 text-navy" aria-hidden="true" />
+                        수강료
+                      </h3>
+                      <ul className="mt-4 space-y-2.5">
+                        {g.fees.map((f) => (
+                          <li key={f.label} className="flex justify-between text-sm border-b border-border/60 pb-2.5">
+                            <span className="text-muted-foreground">{f.label}</span>
+                            <span className="font-medium text-foreground">{f.value}</span>
+                          </li>
+                        ))}
+                        <li className="flex items-baseline justify-between pt-1">
+                          <span className="font-semibold text-foreground">합계</span>
+                          <span className="text-2xl font-bold text-navy">195,000원</span>
+                        </li>
+                      </ul>
+                      <p className="mt-2 text-xs text-muted-foreground">{g.feeNote}</p>
+                      <Button
+                        className="mt-5 w-full h-12 rounded-full bg-brand-orange hover:bg-brand-orange/90 text-white text-base font-semibold"
+                        onClick={() => handleApply(g.level)}
+                        disabled={!courseId}
+                      >
+                        {isEnrolled ? "수강중 · 이어보기" : `${g.level} 과정 신청하기`}
+                      </Button>
+                    </div>
+
+                    <div className="rounded-2xl border border-border/60 p-6">
+                      <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
+                        <Users className="h-5 w-5 text-navy" aria-hidden="true" />
+                        강사 소개
+                      </h3>
+                      <ul className="mt-4 space-y-3">
+                        {g.instructors.map((i) => (
+                          <li key={i.name} className="flex items-center gap-3 rounded-xl bg-muted/40 px-4 py-3">
+                            <GraduationCap className="h-5 w-5 text-navy shrink-0" aria-hidden="true" />
+                            <div className="min-w-0">
+                              <p className="font-medium text-foreground">{i.name}</p>
+                              <p className="text-sm text-muted-foreground">{i.field}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* 교재 */}
+                  <div className="rounded-2xl bg-muted/40 border border-border/60 p-6 sm:p-8">
+                    <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
+                      <BookOpen className="h-5 w-5 text-navy" aria-hidden="true" />
+                      교재 안내
+                    </h3>
+                    <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-lg font-semibold text-foreground leading-snug">{g.book.title}</p>
+                        <p className="mt-2 text-brand-orange font-medium">{g.book.tagline}</p>
+                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{g.book.desc}</p>
+                        <p className="mt-4 text-sm">
+                          <span className="text-muted-foreground">교재 가격 </span>
+                          <strong className="text-foreground">{g.book.price}</strong>
+                        </p>
+                      </div>
+                      <ul className="space-y-2.5">
+                        {g.book.toc.map((t) => (
+                          <li key={t} className="flex gap-2.5 text-sm text-foreground/80 leading-relaxed">
+                            <CheckCircle2 className="h-4 w-4 text-navy shrink-0 mt-0.5" aria-hidden="true" />
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* 하단 CTA */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl bg-navy/5 border border-navy/10 p-6">
+                    <p className="flex items-center gap-2 text-sm text-foreground/80">
+                      <CalendarClock className="h-4 w-4 text-navy" aria-hidden="true" />
+                      개강일은 매월 1일이며, 신청 즉시 학습을 시작할 수 있습니다.
+                    </p>
+                    <Button
+                      size="lg"
+                      className="rounded-full h-12 px-8 bg-navy hover:bg-navy/90 text-white font-semibold"
+                      onClick={() => handleApply(g.level)}
+                      disabled={!courseId}
+                    >
+                      {isEnrolled ? "수강중 · 이어보기" : `${g.level} 과정 신청하기`}
+                    </Button>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className={courses.length <= 2 ? "grid grid-cols-1 md:grid-cols-2 gap-8" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"}>
-                {courses.map(course => (
-                  <StorefrontCourseCard
-                    key={course.id}
-                    course={course}
-                    size={courses.length <= 2 ? "lg" : "default"}
-                    isInWishlist={wishlistSet.has(course.id)}
-                    isEnrolled={enrolledIds.has(course.id)}
-                    onWishlistToggle={handleWishlistToggle}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+            </section>
+          );
+        })}
       </main>
+
+      <Level1QualificationDialog
+        open={level1Open}
+        onOpenChange={setLevel1Open}
+        onConfirm={() => {
+          setLevel1Open(false);
+          goToCourse("1급");
+        }}
+      />
     </div>
   );
 };
