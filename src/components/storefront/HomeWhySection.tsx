@@ -34,20 +34,31 @@ const REASONS = [
 const HomeWhySection = () => (
   <section className="bg-background">
     <div className="max-w-6xl mx-auto px-4 py-20 sm:py-24">
+      <div className="relative">
+        <span
+          className="hidden sm:block absolute -top-10 left-40 w-52 h-52 rounded-full bg-brand-blue-light/60 -z-0"
+          aria-hidden="true"
+        />
+        <div className="relative">
+          <span className="text-sm font-semibold text-brand-orange">Why festcert</span>
+          <h2 className="mt-4 text-2xl sm:text-4xl font-bold tracking-tight leading-[1.5] text-foreground">
+            실무로 증명하는 축제 교육
+            <br />
+            festcert를 선택하는 세 가지 이유
+          </h2>
+        </div>
+      </div>
 
-      <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-        축제운영전문가 자격증, festcert를 선택하는 이유
-      </h2>
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         {REASONS.map(({ icon: Icon, title, lines }) => (
           <div
             key={title}
-            className="rounded-2xl bg-background border border-border p-7 text-center"
+            className="rounded-3xl bg-background p-8 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60"
           >
-            <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-blue-light">
+            <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-blue-light/70">
               <Icon className="w-7 h-7 text-navy" aria-hidden="true" />
             </span>
-            <h3 className="mt-5 text-lg sm:text-xl font-bold text-foreground">{title}</h3>
+            <h3 className="mt-6 text-lg sm:text-xl font-bold text-foreground leading-snug">{title}</h3>
             <div className="mt-3 space-y-1">
               {lines.map((l) => (
                 <p key={l} className="text-base text-muted-foreground leading-relaxed">
