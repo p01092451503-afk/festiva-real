@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight, Layers, PlayCircle, BookOpen, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Layers, PlayCircle, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import heroPhoto from "@/assets/hero-festival-people.jpg.asset.json";
@@ -114,10 +114,8 @@ const HeroBanner = () => {
                         <h2 className="text-3xl font-bold leading-[1.6] tracking-tight text-navy-dark sm:text-4xl md:text-[2.7rem]">
                           축제 기획부터 평가까지,
                           <br />
-                          <span className="mr-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-orange align-middle sm:h-11 sm:w-11">
-                            <Sparkles className="h-5 w-5 text-white sm:h-6 sm:w-6" strokeWidth={2} />
-                          </span>
                           <span className="align-middle">실무로 증명하는 축제운영전문가</span>
+
                         </h2>
 
 
