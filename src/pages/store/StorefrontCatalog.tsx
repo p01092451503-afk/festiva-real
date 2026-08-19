@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/StorefrontHeader";
+import SiteFooter from "@/components/SiteFooter";
 import { PageBanner } from "@/components/PagePattern";
 import { pageBg } from "@/config/pageBackgrounds";
 import Level1QualificationDialog from "@/components/storefront/Level1QualificationDialog";
@@ -244,7 +245,7 @@ const StorefrontCatalog = () => {
         containerClassName="max-w-6xl"
       />
 
-      <main className="max-w-6xl mx-auto px-4 py-16 space-y-20">
+      <main className="max-w-6xl mx-auto px-4 py-16 sm:py-20 space-y-20">
         {GUIDES.map((g, idx) => {
           const courseId = courseByLevel[g.level];
           const isEnrolled = courseId ? enrolledIds.has(courseId) : false;
@@ -252,15 +253,17 @@ const StorefrontCatalog = () => {
             <section key={g.level} id={`level-${g.level === "2급" ? 2 : 1}`} className="scroll-mt-28">
               {/* 헤더 */}
               <div className="rounded-[2rem] bg-background overflow-hidden ring-1 ring-border/60 shadow-[0_24px_70px_-40px_hsl(var(--navy)/0.45)]">
-                <div className="bg-navy px-6 sm:px-10 py-14 sm:py-16 text-white text-center">
-                  <p className="text-sm tracking-[0.2em] text-white/60 uppercase">
-                    STEP {idx + 1} · {g.badge}
-                  </p>
-                  <h2 className="mt-4 text-3xl sm:text-4xl font-bold leading-tight">{g.title}</h2>
-                  <p className="mt-4 text-base sm:text-lg text-white/75 leading-relaxed max-w-2xl mx-auto">
+                <div className="bg-gradient-to-b from-brand-blue-light/70 via-background to-background px-6 sm:px-10 py-14 sm:py-16 text-center">
+                  <span className="text-sm font-semibold text-brand-orange">
+                    STEP 0{idx + 1} · {g.badge}
+                  </span>
+                  <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-tight leading-[1.35] text-foreground">
+                    {g.title}
+                  </h2>
+                  <p className="mt-4 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
                     {g.subtitle}
                   </p>
-                  <p className="mt-2 text-sm text-white/55 leading-relaxed max-w-2xl mx-auto">
+                  <p className="mt-2 text-sm text-muted-foreground/80 leading-relaxed max-w-2xl mx-auto">
                     추천 대상 · {g.target}
                   </p>
 
@@ -268,15 +271,15 @@ const StorefrontCatalog = () => {
                   <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Button
                       size="lg"
-                      className="bg-white hover:bg-white/90 text-navy text-base h-12 px-8 rounded-full font-semibold"
+                      className="bg-brand-orange hover:bg-brand-orange/90 text-white text-base h-12 px-8 rounded-full font-semibold leading-normal"
                       onClick={() => handleApply(g.level)}
                       disabled={!courseId}
                     >
                       {isEnrolled ? "수강중 · 이어보기" : `${g.level} 과정 신청하기`}
                     </Button>
-                    <span className="text-sm text-white/70">
-                      수강료 <strong className="font-semibold text-white">195,000원</strong>
-                      <span className="ml-1.5 text-white/50">({g.feeNote})</span>
+                    <span className="text-sm text-muted-foreground">
+                      수강료 <strong className="font-semibold text-navy">195,000원</strong>
+                      <span className="ml-1.5 text-muted-foreground/70">({g.feeNote})</span>
                     </span>
                   </div>
                 </div>
@@ -323,7 +326,7 @@ const StorefrontCatalog = () => {
 
                   {/* 커리큘럼 */}
                   <div>
-                    <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
+                    <h3 className="flex items-center gap-2 text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                       <ListChecks className="h-5 w-5 text-navy" aria-hidden="true" />
                       커리큘럼 · 3과목 9강
                     </h3>
@@ -446,6 +449,8 @@ const StorefrontCatalog = () => {
           );
         })}
       </main>
+
+      <SiteFooter />
 
       <Level1QualificationDialog
         open={level1Open}
