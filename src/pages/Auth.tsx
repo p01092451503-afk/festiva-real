@@ -215,6 +215,28 @@ const Auth = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) throw result.error;
+      if (result.redirected) {
+        // 브라우저가 Google 로그인 페이지로 이동합니다.
+        return;
+      }
+      const nextParam = new URLSearchParams(window.location.search).get("next");
+      const safeNext = nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : null;
+      navigate(safeNext ?? "/dashboard");
+    } catch (error: any) {
+      setAuthError(mapAuthError(error, "login"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   return (
     <div
       className="flex min-h-[100dvh]"
