@@ -209,6 +209,13 @@ const HeroBanner = () => {
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
+                          to="/student/certificates"
+                          className="inline-flex items-center gap-2 rounded-full bg-brand-orange px-7 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-brand-orange/90"
+                        >
+                          자격증 신청 및 발급
+                          <ChevronRight className="h-4 w-4" />
+                        </Link>
+                        <Link
                           to="/about"
                           className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-base font-medium text-foreground transition hover:bg-accent"
                         >

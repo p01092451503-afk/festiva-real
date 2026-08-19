@@ -1438,6 +1438,63 @@ export type Database = {
         }
         Relationships: []
       }
+      cert_issue_requests: {
+        Row: {
+          address1: string | null
+          address2: string | null
+          admin_note: string | null
+          completion_hours: string | null
+          course_id: string | null
+          course_title: string
+          created_at: string
+          delivery_method: string
+          id: string
+          postcode: string | null
+          recipient_email: string
+          recipient_name: string
+          shipping_fee: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address1?: string | null
+          address2?: string | null
+          admin_note?: string | null
+          completion_hours?: string | null
+          course_id?: string | null
+          course_title: string
+          created_at?: string
+          delivery_method?: string
+          id?: string
+          postcode?: string | null
+          recipient_email: string
+          recipient_name: string
+          shipping_fee?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address1?: string | null
+          address2?: string | null
+          admin_note?: string | null
+          completion_hours?: string | null
+          course_id?: string | null
+          course_title?: string
+          created_at?: string
+          delivery_method?: string
+          id?: string
+          postcode?: string | null
+          recipient_email?: string
+          recipient_name?: string
+          shipping_fee?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       certificate_templates: {
         Row: {
           background_image_url: string | null

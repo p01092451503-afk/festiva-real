@@ -11,6 +11,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useFeatureModules } from "@/hooks/useFeatureModules";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadCertificatePDF } from "@/lib/certificateGenerator";
+import CertificateApplyPanel from "@/components/student/CertificateApplyPanel";
 
 
 type Cert = {
@@ -30,10 +31,11 @@ export default function StudentCertificates() {
   const { toast } = useToast();
   const { isEnabled, isLoading: modulesLoading } = useFeatureModules();
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get("tab") === "shipping" ? "shipping" : "issued";
+  const rawTab = searchParams.get("tab");
+  const tab = rawTab === "shipping" || rawTab === "issued" ? rawTab : "apply";
   const setTab = (next: string) => {
     const params = new URLSearchParams(searchParams);
-    if (next === "issued") params.delete("tab");
+    if (next === "apply") params.delete("tab");
     else params.set("tab", next);
     setSearchParams(params, { replace: true });
   };
@@ -91,9 +93,14 @@ export default function StudentCertificates() {
 
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
           <TabsList>
+            <TabsTrigger value="apply">발급 신청</TabsTrigger>
             <TabsTrigger value="issued">발급 내역</TabsTrigger>
             <TabsTrigger value="shipping">배송 현황</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="apply" className="mt-6">
+            <CertificateApplyPanel />
+          </TabsContent>
 
           <TabsContent value="issued" className="mt-6">
             {isLoading ? (
