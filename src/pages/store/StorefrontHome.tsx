@@ -30,7 +30,6 @@ const HomeReviewsSection = lazy(() => import("@/components/storefront/HomeReview
 const HomeInstructorsSection = lazy(() => import("@/components/storefront/HomeInstructorsSection"));
 const HomeNoticeSection = lazy(() => import("@/components/storefront/HomeNoticeSection"));
 const HomeCtaSection = lazy(() => import("@/components/storefront/HomeCtaSection"));
-const HomeCtaSection = lazy(() => import("@/components/storefront/HomeCtaSection"));
 const HomeCourseFeatureSection = lazy(() => import("@/components/storefront/HomeCourseFeatureSection"));
 const HomeWhySection = lazy(() => import("@/components/storefront/HomeWhySection"));
 const HomeVoicesSection = lazy(() => import("@/components/storefront/HomeVoicesSection"));
