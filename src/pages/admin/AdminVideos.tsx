@@ -224,7 +224,7 @@ const AdminVideos = () => {
 
     const seconds = Number(data?.length_seconds || 0);
     const bytes = Number(data?.storage_size || 0);
-    const patch: Record<string, number> = {};
+    const patch: { duration_minutes?: number; file_size_mb?: number } = {};
     if (seconds > 0) patch.duration_minutes = Math.round((seconds / 60) * 100) / 100;
     if (bytes > 0) patch.file_size_mb = Math.round((bytes / (1024 * 1024)) * 10) / 10;
     if (Object.keys(patch).length === 0) return "skipped";
