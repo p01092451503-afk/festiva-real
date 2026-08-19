@@ -107,15 +107,61 @@ const HeroBanner = () => {
                 )}
                 {isFallback ? (
                   <div className="relative overflow-hidden bg-background">
-                    {/* soft light gradient wash */}
+                    {/* abstract gradient wash */}
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(180deg, hsl(var(--brand-blue-light)) 0%, hsl(0 0% 100%) 55%, hsl(var(--brand-blue-light)) 100%)",
+                          "linear-gradient(135deg, #f0f4ff 0%, #f8f5ff 35%, #ffffff 55%, #f0f9ff 100%)",
                       }}
                     />
-                    {/* clean background: gradient wash + soft blur spots only */}
+                    {/* soft radial gradient blobs */}
+                    <div
+                      className="pointer-events-none absolute -left-[15%] -top-[25%] h-[60%] w-[60%] rounded-full blur-3xl"
+                      style={{ background: "radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%)" }}
+                    />
+                    <div
+                      className="pointer-events-none absolute -right-[15%] top-[10%] h-[55%] w-[55%] rounded-full blur-3xl"
+                      style={{ background: "radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%)" }}
+                    />
+                    <div
+                      className="pointer-events-none absolute bottom-[-10%] left-[20%] h-[45%] w-[45%] rounded-full blur-3xl"
+                      style={{ background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)" }}
+                    />
+                    {/* abstract geometric pattern */}
+                    <svg
+                      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.35]"
+                      viewBox="0 0 1440 520"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <defs>
+                        <linearGradient id="heroGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(99,102,241,0.22)" />
+                          <stop offset="100%" stopColor="rgba(59,130,246,0.12)" />
+                        </linearGradient>
+                        <linearGradient id="heroGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(139,92,246,0.18)" />
+                          <stop offset="100%" stopColor="rgba(99,102,241,0.08)" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx="180" cy="120" r="90" fill="url(#heroGrad1)" opacity="0.6" />
+                      <circle cx="1260" cy="380" r="120" fill="url(#heroGrad2)" opacity="0.5" />
+                      <circle cx="1100" cy="80" r="60" fill="url(#heroGrad1)" opacity="0.4" />
+                      <circle cx="320" cy="420" r="70" fill="url(#heroGrad2)" opacity="0.35" />
+                      <path
+                        d="M-100 260 C 240 180 480 340 1540 200"
+                        fill="none"
+                        stroke="rgba(99,102,241,0.12)"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M-100 300 C 280 220 560 380 1540 240"
+                        fill="none"
+                        stroke="rgba(59,130,246,0.10)"
+                        strokeWidth="2"
+                      />
+                    </svg>
                     <div className="pointer-events-none absolute -left-32 -top-28 h-[380px] w-[380px] rounded-full bg-[hsl(var(--brand-blue)/0.06)] blur-2xl" />
                     <div className="pointer-events-none absolute -right-24 bottom-[-140px] h-[320px] w-[320px] rounded-full bg-[hsl(var(--brand-orange)/0.06)] blur-2xl" />
 
