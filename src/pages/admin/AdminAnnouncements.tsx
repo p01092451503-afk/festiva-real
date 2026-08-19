@@ -17,7 +17,6 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue, formatTargetLabel } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
-import { autoTranslateInBackground } from "@/lib/translate";
 
 const AdminAnnouncements = () => {
   const { t } = useTranslation();

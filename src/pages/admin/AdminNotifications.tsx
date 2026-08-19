@@ -13,7 +13,6 @@ import { format } from "date-fns";
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue, formatTargetLabel } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
 import { resolveTargetStudentIds } from "@/lib/notificationsTargeting";
-import { translateOneOrFallback } from "@/lib/translate";
 
 const AdminNotifications = () => {
   const { t } = useTranslation();
