@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Navigate, useSearchParams, Link } from "react-router-dom";
 import { Award, Download, ShieldCheck, Truck } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { PageBanner } from "@/components/PagePattern";
-import { pageBg } from "@/config/pageBackgrounds";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -115,13 +113,6 @@ export default function StudentCertificates() {
 
   return (
     <DashboardLayout contentClassName="flex-1 min-w-0 p-0">
-      <PageBanner
-        config={pageBg("certificate")}
-        eyebrow="CERTIFICATE"
-        title="자격증 신청 및 발급"
-        description="발급된 자격증·수료증을 다운로드하고 검증 링크를 공유할 수 있습니다. 발급 절차와 수료 조건은 교육원 소개 &gt; 발급 안내에서 확인하세요."
-      />
-
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 min-w-0">
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
           <TabsList>
