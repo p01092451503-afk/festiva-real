@@ -140,7 +140,6 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             {s?.copyright_text || `© ${new Date().getFullYear()} ${s?.company_name || "축제운영전문가 자격증 교육원"}. All rights reserved.`}
           </p>
         </div>
-        </div>
       </div>
 
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
