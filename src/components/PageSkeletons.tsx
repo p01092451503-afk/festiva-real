@@ -8,8 +8,9 @@ import PageLoading, { FullPageLoading } from "@/components/PageLoading";
  * existing imports keep working.
  */
 
-/** Full-viewport loader used for app-level redirects/route guards. */
-export const FullScreenSkeleton = () => <FullPageLoading />;
+/** Route transitions render nothing (no skeleton/spinner flash). */
+export const FullScreenSkeleton = () => null;
+
 
 /** Compact in-page loader. */
 export const InlineBlockSkeleton = ({ className = "" }: { className?: string }) => (

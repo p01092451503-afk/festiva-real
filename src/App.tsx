@@ -11,14 +11,14 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminRoute from "@/components/AdminRoute";
 import TeacherRoute from "@/components/TeacherRoute";
 import TrafficLogger from "@/components/TrafficLogger";
-import { FullScreenSkeleton } from "@/components/PageSkeletons";
+
 import StorefrontGate from "@/components/StorefrontGate";
 import AppUpdateBanner from "@/components/AppUpdateBanner";
 import RouteReporter from "@/components/RouteReporter";
 import FeatureGate from "@/components/ops/FeatureGate";
 
 // Skeleton loading fallback (no spinner)
-const PageLoader = () => <FullScreenSkeleton />;
+const PageLoader = () => null;
 
 // ── Lazy-loaded pages ──────────────────────────────────
 const RoleBasedRedirect = lazy(() => import("@/components/RoleBasedRedirect"));
