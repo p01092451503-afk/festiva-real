@@ -20,7 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import hwacheonImg from "@/assets/festival-hwacheon.png.asset.json";
-import boryeongImg from "@/assets/festival-boryeong.png.asset.json";
+import boryeongImg from "@/assets/festival-boryeong-mud.jpg.asset.json";
 import jinhaeImg from "@/assets/festival-jinhae.png.asset.json";
 
 
@@ -171,7 +171,7 @@ const StorefrontHome = () => {
               aria-label={`${festival.name} 자세히 보기`}
               className="text-left bg-background rounded-xl border border-border/80 overflow-hidden transition-all duration-300 hover:shadow-sm hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="h-24 overflow-hidden bg-muted">
+              <div className="h-44 sm:h-48 overflow-hidden bg-muted">
                 <img
                   src={festival.imageUrl}
                   alt={festival.name}
@@ -284,7 +284,7 @@ const StorefrontHome = () => {
         <DialogContent className="max-w-xl">
           {selectedFestival && (
             <>
-              <div className="-mx-6 -mt-6 mb-2 h-28 overflow-hidden rounded-t-lg bg-muted">
+              <div className="-mx-6 -mt-6 mb-2 h-52 overflow-hidden rounded-t-lg bg-muted">
                 <img
                   src={selectedFestival.imageUrl}
                   alt={selectedFestival.name}
