@@ -44,7 +44,6 @@ import { useBranchAdmin } from "@/hooks/useBranchAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
-import LanguageToggle from "@/components/LanguageToggle";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import NotificationBell from "@/components/NotificationBell";
 import GuidedTourButton from "@/components/GuidedTourButton";
