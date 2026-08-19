@@ -168,13 +168,13 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
           {/* 링크 + 저작권 */}
           <div className="lg:col-span-5 min-w-0 flex flex-col gap-5 lg:text-right lg:items-end">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 lg:justify-end">
-              <Link to="/support" className="text-sm font-semibold text-footer-foreground hover:opacity-70 transition-opacity">
+              <Link to="/support" className="text-base font-semibold text-footer-foreground hover:opacity-70 transition-opacity">
                 고객센터 안내
               </Link>
               <button
                 type="button"
                 onClick={() => setPrivacyOpen(true)}
-                className="text-sm font-semibold text-brand-orange hover:opacity-70 transition-opacity"
+                className="text-base font-semibold text-brand-orange hover:opacity-70 transition-opacity"
               >
                 개인정보처리방침
               </button>
@@ -186,7 +186,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                     href={item.url}
                     target={item.open_in_new_tab ? "_blank" : undefined}
                     rel="noopener noreferrer"
-                    className="text-sm text-footer-muted hover:text-footer-foreground transition-colors"
+                    className="text-base text-footer-muted hover:text-footer-foreground transition-colors"
                   >
                     {item.label}
                   </a>
@@ -194,14 +194,14 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                   <Link
                     key={item.id}
                     to={item.url}
-                    className="text-sm text-footer-muted hover:text-footer-foreground transition-colors"
+                    className="text-base text-footer-muted hover:text-footer-foreground transition-colors"
                   >
                     {item.label}
                   </Link>
                 );
               })}
             </div>
-            <p className="text-sm text-footer-muted/80">
+            <p className="text-base text-footer-muted/80">
               {s?.copyright_text || `© ${new Date().getFullYear()} (사)마이스홍보교육학회. All rights reserved.`}
             </p>
           </div>
