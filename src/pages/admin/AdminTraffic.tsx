@@ -201,10 +201,14 @@ const AdminTraffic = () => {
     (sum, v) => sum + (Number(v.file_size_mb) || 0),
     0,
   );
-  const cdnStorageBytes = cdnStorageMb * 1024 * 1024;
-  const cdnStoredCount = (videoAssets || []).filter((v) =>
+  const dbCdnStorageBytes = cdnStorageMb * 1024 * 1024;
+  const dbCdnStoredCount = (videoAssets || []).filter((v) =>
     ["bunny", "cloudflare", "upload", "custom"].includes(v.video_provider || ""),
   ).length;
+  // Prefer live Bunny numbers when available (DB rows may lack file_size_mb)
+  const cdnStorageBytes = bunnyLive ? Math.max(bunnyLive.bytes, dbCdnStorageBytes) : dbCdnStorageBytes;
+  const cdnStoredCount = bunnyLive ? Math.max(bunnyLive.count, dbCdnStoredCount) : dbCdnStoredCount;
+
 
   // === Learning outcome calculations ===
   const allEnrollments = enrollmentStats || [];
