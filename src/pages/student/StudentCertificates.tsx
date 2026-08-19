@@ -11,6 +11,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useFeatureModules } from "@/hooks/useFeatureModules";
 import { supabase } from "@/integrations/supabase/client";
 import { downloadCertificatePDF } from "@/lib/certificateGenerator";
+import CertificateApplyPanel from "@/components/student/CertificateApplyPanel";
 
 
 type Cert = {
