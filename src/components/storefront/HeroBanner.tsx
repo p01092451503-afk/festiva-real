@@ -216,7 +216,7 @@ const HeroBanner = () => {
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
-                          to="/about"
+                          to="/about?tab=system"
                           className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-7 py-3 text-base font-medium text-foreground transition hover:bg-accent"
                         >
                           자격 제도 안내
