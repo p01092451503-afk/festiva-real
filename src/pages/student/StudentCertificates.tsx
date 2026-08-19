@@ -30,10 +30,11 @@ export default function StudentCertificates() {
   const { toast } = useToast();
   const { isEnabled, isLoading: modulesLoading } = useFeatureModules();
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = searchParams.get("tab") === "shipping" ? "shipping" : "issued";
+  const rawTab = searchParams.get("tab");
+  const tab = rawTab === "shipping" || rawTab === "issued" ? rawTab : "apply";
   const setTab = (next: string) => {
     const params = new URLSearchParams(searchParams);
-    if (next === "issued") params.delete("tab");
+    if (next === "apply") params.delete("tab");
     else params.set("tab", next);
     setSearchParams(params, { replace: true });
   };
