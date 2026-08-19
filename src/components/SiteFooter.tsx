@@ -1,18 +1,37 @@
 import { forwardRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Youtube, Facebook, Globe, Shield, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Instagram, Youtube, Facebook, Globe, Shield, ArrowRight, MessageCircle } from "lucide-react";
 import { useSiteSettings, useNavItems } from "@/hooks/useSiteSettings";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
 
 const SOCIAL_CLASS =
-  "text-muted-foreground/60 hover:text-foreground transition-colors";
+  "text-footer-muted hover:text-footer-foreground transition-colors";
 
 const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
   const { data: s } = useSiteSettings();
   const { data: footerNav = [] } = useNavItems("footer");
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const logo = s?.footer_logo_url || s?.header_logo_url;
+
+  const { data: latestNotice } = useQuery({
+    queryKey: ["footer-latest-notice"],
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("announcements")
+        .select("id, title, created_at")
+        .eq("is_published", true)
+        .order("is_pinned", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+      if (error) return null;
+      return data;
+    },
+  });
 
   const infoLines = [
     [s?.ceo_name && `대표이사 : ${s.ceo_name}`].filter(Boolean).join(""),
@@ -24,111 +43,168 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
     s?.company_phone,
   ].filter(Boolean) as string[];
 
-  return (
-    <footer ref={ref} className="bg-background text-foreground">
-      <div className="max-w-6xl mx-auto px-4 pt-16 pb-12">
-        {/* 좌측 정보 블록 */}
-        <div className="mt-16 max-w-xl">
-          <Link
-            to="/store/courses"
-            className="inline-flex items-center justify-center gap-3 border border-border px-8 py-4 text-base font-medium hover:bg-muted transition-colors"
-          >
-            강의 안내 보기
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+  const workingHours = [
+    s?.hours_weekday,
+    s?.hours_lunch,
+    s?.hours_weekend,
+    s?.hours_holiday,
+  ].filter(Boolean) as string[];
 
-          <div className="mt-10 space-y-3">
-            {infoLines.map((line) => (
-              <p key={line} className="text-sm sm:text-base text-foreground/80 leading-relaxed break-words">
-                {line}
-              </p>
-            ))}
+  return (
+    <footer ref={ref} className="bg-footer text-footer-foreground">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-14">
+        {/* 상단 2단: 공지사항 + 고객센터 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-8">
+          {/* 공지사항 */}
+          <div className="min-w-0">
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight">공지사항</h2>
+              <Link
+                to="/student/announcements"
+                className="inline-flex items-center gap-1 text-sm text-footer-muted hover:text-footer-foreground transition-colors"
+              >
+                전체보기 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+            {latestNotice ? (
+              <Link
+                to="/student/announcements"
+                className="mt-4 flex items-center justify-between gap-4 py-3 border-b border-footer-border hover:opacity-80 transition-opacity"
+              >
+                <span className="truncate text-base sm:text-lg font-medium">{latestNotice.title}</span>
+                <span className="shrink-0 text-sm text-footer-muted">
+                  {new Date(latestNotice.created_at).toLocaleDateString("ko-KR", {
+                    year: "2-digit",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </span>
+              </Link>
+            ) : (
+              <div className="mt-4 py-3 border-b border-footer-border text-sm text-footer-muted">
+                등록된 공지사항이 없습니다.
+              </div>
+            )}
           </div>
 
-          {(s?.hours_weekday || s?.hours_lunch || s?.hours_weekend || s?.hours_holiday) && (
-            <div className="mt-6 space-y-1.5 text-sm text-muted-foreground/70 leading-relaxed">
-              {s?.hours_weekday && <p>{s.hours_weekday}</p>}
-              {s?.hours_lunch && <p>{s.hours_lunch}</p>}
-              {s?.hours_weekend && <p>{s.hours_weekend}</p>}
-              {s?.hours_holiday && <p>{s.hours_holiday}</p>}
-            </div>
-          )}
-
-          {(s?.instagram_url || s?.youtube_url || s?.facebook_url || s?.blog_url) && (
-            <div className="mt-10 flex items-center gap-7">
-              {s?.facebook_url && (
-                <a href={s.facebook_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Facebook">
-                  <Facebook className="h-5 w-5" />
-                </a>
-              )}
-              {s?.youtube_url && (
-                <a href={s.youtube_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="YouTube">
-                  <Youtube className="h-5 w-5" />
-                </a>
-              )}
-              {s?.instagram_url && (
-                <a href={s.instagram_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Instagram">
-                  <Instagram className="h-5 w-5" />
-                </a>
-              )}
-              {s?.blog_url && (
-                <a href={s.blog_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Blog">
-                  <Globe className="h-5 w-5" />
-                </a>
+          {/* 고객센터 */}
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight">고객센터</h2>
+            <div className="mt-4 space-y-1.5 text-base text-footer-muted leading-relaxed">
+              {workingHours.length > 0 ? (
+                workingHours.map((line) => <p key={line}>{line}</p>)
+              ) : (
+                <>
+                  <p>평일 09:00 - 18:00</p>
+                  <p>점심 12:00 - 13:00</p>
+                  <p>주말 · 공휴일 휴무</p>
+                </>
               )}
             </div>
-          )}
-
-          {logo && (
-            <img
-              src={logo}
-              alt={s?.company_name || "Logo"}
-              className="mt-12 h-8 max-w-[200px] object-contain opacity-80"
-              loading="lazy"
-              decoding="async"
-            />
-          )}
+            <Link
+              to="/support?tab=inquiry"
+              className="mt-5 inline-flex items-center gap-2 rounded-full border border-footer-border px-6 py-2.5 text-base font-medium hover:bg-footer-foreground hover:text-footer transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" aria-hidden="true" />
+              1:1 문의하기
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
 
-        {/* 하단 링크 + 저작권 */}
-        <div className="mt-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <Link to="/support" className="text-sm font-semibold text-foreground hover:opacity-70 transition-opacity">
-              고객센터 안내
-            </Link>
-            <button
-              type="button"
-              onClick={() => setPrivacyOpen(true)}
-              className="text-sm font-semibold text-primary hover:opacity-70 transition-opacity"
-            >
-              개인정보처리방침
-            </button>
-            {footerNav.map((item) => {
-              const isExternal = /^https?:\/\//i.test(item.url);
-              return isExternal ? (
-                <a
-                  key={item.id}
-                  href={item.url}
-                  target={item.open_in_new_tab ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  key={item.id}
-                  to={item.url}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+        {/* 구분선 */}
+        <div className="mt-10 sm:mt-12 border-t border-footer-border" />
+
+        {/* 하단: 로고 + 회사 정보 + 링크 */}
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* 로고 + 회사 정보 */}
+          <div className="lg:col-span-7 min-w-0">
+            {logo ? (
+              <img
+                src={logo}
+                alt={s?.company_name || "festcert"}
+                className="h-7 sm:h-8 max-w-[200px] object-contain brightness-0 invert"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <Link to="/" className="inline-flex items-center text-2xl sm:text-3xl font-bold tracking-tight">
+                <span className="text-footer-foreground">fest</span>
+                <span className="text-brand-orange">cert</span>
+              </Link>
+            )}
+            <div className="mt-5 space-y-1.5 text-sm sm:text-base text-footer-muted leading-relaxed">
+              {infoLines.map((line) => (
+                <p key={line} className="break-words">{line}</p>
+              ))}
+            </div>
+
+            {(s?.instagram_url || s?.youtube_url || s?.facebook_url || s?.blog_url) && (
+              <div className="mt-6 flex items-center gap-6">
+                {s?.facebook_url && (
+                  <a href={s.facebook_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Facebook">
+                    <Facebook className="h-5 w-5" />
+                  </a>
+                )}
+                {s?.youtube_url && (
+                  <a href={s.youtube_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="YouTube">
+                    <Youtube className="h-5 w-5" />
+                  </a>
+                )}
+                {s?.instagram_url && (
+                  <a href={s.instagram_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Instagram">
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                )}
+                {s?.blog_url && (
+                  <a href={s.blog_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Blog">
+                    <Globe className="h-5 w-5" />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
-          <p className="text-sm text-muted-foreground/70">
-            {s?.copyright_text || `© EST. ${new Date().getFullYear()}`}
-          </p>
+
+          {/* 링크 + 저작권 */}
+          <div className="lg:col-span-5 min-w-0 flex flex-col gap-5">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <Link to="/support" className="text-sm font-semibold text-footer-foreground hover:opacity-70 transition-opacity">
+                고객센터 안내
+              </Link>
+              <button
+                type="button"
+                onClick={() => setPrivacyOpen(true)}
+                className="text-sm font-semibold text-brand-orange hover:opacity-70 transition-opacity"
+              >
+                개인정보처리방침
+              </button>
+              {footerNav.map((item) => {
+                const isExternal = /^https?:\/\//i.test(item.url);
+                return isExternal ? (
+                  <a
+                    key={item.id}
+                    href={item.url}
+                    target={item.open_in_new_tab ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    className="text-sm text-footer-muted hover:text-footer-foreground transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.id}
+                    to={item.url}
+                    className="text-sm text-footer-muted hover:text-footer-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+            <p className="text-sm text-footer-muted/80">
+              {s?.copyright_text || `© ${new Date().getFullYear()} (사)마이스홍보교육학회. All rights reserved.`}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -136,7 +212,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-4 w-4 text-primary" />
+              <Shield className="h-4 w-4 text-primary" aria-hidden="true" />
               개인정보처리방침
             </DialogTitle>
           </DialogHeader>
