@@ -284,7 +284,7 @@ const StorefrontHome = () => {
         <DialogContent className="max-w-xl">
           {selectedFestival && (
             <>
-              <div className="-mx-6 -mt-6 mb-2 h-28 overflow-hidden rounded-t-lg bg-muted">
+              <div className="-mx-6 -mt-6 mb-2 h-52 overflow-hidden rounded-t-lg bg-muted">
                 <img
                   src={selectedFestival.imageUrl}
                   alt={selectedFestival.name}
