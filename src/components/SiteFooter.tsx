@@ -54,9 +54,9 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
     <footer ref={ref} className="bg-footer text-footer-foreground">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-14">
         {/* 상단 2단: 공지사항 + 고객센터 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8">
           {/* 공지사항 */}
-          <div className="min-w-0">
+          <div className="lg:col-span-7 min-w-0">
             <div className="flex items-center gap-3">
               <h2 className="text-lg sm:text-xl font-bold tracking-tight">공지사항</h2>
               <Link
@@ -88,7 +88,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
           </div>
 
           {/* 고객센터 */}
-          <div className="min-w-0">
+          <div className="lg:col-span-5 min-w-0 lg:text-right">
             <h2 className="text-lg sm:text-xl font-bold tracking-tight">고객센터</h2>
             <div className="mt-4 space-y-1.5 text-base text-footer-muted leading-relaxed">
               {workingHours.length > 0 ? (
