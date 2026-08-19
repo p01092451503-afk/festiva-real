@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/useUserRole";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+
 
 const roleConfig = {
   admin: { icon: Shield, path: "/admin", labelKey: "roles.admin" },
