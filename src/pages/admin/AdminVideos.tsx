@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Video, Plus, Search, Trash2, Copy, Edit, ExternalLink, HardDrive, Clock, Upload } from "lucide-react";
+import { Video, Plus, Search, Trash2, Copy, Edit, ExternalLink, HardDrive, Clock, Upload, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -202,6 +202,86 @@ const AdminVideos = () => {
     toast({ title: t("videoMgmt.urlCopied") });
   };
 
+  /** video_assets 행에서 Bunny GUID 추출 */
+  const getBunnyGuid = (v: VideoAsset): string | null => {
+    if (v.bunny_video_guid) return v.bunny_video_guid.trim();
+    if (v.video_url?.startsWith("bunny://")) return v.video_url.replace("bunny://", "").trim();
+    return null;
+  };
+
+  const [syncingId, setSyncingId] = useState<string | null>(null);
+  const [bulkSyncing, setBulkSyncing] = useState(false);
+
+  /** Bunny에서 실제 재생시간·용량을 읽어 video_assets에 반영 */
+  const fetchMeta = async (v: VideoAsset): Promise<"updated" | "skipped"> => {
+    const guid = getBunnyGuid(v);
+    if (!guid) return "skipped";
+    const { data, error } = await supabase.functions.invoke("bunny-stream-info", {
+      body: { video_guid: guid },
+    });
+    if (error) throw new Error(error.message || "CDN 정보 조회 실패");
+    if (data?.fallback) return "skipped";
+
+    const seconds = Number(data?.length_seconds || 0);
+    const bytes = Number(data?.storage_size || 0);
+    const patch: { duration_minutes?: number; file_size_mb?: number } = {};
+    if (seconds > 0) patch.duration_minutes = Math.round((seconds / 60) * 100) / 100;
+    if (bytes > 0) patch.file_size_mb = Math.round((bytes / (1024 * 1024)) * 10) / 10;
+    if (Object.keys(patch).length === 0) return "skipped";
+
+    const { error: upErr } = await supabase.from("video_assets").update(patch).eq("id", v.id);
+    if (upErr) throw upErr;
+    return "updated";
+  };
+
+  const syncOne = async (v: VideoAsset) => {
+    setSyncingId(v.id);
+    try {
+      const result = await fetchMeta(v);
+      await queryClient.invalidateQueries({ queryKey: ["video-assets"] });
+      toast({
+        title: result === "updated" ? "재생시간·용량을 불러왔습니다" : "CDN에서 정보를 가져올 수 없습니다",
+        variant: result === "updated" ? undefined : "destructive",
+      });
+    } catch (err) {
+      toast({
+        title: "불러오기 실패",
+        description: err instanceof Error ? err.message : String(err),
+        variant: "destructive",
+      });
+    } finally {
+      setSyncingId(null);
+    }
+  };
+
+  const syncAll = async () => {
+    const targets = videos.filter((v) => getBunnyGuid(v));
+    if (targets.length === 0) {
+      toast({ title: "CDN(Bunny) 영상이 없습니다" });
+      return;
+    }
+    setBulkSyncing(true);
+    let updated = 0;
+    let skipped = 0;
+    let failed = 0;
+    for (const v of targets) {
+      try {
+        const r = await fetchMeta(v);
+        r === "updated" ? (updated += 1) : (skipped += 1);
+      } catch {
+        failed += 1;
+      }
+    }
+    setBulkSyncing(false);
+    await queryClient.invalidateQueries({ queryKey: ["video-assets"] });
+    toast({
+      title: failed > 0 ? "일부 불러오기 실패" : "정보 불러오기 완료",
+      description: `갱신 ${updated}건 · 변경없음 ${skipped}건 · 실패 ${failed}건`,
+      variant: failed > 0 ? "destructive" : undefined,
+    });
+  };
+
+
   const openEdit = (v: VideoAsset) => {
     setForm({
       title: v.title,
@@ -247,6 +327,11 @@ const AdminVideos = () => {
             {cdnUnlockButton}
             <BunnyImportDialog />
             <BunnyDurationSyncDialog />
+            <Button variant="outline" onClick={syncAll} disabled={bulkSyncing}>
+              <RefreshCw className={`h-4 w-4 mr-1 ${bulkSyncing ? "animate-spin" : ""}`} />
+              {bulkSyncing ? "불러오는 중..." : "재생시간·용량 불러오기"}
+            </Button>
+
             <Button
               variant="outline"
               onClick={() => {
@@ -358,16 +443,31 @@ const AdminVideos = () => {
                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{new Date(v.created_at).toLocaleDateString("ko")}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      {cdnUnlocked && (
-                        <>
-                          <Button variant="ghost" size="icon" onClick={() => copyUrl(v.video_url)} title={t("videoMgmt.copyUrl")}>
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" asChild title={t("videoMgmt.open")}>
-                            <a href={v.video_url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4" /></a>
-                          </Button>
-                        </>
+                      {getBunnyGuid(v) && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => syncOne(v)}
+                          disabled={syncingId === v.id || bulkSyncing}
+                          title="재생시간·용량 불러오기"
+                        >
+                          <RefreshCw className={`h-4 w-4 ${syncingId === v.id ? "animate-spin" : ""}`} />
+                        </Button>
                       )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => copyUrl(v.video_url)}
+                        title={getBunnyGuid(v) ? "동영상 링크(CDN) 복사" : t("videoMgmt.copyUrl")}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      {cdnUnlocked && (
+                        <Button variant="ghost" size="icon" asChild title={t("videoMgmt.open")}>
+                          <a href={v.video_url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4" /></a>
+                        </Button>
+                      )}
+
                       <Button variant="ghost" size="icon" onClick={() => openEdit(v)} title={t("common.edit")}>
                         <Edit className="h-4 w-4" />
                       </Button>
