@@ -20,7 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import hwacheonImg from "@/assets/festival-hwacheon.png.asset.json";
-import boryeongImg from "@/assets/festival-boryeong.png.asset.json";
+import boryeongImg from "@/assets/festival-boryeong-mud.jpg.asset.json";
 import jinhaeImg from "@/assets/festival-jinhae.png.asset.json";
 
 
