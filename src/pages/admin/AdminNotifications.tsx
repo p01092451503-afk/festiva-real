@@ -13,7 +13,6 @@ import { format } from "date-fns";
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue, formatTargetLabel } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
 import { resolveTargetStudentIds } from "@/lib/notificationsTargeting";
-import { translateOneOrFallback } from "@/lib/translate";
 
 const AdminNotifications = () => {
   const { t } = useTranslation();
@@ -65,22 +64,8 @@ const AdminNotifications = () => {
       });
       if (userIds.length === 0) throw new Error("발송 대상이 없습니다.");
 
-      // Translate at send time so EN viewers see English without needing
-      // a separate i18n table. Both languages are stored together so the
-      // same row works for KO and EN users.
-      const enTitle = form.title_en?.trim()
-        ? form.title_en.trim()
-        : await translateOneOrFallback(form.title_ko);
-      const enMessage = form.content_en?.trim()
-        ? form.content_en.trim()
-        : await translateOneOrFallback(form.content_ko);
-
-      const finalTitle = enTitle && enTitle !== form.title_ko
-        ? `${form.title_ko} / ${enTitle}`
-        : form.title_ko;
-      const finalMessage = enMessage && enMessage !== form.content_ko
-        ? `${form.content_ko}\n\n${enMessage}`
-        : form.content_ko;
+      const finalTitle = form.title_ko;
+      const finalMessage = form.content_ko;
 
       const rows = userIds.map((uid) => ({
         user_id: uid,

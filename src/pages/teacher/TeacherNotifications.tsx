@@ -14,7 +14,6 @@ import { format } from "date-fns";
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue, formatTargetLabel } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
 import { resolveTargetStudentIds } from "@/lib/notificationsTargeting";
-import { translateOneOrFallback } from "@/lib/translate";
 
 const TeacherNotifications = () => {
   const { t } = useTranslation();
@@ -71,18 +70,8 @@ const TeacherNotifications = () => {
       );
       if (userIds.length === 0) throw new Error("발송 대상 수강생이 없습니다.");
 
-      const enTitle = form.title_en?.trim()
-        ? form.title_en.trim()
-        : await translateOneOrFallback(form.title_ko);
-      const enMessage = form.content_en?.trim()
-        ? form.content_en.trim()
-        : await translateOneOrFallback(form.content_ko);
-      const finalTitle = enTitle && enTitle !== form.title_ko
-        ? `${form.title_ko} / ${enTitle}`
-        : form.title_ko;
-      const finalMessage = enMessage && enMessage !== form.content_ko
-        ? `${form.content_ko}\n\n${enMessage}`
-        : form.content_ko;
+      const finalTitle = form.title_ko;
+      const finalMessage = form.content_ko;
 
       const rows = userIds.map((uid) => ({
         user_id: uid,

@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import { Plus, Edit, Trash2, Pin, Upload, X, FileText, Eye, ClipboardList } from "lucide-react";
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
-import { autoTranslateInBackground } from "@/lib/translate";
 import { useTableSort, sortRows } from "@/hooks/useTableSort";
 import TablePagination, { usePagination } from "@/components/table/TablePagination";
 
@@ -62,21 +61,6 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const upsertI18n = async (postId: string) => {
-        await supabase.from("board_post_i18n").upsert(
-          [
-            { post_id: postId, language_code: "ko", title: form.title_ko, content: form.content_ko },
-            {
-              post_id: postId,
-              language_code: "en",
-              title: form.title_en || form.title_ko,
-              content: form.content_en || form.content_ko,
-            },
-          ],
-          { onConflict: "post_id,language_code" },
-        );
-      };
-
       let fileUrls = [...existingFiles];
       if (files.length > 0) {
         for (const file of files) {
@@ -105,15 +89,9 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
       if (editingId) {
         const { error } = await supabase.from("board_posts").update(payload).eq("id", editingId);
         if (error) throw error;
-        await upsertI18n(editingId);
-        if (!form.title_en?.trim()) autoTranslateInBackground("board", [editingId]);
       } else {
         const { data, error } = await supabase.from("board_posts").insert(payload).select("id").single();
         if (error) throw error;
-        if (data?.id) {
-          await upsertI18n(data.id);
-          if (!form.title_en?.trim()) autoTranslateInBackground("board", [data.id]);
-        }
       }
     },
     onSuccess: () => {
@@ -152,17 +130,11 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
   };
 
   const openEdit = async (post: any) => {
-    const { data: i18nRows } = await supabase
-      .from("board_post_i18n")
-      .select("language_code, title, content")
-      .eq("post_id", post.id);
-    const ko = i18nRows?.find((r) => r.language_code === "ko");
-    const en = i18nRows?.find((r) => r.language_code === "en");
     setForm({
-      title_ko: ko?.title ?? post.title,
-      content_ko: ko?.content ?? post.content,
-      title_en: en?.title ?? "",
-      content_en: en?.content ?? "",
+      title_ko: post.title,
+      content_ko: post.content,
+      title_en: "",
+      content_en: "",
       is_pinned: post.is_pinned,
       is_published: post.is_published,
       target_country_codes: post.target_country_codes ?? [],

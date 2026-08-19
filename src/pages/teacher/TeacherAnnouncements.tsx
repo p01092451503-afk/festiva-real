@@ -17,7 +17,6 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import TargetScopeSelector, { EMPTY_TARGET, TargetValue } from "@/components/TargetScopeSelector";
 import MultilingualPostEditor, { EMPTY_MULTILINGUAL, MultilingualValue } from "@/components/MultilingualPostEditor";
-import { autoTranslateInBackground } from "@/lib/translate";
 
 const TeacherAnnouncements = () => {
   const { t } = useTranslation();
@@ -72,23 +71,6 @@ const TeacherAnnouncements = () => {
         savedId = data?.id ?? null;
       }
 
-      if (savedId) {
-        await supabase.from("announcement_i18n").upsert(
-          [
-            { announcement_id: savedId, language_code: "ko", title: form.title_ko, content: form.content_ko },
-            {
-              announcement_id: savedId,
-              language_code: "en",
-              title: form.title_en || form.title_ko,
-              content: form.content_en || form.content_ko,
-            },
-          ],
-          { onConflict: "announcement_id,language_code" },
-        );
-        if (!form.title_en?.trim()) {
-          autoTranslateInBackground("announcement", [savedId]);
-        }
-      }
     },
     onSuccess: () => {
       toast({ title: editId ? "수정 완료" : "공지사항 등록 완료" });
@@ -118,17 +100,11 @@ const TeacherAnnouncements = () => {
 
   const openEdit = async (ann: any) => {
     setEditId(ann.id);
-    const { data: i18nRows } = await supabase
-      .from("announcement_i18n")
-      .select("language_code, title, content")
-      .eq("announcement_id", ann.id);
-    const ko = i18nRows?.find((r) => r.language_code === "ko");
-    const en = i18nRows?.find((r) => r.language_code === "en");
     setForm({
-      title_ko: ko?.title ?? ann.title,
-      content_ko: ko?.content ?? ann.content,
-      title_en: en?.title ?? "",
-      content_en: en?.content ?? "",
+      title_ko: ann.title,
+      content_ko: ann.content,
+      title_en: "",
+      content_en: "",
       is_pinned: ann.is_pinned,
       is_published: ann.is_published,
       target_country_codes: ann.target_country_codes ?? [],
