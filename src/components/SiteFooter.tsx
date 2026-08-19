@@ -53,19 +53,19 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
     <footer ref={ref} className="bg-warm-900 text-primary-foreground">
       <div className="max-w-6xl mx-auto px-4">
         {/* 상단: 공지사항 + 고객센터 */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 lg:gap-16 py-10 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 lg:gap-16 py-12 sm:py-14">
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-base font-bold text-primary-foreground">공지사항</h2>
+              <h2 className="text-lg font-bold text-primary-foreground">공지사항</h2>
               <Link
                 to="/support"
-                className="inline-flex items-center gap-1 text-sm font-medium text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                className="inline-flex items-center gap-1 text-base font-medium text-primary-foreground/70 hover:text-primary-foreground transition-colors"
               >
                 전체보기
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
-            <ul className="mt-5 space-y-3">
+            <ul className="mt-6 space-y-4">
               {Array.isArray(notices) && notices.length > 0 ? (
                 notices.map((n: any) => (
                   <li key={n.id}>
@@ -73,11 +73,11 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                       to="/support"
                       className="flex items-center justify-between gap-6 group min-w-0"
                     >
-                      <span className="truncate text-sm text-primary-foreground/85 group-hover:text-primary-foreground transition-colors">
+                      <span className="truncate text-base text-primary-foreground/85 group-hover:text-primary-foreground transition-colors">
                         {n.is_pinned ? "[공지] " : ""}
                         {n.title}
                       </span>
-                      <span className="shrink-0 text-xs text-primary-foreground/45">
+                      <span className="shrink-0 text-sm text-primary-foreground/45">
                         {new Date(n.created_at)
                           .toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" })
                           .replace(/\.$/, "")}
@@ -86,22 +86,22 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                   </li>
                 ))
               ) : (
-                <li className="text-sm text-primary-foreground/50">등록된 공지사항이 없습니다.</li>
+                <li className="text-base text-primary-foreground/50">등록된 공지사항이 없습니다.</li>
               )}
             </ul>
           </div>
 
           <div className="min-w-0">
-            <h2 className="text-base font-bold text-primary-foreground">고객센터</h2>
+            <h2 className="text-lg font-bold text-primary-foreground">고객센터</h2>
             {s?.company_phone && (
               <a
                 href={`tel:${s.company_phone.replace(/[^0-9+]/g, "")}`}
-                className="mt-3 block text-2xl sm:text-3xl font-bold tracking-tight text-brand-orange hover:opacity-90 transition-opacity"
+                className="mt-4 block text-3xl sm:text-4xl font-bold tracking-tight text-brand-orange hover:opacity-90 transition-opacity"
               >
                 {s.company_phone}
               </a>
             )}
-            <div className="mt-3 space-y-1 text-xs text-primary-foreground/55 leading-relaxed">
+            <div className="mt-4 space-y-1.5 text-sm text-primary-foreground/55 leading-relaxed">
               {s?.hours_weekday && <p>{s.hours_weekday}</p>}
               {s?.hours_lunch && <p>{s.hours_lunch}</p>}
               {s?.hours_weekend && <p>{s.hours_weekend}</p>}
@@ -109,46 +109,46 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             </div>
             <Link
               to="/support?tab=inquiry"
-              className="mt-5 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 px-4 py-2 text-sm font-semibold leading-normal text-primary-foreground/90 hover:bg-primary-foreground/10 transition-colors"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 px-5 py-2.5 text-base font-semibold leading-normal text-primary-foreground/90 hover:bg-primary-foreground/10 transition-colors"
             >
               1:1 문의하기
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
 
         {/* 하단: 사업자 정보 + 소셜 */}
-        <div className="border-t border-primary-foreground/10 py-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-            <div className="min-w-0 space-y-4">
+        <div className="border-t border-primary-foreground/10 py-10">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
+            <div className="min-w-0 space-y-5">
               {logo ? (
                 <img
                   src={logo}
                   alt={s?.company_name || "Logo"}
-                  className="h-8 max-w-[200px] object-contain brightness-0 invert"
+                  className="h-9 max-w-[220px] object-contain brightness-0 invert"
                   loading="lazy"
                   decoding="async"
                 />
               ) : (
-                <span className="flex items-baseline text-2xl font-bold tracking-tight">
+                <span className="flex items-baseline text-3xl font-bold tracking-tight">
                   <span className="text-primary-foreground">fest</span>
                   <span className="text-brand-orange">cert</span>
                 </span>
               )}
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {infoLines.map((line) => (
-                  <p key={line} className="text-xs text-primary-foreground/50 leading-relaxed break-words">
+                  <p key={line} className="text-sm text-primary-foreground/50 leading-relaxed break-words">
                     {line}
                   </p>
                 ))}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
                 <button
                   type="button"
                   onClick={() => setPrivacyOpen(true)}
-                  className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                  className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                 >
                   개인정보처리방침
                 </button>
@@ -160,7 +160,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                       href={item.url}
                       target={item.open_in_new_tab ? "_blank" : undefined}
                       rel="noopener noreferrer"
-                      className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                     >
                       {item.label}
                     </a>
@@ -168,7 +168,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                     <Link
                       key={item.id}
                       to={item.url}
-                      className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -178,7 +178,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             </div>
 
             {(s?.instagram_url || s?.youtube_url || s?.facebook_url || s?.blog_url) && (
-              <div className="flex items-center gap-2.5 lg:pt-1">
+              <div className="flex items-center gap-3 lg:pt-1.5">
                 {s.instagram_url && (
                   <a href={s.instagram_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Instagram">
                     <Instagram className="h-4 w-4" />
@@ -203,7 +203,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             )}
           </div>
 
-          <p className="mt-8 text-xs text-primary-foreground/35">
+          <p className="mt-10 text-sm text-primary-foreground/35">
             {s?.copyright_text ||
               `© ${new Date().getFullYear()} ${s?.company_name || "축제운영전문가 자격증 교육원"}. All rights reserved.`}
           </p>
@@ -213,16 +213,16 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-lg">
               <Shield className="h-4 w-4 text-primary" />
               개인정보처리방침
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh] pr-4">
             {s?.privacy_policy ? (
-              <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">{s.privacy_policy}</p>
+              <p className="text-base text-foreground/80 whitespace-pre-wrap leading-relaxed">{s.privacy_policy}</p>
             ) : (
-              <p className="text-sm text-muted-foreground italic py-8 text-center">개인정보처리방침이 아직 등록되지 않았습니다.</p>
+              <p className="text-base text-muted-foreground italic py-8 text-center">개인정보처리방침이 아직 등록되지 않았습니다.</p>
             )}
           </ScrollArea>
         </DialogContent>
