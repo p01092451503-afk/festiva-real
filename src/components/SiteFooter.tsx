@@ -1,6 +1,6 @@
 import { forwardRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Youtube, Facebook, Globe, ImageIcon, Shield } from "lucide-react";
+import { Instagram, Youtube, Facebook, Globe, Shield } from "lucide-react";
 import { useSiteSettings, useNavItems } from "@/hooks/useSiteSettings";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
