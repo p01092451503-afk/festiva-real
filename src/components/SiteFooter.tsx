@@ -123,17 +123,17 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
               <img
                 src={logo}
                 alt={s?.company_name || "festcert"}
-                className="h-7 sm:h-8 max-w-[200px] object-contain brightness-0 invert"
+                className="h-8 sm:h-9 max-w-[220px] object-contain brightness-0 invert"
                 loading="lazy"
                 decoding="async"
               />
             ) : (
-              <Link to="/" className="inline-flex items-center text-2xl sm:text-3xl font-bold tracking-tight">
+              <Link to="/" className="inline-flex items-center text-3xl sm:text-4xl font-bold tracking-tight">
                 <span className="text-footer-foreground">fest</span>
                 <span className="text-brand-orange">cert</span>
               </Link>
             )}
-            <div className="mt-5 space-y-1.5 text-sm sm:text-base text-footer-muted leading-relaxed">
+            <div className="mt-5 space-y-1.5 text-base sm:text-lg text-footer-muted leading-relaxed">
               {infoLines.map((line) => (
                 <p key={line} className="break-words">{line}</p>
               ))}
