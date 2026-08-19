@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { FileCheck2, Check, Award, Truck, Mail, ListChecks, GraduationCap, CalendarClock } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { PageBanner } from "@/components/PagePattern";
+import { pageBg } from "@/config/pageBackgrounds";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,14 +10,15 @@ import { COMPLETION_CONDITIONS, ISSUE_METHODS, STEPS, ISSUE_NOTES } from "@/page
 
 export default function StudentCertGuide() {
   return (
-    <DashboardLayout role="student">
-      <div className="space-y-8 min-w-0">
-        <header className="space-y-2">
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">발급 절차 안내</h1>
-          <p className="text-sm text-muted-foreground">
-            수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
-          </p>
-        </header>
+    <DashboardLayout role="student" contentClassName="flex-1 min-w-0 p-0">
+      <PageBanner
+        config={pageBg("certificate")}
+        eyebrow="CERTIFICATE"
+        title="발급 절차 안내"
+        description="수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다."
+      />
+
+      <div className="p-4 sm:p-6 lg:p-8 space-y-8 min-w-0">
 
         <section className="space-y-4">
           <h2 className="text-lg font-semibold">수료 조건 안내</h2>
