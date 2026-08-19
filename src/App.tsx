@@ -233,7 +233,7 @@ const App = () => (
               <Route path="/admin/invitations/logs" element={<AdminRoute><AdminInvitationLogs /></AdminRoute>} />
               <Route path="/admin/settings/sms" element={<AdminRoute><AdminSmsSettings /></AdminRoute>} />
 
-              {/* Cart & Checkout */}</ProtectedRoute>} />
+              {/* Checkout */}
               <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
               <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
               <Route path="/checkout/fail" element={<CheckoutFail />} />
