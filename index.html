@@ -82,64 +82,40 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif; }
     #root { min-height: 100vh; }
     #boot-skeleton { position: fixed; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 16px; background: #ffffff; z-index: 0; }
+      align-items: center; justify-content: center; gap: 18px; background: #faf6f0; z-index: 0; }
     #boot-skeleton .brand {
       font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 28px; font-weight: 800; font-style: italic;
-      letter-spacing: -0.01em; color: #1a1a2e;
+      font-size: 32px; font-weight: 800; letter-spacing: -0.02em;
       display: inline-flex;
     }
-    #boot-skeleton .brand .ch {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(8px);
-      animation: bootbrand-in 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    #boot-skeleton .brand .navy { color: #1a3a8c; }
+    #boot-skeleton .brand .orange { color: #e05a1e; }
+    #boot-skeleton .spinner {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 3px solid rgba(26, 58, 140, 0.15);
+      border-top-color: #1a3a8c;
+      animation: bootspin 0.9s linear infinite;
     }
-    @keyframes bootbrand-in {
-      0%   { opacity: 0; transform: translateY(8px); }
-      25%  { opacity: 1; transform: translateY(0); }
-      75%  { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-2px); }
+    @keyframes bootspin {
+      to { transform: rotate(360deg); }
     }
-    #boot-skeleton .bar { width: 200px; height: 1.5px; background: #f0f0f0; border-radius: 999px;
-      overflow: hidden; position: relative; }
-    /* Toss-style indeterminate: two overlapping bars with smooth easing for an organic flow */
-    #boot-skeleton .bar::before,
-    #boot-skeleton .bar::after { content: ""; position: absolute; top: 0; bottom: 0;
-      background: #1a1a1a; border-radius: 999px; will-change: left, right; }
-    #boot-skeleton .bar::before {
-      animation: bootbar-1 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    #boot-skeleton .label {
+      font-size: 14px; color: #6b7280; letter-spacing: 0.02em;
     }
-    #boot-skeleton .bar::after {
-      animation: bootbar-2 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
-    }
-    @keyframes bootbar-1 {
-      0%   { left: -35%; right: 100%; }
-      60%  { left: 100%; right: -90%; }
-      100% { left: 100%; right: -90%; }
-    }
-    @keyframes bootbar-2 {
-      0%   { left: -200%; right: 100%; }
-      60%  { left: 107%; right: -8%; }
-      100% { left: 107%; right: -8%; }
-    }
-    /* Hidden once React mounts and removes #boot-skeleton */
   </style>
-  <meta property="og:title" content="WEBHEADS —  이러닝플랫폼">
-  <meta name="twitter:title" content="WEBHEADS —  이러닝플랫폼">
-  <meta property="og:description" content="영상·HTML5 콘텐츠, 평가, 수료증, 다국어와 AI 기능까지 한 번에 제공하는 맞춤형 이러닝 플랫폼입니다.">
-  <meta name="twitter:description" content="영상·HTML5 콘텐츠, 평가, 수료증, 다국어와 AI 기능까지 한 번에 제공하는 맞춤형 이러닝 플랫폼입니다.">
 </head>
 
   <body>
     <div id="root"></div>
     <div id="boot-skeleton" aria-hidden="true">
-      <div class="brand" aria-label="WEBHEADS">
-        <span class="ch" style="animation-delay:0.00s">W</span><span class="ch" style="animation-delay:0.08s">E</span><span class="ch" style="animation-delay:0.16s">B</span><span class="ch" style="animation-delay:0.24s">H</span><span class="ch" style="animation-delay:0.32s">E</span><span class="ch" style="animation-delay:0.40s">A</span><span class="ch" style="animation-delay:0.48s">D</span><span class="ch" style="animation-delay:0.56s">S</span><span class="ch" style="animation-delay:0.64s">.</span>
+      <div class="brand" aria-label="festcert">
+        <span class="navy">fest</span><span class="orange">cert</span>
       </div>
-      <div class="bar"></div>
+      <div class="spinner"></div>
+      <div class="label">로딩 중</div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
+
     <script>
       window.addEventListener('error', function(e) {
         if (e.message && e.message.indexOf('module script') !== -1) {
