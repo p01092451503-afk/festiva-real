@@ -50,22 +50,21 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
   ].filter(Boolean) as string[];
 
   return (
-    <footer ref={ref} className="bg-navy-dark text-primary-foreground">
+    <footer ref={ref} className="bg-footer text-footer-foreground">
       <div className="max-w-6xl mx-auto px-4">
         {/* 상단: 공지사항 + 고객센터 */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 lg:gap-20 py-14 sm:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-12 lg:gap-24 py-14 sm:py-16">
           <div className="min-w-0">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-bold text-primary-foreground">공지사항</h2>
+              <h2 className="text-xl font-bold text-footer-foreground">공지사항</h2>
               <Link
                 to="/support"
-                className="inline-flex items-center gap-1 text-sm font-medium text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                className="text-sm font-semibold text-footer-foreground/80 hover:text-footer-foreground transition-colors"
               >
                 전체보기
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </div>
-            <ul className="mt-7 space-y-4">
+            <ul className="mt-8 space-y-4">
               {Array.isArray(notices) && notices.length > 0 ? (
                 notices.map((n: any) => (
                   <li key={n.id}>
@@ -73,11 +72,11 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                       to="/support"
                       className="flex items-center justify-between gap-6 group min-w-0"
                     >
-                      <span className="truncate text-base text-primary-foreground/85 group-hover:text-primary-foreground transition-colors">
+                      <span className="truncate text-sm text-footer-foreground/85 group-hover:text-footer-foreground transition-colors">
                         {n.is_pinned ? "[공지] " : ""}
                         {n.title}
                       </span>
-                      <span className="shrink-0 text-sm text-primary-foreground/45">
+                      <span className="shrink-0 text-sm text-footer-foreground/40">
                         {new Date(n.created_at)
                           .toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" })
                           .replace(/\.$/, "")}
@@ -86,36 +85,43 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                   </li>
                 ))
               ) : (
-                <li className="text-base text-primary-foreground/50">등록된 공지사항이 없습니다.</li>
+                <li className="text-sm text-footer-foreground/50">등록된 공지사항이 없습니다.</li>
               )}
             </ul>
           </div>
 
           <div className="min-w-0">
-            <h2 className="text-lg font-bold text-primary-foreground">고객센터</h2>
-            {s?.company_phone && (
+            <h2 className="text-xl font-bold text-footer-foreground">고객센터</h2>
+            {s?.company_phone ? (
               <a
                 href={`tel:${s.company_phone.replace(/[^0-9+]/g, "")}`}
-                className="mt-6 block text-3xl sm:text-4xl font-bold tracking-tight text-brand-orange hover:opacity-90 transition-opacity"
+                className="mt-7 block text-4xl font-bold tracking-tight text-brand-orange hover:opacity-90 transition-opacity"
               >
                 {s.company_phone}
               </a>
+            ) : (
+              <Link
+                to="/support?tab=inquiry"
+                className="mt-7 inline-flex items-center gap-2 rounded-full border border-footer-foreground/25 px-5 py-2.5 text-sm font-semibold leading-normal text-footer-foreground/90 hover:bg-footer-foreground/10 transition-colors"
+              >
+                1:1 문의하기
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
             )}
-            <div className="mt-5 space-y-1.5 text-sm text-primary-foreground/60 leading-relaxed">
-              {s?.hours_weekday && <p>{s.hours_weekday}</p>}
+            <div className="mt-4 space-y-1 text-[13px] text-footer-foreground/50 leading-relaxed">
+              {(s?.hours_weekday || s?.hours_weekend) && (
+                <p>
+                  {s?.hours_weekday}
+                  {s?.hours_weekday && (s?.hours_weekend || s?.hours_holiday) ? " " : ""}
+                  {[s?.hours_weekend, s?.hours_holiday].filter(Boolean).length > 0 &&
+                    `(${[s?.hours_weekend, s?.hours_holiday].filter(Boolean).join(", ")})`}
+                </p>
+              )}
               {s?.hours_lunch && <p>{s.hours_lunch}</p>}
-              {s?.hours_weekend && <p>{s.hours_weekend}</p>}
-              {s?.hours_holiday && <p>{s.hours_holiday}</p>}
             </div>
-            <Link
-              to="/support?tab=inquiry"
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 px-5 py-2.5 text-sm font-semibold leading-normal text-primary-foreground/90 hover:bg-primary-foreground/10 transition-colors"
-            >
-              1:1 문의하기
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </Link>
           </div>
         </div>
+
 
         {/* 하단: 사업자 정보 + 소셜 */}
         <div className="border-t border-primary-foreground/10 py-12">
