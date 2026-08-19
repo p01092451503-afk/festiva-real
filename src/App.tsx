@@ -147,6 +147,7 @@ const AdminModuleSettings = lazy(() => import("./pages/admin/ops/AdminModuleSett
 const BranchAdminRoute = lazy(() => import("./components/BranchAdminRoute"));
 const StudentPrograms = lazy(() => import("./pages/student/StudentPrograms"));
 const StudentCertificates = lazy(() => import("./pages/student/StudentCertificates"));
+const StudentCertGuide = lazy(() => import("./pages/student/StudentCertGuide"));
 const StudentEvidence = lazy(() => import("./pages/student/StudentEvidence"));
 const StudentSurveys = lazy(() => import("./pages/student/StudentSurveys"));
 const VerifyCertificate = lazy(() => import("./pages/public/VerifyCertificate"));
