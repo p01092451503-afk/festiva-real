@@ -19,9 +19,11 @@ const LoginVisualPanel = memo(({
   
   const effectiveBrandName = activePreset?.brand_name || brandName;
   const effectiveBgImage = activePreset?.login_bg_image_url || backgroundImage;
-  const displayTagline = activePreset?.brand_tagline || tagline || t("auth.heroTitle");
+  const displayTagline =
+    activePreset?.brand_tagline || tagline || "축제 기획부터 평가까지,\n실무로 증명하는 축제운영전문가";
   const topText = activePreset?.login_top_text || effectiveBrandName;
   const subtitle = activePreset?.login_subtitle ?? "축제운영전문가자격증 교육원";
+
   // Allow per-client accent. Falls back to brand violet.
   const accent = activePreset?.accent_hsl?.trim() || "223 69% 33%";
   const accentDeep = activePreset?.accent_hsl?.trim() || "224 72% 25%";
@@ -89,12 +91,19 @@ const LoginVisualPanel = memo(({
           </p>
         </div>
 
-        <div className="space-y-3">
-          <h2 className="text-4xl font-medium leading-snug whitespace-pre-line text-white drop-shadow-sm">
+        <div className="space-y-5 max-w-[30rem]">
+          <p className="text-sm font-semibold tracking-[0.2em] uppercase text-brand-orange">
+            Festival Operation Expert
+          </p>
+          <h2 className="text-4xl font-semibold whitespace-pre-line text-white drop-shadow-sm" style={{ lineHeight: 1.5 }}>
             {displayTagline}
           </h2>
-
+          <p className="text-base leading-relaxed text-white/80">
+            2급·1급 온라인 과정, 실무 문서 중심 커리큘럼, 수료 후 자격증 발급까지
+            한 곳에서 진행하는 축제운영전문가 교육 플랫폼입니다.
+          </p>
         </div>
+
       </div>
     </div>
   );
