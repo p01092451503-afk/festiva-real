@@ -438,16 +438,31 @@ const AdminVideos = () => {
                   <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{new Date(v.created_at).toLocaleDateString("ko")}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      {cdnUnlocked && (
-                        <>
-                          <Button variant="ghost" size="icon" onClick={() => copyUrl(v.video_url)} title={t("videoMgmt.copyUrl")}>
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" asChild title={t("videoMgmt.open")}>
-                            <a href={v.video_url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4" /></a>
-                          </Button>
-                        </>
+                      {getBunnyGuid(v) && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => syncOne(v)}
+                          disabled={syncingId === v.id || bulkSyncing}
+                          title="재생시간·용량 불러오기"
+                        >
+                          <RefreshCw className={`h-4 w-4 ${syncingId === v.id ? "animate-spin" : ""}`} />
+                        </Button>
                       )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => copyUrl(v.video_url)}
+                        title={getBunnyGuid(v) ? "동영상 링크(CDN) 복사" : t("videoMgmt.copyUrl")}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      {cdnUnlocked && (
+                        <Button variant="ghost" size="icon" asChild title={t("videoMgmt.open")}>
+                          <a href={v.video_url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-4 w-4" /></a>
+                        </Button>
+                      )}
+
                       <Button variant="ghost" size="icon" onClick={() => openEdit(v)} title={t("common.edit")}>
                         <Edit className="h-4 w-4" />
                       </Button>
