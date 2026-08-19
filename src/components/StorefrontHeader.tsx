@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ShoppingBag, Bell, LogOut, BookOpen, Receipt, Heart, Settings, ChevronDown, Menu, X, ImageIcon } from "lucide-react";
+import { Bell, LogOut, BookOpen, Receipt, Heart, Settings, ChevronDown, Menu, X, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -9,9 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/contexts/UserContext";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import NotificationBell from "@/components/NotificationBell";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
@@ -31,19 +29,6 @@ const StorefrontHeader = () => {
   const isAdmin = roles.includes("admin") || roles.includes("super_admin");
   const isEn = i18n.language?.startsWith("en");
   const logoUrl = siteSettings?.header_logo_url || activePreset?.logo_url;
-
-  const { data: cartCount = 0 } = useQuery({
-    queryKey: ["cart-count", user?.id],
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from("cart_items")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", user!.id);
-      if (error) throw error;
-      return count || 0;
-    },
-    enabled: !!user?.id,
-  });
 
   const initials = profile?.full_name
     ? profile.full_name.slice(0, 2)
@@ -119,15 +104,6 @@ const StorefrontHeader = () => {
         <div className="hidden md:flex items-center gap-3">
           {!user ? (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative h-11 w-11"
-                onClick={() => navigate("/auth")}
-                aria-label="장바구니"
-              >
-                <ShoppingBag className="h-6 w-6" />
-              </Button>
               <Button variant="ghost" size="default" className="text-base" onClick={() => navigate("/auth")}>
                 로그인
               </Button>
@@ -137,25 +113,6 @@ const StorefrontHeader = () => {
             </>
           ) : (
             <>
-              {/* Cart */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative h-11 w-11"
-                onClick={() => navigate("/cart")}
-                aria-label="장바구니"
-              >
-                <ShoppingBag className="h-6 w-6" />
-                {cartCount > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-5 min-w-5 px-1.5 text-[11px] flex items-center justify-center rounded-full"
-                  >
-                    {cartCount}
-                  </Badge>
-                )}
-              </Button>
-
               {/* Notifications */}
               <NotificationBell />
 
@@ -237,9 +194,6 @@ const StorefrontHeader = () => {
             </div>
           ) : (
             <div className="space-y-1 pt-2">
-              <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/cart"); setMobileOpen(false); }}>
-                <ShoppingBag className="h-5 w-5" />{t("common.cart")}{cartCount > 0 && ` (${cartCount})`}
-              </Button>
               <Button variant="ghost" size="default" className="w-full justify-start gap-2 text-base" onClick={() => { navigate("/student"); setMobileOpen(false); }}>
                 <BookOpen className="h-5 w-5" />{t("common.myClassroom")}
               </Button>
