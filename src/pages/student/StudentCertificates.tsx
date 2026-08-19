@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Navigate, useSearchParams, Link } from "react-router-dom";
 import { Award, Download, ShieldCheck, Truck } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { PageBanner } from "@/components/PagePattern";
-import { pageBg } from "@/config/pageBackgrounds";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
