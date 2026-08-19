@@ -55,7 +55,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
         {/* 상단: 공지사항 + 고객센터 */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 lg:gap-16 py-12 sm:py-14">
           <div className="min-w-0">
-            <div className="flex items-center justify-between gap-4">
+            <div className="space-y-2">
               <h2 className="text-lg font-bold text-primary-foreground">공지사항</h2>
               <Link
                 to="/support"
