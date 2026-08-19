@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { FullPageLoading } from "@/components/PageLoading";
 import { lazyWithRetry as lazy } from "@/lib/lazyWithRetry";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
