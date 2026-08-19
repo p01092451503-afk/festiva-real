@@ -260,6 +260,8 @@ const FAQS = [
 
 const About = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openOrg, setOpenOrg] = useState<string | null>(null);
+  const activeOrg = ORGS.find((o) => o.name === openOrg) ?? null;
   const raw = searchParams.get("tab") ?? "intro";
   const tab = TABS.some((t) => t.value === raw) ? raw : "intro";
 
