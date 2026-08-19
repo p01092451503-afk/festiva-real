@@ -226,11 +226,7 @@ const Auth = () => {
       }}
     >
       {/* Left - Visual Panel */}
-      <LoginVisualPanel
-        brandName="festcert"
-        tagline={t("auth.heroTitle")}
-        accentColor="223 69% 33%"
-      />
+      <LoginVisualPanel brandName="festcert" accentColor="223 69% 33%" />
 
       {/* Right - Form */}
       <div className="flex-1 flex items-start lg:items-center justify-center px-6 lg:px-16 py-10 lg:py-0 bg-white relative">
