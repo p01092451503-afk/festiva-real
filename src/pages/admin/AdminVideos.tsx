@@ -327,6 +327,11 @@ const AdminVideos = () => {
             {cdnUnlockButton}
             <BunnyImportDialog />
             <BunnyDurationSyncDialog />
+            <Button variant="outline" onClick={syncAll} disabled={bulkSyncing}>
+              <RefreshCw className={`h-4 w-4 mr-1 ${bulkSyncing ? "animate-spin" : ""}`} />
+              {bulkSyncing ? "불러오는 중..." : "재생시간·용량 불러오기"}
+            </Button>
+
             <Button
               variant="outline"
               onClick={() => {
