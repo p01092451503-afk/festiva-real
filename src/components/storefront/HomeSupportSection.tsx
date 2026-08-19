@@ -119,14 +119,14 @@ const HomeSupportSection = () => {
           <div className="mt-6 space-y-2">
             <Link
               to="/support?tab=inquiry"
-              className="flex items-center justify-center gap-2 rounded-2xl bg-brand-orange px-5 py-3.5 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              className="flex items-center justify-center gap-2 rounded-full bg-brand-orange px-5 py-3.5 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
               <MessageSquare className="w-4 h-4" aria-hidden="true" />
               1:1 문의하기
             </Link>
             <Link
               to="/support?tab=faq"
-              className="flex items-center justify-center gap-2 rounded-2xl border border-border px-5 py-3.5 text-base font-semibold text-navy transition-colors hover:bg-muted/50"
+              className="flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3.5 text-base font-semibold text-navy transition-colors hover:bg-muted/50"
             >
               <HelpCircle className="w-4 h-4" aria-hidden="true" />
               자주 묻는 질문

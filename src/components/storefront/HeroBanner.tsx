@@ -225,21 +225,21 @@ const HeroBanner = () => {
                       <div className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:mt-11">
                         <Link
                           to="/store/courses"
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-navy px-8 py-3.5 text-base font-semibold text-white shadow-lg transition hover:bg-navy-dark"
+                          className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-8 py-3.5 text-base font-semibold text-white shadow-lg transition hover:bg-navy-dark"
                         >
                           강의 안내 보기
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/student/certificates"
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-navy/15 bg-white/80 px-8 py-3.5 text-base font-semibold text-navy backdrop-blur-sm transition hover:bg-white"
+                          className="inline-flex items-center justify-center gap-2 rounded-full border border-navy/15 bg-white/80 px-8 py-3.5 text-base font-semibold text-navy backdrop-blur-sm transition hover:bg-white"
                         >
                           자격증 신청 및 발급
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/about?tab=system"
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-navy/20 px-8 py-3.5 text-base font-medium text-navy/85 transition hover:bg-white/60"
+                          className="inline-flex items-center justify-center gap-2 rounded-full border border-navy/20 px-8 py-3.5 text-base font-medium text-navy/85 transition hover:bg-white/60"
                         >
                           자격 제도 안내
                         </Link>

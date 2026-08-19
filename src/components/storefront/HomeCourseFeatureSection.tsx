@@ -94,7 +94,7 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
                   </div>
                   <Link
                     to={course ? `/store/courses/${course.id}` : "/store/courses"}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-orange px-5 py-3 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-orange px-5 py-3 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                   >
                     과정 보기
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />

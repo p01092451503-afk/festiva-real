@@ -21,7 +21,7 @@ const HomeCourseGuideCta = () => (
         </div>
         <Link
           to="/store/courses"
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-navy px-6 py-3 text-sm sm:text-base font-semibold text-white transition-opacity hover:opacity-90 shrink-0"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-sm sm:text-base font-semibold text-white transition-opacity hover:opacity-90 shrink-0"
         >
           강의 안내 보기
           <ArrowRight className="w-4 h-4" aria-hidden="true" />
