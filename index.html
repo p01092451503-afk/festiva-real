@@ -81,39 +81,60 @@
     html, body { margin: 0; padding: 0; background: #ffffff; color: #1a1a1a;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif; }
     #root { min-height: 100vh; }
-    #boot-skeleton { position: fixed; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 18px; background: #faf6f0; z-index: 0; }
-    #boot-skeleton .brand {
-      font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 32px; font-weight: 800; letter-spacing: -0.02em;
-      display: inline-flex;
+    #boot-skeleton { position: fixed; inset: 0; background: #ffffff; z-index: 0; overflow: hidden; }
+    #boot-skeleton .sk { background: #eef1f6; border-radius: 12px; position: relative; overflow: hidden; }
+    #boot-skeleton .sk::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0) 100%);
+      transform: translateX(-100%);
+      animation: bootshimmer 1.4s infinite;
     }
-    #boot-skeleton .brand .navy { color: #1a3a8c; }
-    #boot-skeleton .brand .orange { color: #e05a1e; }
-    #boot-skeleton .spinner {
-      width: 40px; height: 40px; border-radius: 50%;
-      border: 3px solid rgba(26, 58, 140, 0.15);
-      border-top-color: #1a3a8c;
-      animation: bootspin 0.9s linear infinite;
-    }
-    @keyframes bootspin {
-      to { transform: rotate(360deg); }
-    }
-    #boot-skeleton .label {
-      font-size: 14px; color: #6b7280; letter-spacing: 0.02em;
-    }
+    @keyframes bootshimmer { to { transform: translateX(100%); } }
+    #boot-skeleton .gnb { height: 72px; background: #1a3a8c; display: flex; align-items: center;
+      gap: 28px; padding: 0 clamp(16px, 6vw, 96px); }
+    #boot-skeleton .gnb .logo { width: 118px; height: 24px; background: rgba(255,255,255,0.28); border-radius: 6px; }
+    #boot-skeleton .gnb .nav { width: 74px; height: 14px; background: rgba(255,255,255,0.18); border-radius: 999px; }
+    #boot-skeleton .wrap { padding: clamp(32px, 5vw, 64px) clamp(16px, 6vw, 96px); max-width: 1280px; margin: 0 auto; }
+    #boot-skeleton .row { display: flex; gap: 32px; flex-wrap: wrap; }
+    #boot-skeleton .col { flex: 1 1 320px; min-width: 0; }
+    #boot-skeleton .visual { height: clamp(180px, 26vw, 320px); border-radius: 24px; margin-top: 40px; }
+    #boot-skeleton .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    #boot-skeleton .card { height: 220px; border-radius: 20px; }
   </style>
 </head>
 
   <body>
     <div id="root"></div>
     <div id="boot-skeleton" aria-hidden="true">
-      <div class="brand" aria-label="festcert">
-        <span class="navy">fest</span><span class="orange">cert</span>
+      <div class="gnb">
+        <div class="logo"></div>
+        <div class="nav"></div>
+        <div class="nav"></div>
+        <div class="nav"></div>
+        <div class="nav"></div>
       </div>
-      <div class="spinner"></div>
-      <div class="label">로딩 중</div>
+      <div class="wrap">
+        <div class="row">
+          <div class="col">
+            <div class="sk" style="width:96px;height:14px"></div>
+            <div class="sk" style="width:min(100%,520px);height:38px;margin-top:20px"></div>
+            <div class="sk" style="width:min(80%,420px);height:38px;margin-top:14px"></div>
+          </div>
+          <div class="col">
+            <div class="sk" style="width:100%;height:14px;margin-top:8px"></div>
+            <div class="sk" style="width:88%;height:14px;margin-top:12px"></div>
+            <div class="sk" style="width:60%;height:14px;margin-top:12px"></div>
+            <div class="sk" style="width:150px;height:44px;margin-top:24px;border-radius:999px"></div>
+          </div>
+        </div>
+        <div class="sk visual"></div>
+        <div class="cards">
+          <div class="sk card"></div>
+          <div class="sk card"></div>
+        </div>
+      </div>
     </div>
+
     <script type="module" src="/src/main.tsx"></script>
 
     <script>

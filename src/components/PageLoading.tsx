@@ -1,7 +1,7 @@
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PageLoadingProps {
-  /** Optional label under the spinner. Defaults to "로딩 중". */
+  /** Kept for API compatibility — used as the accessible loading label. */
   label?: string;
   /** Extra classes for the wrapper. */
   className?: string;
@@ -10,30 +10,43 @@ interface PageLoadingProps {
 }
 
 /**
- * Unified loading animation used across the app.
- * Replaces the previous skeleton placeholders: a single calm spinner
- * with a short "loading" label, so every page loads the same way.
+ * Unified loading placeholder used across the app.
+ * Renders a content-shaped skeleton (no spinner) so the layout does not jump
+ * once real data arrives.
  */
 const PageLoading = ({ label = "로딩 중", className = "", size = "md" }: PageLoadingProps) => {
-  const pad = size === "sm" ? "py-8" : size === "lg" ? "py-24" : "py-16";
-  const icon = size === "sm" ? "h-4 w-4" : size === "lg" ? "h-7 w-7" : "h-5 w-5";
+  const pad = size === "sm" ? "py-4" : size === "lg" ? "py-12" : "py-8";
+  const rows = size === "sm" ? 2 : size === "lg" ? 4 : 3;
+
   return (
     <div
       role="status"
       aria-live="polite"
       aria-busy="true"
-      className={`w-full flex flex-col items-center justify-center gap-3 ${pad} animate-fade-in ${className}`}
+      aria-label={label}
+      className={`w-full ${pad} animate-fade-in ${className}`}
     >
-      <Loader2 className={`${icon} animate-spin text-muted-foreground`} aria-hidden="true" />
-      <p className="text-xs sm:text-sm text-muted-foreground tracking-wide">{label}</p>
+      <span className="sr-only">{label}</span>
+      <div className="space-y-4">
+        <Skeleton className="h-4 w-24 rounded-full" />
+        <Skeleton className="h-8 w-2/3 max-w-md rounded-xl" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          {Array.from({ length: rows }).map((_, i) => (
+            <Skeleton key={i} className="h-32 rounded-2xl" />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 
-/** Full-viewport loading animation for route guards / lazy routes. */
+/** Full-viewport skeleton for route guards / lazy routes. */
 export const FullPageLoading = ({ label }: { label?: string }) => (
-  <div className="min-h-screen w-full flex items-center justify-center bg-background">
-    <PageLoading label={label} size="lg" />
+  <div className="min-h-screen w-full bg-background">
+    <div className="h-16 w-full bg-navy/90" />
+    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+      <PageLoading label={label} size="lg" />
+    </div>
   </div>
 );
 
