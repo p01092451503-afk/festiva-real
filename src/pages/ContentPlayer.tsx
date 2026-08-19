@@ -543,6 +543,46 @@ const ContentPlayer = () => {
     };
   }, [currentContent?.id, user?.id]);
 
+  // Bunny 인코딩 상태 폴링 — 인코딩 중이면 Bunny가 "Processing video" 화면을 보여주므로
+  // 우리 안내 화면으로 덮고, 완료되면 자동으로 플레이어를 노출한다.
+  useEffect(() => {
+    if (!currentContent || !user?.id) return;
+    const provider = getVideoProvider(currentContent);
+    const videoUrl = getVideoUrl(currentContent);
+    const guid = getBunnyGuid(currentContent, videoUrl);
+    if (!isBunny(currentContent, provider, videoUrl) || !guid) {
+      setBunnyEncoding(false);
+      return;
+    }
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const check = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("bunny-stream-info", {
+          body: { video_guid: guid },
+        });
+        if (cancelled) return;
+        if (error || data?.fallback) {
+          setBunnyEncoding(false);
+          return;
+        }
+        const status = Number(data?.status ?? 4);
+        const ready = status >= 3; // 3=재생 가능(부분), 4=완료, 5=해상도 최종
+        setBunnyEncoding(!ready);
+        if (!ready) timer = setTimeout(check, 15000);
+      } catch {
+        if (!cancelled) setBunnyEncoding(false);
+      }
+    };
+    check();
+
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
+  }, [currentContent?.id, user?.id]);
+
   const getVideoEmbed = (url: string | null, provider: string | null) => {
     if (!url && !currentContent?.bunny_video_guid) return null;
     if (url && isMangoboard(url)) return normalizeMangoboardUrl(url);
