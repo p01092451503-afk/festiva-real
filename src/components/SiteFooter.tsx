@@ -124,7 +124,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 {s?.hours_holiday && <p className="text-sm text-muted-foreground">{s.hours_holiday}</p>}
               </div>
               {s?.company_phone && (
-                <a href={`tel:${s.company_phone.replace(/[^0-9+]/g, "")}`} className="mt-5 flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity">
+                <a href={`tel:${s.company_phone.replace(/[^0-9+]/g, "")}`} className="mt-5 flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity">
                   <Phone className="h-3.5 w-3.5" />
                   {s.company_phone}
                 </a>
