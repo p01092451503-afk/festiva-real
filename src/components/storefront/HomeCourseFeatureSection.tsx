@@ -27,11 +27,11 @@ const LEVEL_SPECS = [
   },
 ];
 
-const FEATURES = [
-  { icon: MonitorPlay, label: "온라인 100% 수강", desc: "PC·모바일 어디서나 수강" },
-  { icon: FileText, label: "실무 문서 중심", desc: "기획서·운영계획서 직접 작성" },
-  { icon: ClipboardCheck, label: "자격 검정 연계", desc: "수강 후 검정 응시·자격 발급" },
-  { icon: ShieldCheck, label: "발급 이력 관리", desc: "온라인 자격 진위 확인 지원" },
+const STEPS = [
+  { step: "STEP 01", title: "축제 기획 기초", icon: FileText, desc: "개념·유형·기획 프로세스 이해" },
+  { step: "STEP 02", title: "실무 문서 작성", icon: ClipboardCheck, desc: "기획서·예산안 직접 작성" },
+  { step: "STEP 03", title: "운영 · 안전 실무", icon: MonitorPlay, desc: "운영계획·안전관리계획 심화" },
+  { step: "STEP 04", title: "자격 검정 · 발급", icon: ShieldCheck, desc: "검정 응시 후 자격증 발급" },
 ];
 
 type CourseLite = { id: string; title: string; price: number | null; sale_price: number | null };
@@ -41,42 +41,69 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
   const findCourse = (match: string) => courses.find((c) => c.title?.includes(match));
 
   return (
-    <section className="relative overflow-hidden border-y border-border/60 bg-muted/40 text-foreground">
-
-      <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-24">
-
-
+    <section className="bg-background text-foreground">
+      <div className="max-w-6xl mx-auto px-4 pt-20 sm:pt-24">
         <div className="text-center max-w-2xl mx-auto">
-          <span className="text-sm font-semibold tracking-[0.2em] text-brand-orange">CURRICULUM</span>
-          <h2 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-            축제 기획부터 평가까지, 단계별 실무 과정
+          <span className="text-sm font-semibold text-brand-orange">Curriculum</span>
+          <h2 className="mt-4 text-2xl sm:text-4xl font-bold tracking-tight leading-[1.5] text-foreground">
+            체계적인 4단계 학습 시스템
+            <br />
+            기획부터 자격 발급까지 완성하는 커리큘럼
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-muted-foreground leading-relaxed">
-            2급에서 기획의 기본기를, 1급에서 운영·안전·평가 실무를 완성합니다.
-          </p>
         </div>
+      </div>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 옅은 그라데이션 밴드 위의 STEP 카드 */}
+      <div className="mt-10 bg-gradient-to-b from-brand-blue-light/50 via-brand-blue-light/25 to-background">
+        <div className="max-w-6xl mx-auto px-4 py-14 sm:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-3 lg:items-stretch">
+            {STEPS.map(({ step, title, icon: Icon, desc }, idx) => (
+              <div key={step} className="relative flex items-stretch">
+                <div className="flex-1 rounded-2xl bg-background p-7 text-center shadow-[0_10px_30px_-18px_hsl(var(--navy)/0.35)]">
+                  <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground">{step}</p>
+                  <p className="mt-3 text-lg font-bold text-foreground">{title}</p>
+                  <span className="mt-6 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-blue-light/70">
+                    <Icon className="w-7 h-7 text-navy" aria-hidden="true" />
+                  </span>
+                  <p className="mt-5 text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                </div>
+                {idx < STEPS.length - 1 && (
+                  <span
+                    className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 items-center justify-center w-7 h-7 rounded-full bg-navy"
+                    aria-hidden="true"
+                  >
+                    <ArrowRight className="w-3.5 h-3.5 text-primary-foreground" />
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 급수별 과정 카드 */}
+      <div className="max-w-6xl mx-auto px-4 pb-20 sm:pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {LEVEL_SPECS.map((spec) => {
             const course = findCourse(spec.match);
             const price = course?.sale_price ?? course?.price ?? null;
             return (
               <article
                 key={spec.level}
-                className="rounded-2xl bg-background text-foreground border border-border p-7 flex flex-col"
+                className="rounded-3xl bg-background p-8 flex flex-col shadow-[0_18px_50px_-30px_hsl(var(--navy)/0.4)] ring-1 ring-border/60"
               >
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex items-center justify-center rounded-lg bg-navy px-3 py-1.5 text-base font-bold text-primary-foreground">
+                  <span className="inline-flex items-center justify-center rounded-full bg-navy px-4 py-1.5 text-sm font-bold text-primary-foreground">
                     {spec.level}
                   </span>
                   <span className="text-base font-semibold text-brand-blue">{spec.keyword}</span>
                 </div>
-                <h3 className="mt-4 text-xl sm:text-2xl font-bold tracking-tight">
+                <h3 className="mt-5 text-xl sm:text-2xl font-bold tracking-tight leading-snug">
                   축제운영전문가 {spec.level}
                 </h3>
-                <p className="mt-2 text-base text-muted-foreground leading-relaxed">{spec.summary}</p>
+                <p className="mt-3 text-base text-muted-foreground leading-relaxed">{spec.summary}</p>
 
-                <ul className="mt-5 space-y-2.5 border-t border-border pt-5">
+                <ul className="mt-6 space-y-3 border-t border-border/70 pt-6">
                   {spec.points.map((p) => (
                     <li key={p} className="flex gap-2.5 text-base text-foreground/85 leading-relaxed">
                       <span className="mt-2 w-1.5 h-1.5 rounded-full bg-brand-orange shrink-0" aria-hidden="true" />
@@ -85,7 +112,7 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
                   ))}
                 </ul>
 
-                <div className="mt-6 pt-5 border-t border-border flex items-end justify-between gap-4">
+                <div className="mt-auto pt-6 flex items-end justify-between gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">교재 포함 수강료</p>
                     <p className="text-2xl font-bold tracking-tight">
@@ -94,7 +121,7 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
                   </div>
                   <Link
                     to={course ? `/store/courses/${course.id}` : "/store/courses"}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-orange px-5 py-3 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-orange px-6 py-3 text-base font-semibold leading-normal text-primary-foreground transition-opacity hover:opacity-90"
                   >
                     과정 보기
                     <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -103,16 +130,6 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
               </article>
             );
           })}
-        </div>
-
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {FEATURES.map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="rounded-xl border border-border bg-background p-5 shadow-sm">
-              <Icon className="w-5 h-5 text-brand-orange" aria-hidden="true" />
-              <p className="mt-3 text-base font-semibold text-foreground">{label}</p>
-              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{desc}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>

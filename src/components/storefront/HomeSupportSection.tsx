@@ -56,7 +56,7 @@ const HomeSupportSection = () => {
       <div className="max-w-6xl mx-auto px-4 py-20 sm:py-24 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* 공지 / FAQ 탭 */}
-        <div className="lg:col-span-2 rounded-2xl border border-border bg-background overflow-hidden">
+        <div className="lg:col-span-2 rounded-3xl bg-background overflow-hidden shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60">
           <div className="grid grid-cols-2" role="tablist" aria-label="공지사항 및 자주 묻는 질문">
             {(
               [
@@ -70,10 +70,10 @@ const HomeSupportSection = () => {
                 role="tab"
                 aria-selected={tab === t.key}
                 onClick={() => setTab(t.key)}
-                className={`py-4 text-base font-semibold transition-colors ${
+                className={`py-5 text-base font-semibold transition-colors border-b-2 ${
                   tab === t.key
-                    ? "bg-navy text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:text-navy border-b border-border"
+                    ? "border-brand-orange text-navy"
+                    : "border-border/60 text-muted-foreground hover:text-navy"
                 }`}
               >
                 {t.label}
@@ -83,7 +83,7 @@ const HomeSupportSection = () => {
 
           <ul>
             {items.map((item) => (
-              <li key={item.id} className="border-b border-border last:border-b-0">
+              <li key={item.id} className="border-b border-border/60 last:border-b-0">
                 <Link
                   to={tab === "notice" ? "/support" : "/support?tab=faq"}
                   className="flex items-center justify-between gap-4 px-6 py-4 hover:bg-muted/40 transition-colors"
@@ -104,7 +104,7 @@ const HomeSupportSection = () => {
         </div>
 
         {/* 학습 지원 안내 */}
-        <div className="rounded-2xl border border-border bg-background p-7 text-center flex flex-col">
+        <div className="rounded-3xl bg-brand-blue-light/40 p-8 text-center flex flex-col ring-1 ring-border/60">
           <p className="text-base font-semibold text-muted-foreground">학습운영 · 문의 안내</p>
           <p className="mt-3 text-2xl font-bold tracking-tight text-navy">1:1 온라인 문의</p>
           <div className="mt-4 space-y-1.5 text-base text-muted-foreground">
@@ -126,7 +126,7 @@ const HomeSupportSection = () => {
             </Link>
             <Link
               to="/support?tab=faq"
-              className="flex items-center justify-center gap-2 rounded-full border border-border px-5 py-3.5 text-base font-semibold text-navy transition-colors hover:bg-muted/50"
+              className="flex items-center justify-center gap-2 rounded-full border border-navy/25 bg-background px-5 py-3.5 text-base font-semibold text-navy transition-colors hover:bg-muted/50"
             >
               <HelpCircle className="w-4 h-4" aria-hidden="true" />
               자주 묻는 질문
