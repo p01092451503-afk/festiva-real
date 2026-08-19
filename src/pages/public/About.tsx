@@ -353,28 +353,59 @@ const About = () => {
 
             <section className="space-y-5">
               <h3 className="text-2xl font-bold">운영 기관</h3>
+              <p className="text-base text-muted-foreground">카드를 클릭하면 기관 상세 소개를 확인할 수 있습니다.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {ORGS.map((o) => (
-                  <Card key={o.name} className="border-border/70">
-                    <CardContent className="p-7 space-y-4">
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-navy/5 text-navy">
-                          <Building2 className="w-5 h-5" aria-hidden="true" />
+                  <button
+                    key={o.name}
+                    type="button"
+                    onClick={() => setOpenOrg(o.name)}
+                    className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+                    aria-label={`${o.name} 상세 소개 보기`}
+                  >
+                    <Card className="border-border/70 h-full hover:shadow-md hover:-translate-y-0.5 transition-all">
+                      <CardContent className="p-7 space-y-4">
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-navy/5 text-navy">
+                            <Building2 className="w-5 h-5" aria-hidden="true" />
+                          </span>
+                          <p className="text-xl font-bold text-navy min-w-0">{o.name}</p>
+                        </div>
+                        <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
+                          {o.lines.map((l) => (
+                            <li key={l} className="flex items-start gap-2">
+                              <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
+                              <span className="min-w-0">{l}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-orange">
+                          상세 소개 보기 <ArrowRight className="w-4 h-4" aria-hidden="true" />
                         </span>
-                        <p className="text-xl font-bold text-navy min-w-0">{o.name}</p>
-                      </div>
-                      <ul className="text-base text-muted-foreground leading-relaxed space-y-2">
-                        {o.lines.map((l) => (
-                          <li key={l} className="flex items-start gap-2">
-                            <Check className="w-4 h-4 mt-1.5 text-brand-blue shrink-0" aria-hidden="true" />
-                            <span className="min-w-0">{l}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </button>
                 ))}
               </div>
+
+              <Dialog open={!!openOrg} onOpenChange={(next) => !next && setOpenOrg(null)}>
+                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+                  {activeOrg && (
+                    <>
+                      <DialogHeader>
+                        <DialogTitle className="text-2xl text-navy">{activeOrg.detail.title}</DialogTitle>
+                        <DialogDescription className="text-base">{activeOrg.detail.subtitle}</DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        {activeOrg.detail.paragraphs.map((p, i) => (
+                          <p key={i} className="text-base text-muted-foreground leading-relaxed">{p}</p>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </DialogContent>
+              </Dialog>
+
             </section>
 
             <Card className="bg-brand-blue-light border-navy/10">
