@@ -245,7 +245,7 @@ const StorefrontCatalog = () => {
         containerClassName="max-w-6xl"
       />
 
-      <main className="max-w-6xl mx-auto px-4 py-16 sm:py-20 space-y-20">
+      <main className="max-w-6xl mx-auto px-4 pt-16 sm:pt-20 pb-24 sm:pb-32 space-y-20">
         {GUIDES.map((g, idx) => {
           const courseId = courseByLevel[g.level];
           const isEnrolled = courseId ? enrolledIds.has(courseId) : false;
