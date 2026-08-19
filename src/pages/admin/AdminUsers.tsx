@@ -57,7 +57,8 @@ const AdminUsers = () => {
   const queryClient = useQueryClient();
   const isEn = i18n.language?.startsWith("en");
   const { data: siteSettings } = useSiteSettings();
-  const teacherRoleEnabled = siteSettings?.teacher_role_enabled !== false;
+  // 강사 역할은 이 고객사에서 사용하지 않으므로 UI에서 항상 숨긴다.
+  const teacherRoleEnabled = false;
 
   const roleLabel: Record<(typeof ROLE_PRIORITY)[number], { text: string; className: string }> = {
     super_admin: { text: t("roles.superAdminLabel", "슈퍼관리자"), className: "text-primary bg-primary/10" },
