@@ -218,7 +218,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
           children: [
             { navKey: "student.certIssued", label: t("nav.certIssued", "발급 신청·내역"), href: "/student/certificates", icon: Award },
             { navKey: "student.certShipping", label: t("nav.certShipping", "배송 현황"), href: "/student/certificates?tab=shipping", icon: Truck },
-            { navKey: "student.certGuide", label: t("nav.certGuide", "발급 절차 안내"), href: "/about?tab=certificate", icon: FileText },
+            { navKey: "student.certGuide", label: t("nav.certGuide", "발급 절차 안내"), href: "/student/cert-guide", icon: FileText },
           ].filter((i) => !isHidden(i.navKey)),
         } as NavItem]
       : []),

@@ -147,6 +147,7 @@ const AdminModuleSettings = lazy(() => import("./pages/admin/ops/AdminModuleSett
 const BranchAdminRoute = lazy(() => import("./components/BranchAdminRoute"));
 const StudentPrograms = lazy(() => import("./pages/student/StudentPrograms"));
 const StudentCertificates = lazy(() => import("./pages/student/StudentCertificates"));
+const StudentCertGuide = lazy(() => import("./pages/student/StudentCertGuide"));
 const StudentEvidence = lazy(() => import("./pages/student/StudentEvidence"));
 const StudentSurveys = lazy(() => import("./pages/student/StudentSurveys"));
 const VerifyCertificate = lazy(() => import("./pages/public/VerifyCertificate"));
@@ -270,6 +271,7 @@ const App = () => (
               <Route path="/articles/:id" element={<ProtectedRoute><StudentArticleDetail /></ProtectedRoute>} />
               <Route path="/student/programs" element={<ProtectedRoute><StudentPrograms /></ProtectedRoute>} />
               <Route path="/student/certificates" element={<ProtectedRoute><FeatureGate module="certificates_ops"><StudentCertificates /></FeatureGate></ProtectedRoute>} />
+              <Route path="/student/cert-guide" element={<ProtectedRoute><FeatureGate module="certificates_ops"><StudentCertGuide /></FeatureGate></ProtectedRoute>} />
               <Route path="/student/evidence" element={<ProtectedRoute><FeatureGate module="evidence"><StudentEvidence /></FeatureGate></ProtectedRoute>} />
               <Route path="/student/surveys" element={<ProtectedRoute><FeatureGate module="surveys_ops"><StudentSurveys /></FeatureGate></ProtectedRoute>} />
               <Route path="/verify/cert/:code" element={<VerifyCertificate />} />
