@@ -78,22 +78,15 @@ export default function StudentCertificates() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6 min-w-0">
-        <header className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Award className="w-6 h-6 text-muted-foreground" />
-            <h1 className="text-xl sm:text-2xl font-semibold">자격증 신청 및 발급</h1>
-          </div>
-          <p className="text-muted-foreground mt-1">
-            발급된 자격증·수료증을 다운로드하고 검증 링크를 공유할 수 있습니다. 발급 절차와 수료 조건은{" "}
-            <Link to="/about?tab=certificate" className="underline underline-offset-2">
-              교육원 소개 &gt; 발급 안내
-            </Link>
-            에서 확인하세요.
-          </p>
-        </header>
+    <DashboardLayout contentClassName="flex-1 min-w-0 p-0">
+      <PageBanner
+        config={pageBg("certificate")}
+        eyebrow="CERTIFICATE"
+        title="자격증 신청 및 발급"
+        description="발급된 자격증·수료증을 다운로드하고 검증 링크를 공유할 수 있습니다. 발급 절차와 수료 조건은 교육원 소개 &gt; 발급 안내에서 확인하세요."
+      />
 
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 min-w-0">
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
           <TabsList>
             <TabsTrigger value="apply">발급 신청</TabsTrigger>
