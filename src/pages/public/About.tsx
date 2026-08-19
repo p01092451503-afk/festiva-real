@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SectionHeading from "@/components/storefront/SectionHeading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -292,11 +293,11 @@ const About = () => {
 
 
       {/* Tabs */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-10 min-w-0">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-14 sm:py-16 min-w-0">
         <Tabs value={tab} onValueChange={setTab} className="min-w-0">
-          <TabsList className="flex-wrap h-auto p-1.5 gap-1">
+          <TabsList className="flex-wrap h-auto rounded-full bg-muted/60 p-1.5 gap-1">
             {TABS.map((t) => (
-              <TabsTrigger key={t.value} value={t.value} className="gap-2 text-base px-5 py-2.5">
+              <TabsTrigger key={t.value} value={t.value} className="gap-2 text-base px-6 py-2.5 rounded-full data-[state=active]:bg-navy data-[state=active]:text-white data-[state=active]:shadow-sm">
                 <t.icon className="w-5 h-5" aria-hidden="true" />
                 {t.label}
               </TabsTrigger>
@@ -305,16 +306,15 @@ const About = () => {
 
           {/* 교육원 소개 */}
           <TabsContent value="intro" className="mt-10 space-y-14">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">크리에이티브쉐이크 부설 평생교육원</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영
-              </p>
-            </section>
+            <SectionHeading
+              label="About festcert"
+              title={<>축제 현장의 언어로 가르치는<br />축제운영전문가 교육원</>}
+              description="언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영"
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {HIGHLIGHTS.map((h) => (
-                <Card key={h.title} className="border-border/70 hover:shadow-md transition-shadow">
+                <Card key={h.title} className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60 transition-shadow hover:shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.5)]">
                   <CardContent className="p-7 space-y-4">
                     <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-blue-light text-navy">
                       <h.icon className="w-6 h-6" aria-hidden="true" />
@@ -327,7 +327,7 @@ const About = () => {
             </div>
 
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold flex items-center gap-2">
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4] flex items-center gap-2">
                 <Users2 className="w-6 h-6 text-brand-orange" aria-hidden="true" /> 이런 분들께 추천합니다
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -341,7 +341,7 @@ const About = () => {
             </section>
 
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold">학회 연혁</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">학회 연혁</h3>
               <p className="text-base text-muted-foreground">사단법인 마이스교육학회 설립 및 운영 이력</p>
               <ol className="relative pl-6 sm:pl-8 border-l-2 border-brand-blue-light space-y-7">
                 {HISTORY.map((h) => (
@@ -355,7 +355,7 @@ const About = () => {
             </section>
 
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold">운영 기관</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">운영 기관</h3>
               <p className="text-base text-muted-foreground">카드를 클릭하면 기관 상세 소개를 확인할 수 있습니다.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {ORGS.map((o) => (
@@ -366,7 +366,7 @@ const About = () => {
                     className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
                     aria-label={`${o.name} 상세 소개 보기`}
                   >
-                    <Card className="border-border/70 h-full hover:shadow-md hover:-translate-y-0.5 transition-all">
+                    <Card className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60 h-full hover:-translate-y-0.5 transition-all">
                       <CardContent className="p-7 space-y-4">
                         <div className="flex items-center gap-3">
                           <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-navy/5 text-navy">
@@ -467,7 +467,7 @@ const About = () => {
 
             </section>
 
-            <Card className="bg-brand-blue-light border-navy/10">
+            <Card className="border-0 rounded-3xl bg-brand-blue-light/70 ring-1 ring-navy/10">
               <CardContent className="p-7 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
                 <div className="min-w-0">
                   <p className="text-xl font-bold text-navy">어떤 과정부터 시작해야 할지 모르겠다면?</p>
@@ -482,17 +482,15 @@ const About = () => {
 
           {/* 자격 제도 */}
           <TabsContent value="system" className="mt-10 space-y-14">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자격 제도</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성됩니다.
-                자격은 2급(기초)과 1급(심화)으로 나뉩니다.
-              </p>
-            </section>
+            <SectionHeading
+              label="Qualification"
+              title={<>2급에서 1급까지<br />단계별로 설계된 자격 제도</>}
+              description="개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성되며 자격은 2급(기초)과 1급(심화)으로 나뉩니다."
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {LEVELS.map((l) => (
-                <Card key={l.level} className="border-border/70 overflow-hidden">
+                <Card key={l.level} className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60 overflow-hidden">
                   <div className="h-1.5 bg-navy" aria-hidden="true" />
                   <CardContent className="p-7 space-y-5">
                     <div className="flex items-center gap-3 flex-wrap">
@@ -525,7 +523,7 @@ const About = () => {
             </div>
 
             {/* 1급 수강 전 필수 확인 */}
-            <Card className="border-brand-orange/50 bg-brand-orange/5">
+            <Card className="border-0 rounded-3xl bg-brand-orange/5 ring-1 ring-brand-orange/30">
               <CardContent className="p-7 flex flex-col sm:flex-row gap-5">
                 <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-orange/15 text-brand-orange shrink-0">
                   <AlertTriangle className="w-6 h-6" aria-hidden="true" />
@@ -544,13 +542,13 @@ const About = () => {
             {/* 커리큘럼 */}
             {CURRICULUM.map((c) => (
               <section key={c.level} className="space-y-6">
-                <h3 className="text-2xl font-bold flex items-center gap-2">
+                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4] flex items-center gap-2">
                   <ListChecks className="w-6 h-6 text-brand-orange" aria-hidden="true" />
                   축제운영전문가 {c.level} 커리큘럼
                 </h3>
                 <div className="space-y-5">
                   {c.subjects.map((s) => (
-                    <Card key={s.title} className="border-border/70">
+                    <Card key={s.title} className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60">
                       <CardContent className="p-7 space-y-4">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                           <p className="text-xl font-bold text-navy min-w-0">{s.title}</p>
@@ -572,7 +570,7 @@ const About = () => {
                   ))}
                 </div>
 
-                <Card className="border-border/70 bg-muted/30">
+                <Card className="border-0 rounded-3xl bg-muted/40 ring-1 ring-border/60">
                   <CardContent className="p-7 space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                       <p className="text-xl font-bold flex items-center gap-2 min-w-0">
@@ -604,10 +602,10 @@ const About = () => {
 
             {/* 강사 소개 */}
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold">강사 소개</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">강사 소개</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {INSTRUCTORS.map((i) => (
-                  <Card key={i.name} className="border-border/70 hover:shadow-md transition-shadow">
+                  <Card key={i.name} className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60 transition-shadow hover:shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.5)]">
                     <CardContent className="p-7 space-y-3">
                       <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-blue-light text-navy">
                         <UserRound className="w-7 h-7" aria-hidden="true" />
@@ -631,18 +629,17 @@ const About = () => {
 
           {/* 발급 안내 */}
           <TabsContent value="certificate" className="mt-10 space-y-14">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자격증 발급 안내</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
-              </p>
-            </section>
+            <SectionHeading
+              label="Certificate"
+              title={<>수료가 확인되면<br />PDF와 실물 자격증이 함께 발급됩니다</>}
+              description="수료 조건을 충족한 뒤 신청할 수 있으며, PDF는 이메일로 3~5영업일 내 발송되고 실물은 순차 배송됩니다."
+            />
 
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold">수료 조건 안내</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">수료 조건 안내</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {COMPLETION_CONDITIONS.map((c) => (
-                  <Card key={c.label} className="border-border/70 text-center">
+                  <Card key={c.label} className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60 text-center">
                     <CardContent className="p-7 space-y-3">
                       <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-blue-light text-navy mx-auto">
                         <c.icon className="w-6 h-6" aria-hidden="true" />
@@ -657,10 +654,10 @@ const About = () => {
             </section>
 
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold">발급 방법 — PDF + 실물 동시 발급</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">발급 방법 — PDF + 실물 동시 발급</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {ISSUE_METHODS.map((m) => (
-                  <Card key={m.title} className="border-border/70">
+                  <Card key={m.title} className="border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60">
                     <CardContent className="p-7 space-y-4">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
@@ -686,11 +683,11 @@ const About = () => {
             </section>
 
             <section className="space-y-5">
-              <h3 className="text-2xl font-bold">수강부터 발급까지</h3>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">수강부터 발급까지</h3>
               <ol className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {STEPS.map((s) => (
                   <li key={s.step}>
-                    <Card className="h-full border-border/70 shadow-sm">
+                    <Card className="h-full border-0 rounded-3xl bg-background shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] ring-1 ring-border/60">
                       <CardContent className="p-7 space-y-3">
                         <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-navy text-sm font-bold text-white shadow-sm">{s.step}</span>
                         <h4 className="text-xl font-bold text-navy">{s.title}</h4>
@@ -702,7 +699,7 @@ const About = () => {
               </ol>
             </section>
 
-            <Card className="border-border/70 bg-muted/30">
+            <Card className="border-0 rounded-3xl bg-muted/40 ring-1 ring-border/60">
               <CardContent className="p-7 flex flex-col sm:flex-row gap-5">
                 <span className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-navy/5 text-navy shrink-0">
                   <FileCheck2 className="w-6 h-6" aria-hidden="true" />
@@ -721,7 +718,7 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-brand-blue-light border-navy/10">
+            <Card className="border-0 rounded-3xl bg-brand-blue-light/70 ring-1 ring-navy/10">
               <CardContent className="p-7 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
                 <div className="min-w-0">
                   <p className="text-xl font-bold text-navy">이미 수료하셨나요?</p>
@@ -736,19 +733,18 @@ const About = () => {
 
           {/* FAQ */}
           <TabsContent value="faq" className="mt-10 space-y-8">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자주 묻는 질문</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                찾는 답이 없다면 학습운영·문의의 1:1 문의 게시판으로 남겨 주세요.
-              </p>
-            </section>
+            <SectionHeading
+              label="FAQ"
+              title={<>학습 전에 가장 많이<br />물어보신 질문들</>}
+              description="찾는 답이 없다면 학습운영·문의의 1:1 문의 게시판으로 남겨 주세요. 평일 09:00~18:00 · 24시간 내 답변드립니다."
+            />
 
             <Accordion type="single" collapsible className="space-y-4">
               {FAQS.map((f, i) => (
                 <AccordionItem
                   key={f.q}
                   value={`faq-${i}`}
-                  className="border border-border/70 rounded-xl px-6 bg-card data-[state=open]:bg-brand-blue-light/40"
+                  className="border-0 rounded-2xl px-6 bg-background ring-1 ring-border/60 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] data-[state=open]:ring-navy/20"
                 >
                   <AccordionTrigger className="text-left text-lg font-semibold hover:no-underline py-5">
                     <span className="flex items-start gap-3 min-w-0">
