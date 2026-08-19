@@ -182,7 +182,7 @@ const SaleStatusCta = ({ courseId, productId, info, children, className }: SaleS
           )}
         </div>
         <Button
-          className="w-full h-12 text-base rounded-xl font-bold"
+          className="w-full h-12 text-base rounded-full font-bold"
           variant={alertState?.mine ? "outline" : "default"}
           onClick={() => toggleAlert.mutate()}
           disabled={toggleAlert.isPending}
@@ -204,7 +204,7 @@ const SaleStatusCta = ({ courseId, productId, info, children, className }: SaleS
   // closed / sold_out
   return (
     <div className={cn("space-y-2", className)}>
-      <Button className="w-full h-12 text-base rounded-xl font-bold" disabled>
+      <Button className="w-full h-12 text-base rounded-full font-bold" disabled>
         {saleCtaLabel(status)}
       </Button>
       <p className="text-xs text-muted-foreground text-center">{SALE_STATUS_META[status].desc}</p>
