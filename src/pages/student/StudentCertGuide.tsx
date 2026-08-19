@@ -115,7 +115,6 @@ export default function StudentCertGuide() {
           </CardContent>
         </Card>
       </div>
-      </div>
     </DashboardLayout>
   );
 }
