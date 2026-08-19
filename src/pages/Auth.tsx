@@ -242,7 +242,7 @@ const Auth = () => {
               {activePreset.login_form_brand_name || activePreset.brand_name}
             </div>
           ) : (
-            <div className="h-[2.6rem] flex items-baseline justify-center text-3xl font-bold tracking-tight">
+            <div className="h-[3.9rem] flex items-baseline justify-center text-5xl font-bold tracking-tight">
               <span className="text-navy">fest</span>
               <span className="text-brand-orange">cert</span>
             </div>
