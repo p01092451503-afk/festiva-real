@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { FullPageLoading } from "@/components/PageLoading";
 import { lazyWithRetry as lazy } from "@/lib/lazyWithRetry";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -18,7 +19,7 @@ import RouteReporter from "@/components/RouteReporter";
 import FeatureGate from "@/components/ops/FeatureGate";
 
 // Skeleton loading fallback (no spinner)
-const PageLoader = () => null;
+const PageLoader = () => <FullPageLoading />;
 
 // ── Lazy-loaded pages ──────────────────────────────────
 const RoleBasedRedirect = lazy(() => import("@/components/RoleBasedRedirect"));
