@@ -9,7 +9,7 @@ import PageLoading, { FullPageLoading } from "@/components/PageLoading";
  */
 
 /** Route transitions render nothing (no skeleton/spinner flash). */
-export const FullScreenSkeleton = () => null;
+export const FullScreenSkeleton = () => <FullPageLoading />;
 
 
 /** Compact in-page loader. */

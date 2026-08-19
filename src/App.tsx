@@ -18,7 +18,7 @@ import RouteReporter from "@/components/RouteReporter";
 import FeatureGate from "@/components/ops/FeatureGate";
 
 // Skeleton loading fallback (no spinner)
-const PageLoader = () => null;
+const PageLoader = () => <FullPageLoading />;
 
 // ── Lazy-loaded pages ──────────────────────────────────
 const RoleBasedRedirect = lazy(() => import("@/components/RoleBasedRedirect"));
