@@ -251,7 +251,7 @@ const StorefrontCatalog = () => {
           return (
             <section key={g.level} id={`level-${g.level === "2급" ? 2 : 1}`} className="scroll-mt-28">
               {/* 헤더 */}
-              <div className="rounded-3xl border border-border/60 bg-card overflow-hidden">
+              <div className="rounded-[2rem] bg-background overflow-hidden ring-1 ring-border/60 shadow-[0_24px_70px_-40px_hsl(var(--navy)/0.45)]">
                 <div className="bg-navy px-6 sm:px-10 py-14 sm:py-16 text-white text-center">
                   <p className="text-sm tracking-[0.2em] text-white/60 uppercase">
                     STEP {idx + 1} · {g.badge}
@@ -329,7 +329,7 @@ const StorefrontCatalog = () => {
                     </h3>
                     <div className="mt-5 space-y-5">
                       {g.subjects.map((s) => (
-                        <div key={s.title} className="rounded-2xl border border-border/60 overflow-hidden">
+                        <div key={s.title} className="rounded-2xl ring-1 ring-border/60 overflow-hidden">
                           <div className="flex flex-wrap items-baseline justify-between gap-2 bg-muted/50 px-5 py-3.5">
                             <p className="font-semibold text-foreground">{s.title}</p>
                             <p className="text-xs text-muted-foreground">{s.meta}</p>
@@ -352,7 +352,7 @@ const StorefrontCatalog = () => {
 
                   {/* 수강료 + 강사 */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="rounded-2xl border border-border/60 p-6">
+                    <div className="rounded-2xl ring-1 ring-border/60 p-6">
                       <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
                         <Receipt className="h-5 w-5 text-navy" aria-hidden="true" />
                         수강료
@@ -379,7 +379,7 @@ const StorefrontCatalog = () => {
                       </Button>
                     </div>
 
-                    <div className="rounded-2xl border border-border/60 p-6">
+                    <div className="rounded-2xl ring-1 ring-border/60 p-6">
                       <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
                         <Users className="h-5 w-5 text-navy" aria-hidden="true" />
                         강사 소개
@@ -399,7 +399,7 @@ const StorefrontCatalog = () => {
                   </div>
 
                   {/* 교재 */}
-                  <div className="rounded-2xl bg-muted/40 border border-border/60 p-6 sm:p-8">
+                  <div className="rounded-2xl bg-muted/40 ring-1 ring-border/60 p-6 sm:p-8">
                     <h3 className="flex items-center gap-2 text-lg font-bold text-foreground">
                       <BookOpen className="h-5 w-5 text-navy" aria-hidden="true" />
                       교재 안내
@@ -426,7 +426,7 @@ const StorefrontCatalog = () => {
                   </div>
 
                   {/* 하단 CTA */}
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl bg-navy/5 border border-navy/10 p-6">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl bg-brand-blue-light/60 ring-1 ring-navy/10 p-6">
                     <p className="flex items-center gap-2 text-sm text-foreground/80">
                       <CalendarClock className="h-4 w-4 text-navy" aria-hidden="true" />
                       개강일은 매월 1일이며, 신청 즉시 학습을 시작할 수 있습니다.
