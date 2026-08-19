@@ -124,7 +124,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
 
 
         {/* 하단: 사업자 정보 + 소셜 */}
-        <div className="border-t border-primary-foreground/10 py-12">
+        <div className="border-t border-footer-foreground/10 py-12">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
             <div className="min-w-0 space-y-5">
               {logo ? (
@@ -137,14 +137,14 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 />
               ) : (
                 <span className="flex items-baseline text-3xl font-bold tracking-tight">
-                  <span className="text-primary-foreground">fest</span>
+                  <span className="text-footer-foreground">fest</span>
                   <span className="text-brand-orange">cert</span>
                 </span>
               )}
 
               <div className="space-y-2.5">
                 {infoLines.map((line) => (
-                  <p key={line} className="text-sm text-primary-foreground/55 leading-relaxed break-words">
+                  <p key={line} className="text-sm text-footer-foreground/55 leading-relaxed break-words">
                     {line}
                   </p>
                 ))}
@@ -154,7 +154,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 <button
                   type="button"
                   onClick={() => setPrivacyOpen(true)}
-                  className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                  className="text-sm text-footer-foreground/70 hover:text-footer-foreground transition-colors"
                 >
                   개인정보처리방침
                 </button>
@@ -166,7 +166,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                       href={item.url}
                       target={item.open_in_new_tab ? "_blank" : undefined}
                       rel="noopener noreferrer"
-                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                      className="text-sm text-footer-foreground/70 hover:text-footer-foreground transition-colors"
                     >
                       {item.label}
                     </a>
@@ -174,7 +174,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                     <Link
                       key={item.id}
                       to={item.url}
-                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                      className="text-sm text-footer-foreground/70 hover:text-footer-foreground transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -209,7 +209,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             )}
           </div>
 
-          <p className="mt-10 text-sm text-primary-foreground/40">
+          <p className="mt-10 text-sm text-footer-foreground/40">
             {s?.copyright_text ||
               `© ${new Date().getFullYear()} ${s?.company_name || "축제운영전문가 자격증 교육원"}. All rights reserved.`}
           </p>
