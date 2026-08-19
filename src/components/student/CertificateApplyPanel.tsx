@@ -17,7 +17,7 @@ type EnrollmentRow = {
   status: string;
   completed_at: string | null;
   expires_at: string | null;
-  courses: { id: string; title: string; level: string | null } | null;
+  courses: { id: string; title: string; difficulty_level: string | null } | null;
 };
 
 const SHIPPING_FEE = 3000;
@@ -45,7 +45,7 @@ export default function CertificateApplyPanel() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("enrollments")
-        .select("id, course_id, progress, status, completed_at, expires_at, courses(id, title, level)")
+        .select("id, course_id, progress, status, completed_at, expires_at, courses(id, title, difficulty_level)")
         .eq("user_id", user!.id)
         .order("enrolled_at", { ascending: false });
       if (error) throw error;
@@ -80,6 +80,11 @@ export default function CertificateApplyPanel() {
     [enrollments, selectedId],
   );
 
+  const levelLabel = active?.courses?.title?.includes("1급")
+    ? "1급 과정"
+    : active?.courses?.title?.includes("2급")
+      ? "2급 과정"
+      : "과정";
   const progress = Math.round(active?.progress ?? 0);
   const progressOk = progress >= 80;
   const daysLeft = active?.expires_at
@@ -138,7 +143,7 @@ export default function CertificateApplyPanel() {
     <div className="space-y-6 min-w-0">
       {/* 헤더 */}
       <div className="space-y-2">
-        <Badge className="bg-navy text-white hover:bg-navy">{active?.courses?.level ?? "과정"}</Badge>
+        <Badge className="bg-navy text-white hover:bg-navy">{levelLabel}</Badge>
         <h2 className="text-xl sm:text-2xl font-bold text-navy">자격증 발급 신청</h2>
         <p className="text-sm text-muted-foreground">
           수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
@@ -148,7 +153,7 @@ export default function CertificateApplyPanel() {
       {/* 조건 요약 */}
       <div className="rounded-lg border border-border bg-muted/40 p-4">
         <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
-          <Stat label="수강 과정" value={active?.courses?.level ?? "-"} />
+          <Stat label="수강 과정" value={levelLabel} />
           <Stat label="진도율" value={`${progress}%`} tag={progressOk ? "충족" : "미충족"} ok={progressOk} />
           <Stat
             label="수강 기간"
