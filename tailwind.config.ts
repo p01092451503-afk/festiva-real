@@ -85,12 +85,6 @@ export default {
           "orange-foreground": "hsl(var(--brand-orange-foreground))",
           "pink-light": "hsl(var(--brand-pink-light))",
         },
-        footer: {
-          DEFAULT: "hsl(var(--footer-bg))",
-          foreground: "hsl(var(--footer-foreground))",
-        },
-
-
 
         success: {
           DEFAULT: "hsl(var(--success))",
