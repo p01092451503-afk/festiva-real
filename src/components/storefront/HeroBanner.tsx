@@ -111,11 +111,10 @@ const HeroBanner = () => {
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-14 sm:py-16 md:py-20">
                       {/* headline row */}
                       <div className="grid gap-8 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] md:items-start md:gap-12">
-                        <h2 className="text-3xl font-bold leading-[1.6] tracking-tight text-navy-dark sm:text-4xl md:text-[2.7rem]">
+                        <h2 className="text-3xl font-bold leading-[1.8] tracking-tight text-navy-dark sm:text-4xl md:text-[2.7rem]">
                           축제 기획부터 평가까지,
                           <br />
                           <span className="align-middle">실무로 증명하는 축제운영전문가</span>
-
                         </h2>
 
 
