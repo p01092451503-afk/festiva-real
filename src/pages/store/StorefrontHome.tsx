@@ -34,6 +34,7 @@ const HomeCourseFeatureSection = lazy(() => import("@/components/storefront/Home
 const HomeWhySection = lazy(() => import("@/components/storefront/HomeWhySection"));
 const HomeVoicesSection = lazy(() => import("@/components/storefront/HomeVoicesSection"));
 const HomeSupportSection = lazy(() => import("@/components/storefront/HomeSupportSection"));
+const HomeCourseGuideCta = lazy(() => import("@/components/storefront/HomeCourseGuideCta"));
 
 
 const FESTIVALS = [
@@ -261,6 +262,9 @@ const StorefrontHome = () => {
           </>
         )}
         {!blocks.some((b: MainPageBlock) => b.block_type === "courses") && renderFeaturedCourses()}
+        <Suspense fallback={<div className="min-h-[160px]" />}>
+          <HomeCourseGuideCta />
+        </Suspense>
         <Suspense fallback={<div className="min-h-[300px]" />}>
           <HomeWhySection />
         </Suspense>
