@@ -96,25 +96,6 @@ const AdminAnnouncements = () => {
         savedId = data?.id ?? null;
       }
 
-      // Persist KO + EN i18n rows (EN may be blank → fall back to KO so list never shows empty)
-      if (savedId) {
-        await supabase.from("announcement_i18n").upsert(
-          [
-            { announcement_id: savedId, language_code: "ko", title: form.title_ko, content: form.content_ko },
-            {
-              announcement_id: savedId,
-              language_code: "en",
-              title: form.title_en || form.title_ko,
-              content: form.content_en || form.content_ko,
-            },
-          ],
-          { onConflict: "announcement_id,language_code" },
-        );
-        // If admin did not enter English manually, kick off background AI translation
-        if (!form.title_en?.trim()) {
-          autoTranslateInBackground("announcement", [savedId]);
-        }
-      }
     },
     onSuccess: () => {
       toast({ title: editId ? "수정 완료" : "공지사항 등록 완료" });

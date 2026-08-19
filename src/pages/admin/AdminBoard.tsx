@@ -62,21 +62,6 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const upsertI18n = async (postId: string) => {
-        await supabase.from("board_post_i18n").upsert(
-          [
-            { post_id: postId, language_code: "ko", title: form.title_ko, content: form.content_ko },
-            {
-              post_id: postId,
-              language_code: "en",
-              title: form.title_en || form.title_ko,
-              content: form.content_en || form.content_ko,
-            },
-          ],
-          { onConflict: "post_id,language_code" },
-        );
-      };
-
       let fileUrls = [...existingFiles];
       if (files.length > 0) {
         for (const file of files) {
@@ -105,15 +90,9 @@ const AdminBoard = ({ role = "admin" }: { role?: "admin" | "teacher" }) => {
       if (editingId) {
         const { error } = await supabase.from("board_posts").update(payload).eq("id", editingId);
         if (error) throw error;
-        await upsertI18n(editingId);
-        if (!form.title_en?.trim()) autoTranslateInBackground("board", [editingId]);
       } else {
         const { data, error } = await supabase.from("board_posts").insert(payload).select("id").single();
         if (error) throw error;
-        if (data?.id) {
-          await upsertI18n(data.id);
-          if (!form.title_en?.trim()) autoTranslateInBackground("board", [data.id]);
-        }
       }
     },
     onSuccess: () => {
