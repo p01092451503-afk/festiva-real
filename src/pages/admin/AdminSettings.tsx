@@ -693,11 +693,11 @@ const AdminSettings = () => {
                     const hiddenCount = allItems.filter((i) => hiddenNavKeys.includes(i.key)).length;
                     return (
                       <div key={group.role} className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        <div className="flex items-center justify-between rounded-lg bg-primary/5 px-4 py-2.5 border border-primary/10">
+                          <h3 className="text-sm font-bold text-primary">
                             {group.roleLabel}
                           </h3>
-                          <span className="text-[11px] text-muted-foreground">
+                          <span className="text-xs font-medium text-muted-foreground">
                             {hiddenCount}/{allItems.length} {t("admin.menuVisibilityHidden", "숨김")}
                           </span>
                         </div>
