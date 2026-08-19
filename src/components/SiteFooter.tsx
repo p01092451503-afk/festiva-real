@@ -118,37 +118,37 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
         </div>
 
         {/* 하단: 사업자 정보 + 소셜 */}
-        <div className="border-t border-primary-foreground/10 py-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-            <div className="min-w-0 space-y-4">
+        <div className="border-t border-primary-foreground/10 py-10">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
+            <div className="min-w-0 space-y-5">
               {logo ? (
                 <img
                   src={logo}
                   alt={s?.company_name || "Logo"}
-                  className="h-8 max-w-[200px] object-contain brightness-0 invert"
+                  className="h-9 max-w-[220px] object-contain brightness-0 invert"
                   loading="lazy"
                   decoding="async"
                 />
               ) : (
-                <span className="flex items-baseline text-2xl font-bold tracking-tight">
+                <span className="flex items-baseline text-3xl font-bold tracking-tight">
                   <span className="text-primary-foreground">fest</span>
                   <span className="text-brand-orange">cert</span>
                 </span>
               )}
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {infoLines.map((line) => (
-                  <p key={line} className="text-xs text-primary-foreground/50 leading-relaxed break-words">
+                  <p key={line} className="text-sm text-primary-foreground/50 leading-relaxed break-words">
                     {line}
                   </p>
                 ))}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
                 <button
                   type="button"
                   onClick={() => setPrivacyOpen(true)}
-                  className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                  className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                 >
                   개인정보처리방침
                 </button>
@@ -160,7 +160,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                       href={item.url}
                       target={item.open_in_new_tab ? "_blank" : undefined}
                       rel="noopener noreferrer"
-                      className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                     >
                       {item.label}
                     </a>
@@ -168,7 +168,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                     <Link
                       key={item.id}
                       to={item.url}
-                      className="text-xs text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+                      className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -178,7 +178,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             </div>
 
             {(s?.instagram_url || s?.youtube_url || s?.facebook_url || s?.blog_url) && (
-              <div className="flex items-center gap-2.5 lg:pt-1">
+              <div className="flex items-center gap-3 lg:pt-1.5">
                 {s.instagram_url && (
                   <a href={s.instagram_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Instagram">
                     <Instagram className="h-4 w-4" />
@@ -203,7 +203,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
             )}
           </div>
 
-          <p className="mt-8 text-xs text-primary-foreground/35">
+          <p className="mt-10 text-sm text-primary-foreground/35">
             {s?.copyright_text ||
               `© ${new Date().getFullYear()} ${s?.company_name || "축제운영전문가 자격증 교육원"}. All rights reserved.`}
           </p>
@@ -213,16 +213,16 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 text-lg">
               <Shield className="h-4 w-4 text-primary" />
               개인정보처리방침
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh] pr-4">
             {s?.privacy_policy ? (
-              <p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">{s.privacy_policy}</p>
+              <p className="text-base text-foreground/80 whitespace-pre-wrap leading-relaxed">{s.privacy_policy}</p>
             ) : (
-              <p className="text-sm text-muted-foreground italic py-8 text-center">개인정보처리방침이 아직 등록되지 않았습니다.</p>
+              <p className="text-base text-muted-foreground italic py-8 text-center">개인정보처리방침이 아직 등록되지 않았습니다.</p>
             )}
           </ScrollArea>
         </DialogContent>
