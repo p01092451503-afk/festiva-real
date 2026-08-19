@@ -26,22 +26,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
 
   return (
     <footer ref={ref} className="bg-background text-foreground">
-      <div className="max-w-6xl mx-auto px-4 pt-20 pb-12 sm:pt-24">
-        {/* 헤드라인 + Contact 원형 버튼 */}
-        <div className="flex items-start justify-between gap-8">
-          <h2 className="text-4xl sm:text-6xl font-bold tracking-tight leading-[1.05]">
-            LET&apos;S Connect
-          </h2>
-          <Link
-            to="/support?tab=inquiry"
-            className="shrink-0 h-28 w-28 sm:h-36 sm:w-36 rounded-full bg-foreground text-background flex items-center justify-center text-base sm:text-lg font-medium hover:opacity-90 transition-opacity"
-          >
-            Contact
-          </Link>
-        </div>
-
-        <div className="mt-10 border-t border-border" />
-
+      <div className="max-w-6xl mx-auto px-4 pt-16 pb-12">
         {/* 좌측 정보 블록 */}
         <div className="mt-16 max-w-xl">
           <Link
