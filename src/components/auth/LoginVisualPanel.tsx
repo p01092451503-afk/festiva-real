@@ -84,15 +84,16 @@ const LoginVisualPanel = memo(({
       <div className="relative z-10 flex flex-col justify-between p-12 w-full">
         <div>
           <p className="tracking-[0.3em] uppercase text-white drop-shadow-sm">
-            <span className="text-[1.3125rem] font-light leading-none align-middle">{topText}</span>
-            {subtitle && <span className="text-sm align-middle ml-2">{subtitle}</span>}
+            <span className="text-[1.75rem] font-light leading-none align-middle">{topText}</span>
+            {subtitle && <span className="text-lg align-middle ml-2">{subtitle}</span>}
           </p>
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-3xl font-medium leading-snug whitespace-pre-line text-white drop-shadow-sm">
+          <h2 className="text-4xl font-medium leading-snug whitespace-pre-line text-white drop-shadow-sm">
             {displayTagline}
           </h2>
+
         </div>
       </div>
     </div>
