@@ -253,36 +253,35 @@ const StorefrontCatalog = () => {
             <section key={g.level} id={`level-${g.level === "2급" ? 2 : 1}`} className="scroll-mt-28">
               {/* 헤더 */}
               <div className="rounded-3xl border border-border/60 bg-card overflow-hidden">
-                <div className="bg-navy px-6 sm:px-10 py-10 text-white">
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    <Badge className="bg-brand-orange hover:bg-brand-orange text-white text-sm px-3 py-1">
-                      {g.level} · {g.badge}
-                    </Badge>
-                    <span className="text-sm text-white/70">STEP {idx + 1}</span>
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl font-bold leading-tight">{g.title}</h2>
-                  <p className="mt-4 text-base sm:text-lg text-white/80 leading-relaxed max-w-3xl">{g.subtitle}</p>
-                  <p className="mt-3 text-sm text-white/60 leading-relaxed max-w-3xl">
-                    <span className="font-semibold text-white/80">추천 대상 </span>
-                    {g.target}
+                <div className="bg-navy px-6 sm:px-10 py-14 sm:py-16 text-white text-center">
+                  <p className="text-sm tracking-[0.2em] text-white/60 uppercase">
+                    STEP {idx + 1} · {g.badge}
+                  </p>
+                  <h2 className="mt-4 text-3xl sm:text-4xl font-bold leading-tight">{g.title}</h2>
+                  <p className="mt-4 text-base sm:text-lg text-white/75 leading-relaxed max-w-2xl mx-auto">
+                    {g.subtitle}
+                  </p>
+                  <p className="mt-2 text-sm text-white/55 leading-relaxed max-w-2xl mx-auto">
+                    추천 대상 · {g.target}
                   </p>
 
                   {/* 신청 CTA */}
-                  <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Button
                       size="lg"
-                      className="bg-brand-orange hover:bg-brand-orange/90 text-white text-base h-14 px-8 rounded-full font-semibold shadow-lg"
+                      className="bg-white hover:bg-white/90 text-navy text-base h-12 px-8 rounded-full font-semibold"
                       onClick={() => handleApply(g.level)}
                       disabled={!courseId}
                     >
                       {isEnrolled ? "수강중 · 이어보기" : `${g.level} 과정 신청하기`}
                     </Button>
-                    <span className="text-white/80 text-sm">
-                      수강료 <strong className="text-xl font-bold text-white align-middle ml-1">195,000원</strong>
-                      <span className="ml-2 text-white/60">({g.feeNote})</span>
+                    <span className="text-sm text-white/70">
+                      수강료 <strong className="font-semibold text-white">195,000원</strong>
+                      <span className="ml-1.5 text-white/50">({g.feeNote})</span>
                     </span>
                   </div>
                 </div>
+
 
                 {/* 핵심 정보 */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y divide-border/60 border-b border-border/60">
