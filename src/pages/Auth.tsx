@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import LanguageToggle from "@/components/LanguageToggle";
 import LoginVisualPanel from "@/components/auth/LoginVisualPanel";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
@@ -235,11 +234,6 @@ const Auth = () => {
 
       {/* Right - Form */}
       <div className="flex-1 flex items-start lg:items-center justify-center px-6 lg:px-16 py-10 lg:py-0 bg-white relative">
-        {/* Language toggle */}
-        <div className="absolute top-4 right-4">
-          <LanguageToggle />
-        </div>
-
         <div className="w-full max-w-md space-y-10">
           {activePreset?.login_form_logo_url ? (
             <img

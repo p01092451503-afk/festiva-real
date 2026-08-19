@@ -44,7 +44,6 @@ import { useBranchAdmin } from "@/hooks/useBranchAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { useDemoPreset } from "@/contexts/DemoPresetContext";
-import LanguageToggle from "@/components/LanguageToggle";
 import RoleSwitcher from "@/components/RoleSwitcher";
 import NotificationBell from "@/components/NotificationBell";
 import GuidedTourButton from "@/components/GuidedTourButton";
@@ -909,9 +908,6 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
           </button>
           <div className="flex-1" />
           {/* <GuidedTourButton role={activeRole as "student" | "teacher" | "admin"} /> */}
-          {effectiveRole !== "admin" && (
-            <div data-tour="language-toggle"><LanguageToggle /></div>
-          )}
           <RoleSwitcher />
           <div data-tour="notification-bell"><NotificationBell /></div>
           <div className="pl-2 sm:pl-3 border-l border-border" data-tour="user-profile">
