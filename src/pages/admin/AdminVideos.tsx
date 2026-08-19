@@ -202,6 +202,86 @@ const AdminVideos = () => {
     toast({ title: t("videoMgmt.urlCopied") });
   };
 
+  /** video_assets 행에서 Bunny GUID 추출 */
+  const getBunnyGuid = (v: VideoAsset): string | null => {
+    if (v.bunny_video_guid) return v.bunny_video_guid.trim();
+    if (v.video_url?.startsWith("bunny://")) return v.video_url.replace("bunny://", "").trim();
+    return null;
+  };
+
+  const [syncingId, setSyncingId] = useState<string | null>(null);
+  const [bulkSyncing, setBulkSyncing] = useState(false);
+
+  /** Bunny에서 실제 재생시간·용량을 읽어 video_assets에 반영 */
+  const fetchMeta = async (v: VideoAsset): Promise<"updated" | "skipped"> => {
+    const guid = getBunnyGuid(v);
+    if (!guid) return "skipped";
+    const { data, error } = await supabase.functions.invoke("bunny-stream-info", {
+      body: { video_guid: guid },
+    });
+    if (error) throw new Error(error.message || "CDN 정보 조회 실패");
+    if (data?.fallback) return "skipped";
+
+    const seconds = Number(data?.length_seconds || 0);
+    const bytes = Number(data?.storage_size || 0);
+    const patch: Record<string, number> = {};
+    if (seconds > 0) patch.duration_minutes = Math.round((seconds / 60) * 100) / 100;
+    if (bytes > 0) patch.file_size_mb = Math.round((bytes / (1024 * 1024)) * 10) / 10;
+    if (Object.keys(patch).length === 0) return "skipped";
+
+    const { error: upErr } = await supabase.from("video_assets").update(patch).eq("id", v.id);
+    if (upErr) throw upErr;
+    return "updated";
+  };
+
+  const syncOne = async (v: VideoAsset) => {
+    setSyncingId(v.id);
+    try {
+      const result = await fetchMeta(v);
+      await queryClient.invalidateQueries({ queryKey: ["video-assets"] });
+      toast({
+        title: result === "updated" ? "재생시간·용량을 불러왔습니다" : "CDN에서 정보를 가져올 수 없습니다",
+        variant: result === "updated" ? undefined : "destructive",
+      });
+    } catch (err) {
+      toast({
+        title: "불러오기 실패",
+        description: err instanceof Error ? err.message : String(err),
+        variant: "destructive",
+      });
+    } finally {
+      setSyncingId(null);
+    }
+  };
+
+  const syncAll = async () => {
+    const targets = videos.filter((v) => getBunnyGuid(v));
+    if (targets.length === 0) {
+      toast({ title: "CDN(Bunny) 영상이 없습니다" });
+      return;
+    }
+    setBulkSyncing(true);
+    let updated = 0;
+    let skipped = 0;
+    let failed = 0;
+    for (const v of targets) {
+      try {
+        const r = await fetchMeta(v);
+        r === "updated" ? (updated += 1) : (skipped += 1);
+      } catch {
+        failed += 1;
+      }
+    }
+    setBulkSyncing(false);
+    await queryClient.invalidateQueries({ queryKey: ["video-assets"] });
+    toast({
+      title: failed > 0 ? "일부 불러오기 실패" : "정보 불러오기 완료",
+      description: `갱신 ${updated}건 · 변경없음 ${skipped}건 · 실패 ${failed}건`,
+      variant: failed > 0 ? "destructive" : undefined,
+    });
+  };
+
+
   const openEdit = (v: VideoAsset) => {
     setForm({
       title: v.title,
