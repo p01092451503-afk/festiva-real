@@ -17,7 +17,7 @@ type EnrollmentRow = {
   status: string;
   completed_at: string | null;
   expires_at: string | null;
-  courses: { id: string; title: string; level: string | null } | null;
+  courses: { id: string; title: string; difficulty_level: string | null } | null;
 };
 
 const SHIPPING_FEE = 3000;
