@@ -135,10 +135,11 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
 
 
         {/* Copyright */}
-        <div className="mt-8 pt-6 border-t border-border">
-          <p className="text-xs text-muted-foreground/50 text-center">
+        <div className="mt-12 pt-6 border-t border-border">
+          <p className="text-sm text-muted-foreground/70 text-center">
             {s?.copyright_text || `© ${new Date().getFullYear()} ${s?.company_name || "축제운영전문가 자격증 교육원"}. All rights reserved.`}
           </p>
+        </div>
         </div>
       </div>
 
