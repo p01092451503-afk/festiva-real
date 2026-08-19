@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SectionHeading from "@/components/storefront/SectionHeading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -305,12 +306,11 @@ const About = () => {
 
           {/* 교육원 소개 */}
           <TabsContent value="intro" className="mt-10 space-y-14">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">크리에이티브쉐이크 부설 평생교육원</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영
-              </p>
-            </section>
+            <SectionHeading
+              label="About festcert"
+              title={<>축제 현장의 언어로 가르치는<br />축제운영전문가 교육원</>}
+              description="언론기관부설 평생교육시설 · 교육청 신고 완료 · 사단법인 마이스교육학회 공동운영"
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {HIGHLIGHTS.map((h) => (
@@ -482,13 +482,11 @@ const About = () => {
 
           {/* 자격 제도 */}
           <TabsContent value="system" className="mt-10 space-y-14">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자격 제도</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성됩니다.
-                자격은 2급(기초)과 1급(심화)으로 나뉩니다.
-              </p>
-            </section>
+            <SectionHeading
+              label="Qualification"
+              title={<>2급에서 1급까지<br />단계별로 설계된 자격 제도</>}
+              description="개강일은 매월 1일입니다. 5분 안내 + 25분 강의 + 15분 시험 = 총 45분, 1과목 3강, 총 9강으로 구성되며 자격은 2급(기초)과 1급(심화)으로 나뉩니다."
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {LEVELS.map((l) => (
@@ -631,12 +629,11 @@ const About = () => {
 
           {/* 발급 안내 */}
           <TabsContent value="certificate" className="mt-10 space-y-14">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자격증 발급 안내</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                수료 조건 충족 후 신청 가능합니다. PDF + 실물 자격증이 함께 발급됩니다.
-              </p>
-            </section>
+            <SectionHeading
+              label="Certificate"
+              title={<>수료가 확인되면<br />PDF와 실물 자격증이 함께 발급됩니다</>}
+              description="수료 조건을 충족한 뒤 신청할 수 있으며, PDF는 이메일로 3~5영업일 내 발송되고 실물은 순차 배송됩니다."
+            />
 
             <section className="space-y-5">
               <h3 className="text-2xl sm:text-3xl font-bold tracking-tight leading-[1.4]">수료 조건 안내</h3>
@@ -736,12 +733,11 @@ const About = () => {
 
           {/* FAQ */}
           <TabsContent value="faq" className="mt-10 space-y-8">
-            <section className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy">자주 묻는 질문</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
-                찾는 답이 없다면 학습운영·문의의 1:1 문의 게시판으로 남겨 주세요.
-              </p>
-            </section>
+            <SectionHeading
+              label="FAQ"
+              title={<>학습 전에 가장 많이<br />물어보신 질문들</>}
+              description="찾는 답이 없다면 학습운영·문의의 1:1 문의 게시판으로 남겨 주세요. 평일 09:00~18:00 · 24시간 내 답변드립니다."
+            />
 
             <Accordion type="single" collapsible className="space-y-4">
               {FAQS.map((f, i) => (
