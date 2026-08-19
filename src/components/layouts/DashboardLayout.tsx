@@ -643,7 +643,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                     {activePreset.sidebar_brand_name || activePreset.brand_name}
                   </span>
                 ) : (
-                  <AnimatedBrand className="text-2xl" />
+                  <AnimatedBrand className="text-4xl" />
                 )}
               </Link>
               <RoleChip ariaLabelled />
@@ -664,7 +664,7 @@ const DashboardLayout = ({ children, role, contentClassName }: DashboardLayoutPr
                     {activePreset.sidebar_brand_name || activePreset.brand_name}
                   </span>
                 ) : (
-                  <AnimatedBrand className="text-2xl" />
+                  <AnimatedBrand className="text-4xl" />
                 )}
               </Link>
               <RoleChip />
