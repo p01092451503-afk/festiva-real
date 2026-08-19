@@ -19,9 +19,11 @@ const LoginVisualPanel = memo(({
   
   const effectiveBrandName = activePreset?.brand_name || brandName;
   const effectiveBgImage = activePreset?.login_bg_image_url || backgroundImage;
-  const displayTagline = activePreset?.brand_tagline || tagline || t("auth.heroTitle");
+  const displayTagline =
+    activePreset?.brand_tagline || tagline || "축제 기획부터 평가까지,\n실무로 증명하는 축제운영전문가";
   const topText = activePreset?.login_top_text || effectiveBrandName;
   const subtitle = activePreset?.login_subtitle ?? "축제운영전문가자격증 교육원";
+
   // Allow per-client accent. Falls back to brand violet.
   const accent = activePreset?.accent_hsl?.trim() || "223 69% 33%";
   const accentDeep = activePreset?.accent_hsl?.trim() || "224 72% 25%";
