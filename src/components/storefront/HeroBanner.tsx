@@ -107,23 +107,24 @@ const HeroBanner = () => {
                 )}
                 {isFallback ? (
                   <div className="relative overflow-hidden">
-                    {/* deep blue base */}
+                    {/* pastel lilac / periwinkle satin base */}
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(115deg, #12306f 0%, #1a3a8c 42%, #23509f 72%, #2b62b4 100%)",
+                          "linear-gradient(125deg, #dfe4fb 0%, #e6e3fb 30%, #dcd8f7 55%, #cfd7f7 78%, #e9e6fc 100%)",
                       }}
                     />
-                    {/* soft light source top-center */}
+                    {/* soft light bloom */}
                     <div
                       className="pointer-events-none absolute inset-0"
                       style={{
                         background:
-                          "radial-gradient(120% 90% at 50% -10%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 40%, transparent 72%)",
+                          "radial-gradient(110% 85% at 22% 12%, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.15) 45%, transparent 72%)",
                       }}
                     />
-                    {/* floating glass objects, receding diagonally */}
+
+                    {/* flowing silk ribbons */}
                     <svg
                       className="pointer-events-none absolute inset-0 h-full w-full"
                       viewBox="0 0 1440 560"
@@ -131,112 +132,129 @@ const HeroBanner = () => {
                       aria-hidden="true"
                     >
                       <defs>
-                        <linearGradient id="glassA" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(255,255,255,0.42)" />
-                          <stop offset="45%" stopColor="rgba(198,228,255,0.20)" />
-                          <stop offset="100%" stopColor="rgba(255,255,255,0.06)" />
+                        <linearGradient id="silkA" x1="0%" y1="0%" x2="100%" y2="60%">
+                          <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
+                          <stop offset="45%" stopColor="rgba(214,222,255,0.55)" />
+                          <stop offset="100%" stopColor="rgba(255,255,255,0.05)" />
                         </linearGradient>
-                        <linearGradient id="glassB" x1="100%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(180,214,255,0.30)" />
-                          <stop offset="60%" stopColor="rgba(255,255,255,0.10)" />
-                          <stop offset="100%" stopColor="rgba(255,255,255,0.03)" />
+                        <linearGradient id="silkB" x1="10%" y1="100%" x2="90%" y2="0%">
+                          <stop offset="0%" stopColor="rgba(186,178,240,0.45)" />
+                          <stop offset="55%" stopColor="rgba(255,255,255,0.45)" />
+                          <stop offset="100%" stopColor="rgba(255,255,255,0.02)" />
                         </linearGradient>
-                        <filter id="glassBlur" x="-20%" y="-20%" width="140%" height="140%">
-                          <feGaussianBlur stdDeviation="1.2" />
+                        <linearGradient id="silkC" x1="0%" y1="50%" x2="100%" y2="50%">
+                          <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+                          <stop offset="40%" stopColor="rgba(255,255,255,0.7)" />
+                          <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+                        </linearGradient>
+                        <filter id="silkSoft" x="-20%" y="-20%" width="140%" height="140%">
+                          <feGaussianBlur stdDeviation="6" />
                         </filter>
                       </defs>
 
-                      {/* left cluster: large -> small, rising to the right */}
-                      <g filter="url(#glassBlur)">
-                        <g transform="translate(-40 300) rotate(-18)">
-                          <rect width="250" height="250" rx="42" fill="url(#glassA)" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
-                        </g>
-                        <g transform="translate(190 250) rotate(-18)">
-                          <rect width="205" height="205" rx="36" fill="url(#glassB)" stroke="rgba(255,255,255,0.28)" strokeWidth="1.4" />
-                        </g>
-                        <g transform="translate(378 214) rotate(-18)">
-                          <rect width="164" height="164" rx="30" fill="url(#glassA)" stroke="rgba(255,255,255,0.22)" strokeWidth="1.2" />
-                        </g>
-                        <g transform="translate(524 190) rotate(-18)" opacity="0.75">
-                          <rect width="126" height="126" rx="24" fill="url(#glassB)" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-                        </g>
-                        <g transform="translate(634 176) rotate(-18)" opacity="0.5">
-                          <rect width="92" height="92" rx="18" fill="url(#glassA)" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
-                        </g>
+                      {/* broad diagonal drape */}
+                      <g filter="url(#silkSoft)">
+                        <path
+                          d="M-120 430 C 220 330 420 250 700 150 C 940 66 1180 30 1560 -30 L1560 90 C1200 140 980 190 740 270 C 470 360 240 470 -120 540 Z"
+                          fill="url(#silkA)"
+                          opacity="0.9"
+                        />
+                        <path
+                          d="M-140 560 C 260 470 520 380 820 250 C 1080 138 1300 90 1580 40 L1580 150 C1280 200 1060 260 820 360 C 540 476 300 540 -140 620 Z"
+                          fill="url(#silkB)"
+                          opacity="0.75"
+                        />
                       </g>
 
-                      {/* right cluster: mirrored, descending */}
-                      <g filter="url(#glassBlur)">
-                        <g transform="translate(1250 210) rotate(-18)">
-                          <rect width="260" height="260" rx="44" fill="url(#glassB)" stroke="rgba(255,255,255,0.32)" strokeWidth="1.5" />
-                        </g>
-                        <g transform="translate(1058 262) rotate(-18)">
-                          <rect width="200" height="200" rx="34" fill="url(#glassA)" stroke="rgba(255,255,255,0.24)" strokeWidth="1.3" />
-                        </g>
-                        <g transform="translate(908 306) rotate(-18)" opacity="0.8">
-                          <rect width="150" height="150" rx="28" fill="url(#glassB)" stroke="rgba(255,255,255,0.18)" strokeWidth="1.1" />
-                        </g>
-                        <g transform="translate(796 340) rotate(-18)" opacity="0.55">
-                          <rect width="108" height="108" rx="20" fill="url(#glassA)" stroke="rgba(255,255,255,0.14)" strokeWidth="1" />
-                        </g>
+                      {/* crisp specular edges */}
+                      <path
+                        d="M-120 452 C 240 352 460 268 740 168 C 980 84 1200 46 1580 -12"
+                        fill="none"
+                        stroke="url(#silkC)"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M-120 500 C 260 402 500 314 780 214 C 1020 130 1240 92 1580 40"
+                        fill="none"
+                        stroke="url(#silkC)"
+                        strokeWidth="1.2"
+                        opacity="0.7"
+                      />
+                      <path
+                        d="M-120 372 C 220 282 440 206 720 108 C 960 26 1200 -10 1580 -66"
+                        fill="none"
+                        stroke="url(#silkC)"
+                        strokeWidth="1"
+                        opacity="0.55"
+                      />
+
+                      {/* faint vertical light shafts */}
+                      <g opacity="0.28">
+                        <rect x="205" y="0" width="1.5" height="560" fill="rgba(255,255,255,0.8)" />
+                        <rect x="1235" y="0" width="1.5" height="560" fill="rgba(255,255,255,0.6)" />
                       </g>
 
-                      {/* faint horizon lines for depth */}
-                      <path d="M-40 452 C 320 404 1120 404 1480 452" fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="1.5" />
-                      <path d="M-40 486 C 360 442 1080 442 1480 486" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
+                      {/* wide arc, bottom right */}
+                      <path
+                        d="M1560 210 C 1300 300 1080 420 940 580"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.5)"
+                        strokeWidth="1.5"
+                      />
                     </svg>
-                    {/* bottom vignette so type stays legible */}
+
+                    {/* legibility veil behind copy */}
                     <div
                       className="pointer-events-none absolute inset-0"
                       style={{
                         background:
-                          "radial-gradient(70% 60% at 50% 45%, rgba(10,28,68,0.45) 0%, transparent 70%)",
+                          "radial-gradient(60% 55% at 50% 45%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 60%, transparent 80%)",
                       }}
                     />
 
                     <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center sm:py-20 md:py-28">
-                      <h2 className="text-4xl font-bold leading-[1.3] tracking-tight text-white sm:text-5xl md:text-[3.6rem]">
+                      <h2 className="text-4xl font-bold leading-[1.3] tracking-tight text-navy-dark sm:text-5xl md:text-[3.6rem]">
                         축제 기획부터 평가까지
                         <br />
                         실무 문서를 만드는 자격증
                       </h2>
-                      <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-white/80 sm:mt-7 sm:text-lg">
+                      <div className="mx-auto mt-6 max-w-2xl space-y-1.5 text-base leading-relaxed text-navy/75 sm:mt-7 sm:text-lg">
                         <p>지자체·공공기관 실무자, 행사 기획자, 축제 분야 취업 희망자를 위한</p>
                         <p>대한민국 유일의 온라인 축제전문가 자격증 과정</p>
                       </div>
                       <div className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:mt-11">
                         <Link
                           to="/store/courses"
-                          className="inline-flex items-center gap-2 rounded-md bg-white px-8 py-3.5 text-base font-semibold text-navy shadow-lg transition hover:bg-white/90"
+                          className="inline-flex items-center gap-2 rounded-md bg-navy px-8 py-3.5 text-base font-semibold text-white shadow-lg transition hover:bg-navy-dark"
                         >
                           강의 안내 보기
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/student/certificates"
-                          className="inline-flex items-center gap-2 rounded-md border border-white/25 bg-navy-dark/60 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-navy-dark/80"
+                          className="inline-flex items-center gap-2 rounded-md border border-navy/15 bg-white/80 px-8 py-3.5 text-base font-semibold text-navy backdrop-blur-sm transition hover:bg-white"
                         >
                           자격증 신청 및 발급
                           <ChevronRight className="h-4 w-4" />
                         </Link>
                         <Link
                           to="/about?tab=system"
-                          className="inline-flex items-center gap-2 rounded-md border border-white/20 px-8 py-3.5 text-base font-medium text-white/90 transition hover:bg-white/10"
+                          className="inline-flex items-center gap-2 rounded-md border border-navy/20 px-8 py-3.5 text-base font-medium text-navy/85 transition hover:bg-white/60"
                         >
                           자격 제도 안내
                         </Link>
                       </div>
                       <div className="mt-12 sm:mt-14">
-                        <div className="mx-auto inline-flex flex-wrap items-center justify-center divide-y divide-white/15 border-y border-white/15 sm:divide-x sm:divide-y-0">
+                        <div className="mx-auto inline-flex flex-wrap items-center justify-center divide-y divide-navy/10 border-y border-navy/10 sm:divide-x sm:divide-y-0">
                           {[
                             { Icon: Layers, strong: "2급·1급", label: "단계별 과정" },
                             { Icon: PlayCircle, strong: "9차시", label: "온라인 강의" },
                             { Icon: BookOpen, strong: "교재 포함", label: "195,000원" },
                           ].map(({ Icon, strong, label }) => (
                             <div key={strong} className="flex items-center gap-3 px-6 py-4 sm:px-8">
-                              <Icon className="h-5 w-5 shrink-0 text-white/70" strokeWidth={1.5} />
-                              <span className="text-base text-white/75 sm:text-lg">
-                                <strong className="font-bold text-white">{strong}</strong> {label}
+                              <Icon className="h-5 w-5 shrink-0 text-navy/60" strokeWidth={1.5} />
+                              <span className="text-base text-navy/70 sm:text-lg">
+                                <strong className="font-bold text-navy-dark">{strong}</strong> {label}
                               </span>
                             </div>
                           ))}
@@ -245,6 +263,7 @@ const HeroBanner = () => {
                     </div>
                   </div>
                 ) : (
+
 
                 <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-16 sm:py-20 md:py-24 min-h-[320px] sm:min-h-[380px]">
                   {banner.title && (
