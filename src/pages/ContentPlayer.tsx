@@ -211,6 +211,8 @@ const ContentPlayer = () => {
   const [bunnyEmbedUrl, setBunnyEmbedUrl] = useState<string | null>(null);
   const [bunnyLoading, setBunnyLoading] = useState(false);
   const [bunnyTokenExpiresAt, setBunnyTokenExpiresAt] = useState<number | null>(null);
+  // Bunny 인코딩(트랜스코딩) 진행 상태 — status 4/5 = 재생 가능
+  const [bunnyEncoding, setBunnyEncoding] = useState(false);
 
   const currentContent = contents.find((c) => c.id === contentId);
 
@@ -541,6 +543,46 @@ const ContentPlayer = () => {
     };
   }, [currentContent?.id, user?.id]);
 
+  // Bunny 인코딩 상태 폴링 — 인코딩 중이면 Bunny가 "Processing video" 화면을 보여주므로
+  // 우리 안내 화면으로 덮고, 완료되면 자동으로 플레이어를 노출한다.
+  useEffect(() => {
+    if (!currentContent || !user?.id) return;
+    const provider = getVideoProvider(currentContent);
+    const videoUrl = getVideoUrl(currentContent);
+    const guid = getBunnyGuid(currentContent, videoUrl);
+    if (!isBunny(currentContent, provider, videoUrl) || !guid) {
+      setBunnyEncoding(false);
+      return;
+    }
+    let cancelled = false;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const check = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("bunny-stream-info", {
+          body: { video_guid: guid },
+        });
+        if (cancelled) return;
+        if (error || data?.fallback) {
+          setBunnyEncoding(false);
+          return;
+        }
+        const status = Number(data?.status ?? 4);
+        const ready = status >= 3; // 3=재생 가능(부분), 4=완료, 5=해상도 최종
+        setBunnyEncoding(!ready);
+        if (!ready) timer = setTimeout(check, 15000);
+      } catch {
+        if (!cancelled) setBunnyEncoding(false);
+      }
+    };
+    check();
+
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
+  }, [currentContent?.id, user?.id]);
+
   const getVideoEmbed = (url: string | null, provider: string | null) => {
     if (!url && !currentContent?.bunny_video_guid) return null;
     if (url && isMangoboard(url)) return normalizeMangoboardUrl(url);
@@ -742,6 +784,20 @@ const ContentPlayer = () => {
                       referrerPolicy="no-referrer-when-downgrade"
                       title={localTitle}
                     />
+                    {bunnyEncoding && (
+                      <div className="absolute inset-0 z-30 flex items-center justify-center bg-background">
+                        <div className="text-center space-y-4 px-6">
+                          <div className="mx-auto h-12 w-12 rounded-full border-4 border-primary/25 border-t-primary animate-spin" />
+                          <div className="space-y-1.5">
+                            <p className="text-base font-semibold text-foreground">영상 변환(인코딩) 중입니다</p>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              업로드된 영상을 재생용으로 변환하고 있습니다. 보통 영상 길이의 20~50% 정도 시간이 걸리며,
+                              완료되면 이 화면이 자동으로 플레이어로 바뀝니다.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {resumeDialogOpen && (
                       <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 p-3 sm:p-0">
                         <div
