@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const SOCIAL_CLASS =
-  "h-11 w-11 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground/70 hover:bg-primary-foreground/20 hover:text-primary-foreground transition-colors";
+  "h-11 w-11 rounded-full bg-footer-foreground/10 flex items-center justify-center text-footer-foreground/70 hover:bg-footer-foreground/20 hover:text-footer-foreground transition-colors";
 
 const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
   const { data: s } = useSiteSettings();
