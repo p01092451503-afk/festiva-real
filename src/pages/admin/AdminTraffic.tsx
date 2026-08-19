@@ -425,9 +425,12 @@ const AdminTraffic = () => {
                   icon={Database}
                   label="CDN 저장"
                   value={formatBytes(cdnStorageBytes)}
-                  sub={`${cdnStoredCount}개`}
+                  sub={bunnyLive
+                    ? `${cdnStoredCount}개 · ${Math.round(bunnyLive.seconds / 60)}분 (실시간)`
+                    : `${cdnStoredCount}개`}
                   tone="text-amber-600 dark:text-amber-400"
                 />
+
                 <CompactMetric
                   icon={HardDrive}
                   label="저장 차시"
