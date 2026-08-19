@@ -143,22 +143,22 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
               <div className="mt-6 flex items-center gap-6">
                 {s?.facebook_url && (
                   <a href={s.facebook_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Facebook">
-                    <Facebook className="h-5 w-5" />
+                    <Facebook className="h-6 w-6" />
                   </a>
                 )}
                 {s?.youtube_url && (
                   <a href={s.youtube_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="YouTube">
-                    <Youtube className="h-5 w-5" />
+                    <Youtube className="h-6 w-6" />
                   </a>
                 )}
                 {s?.instagram_url && (
                   <a href={s.instagram_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Instagram">
-                    <Instagram className="h-5 w-5" />
+                    <Instagram className="h-6 w-6" />
                   </a>
                 )}
                 {s?.blog_url && (
                   <a href={s.blog_url} target="_blank" rel="noopener noreferrer" className={SOCIAL_CLASS} aria-label="Blog">
-                    <Globe className="h-5 w-5" />
+                    <Globe className="h-6 w-6" />
                   </a>
                 )}
               </div>
