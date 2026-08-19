@@ -51,7 +51,8 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
   ].filter(Boolean) as string[];
 
   return (
-    <footer ref={ref} className="bg-footer text-footer-foreground">
+    <footer ref={ref} className="bg-footer text-footer-foreground mt-20 sm:mt-28 lg:mt-36">
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-14">
         {/* 상단 2단: 공지사항 + 고객센터 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8">
