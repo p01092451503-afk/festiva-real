@@ -17,26 +17,25 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {logo ? (
                 <img
                   src={logo}
                   alt={s?.company_name || "Logo"}
-                  className="h-7 max-w-[160px] object-contain"
-                  width={160}
-                  height={28}
+                  className="h-8 max-w-[180px] object-contain"
+                  width={180}
+                  height={32}
                   loading="lazy"
                   decoding="async"
                 />
               ) : (
-                <>
-                  <div className="h-7 w-7 rounded bg-muted border border-dashed border-border flex items-center justify-center">
-                    <ImageIcon className="h-3.5 w-3.5 text-muted-foreground/60" />
-                  </div>
-                  <span className="text-sm font-medium text-muted-foreground">회사 로고 영역</span>
-                </>
+                <span className="flex items-baseline text-2xl font-bold tracking-tight">
+                  <span className="text-navy">fest</span>
+                  <span className="text-brand-orange">cert</span>
+                </span>
               )}
             </div>
+
 
             {s?.footer_description && (
               <p className="text-xs text-muted-foreground max-w-md">{s.footer_description}</p>
