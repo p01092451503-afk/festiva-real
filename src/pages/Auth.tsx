@@ -204,7 +204,9 @@ const Auth = () => {
         } else {
           localStorage.removeItem(SAVED_EMAIL_KEY);
         }
-        navigate("/dashboard");
+        const nextParam = new URLSearchParams(window.location.search).get("next");
+        const safeNext = nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : null;
+        navigate(safeNext ?? "/dashboard");
       }
     } catch (error: any) {
       setAuthError(mapAuthError(error, isSignUp ? "signup" : "login"));
