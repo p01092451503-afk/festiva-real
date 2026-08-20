@@ -17,8 +17,8 @@ import {
 import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { PageBanner } from "@/components/PagePattern";
-import { pageBg } from "@/config/pageBackgrounds";
+import PageTitleHeader from "@/components/storefront/PageTitleHeader";
+
 import Level1QualificationDialog from "@/components/storefront/Level1QualificationDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
