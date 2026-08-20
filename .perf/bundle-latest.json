@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-08-20T03:39:51.617Z",
+  "timestamp": "2026-08-20T03:41:05.686Z",
   "totals": {
-    "raw": 9976894,
-    "gzipText": 2423145,
+    "raw": 9976865,
+    "gzipText": 2422714,
     "files": 311
   },
   "buckets": {
     "js": {
       "files": 262,
-      "raw": 8176909,
-      "gzip": 2381705
+      "raw": 8176880,
+      "gzip": 2381274
     },
     "css": {
       "files": 2,
@@ -39,9 +39,9 @@
   },
   "topJs": [
     {
-      "path": "assets/CorrectionCanvas-Cmk0H840.js",
+      "path": "assets/CorrectionCanvas-BVFLtgW2.js",
       "size": 1598192,
-      "gzip": 478120
+      "gzip": 478122
     },
     {
       "path": "assets/vendor-icons-C1ZyEQjw.js",
@@ -64,14 +64,14 @@
       "gzip": 135085
     },
     {
-      "path": "assets/VideoRoom-CcYGIVTH.js",
+      "path": "assets/VideoRoom-CYVlChGj.js",
       "size": 252222,
-      "gzip": 70954
+      "gzip": 70956
     },
     {
-      "path": "assets/index-DE6ASi18.js",
+      "path": "assets/index-DkbQbABU.js",
       "size": 208730,
-      "gzip": 63902
+      "gzip": 63874
     },
     {
       "path": "assets/vendor-canvas-BfxBtG_O.js",
@@ -104,9 +104,9 @@
       "gzip": 36061
     },
     {
-      "path": "assets/CreateCourse-SKP8j5C7.js",
+      "path": "assets/CreateCourse-Dgc7G_qR.js",
       "size": 107371,
-      "gzip": 25724
+      "gzip": 25720
     },
     {
       "path": "assets/jszip.min-iBrHrPu8.js",
