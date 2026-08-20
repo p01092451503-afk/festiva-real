@@ -99,20 +99,21 @@ const StudentAnnouncements = () => {
       </div>
 
       <Dialog open={!!selectedAnn} onOpenChange={() => setSelectedAnn(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[86vh] overflow-y-auto rounded-3xl p-6">
+          <DialogHeader className="sr-only">
             <DialogTitle>{selectedAnn?.title}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <span>{authorProfiles?.[selectedAnn?.author_id] || "—"}</span>
-              <span>·</span>
-              <span>{selectedAnn && format(new Date(selectedAnn.created_at), "yyyy-MM-dd HH:mm")}</span>
-            </div>
-            <div className="whitespace-pre-wrap text-sm leading-relaxed border-t pt-4">
-              {selectedAnn?.content}
-            </div>
-          </div>
+          <NoticeDialogLayout
+            title={selectedAnn?.title}
+            content={selectedAnn?.content}
+            meta={
+              <>
+                <span>{authorProfiles?.[selectedAnn?.author_id] || "—"}</span>
+                <span aria-hidden="true">·</span>
+                <span>{selectedAnn && format(new Date(selectedAnn.created_at), "yyyy-MM-dd HH:mm")}</span>
+              </>
+            }
+          />
         </DialogContent>
       </Dialog>
     </DashboardLayout>
