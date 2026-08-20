@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Instagram, Youtube, Facebook, Globe, Shield, ArrowRight, MessageCircle, MapPin, Mail, Phone } from "lucide-react";
+import { Instagram, Youtube, Facebook, Globe, Shield, ArrowRight, MessageCircle, MapPin, Mail, Phone, Building2 } from "lucide-react";
 import { useSiteSettings, useNavItems } from "@/hooks/useSiteSettings";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
