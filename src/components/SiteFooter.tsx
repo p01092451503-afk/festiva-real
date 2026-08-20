@@ -88,15 +88,18 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
           {/* 고객센터 */}
           <div className="lg:col-span-5 min-w-0 lg:text-right lg:flex lg:flex-col lg:items-end">
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight">고객센터</h2>
-            <div className="mt-4 space-y-1.5 text-lg text-footer-muted leading-relaxed">
+            <a
+              href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}
+              className="mt-3 inline-flex items-center justify-end gap-2 text-xl sm:text-2xl font-bold tracking-tight text-footer-foreground hover:opacity-70 transition-opacity"
+            >
+              <Phone className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
+              {contactPhone}
+            </a>
+            <div className="mt-3 text-lg text-footer-muted leading-relaxed">
               {workingHours.length > 0 ? (
-                workingHours.map((line) => <p key={line}>{line}</p>)
+                <p>{workingHours.join(" / ")}</p>
               ) : (
-                <>
-                  <p>평일 09:00 - 18:00</p>
-                  <p>점심 12:00 - 13:00</p>
-                  <p>주말 · 공휴일 휴무</p>
-                </>
+                <p>평일 09:00 - 18:00 / 점심 12:00 - 13:00 / 주말 · 공휴일 휴무</p>
               )}
             </div>
             <Link
@@ -107,13 +110,6 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
               1:1 문의하기
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </Link>
-            <a
-              href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}
-              className="mt-5 inline-flex items-center gap-2 text-xl sm:text-2xl font-bold tracking-tight text-footer-foreground hover:opacity-70 transition-opacity"
-            >
-              <Phone className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
-              {contactPhone}
-            </a>
           </div>
         </div>
 
