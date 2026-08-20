@@ -33,17 +33,11 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
     },
   });
 
-  const infoLines = [
-    [s?.ceo_name && `대표이사 : ${s.ceo_name}`].filter(Boolean).join(""),
-    [s?.business_number && `사업자등록번호 ${s.business_number}`, s?.company_name && `상호 ${s.company_name}`]
-      .filter(Boolean)
-      .join("  "),
-  ].filter(Boolean) as string[];
-
-
   const contactEmail = s?.company_email || "themiceseoul@naver.com";
   const contactPhone = s?.company_phone || "02-723-7708";
   const contactAddress = s?.company_address || "서울시 종로구 인사동길12 대일빌딩 1005호";
+  const companyName = s?.company_name || "(사)마이스홍보교육학회";
+  const ceoName = s?.ceo_name;
 
 
   const workingHours = [
