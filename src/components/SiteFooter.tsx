@@ -86,7 +86,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
           </div>
 
           {/* 고객센터 */}
-          <div className="lg:col-span-5 min-w-0 lg:text-right lg:items-end">
+          <div className="lg:col-span-5 min-w-0 lg:text-right lg:flex lg:flex-col lg:items-end">
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight">고객센터</h2>
             <div className="mt-4 space-y-1.5 text-lg text-footer-muted leading-relaxed">
               {workingHours.length > 0 ? (
@@ -107,6 +107,13 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
               1:1 문의하기
               <ArrowRight className="h-5 w-5" aria-hidden="true" />
             </Link>
+            <a
+              href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}
+              className="mt-5 inline-flex items-center gap-2 text-xl sm:text-2xl font-bold tracking-tight text-footer-foreground hover:opacity-70 transition-opacity"
+            >
+              <Phone className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
+              {contactPhone}
+            </a>
           </div>
         </div>
 
