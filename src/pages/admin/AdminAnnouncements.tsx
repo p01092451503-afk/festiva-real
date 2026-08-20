@@ -98,7 +98,9 @@ const AdminAnnouncements = () => {
     },
     onSuccess: () => {
       toast({ title: editId ? "수정 완료" : "공지사항 등록 완료" });
-      queryClient.invalidateQueries({ queryKey: ["admin-announcements"] });
+      ["admin-announcements", "student-announcements", "home-notices", "home-support-notices", "footer-notices"].forEach(
+        (key) => queryClient.invalidateQueries({ queryKey: [key] }),
+      );
       setDialogOpen(false);
       resetForm();
     },
@@ -112,7 +114,9 @@ const AdminAnnouncements = () => {
     },
     onSuccess: () => {
       toast({ title: "삭제 완료" });
-      queryClient.invalidateQueries({ queryKey: ["admin-announcements"] });
+      ["admin-announcements", "student-announcements", "home-notices", "home-support-notices", "footer-notices"].forEach(
+        (key) => queryClient.invalidateQueries({ queryKey: [key] }),
+      );
       setDeleteId(null);
     },
   });
