@@ -282,15 +282,6 @@ const StorefrontCatalog = () => {
                 </div>
 
 
-                {/* 핵심 정보 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-border/60 border-b border-border/60">
-                  {g.facts.map((f) => (
-                    <div key={f.label} className="p-3.5 sm:p-4">
-                      <p className="text-[11px] sm:text-xs font-medium text-muted-foreground">{f.label}</p>
-                      <p className="mt-1 text-sm sm:text-base font-semibold text-foreground leading-tight">{f.value}</p>
-                    </div>
-                  ))}
-                </div>
 
                 <div className="p-5 sm:p-8 space-y-8">
                   {/* 수료 포인트 */}
