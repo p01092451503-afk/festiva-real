@@ -17,8 +17,8 @@ import {
 import { Button } from "@/components/ui/button";
 import StorefrontHeader from "@/components/StorefrontHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { PageBanner } from "@/components/PagePattern";
-import { pageBg } from "@/config/pageBackgrounds";
+import PageTitleHeader from "@/components/storefront/PageTitleHeader";
+
 import Level1QualificationDialog from "@/components/storefront/Level1QualificationDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useEnrolledCourseIds } from "@/hooks/useEnrolledCourseIds";
@@ -236,14 +236,11 @@ const StorefrontCatalog = () => {
     <div className="min-h-screen bg-background">
       <StorefrontHeader />
 
-      <PageBanner
-        config={pageBg("courses")}
-        as="h1"
-        eyebrow="COURSES"
+      <PageTitleHeader
         title="강의 안내"
         description="2급·1급 단계별 온라인 과정으로 축제 기획·운영·안전관리 실무 문서를 직접 완성합니다."
-        containerClassName="max-w-6xl"
       />
+
 
       <main className="max-w-6xl mx-auto px-4 pt-16 sm:pt-20 pb-24 sm:pb-32 space-y-20">
         {GUIDES.map((g, idx) => {

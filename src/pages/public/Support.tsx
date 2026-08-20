@@ -4,8 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Megaphone, MessageSquare, HelpCircle, Star, Pin } from "lucide-react";
 import { toast } from "sonner";
 import StorefrontHeader from "@/components/StorefrontHeader";
-import { PageBanner } from "@/components/PagePattern";
-import { pageBg } from "@/config/pageBackgrounds";
+import PageTitleHeader from "@/components/storefront/PageTitleHeader";
+
 import SiteFooter from "@/components/SiteFooter";
 import SectionHeading from "@/components/storefront/SectionHeading";
 import { Card, CardContent } from "@/components/ui/card";
@@ -142,13 +142,12 @@ export default function Support() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <StorefrontHeader />
-
-      <PageBanner
-        config={pageBg("support")}
-        eyebrow="SUPPORT"
+      <PageTitleHeader
         title="학습운영·문의"
         description="공지사항과 자주 묻는 질문을 확인하고, 궁금한 점은 1:1 문의로 남겨주세요. 평일 09:00~18:00 · 24시간 내 답변"
       />
+
+
 
 
 
