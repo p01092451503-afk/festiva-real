@@ -38,8 +38,8 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
     [s?.business_number && `사업자등록번호 ${s.business_number}`, s?.company_name && `상호 ${s.company_name}`]
       .filter(Boolean)
       .join("  "),
-    s?.company_address,
   ].filter(Boolean) as string[];
+
 
   const contactEmail = s?.company_email || "themiceseoul@naver.com";
   const contactPhone = s?.company_phone || "02-723-7708";
