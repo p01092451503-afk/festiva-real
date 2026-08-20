@@ -42,21 +42,19 @@ const HomeCourseFeatureSection = ({ courses = [] }: { courses?: CourseLite[] }) 
 
   return (
     <section className="bg-background text-foreground">
-      <div className="max-w-6xl mx-auto px-4 pt-20 sm:pt-24">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-sm font-semibold text-brand-orange">Curriculum</span>
-          <h2 className="mt-4 text-2xl sm:text-4xl font-bold tracking-tight leading-[1.5] text-foreground">
-            체계적인 4단계 학습 시스템
-            <br />
-            기획부터 자격 발급까지 완성하는 커리큘럼
-          </h2>
-        </div>
-      </div>
+      {/* 제목 + STEP 카드를 하나의 옅은 그라데이션 밴드 안에 배치 */}
+      <div className="bg-gradient-to-b from-brand-blue-light/50 via-brand-blue-light/25 to-background">
+        <div className="max-w-6xl mx-auto px-4 pt-20 pb-14 sm:pt-24 sm:pb-16">
+          <div className="text-center max-w-2xl mx-auto">
+            <span className="text-sm font-semibold text-brand-orange">Curriculum</span>
+            <h2 className="mt-4 text-2xl sm:text-4xl font-bold tracking-tight leading-[1.5] text-foreground">
+              체계적인 4단계 학습 시스템
+              <br />
+              기획부터 자격 발급까지 완성하는 커리큘럼
+            </h2>
+          </div>
 
-      {/* 옅은 그라데이션 밴드 위의 STEP 카드 */}
-      <div className="mt-10 bg-gradient-to-b from-brand-blue-light/50 via-brand-blue-light/25 to-background">
-        <div className="max-w-6xl mx-auto px-4 py-14 sm:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-3 lg:items-stretch">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-3 lg:items-stretch">
             {STEPS.map(({ step, title, icon: Icon, desc }, idx) => (
               <div key={step} className="relative flex items-stretch">
                 <div className="flex-1 rounded-2xl bg-background p-7 text-center shadow-[0_10px_30px_-18px_hsl(var(--navy)/0.35)]">
