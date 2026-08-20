@@ -43,8 +43,6 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
   const workingHours = [
     s?.hours_weekday,
     s?.hours_lunch,
-    s?.hours_weekend,
-    s?.hours_holiday,
   ].filter(Boolean) as string[];
 
   return (
@@ -99,7 +97,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
               {workingHours.length > 0 ? (
                 <p>{workingHours.join(" / ")}</p>
               ) : (
-                <p>평일 09:00 - 18:00 / 점심 12:00 - 13:00 / 주말 · 공휴일 휴무</p>
+                <p>평일 09:00 - 18:00 / 점심 12:00 - 13:00</p>
               )}
             </div>
             <Link
