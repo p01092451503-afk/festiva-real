@@ -179,7 +179,7 @@ const StorefrontHome = () => {
               aria-label={`${festival.name} 자세히 보기`}
               className="text-left bg-background rounded-3xl overflow-hidden ring-1 ring-border/60 shadow-[0_18px_50px_-32px_hsl(var(--navy)/0.4)] transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="h-48 sm:h-56 overflow-hidden bg-muted">
+              <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
                 <img
                   src={festival.imageUrl}
                   alt={festival.name}
