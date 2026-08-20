@@ -7,8 +7,7 @@ import {
 } from "lucide-react";
 
 import StorefrontHeader from "@/components/StorefrontHeader";
-import { PageBanner } from "@/components/PagePattern";
-import { pageBg } from "@/config/pageBackgrounds";
+import PageTitleHeader from "@/components/storefront/PageTitleHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
