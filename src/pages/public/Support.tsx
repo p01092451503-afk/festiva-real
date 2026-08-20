@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { NoticeDialogLayout } from "@/components/common/NoticeDialogLayout";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useUser } from "@/contexts/UserContext";
@@ -320,12 +321,15 @@ export default function Support() {
       </main>
 
       <Dialog open={!!openNotice} onOpenChange={(o) => !o && setOpenNotice(null)}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-xl">{openNotice?.title}</DialogTitle>
+        <DialogContent className="max-w-2xl max-h-[86vh] overflow-y-auto rounded-3xl p-6">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{openNotice?.title}</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">{openNotice && formatDate(openNotice.created_at)}</p>
-          <p className="whitespace-pre-wrap leading-relaxed text-base">{openNotice?.content}</p>
+          <NoticeDialogLayout
+            title={openNotice?.title}
+            content={openNotice?.content}
+            meta={<span>{openNotice && formatDate(openNotice.created_at)}</span>}
+          />
         </DialogContent>
       </Dialog>
 
