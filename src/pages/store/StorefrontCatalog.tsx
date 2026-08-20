@@ -283,22 +283,22 @@ const StorefrontCatalog = () => {
 
 
                 {/* 핵심 정보 */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y divide-border/60 border-b border-border/60">
+                <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-border/60 border-b border-border/60">
                   {g.facts.map((f) => (
-                    <div key={f.label} className="p-5">
-                      <p className="text-xs font-medium text-muted-foreground">{f.label}</p>
-                      <p className="mt-1.5 text-base font-semibold text-foreground leading-snug">{f.value}</p>
+                    <div key={f.label} className="p-3.5 sm:p-4">
+                      <p className="text-[11px] sm:text-xs font-medium text-muted-foreground">{f.label}</p>
+                      <p className="mt-1 text-sm sm:text-base font-semibold text-foreground leading-tight">{f.value}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="p-6 sm:p-10 space-y-10">
+                <div className="p-5 sm:p-8 space-y-8">
                   {/* 수료 포인트 */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                     {g.highlights.map((h) => (
-                      <div key={h.text} className="flex items-center gap-3 rounded-xl bg-muted/50 px-4 py-3.5">
-                        <h.icon className="h-5 w-5 text-navy shrink-0" aria-hidden="true" />
-                        <span className="text-sm font-medium text-foreground leading-snug">{h.text}</span>
+                      <div key={h.text} className="flex items-center gap-2.5 rounded-xl bg-muted/50 px-3 py-2.5">
+                        <h.icon className="h-4 w-4 text-navy shrink-0" aria-hidden="true" />
+                        <span className="text-xs sm:text-sm font-medium text-foreground leading-tight">{h.text}</span>
                       </div>
                     ))}
                   </div>
