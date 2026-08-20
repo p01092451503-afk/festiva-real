@@ -11,13 +11,14 @@ import { format } from "date-fns";
 import { useUserTargetContext, filterByTarget } from "@/hooks/useTargetFilter";
 
 const StudentAnnouncements = () => {
-  const { t, i18n } = useTranslation();
-  const lang = (i18n.language || "ko").startsWith("en") ? "en" : "ko";
+  const { t } = useTranslation();
   const [selectedAnn, setSelectedAnn] = useState<any>(null);
   const { data: targetCtx } = useUserTargetContext();
 
   const { data: rawAnnouncements, isLoading } = useQuery({
     queryKey: ["student-announcements"],
+    staleTime: 0,
+    refetchOnMount: "always",
     queryFn: async () => {
       const { data } = await supabase
         .from("announcements")
