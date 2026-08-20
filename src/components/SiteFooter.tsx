@@ -138,13 +138,23 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 <span className="text-brand-orange">cert</span>
               </Link>
             )}
-            <div className="mt-5 space-y-1.5 text-base sm:text-lg text-footer-muted leading-relaxed">
-              {infoLines.map((line) => (
-                <p key={line} className="break-words">{line}</p>
-              ))}
-            </div>
-
             <div className="mt-5 space-y-2 text-base sm:text-lg leading-relaxed">
+              <p className="flex items-start gap-2 text-footer-muted">
+                <Building2 className="h-5 w-5 shrink-0 mt-0.5 text-brand-orange" aria-hidden="true" />
+                <span className="break-words">상호 : {companyName}</span>
+              </p>
+              {s?.business_number && (
+                <p className="flex items-start gap-2 text-footer-muted">
+                  <Building2 className="h-5 w-5 shrink-0 mt-0.5 text-brand-orange" aria-hidden="true" />
+                  <span className="break-words">사업자등록번호 : {s.business_number}</span>
+                </p>
+              )}
+              {ceoName && (
+                <p className="flex items-start gap-2 text-footer-muted">
+                  <Building2 className="h-5 w-5 shrink-0 mt-0.5 text-brand-orange" aria-hidden="true" />
+                  <span className="break-words">대표이사 : {ceoName}</span>
+                </p>
+              )}
               <p className="flex items-start gap-2 text-footer-muted">
                 <MapPin className="h-5 w-5 shrink-0 mt-0.5 text-brand-orange" aria-hidden="true" />
                 <span className="break-words">{contactAddress}</span>
@@ -156,15 +166,6 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                   className="text-footer-foreground underline underline-offset-4 hover:opacity-70 transition-opacity break-all"
                 >
                   {contactEmail}
-                </a>
-              </p>
-              <p className="flex items-center gap-2">
-                <Phone className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
-                <a
-                  href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}
-                  className="text-xl sm:text-2xl font-bold tracking-tight text-footer-foreground hover:opacity-70 transition-opacity"
-                >
-                  {contactPhone}
                 </a>
               </p>
             </div>
