@@ -38,7 +38,7 @@ const HeroBanner = () => {
             className="h-[240px] w-full object-cover sm:h-[340px] md:h-[420px]"
             width={1600}
             height={768}
-            fetchpriority="high"
+            fetchPriority="high"
             decoding="async"
           />
         </div>
