@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Instagram, Youtube, Facebook, Globe, Shield, ArrowRight, MessageCircle } from "lucide-react";
+import { Instagram, Youtube, Facebook, Globe, Shield, ArrowRight, MessageCircle, MapPin, Mail, Phone } from "lucide-react";
 import { useSiteSettings, useNavItems } from "@/hooks/useSiteSettings";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,10 +38,13 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
     [s?.business_number && `사업자등록번호 ${s.business_number}`, s?.company_name && `상호 ${s.company_name}`]
       .filter(Boolean)
       .join("  "),
-    s?.company_address,
-    s?.company_email,
-    s?.company_phone,
   ].filter(Boolean) as string[];
+
+
+  const contactEmail = s?.company_email || "themiceseoul@naver.com";
+  const contactPhone = s?.company_phone || "02-723-7708";
+  const contactAddress = s?.company_address || "서울시 종로구 인사동길12 대일빌딩 1005호";
+
 
   const workingHours = [
     s?.hours_weekday,
@@ -139,6 +142,32 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 <p key={line} className="break-words">{line}</p>
               ))}
             </div>
+
+            <div className="mt-5 space-y-2 text-base sm:text-lg leading-relaxed">
+              <p className="flex items-start gap-2 text-footer-muted">
+                <MapPin className="h-5 w-5 shrink-0 mt-0.5 text-brand-orange" aria-hidden="true" />
+                <span className="break-words">{contactAddress}</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Mail className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="text-footer-foreground underline underline-offset-4 hover:opacity-70 transition-opacity break-all"
+                >
+                  {contactEmail}
+                </a>
+              </p>
+              <p className="flex items-center gap-2">
+                <Phone className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
+                <a
+                  href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}
+                  className="text-xl sm:text-2xl font-bold tracking-tight text-footer-foreground hover:opacity-70 transition-opacity"
+                >
+                  {contactPhone}
+                </a>
+              </p>
+            </div>
+
 
             {(s?.instagram_url || s?.youtube_url || s?.facebook_url || s?.blog_url) && (
               <div className="mt-6 flex items-center gap-6">
