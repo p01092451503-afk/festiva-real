@@ -39,9 +39,12 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
       .filter(Boolean)
       .join("  "),
     s?.company_address,
-    s?.company_email,
-    s?.company_phone,
   ].filter(Boolean) as string[];
+
+  const contactEmail = s?.company_email || "themiceseoul@naver.com";
+  const contactPhone = s?.company_phone || "02-723-7708";
+  const contactAddress = s?.company_address || "서울시 종로구 인사동길12 대일빌딩 1005호";
+
 
   const workingHours = [
     s?.hours_weekday,
