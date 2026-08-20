@@ -112,30 +112,35 @@ const StudentBoard = () => {
       </div>
 
       <Dialog open={!!selected} onOpenChange={v => { if (!v) setSelected(null); }}>
-        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-base">{selected?.title}</DialogTitle>
+        <DialogContent className="max-w-2xl max-h-[86vh] overflow-y-auto rounded-3xl p-6">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{selected?.title}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="text-xs text-muted-foreground">
-              {selected && new Date(selected.created_at).toLocaleString()}
-              <span className="ml-3 inline-flex items-center gap-0.5"><Eye className="h-3 w-3" />{selected?.view_count}</span>
-            </div>
-            <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{selected?.content}</div>
+          <NoticeDialogLayout
+            title={selected?.title}
+            content={selected?.content}
+            meta={
+              <>
+                <span>{selected && new Date(selected.created_at).toLocaleString()}</span>
+                <span aria-hidden="true">·</span>
+                <span className="inline-flex items-center gap-1"><Eye className="h-3.5 w-3.5" />{selected?.view_count}</span>
+              </>
+            }
+          >
             {(selected?.file_urls?.length || 0) > 0 && (
-              <div className="space-y-2 pt-2 border-t border-border">
-                <p className="text-xs font-medium text-muted-foreground">{t("board.attachments", "첨부파일")}</p>
+              <div className="space-y-2 rounded-2xl border border-border bg-muted/40 p-5">
+                <p className="text-sm font-medium text-muted-foreground">{t("board.attachments", "첨부파일")}</p>
                 {selected.file_urls.map((url: string, i: number) => (
                   <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-xs bg-muted rounded px-3 py-2 hover:bg-accent transition-colors">
-                    <Download className="h-3.5 w-3.5 shrink-0 text-primary" />
+                    className="flex items-center gap-2 rounded-xl bg-background px-4 py-2.5 text-sm transition-colors hover:bg-accent">
+                    <Download className="h-4 w-4 shrink-0 text-primary" />
                     <span className="truncate">{getFileName(url)}</span>
                   </a>
                 ))}
               </div>
             )}
             {selected && <BoardComments postId={selected.id} />}
-          </div>
+          </NoticeDialogLayout>
         </DialogContent>
       </Dialog>
     </DashboardLayout>
