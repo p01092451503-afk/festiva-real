@@ -143,6 +143,32 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
               ))}
             </div>
 
+            <div className="mt-5 space-y-2 text-base sm:text-lg leading-relaxed">
+              <p className="flex items-start gap-2 text-footer-muted">
+                <MapPin className="h-5 w-5 shrink-0 mt-0.5 text-brand-orange" aria-hidden="true" />
+                <span className="break-words">{contactAddress}</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Mail className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="text-footer-foreground underline underline-offset-4 hover:opacity-70 transition-opacity break-all"
+                >
+                  {contactEmail}
+                </a>
+              </p>
+              <p className="flex items-center gap-2">
+                <Phone className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
+                <a
+                  href={`tel:${contactPhone.replace(/[^0-9+]/g, "")}`}
+                  className="text-xl sm:text-2xl font-bold tracking-tight text-footer-foreground hover:opacity-70 transition-opacity"
+                >
+                  {contactPhone}
+                </a>
+              </p>
+            </div>
+
+
             {(s?.instagram_url || s?.youtube_url || s?.facebook_url || s?.blog_url) && (
               <div className="mt-6 flex items-center gap-6">
                 {s?.facebook_url && (
