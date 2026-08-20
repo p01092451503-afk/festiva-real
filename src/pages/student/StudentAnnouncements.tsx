@@ -6,6 +6,7 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { NoticeDialogLayout } from "@/components/common/NoticeDialogLayout";
 import { Megaphone, Pin, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { useUserTargetContext, filterByTarget } from "@/hooks/useTargetFilter";

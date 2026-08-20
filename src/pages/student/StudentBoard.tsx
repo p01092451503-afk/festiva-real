@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { NoticeDialogLayout } from "@/components/common/NoticeDialogLayout";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Pin, FileText, Eye, Download, ClipboardList } from "lucide-react";
