@@ -280,16 +280,11 @@ const About = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <StorefrontHeader />
 
-      {/* Hero */}
-      <PageBanner
-        config={pageBg("about")}
-        size="lg"
-        eyebrow="ABOUT festcert"
-        title="축제운영전문가 자격증 교육원"
+      {/* Minimal page header */}
+      <PageTitleHeader
+        title="교육원 소개"
         description="축제·이벤트 현장에서 바로 통하는 기획·운영·안전관리 역량을 단계별로 학습하고, 자격 검정을 통해 전문성을 증명합니다."
       />
-
-
 
       {/* Tabs */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-14 sm:py-16 min-w-0">
