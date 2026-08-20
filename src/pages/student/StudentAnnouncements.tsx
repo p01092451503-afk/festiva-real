@@ -33,24 +33,8 @@ const StudentAnnouncements = () => {
     ? filterByTarget(rawAnnouncements, targetCtx)
     : rawAnnouncements;
 
-  const { data: i18nMap } = useQuery({
-    queryKey: ["announcement-i18n", lang, filtered?.map((a) => a.id)],
-    enabled: !!filtered?.length,
-    queryFn: async () => {
-      const ids = filtered!.map((a) => a.id);
-      const { data } = await supabase
-        .from("announcement_i18n")
-        .select("announcement_id, title, content")
-        .eq("language_code", lang)
-        .in("announcement_id", ids);
-      return Object.fromEntries((data || []).map((r) => [r.announcement_id, r]));
-    },
-  });
-
-  const announcements = filtered?.map((a) => {
-    const tr = i18nMap?.[a.id];
-    return tr ? { ...a, title: tr.title, content: tr.content } : a;
-  });
+  // 한국어 전용 서비스: 원본 공지 데이터를 그대로 사용합니다.
+  const announcements = filtered;
 
   const { data: authorProfiles } = useQuery({
     queryKey: ["announcement-authors-student", announcements?.map((a) => a.author_id)],
