@@ -244,3 +244,12 @@ mark.nf-mark {
 .prose-editor a { color: hsl(var(--primary)); text-decoration: underline; }
 .prose-editor img { max-width: 100%; height: auto; border-radius: 8px; margin: 0.5em 0; }
 .prose-editor hr { border-color: hsl(var(--border)); margin: 0.75em 0; }
+
+/* 앱 전역 통일 스피너 — index.html 부트 스피너(#boot-spinner .ring)와 동일한 형태 */
+.app-spinner {
+  border-radius: 999px;
+  border: 2px solid hsl(var(--border));
+  border-top-color: hsl(var(--primary));
+  animation: app-spin 0.8s linear infinite;
+}
+@keyframes app-spin { to { transform: rotate(360deg); } }

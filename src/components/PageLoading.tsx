@@ -1,5 +1,3 @@
-import { Loader2 } from "lucide-react";
-
 interface PageLoadingProps {
   /** Accessible loading label. */
   label?: string;
@@ -10,7 +8,8 @@ interface PageLoadingProps {
 }
 
 /**
- * Unified loading indicator used across the app — a simple spinner.
+ * Unified loading indicator used across the app — same ring spinner as the
+ * boot spinner in index.html so only one spinner style ever appears.
  */
 const PageLoading = ({ label = "로딩 중", className = "", size = "md" }: PageLoadingProps) => {
   const pad = size === "sm" ? "py-6" : size === "lg" ? "py-20" : "py-12";
@@ -24,11 +23,12 @@ const PageLoading = ({ label = "로딩 중", className = "", size = "md" }: Page
       aria-label={label}
       className={`w-full flex items-center justify-center ${pad} ${className}`}
     >
-      <Loader2 className={`${iconSize} animate-spin text-primary`} aria-hidden="true" />
+      <div className={`app-spinner ${iconSize}`} aria-hidden="true" />
       <span className="sr-only">{label}</span>
     </div>
   );
 };
+
 
 /** Full-viewport spinner for route guards / lazy routes. */
 export const FullPageLoading = ({ label }: { label?: string }) => (
