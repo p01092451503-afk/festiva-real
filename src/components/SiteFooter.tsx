@@ -159,7 +159,7 @@ const SiteFooter = forwardRef<HTMLElement>((_props, ref) => {
                 <Mail className="h-5 w-5 shrink-0 text-brand-orange" aria-hidden="true" />
                 <a
                   href={`mailto:${contactEmail}`}
-                  className="text-footer-foreground underline underline-offset-4 hover:opacity-70 transition-opacity break-all"
+                  className="text-footer-foreground hover:opacity-70 transition-opacity break-all"
                 >
                   {contactEmail}
                 </a>
